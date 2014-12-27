@@ -9,9 +9,9 @@ This repository also includes a C# translation of the demo app included with the
 
 Please note: these bindings are in very early stages and have not yet been thoroughly tested.
 
-## Usage ##
+## Installation ##
 
-The easiest way is to grab the [nuget package](https://www.nuget.org/packages/Xamarin.Android.Skobbler/). Skobbler.dll should be added to your references on installation. You can also clone this repo and build from source should you wish to remove any ABIs to cut down on assembly size.
+The easiest way is to add the [nuget package](https://www.nuget.org/packages/Xamarin.Android.Skobbler/). Skobbler.dll should be added to your references on installation. You can also clone this repo and build from source should you wish to remove any ABIs to cut down on assembly size.
 
 Fantastic documentation is [available from Skobbler](http://developer.skobbler.com/getting-started/android). The main difference you will find is that get/set method pairs in Java have been changed to  C# properties. The automatic binding generation process will also add events that correspond to callback interfaces.
 
