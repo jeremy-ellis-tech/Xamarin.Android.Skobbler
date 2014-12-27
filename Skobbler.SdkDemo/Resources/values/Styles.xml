@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="menu_options_style">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@drawable/menu_options_selector</item>
+    <item name="android:textSize">21dp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:clickable">true</item>
+    <item name="android:onClick">OnMenuOptionClick</item>
+    <item name="android:paddingBottom">3dp</item>
+    <item name="android:paddingTop">3dp</item>
+    <item name="android:paddingLeft">8dp</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:textColor">@color/black</item>
+  </style>
+
+  <style name="list_items_style">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textSize">21dp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:paddingBottom">3dp</item>
+    <item name="android:paddingTop">3dp</item>
+    <item name="android:paddingLeft">8dp</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:textColor">@color/black</item>
+  </style>
+
+  <style name="menu_options_group_style">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@color/grey_options_group</item>
+    <item name="android:textSize">14dp</item>
+    <item name="android:paddingBottom">2dp</item>
+    <item name="android:paddingTop">2dp</item>
+    <item name="android:paddingLeft">14dp</item>
+    <item name="android:singleLine">true</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:textColor">@color/black</item>
+  </style>
+
+  <style name="alt_routes_button_style">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:paddingBottom">8dp</item>
+    <item name="android:background">@drawable/button_selector</item>
+    <item name="android:singleLine">false</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">@color/blue_outline</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:onClick">OnClick</item>
+  </style>
+
+  <style name="button_style">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingTop">8dp</item>
+    <item name="android:paddingBottom">8dp</item>
+    <item name="android:paddingLeft">10dp</item>
+    <item name="android:paddingRight">10dp</item>
+    <item name="android:background">@drawable/button_selector</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">@color/blue_outline</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:onClick">OnClick</item>
+    <item name="android:layout_marginBottom">20dp</item>
+    <item name="android:layout_centerHorizontal">true</item>
+    <item name="android:layout_alignParentBottom">true</item>
+  </style>
+
+</resources>

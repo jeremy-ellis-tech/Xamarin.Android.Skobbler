@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" >
+
+            <EditText
+                android:id="@+id/radius_field"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:inputType="number"
+                android:text="2000"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/radius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignTop="@id/radius_field"
+                android:layout_marginTop="10dp"
+                android:text="@string/radius"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/search_topic_field"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/radius_field"
+                android:layout_marginTop="15dp"
+                android:text="park"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/search_topic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignTop="@id/search_topic_field"
+                android:layout_marginTop="10dp"
+                android:text="@string/search_topic"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/latitude_field"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/search_topic_field"
+                android:layout_marginTop="15dp"
+                android:inputType="numberSigned|numberDecimal"
+                android:text="37.756479"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/latitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignTop="@id/latitude_field"
+                android:layout_marginTop="10dp"
+                android:text="@string/latitude"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/longitude_field"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/latitude_field"
+                android:layout_marginTop="15dp"
+                android:inputType="numberSigned|numberDecimal"
+                android:text="-122.43287"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/longitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignTop="@id/longitude_field"
+                android:layout_marginTop="10dp"
+                android:text="@string/longitude"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/longitude_field"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:onClick="OnClick"
+                android:text="@string/search" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

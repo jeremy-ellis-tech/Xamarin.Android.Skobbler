@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="20dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:weightSum="4" >
+
+    <Button
+        android:id="@+id/map_style_day"
+        style="@style/alt_routes_button_style"
+        android:layout_weight="1"
+        android:text="@string/map_style_day" />
+
+    <Button
+        android:id="@+id/map_style_night"
+        style="@style/alt_routes_button_style"
+        android:layout_weight="1"
+        android:text="@string/map_style_night" />
+
+    <Button
+        android:id="@+id/map_style_outdoor"
+        style="@style/alt_routes_button_style"
+        android:layout_weight="1"
+        android:text="@string/map_style_outdoor" />
+
+    <Button
+        android:id="@+id/map_style_grayscale"
+        style="@style/alt_routes_button_style"
+        android:layout_weight="1"
+        android:text="@string/map_style_grayscale" />
+
+
+</LinearLayout>

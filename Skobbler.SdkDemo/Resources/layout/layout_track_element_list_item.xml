@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/menu_options_selector"
+    android:paddingBottom="3dp"
+    android:paddingTop="3dp" >
+
+    <TextView
+        android:id="@+id/indicator_children_available"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text=">"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/draw_button"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/indicator_children_available"
+        android:background="@color/grey"
+        android:clickable="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:padding="5dp"
+        android:text="@string/label_draw"
+        android:textColor="@color/black"
+        android:textSize="17dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/label_list_item"
+        style="@style/list_items_style"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/download_button"
+        android:clickable="false"
+        android:singleLine="false"
+        android:text="ONE\nTWO" />
+
+</RelativeLayout>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map_layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#80000000" >
+
+        <com.skobbler.ngx.map.SKMapViewHolder
+            android:id="@+id/view_group_map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <RelativeLayout
+            android:id="@+id/chess_board_background"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/map_background" >
+        </RelativeLayout>
+    </FrameLayout>
+
+    <include
+        android:id="@+id/real_reach_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        layout="@layout/element_real_reach"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/options_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/layout_menu"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/alt_routes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        layout="@layout/layout_alternative_routes"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/map_styles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        layout="@layout/layout_map_styles"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/bottom_button"
+        style="@style/button_style"
+        android:text="@string/navigate"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/position_me_button"
+        style="@style/button_style"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:text="@string/label_position_me"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/heading_button"
+        style="@style/button_style"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:text="@string/label_heading"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/customView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_searchcenter_favorite"
+        android:visibility="invisible" />
+
+</RelativeLayout>
