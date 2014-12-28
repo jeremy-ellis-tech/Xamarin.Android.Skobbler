@@ -5,10 +5,14 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Java.Interop;
+using Java.IO;
 using Skobbler.Ngx.Packages;
 using Skobbler.SdkDemo.Application;
 using Skobbler.SdkDemo.Model;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Skobbler.SdkDemo.Activities
@@ -88,14 +92,62 @@ namespace Skobbler.SdkDemo.Activities
 
         private void DownloadResource(string url, string extension)
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 long lastProgressUpdateTime = SystemClock.CurrentThreadTimeMillis();
 
-                //using (var httpClient = new HttpClient())
-                //{
+                try
+                {
+                    using (var httpClient = new HttpClient())
+                    {
+                        Stream responseStream = await httpClient.GetStreamAsync(url);
 
-                //}
+                        if (!new Java.IO.File(_packagesPath).Exists())
+                        {
+                            new Java.IO.File(_packagesPath).Mkdirs();
+                        }
+
+                        var localFile = new RandomAccessFile(_packagesPath + _downloadPackage.Code + extension, "rw");
+
+                        long bytesRead = localFile.Length();
+
+                        localFile.Seek(bytesRead);
+                        byte[] data = new byte[NoBytesIntoOneMB];
+
+                        while (true)
+                        {
+                            int actual = responseStream != null ? responseStream.Read(data, 0, data.Length) : 0;
+                            if (actual > 0)
+                            {
+                                bytesRead += actual;
+
+                                localFile.Write(data, 0, actual);
+
+                                if (_downloadResourceExtensions[_downloadResourceIndex] == ".skm")
+                                {
+                                    long currentTIme = SystemClock.CurrentThreadTimeMillis();
+
+                                    if (currentTIme - lastProgressUpdateTime > 100)
+                                    {
+                                        UpdateDownloadProgress(bytesRead, _downloadPackage.Size);
+                                        lastProgressUpdateTime = currentTIme;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+                        localFile.Close();
+
+                        UpdateOnFinishDownload();
+                    }
+                }
+                catch (Exception)
+                {
+                }
             });
         }
 
