@@ -9,6 +9,8 @@ This repository also includes a C# translation of the demo app included with the
 
 Please note: these bindings are in very early stages and have not yet been thoroughly tested.
 
+This version currently uses version 2.3.0 of the Skobbler Android SDK.
+
 ## Installation ##
 
 The easiest way is to add the [nuget package](https://www.nuget.org/packages/Xamarin.Android.Skobbler/). Skobbler.dll should be added to your references on installation. You can also clone this repo and build from source should you wish to remove any ABIs to cut down on assembly size.
