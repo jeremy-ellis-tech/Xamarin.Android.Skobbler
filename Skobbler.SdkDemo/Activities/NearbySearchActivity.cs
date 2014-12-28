@@ -31,7 +31,7 @@ namespace Skobbler.SdkDemo.Activities
                         intent.PutExtra("radius", radius);
                         intent.PutExtra("latitude", Double.Parse(FindViewById<TextView>(Resource.Id.latitude_field).Text.ToString()));
                         intent.PutExtra("longitude", Double.Parse(FindViewById<TextView>(Resource.Id.longitude_field).Text.ToString()));
-                        intent.PutExtra("searchTopic", Double.Parse(FindViewById<TextView>(Resource.Id.search_topic_field).Text.ToString()));
+                        intent.PutExtra("searchTopic", FindViewById<TextView>(Resource.Id.search_topic_field).Text.ToString());
 
                         StartActivity(intent);
                     }
