@@ -10,7 +10,7 @@ namespace Skobbler.Ngx.Search
         private readonly ISKSearchListener _searchListener;
         private readonly TaskCompletionSource<IList<SKSearchResult>> _taskCompletionSource;
 
-        public SKSearchManager()
+        public SKSearchManager() : this(null)
         {
             _taskCompletionSource = new TaskCompletionSource<IList<SKSearchResult>>();
             _searchListener = new SKSearchListener(_taskCompletionSource);

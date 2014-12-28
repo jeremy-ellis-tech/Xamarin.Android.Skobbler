@@ -42,7 +42,7 @@ You will also need to manually copy the SKMaps.zip file to your assets folder, w
 
 ## Additions ##
 
-I'm looking to add `async/await` methods ontop of the existing Java interface callbacks to make things cleaner and more .NET friendly. I've added an untested implementation for nearby searches and will be adding more soon.
+I'm looking to add `async/await` methods ontop of the existing Java interface callbacks to make things cleaner and more .NET friendly. Here's a working example using nearby search:
 
     try
     {

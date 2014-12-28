@@ -27,7 +27,7 @@ namespace Skobbler.SdkDemo.Activities
                     if(ValidateCoordinates())
                     {
                         int radius = Int32.Parse(FindViewById<TextView>(Resource.Id.radius_field).Text.ToString());
-                        var intent = new Intent(this, typeof(NearbySearchActivity));
+                        var intent = new Intent(this, typeof(NearbySearchResultsActivity));
                         intent.PutExtra("radius", radius);
                         intent.PutExtra("latitude", Double.Parse(FindViewById<TextView>(Resource.Id.latitude_field).Text.ToString()));
                         intent.PutExtra("longitude", Double.Parse(FindViewById<TextView>(Resource.Id.longitude_field).Text.ToString()));
