@@ -44,10 +44,6 @@
     <Reference Include="Mono.Android" />
     <Reference Include="Mono.Android.Export" />
     <Reference Include="mscorlib" />
-    <Reference Include="Skobbler, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\Skobbler.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -168,7 +164,10 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="libs\" />
+    <ProjectReference Include="..\Skobbler.Binding\Skobbler.Binding.csproj">
+      <Project>{c399b111-040e-485c-85f0-40ae7bb88af4}</Project>
+      <Name>Skobbler.Binding</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
