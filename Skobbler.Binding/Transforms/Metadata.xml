@@ -10,6 +10,9 @@
   <attr path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMapsInitSettings']/method[@name='setAppName']" name="visibility">private</attr>
   <attr path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMapsInitSettings']/method[@name='setAppVersion']" name="visibility">private</attr>
   <attr path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMapsInitSettings']/method[@name='isFcdEnabled']" name="visibility">private</attr>
+  
+  <!--Add param names missing from docs.-->
+  <attr path="/api/package[@name='com.skobbler.ngx.search']/interface[@name='SKSearchListener']/method[@name='onReceivedSearchResults']/parameter[@name='p0']" name="name">searchResults</attr>
 
   <!--.NET friendly namespace names-->
   <attr path="/api/package[@name='com.skobbler.ngx']" name="managedName">Skobbler.Ngx</attr>
