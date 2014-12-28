@@ -29,5 +29,12 @@ namespace Skobbler.Ngx.Search
 
             return await _taskCompletionSource.Task;
         }
+
+        public async Task<IList<SKSearchResult>> MultistepSearchAsync(SKMultiStepSearchSettings stepObject)
+        {
+            MultistepSearch(stepObject);
+
+            return await _taskCompletionSource.Task;
+        }
     }
 }
