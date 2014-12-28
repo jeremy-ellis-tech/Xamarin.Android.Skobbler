@@ -9,7 +9,7 @@ This repository also includes a C# translation of the demo app included with the
 
 Please note: these bindings are in very early stages and have not yet been thoroughly tested.
 
-This version currently uses version 2.3.0 of the Skobbler Android SDK.
+This version currently uses v2.3.0 of the Skobbler Android SDK.
 
 ## Installation ##
 
@@ -39,6 +39,22 @@ and in Properties\AndroidManifest.xml
 I believe this is required for analytics purposes.
 
 You will also need to manually copy the SKMaps.zip file to your assets folder, with a build configuration of an Android asset. The zip is available in the Android SDK from [Skobbler](http://developer.skobbler.com/support#download). See the demo app for a working example.
+
+## Additions ##
+
+I'm looking to add `async/await` methods ontop of the existing Java interface callbacks to make things cleaner and more .NET friendly. I've added an untested implementation for nearby searches and will be adding more soon.
+
+    try
+    {
+    	var searchManager = new SKSearchManager(); //No listener needed in the constructor for async calls;
+    	IList<SKSearchResult> results = await searchManager.NearbySearchAsync(searchObj);
+    }
+    catch(Exception)
+    {
+    	//Catch invalid status' & other exceptions here.
+    }
+    
+
 
 ## License ##
 Bindings provided under the MIT license. See LICENSE for details.

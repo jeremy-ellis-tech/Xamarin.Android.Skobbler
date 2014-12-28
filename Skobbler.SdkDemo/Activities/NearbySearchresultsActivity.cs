@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace Skobbler.SdkDemo.Activities
 {
     [Activity(Label = "NearbySearchresultsActivity", ConfigurationChanges = ConfigChanges.Orientation)]
-    public class NearbySearchresultsActivity : Activity, ISKSearchListener
+    public class NearbySearchResultsActivity : Activity, ISKSearchListener
     {
 
         private SKSearchManager _searchManager;

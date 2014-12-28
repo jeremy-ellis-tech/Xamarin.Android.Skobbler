@@ -57,7 +57,7 @@
     <Compile Include="Activities\MapActivity.cs" />
     <Compile Include="Activities\MapPackagesListActivity.cs" />
     <Compile Include="Activities\NearbySearchActivity.cs" />
-    <Compile Include="Activities\NearbySearchresultsActivity.cs" />
+    <Compile Include="Activities\NearbySearchResultsActivity.cs" />
     <Compile Include="Activities\OfflineAddressSearchActivity.cs" />
     <Compile Include="Activities\POICategoriesListActivity.cs" />
     <Compile Include="Activities\ReverseGeocodingActivity.cs" />
