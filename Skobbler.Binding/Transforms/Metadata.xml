@@ -13,7 +13,11 @@
   
   <!--Add param names missing from docs.-->
   <attr path="/api/package[@name='com.skobbler.ngx.search']/interface[@name='SKSearchListener']/method[@name='onReceivedSearchResults']/parameter[@name='p0']" name="name">searchResults</attr>
-
+  
+  <!--Fix incorrect parameter names in documentation-->
+  <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapSurfaceView']/method[@name='fitRealReachInView']/parameter[2]" name="name">xMax</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapSurfaceView']/method[@name='fitRealReachInView']/parameter[3]" name="name">yMin</attr> 
+  
   <!--.NET friendly namespace names-->
   <attr path="/api/package[@name='com.skobbler.ngx']" name="managedName">Skobbler.Ngx</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.cache']" name="managedName">Skobbler.Ngx.Cache</attr>

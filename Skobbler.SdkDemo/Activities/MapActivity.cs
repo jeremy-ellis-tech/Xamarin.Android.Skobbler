@@ -1182,7 +1182,7 @@ namespace Skobbler.SdkDemo.Activities
 
         public void OnRealReachCalculationCompleted(int xMin, int xMax, int yMin, int yMax)
         {
-            _mapView.FitRealReachInView(xMin, yMin, xMax, yMax, false, 0);
+            _mapView.FitRealReachInView(xMin, xMax, yMin, yMax, false, 0);
         }
 
         public void OnAccuracyChanged(SensorType sensor, SensorStatus accuracy)
