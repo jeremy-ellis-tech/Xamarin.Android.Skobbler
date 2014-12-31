@@ -16,7 +16,7 @@ namespace Skobbler.Additions
 
         public void OnReceivedSearchResults(IList<SKSearchResult> results)
         {
-            _taskCompletionSource.SetResult(results);
+            _taskCompletionSource.TrySetResult(results);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Skobbler.Ngx.Search
 
             if(searchStatus != SKSearchStatus.SkSearchNoError)
             {
-                _taskCompletionSource.SetException(new SKSearchStatusException(searchStatus));
+                _taskCompletionSource.TrySetException(new SKSearchStatusException(searchStatus));
             }
 
             return await _taskCompletionSource.Task;

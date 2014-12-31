@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additions\SKRealReachCalculationResult.cs" />
+    <Compile Include="Additions\SKMapSurfaceView.cs" />
+    <Compile Include="Additions\SKRealReachListener.cs" />
     <Compile Include="Additions\SKSearchStatusException.cs" />
     <Compile Include="Additions\SKSearchListener.cs" />
     <Compile Include="Additions\SKSearchManager.cs" />
