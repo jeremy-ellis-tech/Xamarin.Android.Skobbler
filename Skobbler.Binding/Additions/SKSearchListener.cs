@@ -1,9 +1,8 @@
-using Skobbler.Ngx.Search;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JavaObject = Java.Lang.Object;
 
-namespace Skobbler.Additions
+namespace Skobbler.Ngx.Search
 {
     internal sealed class SKSearchListener : JavaObject, ISKSearchListener
     {

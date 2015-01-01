@@ -41,9 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additions\SKMetaDataListener.cs" />
     <Compile Include="Additions\SKSearchStatusException.cs" />
     <Compile Include="Additions\SKSearchListener.cs" />
     <Compile Include="Additions\SKSearchManager.cs" />
+    <Compile Include="Additions\SKVersioningManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

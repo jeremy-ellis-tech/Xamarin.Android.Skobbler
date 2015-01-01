@@ -1,8 +1,7 @@
-using Skobbler.Ngx.Search;
 using System;
 using System.Runtime.Serialization;
 
-namespace Skobbler.Additions
+namespace Skobbler.Ngx.Search
 {
     [Serializable]
     public class SKSearchStatusException : Exception
