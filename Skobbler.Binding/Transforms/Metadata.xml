@@ -19,6 +19,9 @@
   <!--Remove events in favour of async methods-->
   <attr path="/api/package[@name='com.skobbler.ngx.search']/class[@name='SKSearchManager']/method[@name='setSearchListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.search.SKSearchListener']]" name="eventName"></attr>
   <attr path="/api/package[@name='com.skobbler.ngx.versioning']/class[@name='SKVersioningManager']/method[@name='setMetaDataListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.versioning.SKMetaDataListener']]" name="eventName"></attr>
+
+  <!--Change event name to stop hiding of inherited glSurfaceView member-->
+  <attr path="/api/package[@name='com.skobbler.ngx.map']/interface[@name='SKMapSurfaceListener']/method[@name='onSurfaceCreated' and count(parameter)=0]" name="eventName">MapSurfaceCreated</attr>
   
   <!--Add param names missing from docs.-->
   <attr path="/api/package[@name='com.skobbler.ngx.search']/interface[@name='SKSearchListener']/method[@name='onReceivedSearchResults']/parameter[@name='p0']" name="name">searchResults</attr>
