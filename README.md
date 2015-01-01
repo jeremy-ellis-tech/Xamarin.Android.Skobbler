@@ -56,7 +56,7 @@ I will be adding `async/await` methods on top of the existing Java interface cal
 `com.skobbler.ngx.config` has been renamed to `Skobbler.Ngx.Configuration` to avoid a naming warning. All other namespace names should be the same as their respective Java packages, minus the `com` prefix and capitalization.
 
 ## License ##
-Bindings provided under the MIT license. See LICENSE for details.
+Bindings & demo provided under the MIT license. See LICENSE for details.
 
 ## Thanks ##
 [Skobbler](http://www.skobbler.com/)
