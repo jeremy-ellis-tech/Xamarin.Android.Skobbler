@@ -7,13 +7,13 @@ I am not associated with either [Skobbler](http://www.skobbler.com/) or [Xamarin
 
 This repository includes a C# translation of the demo app included with the Skobbler SDK. This currently has a few bugs which I think are a result of my [mis]translation. I will be working to remove these bugs shortly.
 
-These bindings are in very early stages and have not yet been thoroughly tested.
+The bindings are in very early stages so event names may change and async methods may be added until I feel it is good enough to tag a release. Keep in mind it is a relatively big project so please have patience.
 
 ####This version currently uses v 2.3.0 of the Skobbler Android SDK.####
 
 ## Installation ##
 
-The easiest way is to add the [nuget package](https://www.nuget.org/packages/Xamarin.Android.Skobbler/). Skobbler.dll should be added to your references on installation. You can also clone this repo and build from source should you wish to remove any ABIs to cut down on assembly size.
+Clone the repo and build the Skobbler.Binding project. "Skobbler.dll" will then be found under "Xamarin.Android.Skobbler\Skobbler.Binding\bin\\[Debug|Release]\Skobbler.dll". Reference the assembly from your project. You can also remove a few ABIs should you wish to cut down on assembly size.
 
 Fantastic documentation is [available from Skobbler](http://developer.skobbler.com/getting-started/android). The main difference you will find is that get/set method pairs in Java have been changed to  C# properties. The automatic binding generation process will also add events that correspond to callback interfaces.
 
@@ -41,7 +41,7 @@ You will need to manually copy the SKMaps.zip file to your assets folder, with a
 
 ## Additions & Alterations ##
 
-I will be adding `async/await` methods on top of the existing Java interface callbacks to make things cleaner and more .NET friendly should you wish to use them. Here's an example using `NearbySearchAsync()` instead of `NearbySearch()`:
+I will be adding `async/await` methods to make things cleaner and more .NET friendly should you wish to use them. Here's an example using `NearbySearchAsync()` instead of `NearbySearch()`:
 
     try
     {
