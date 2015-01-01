@@ -7,7 +7,7 @@ I am not associated with either [Skobbler](http://www.skobbler.com/) or [Xamarin
 
 This repository includes a C# translation of the demo app included with the Skobbler SDK. This currently has a few bugs which I think are a result of my [mis]translation. I will be working to remove these bugs shortly.
 
-The bindings are in very early stages so event names may change and async methods may be added until I feel it is good enough to tag a release. Keep in mind it is a relatively big project so please have patience.
+The bindings are in very early stages so event names may change and async methods may be added until it is good enough to tag a release. Keep in mind it is a relatively big project so please have patience.
 
 ####This version currently uses v 2.3.0 of the Skobbler Android SDK.####
 
