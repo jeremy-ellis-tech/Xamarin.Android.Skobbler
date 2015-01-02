@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,16 +5,7 @@ namespace Skobbler.Ngx.Search
 {
     public partial class SKSearchManager
     {
-        private readonly ISKSearchListener _searchListener;
-        private readonly TaskCompletionSource<IList<SKSearchResult>> _taskCompletionSource;
-
-        public SKSearchManager() : this(null)
-        {
-            _taskCompletionSource = new TaskCompletionSource<IList<SKSearchResult>>();
-            _searchListener = new SKSearchListener(_taskCompletionSource);
-
-            SetSearchListener(_searchListener);
-        }
+        public SKSearchManager() : this(null) { }
 
         /// <summary>
         /// An asynchronous wrapper around Skobbler's NearbySearch()
@@ -25,14 +15,19 @@ namespace Skobbler.Ngx.Search
         /// <returns>An IList of SKSearchResult</returns>
         public async Task<IList<SKSearchResult>> NearbySearchAsync(SKNearbySearchSettings nearbySearchObj)
         {
+            var taskCompletionSource = new TaskCompletionSource<IList<SKSearchResult>>();
+            var searchListener = new SKSearchListener(taskCompletionSource);
+
+            SetSearchListener(searchListener);
+
             SKSearchStatus searchStatus = NearbySearch(nearbySearchObj);
 
             if(searchStatus != SKSearchStatus.SkSearchNoError)
             {
-                _taskCompletionSource.TrySetException(new SKSearchStatusException(searchStatus));
+                taskCompletionSource.TrySetException(new SKSearchStatusException(searchStatus));
             }
 
-            return await _taskCompletionSource.Task;
+            return await taskCompletionSource.Task;
         }
 
         /// <summary>
@@ -42,9 +37,14 @@ namespace Skobbler.Ngx.Search
         /// <returns>An IList of SKSearchResult</returns>
         public async Task<IList<SKSearchResult>> MultistepSearchAsync(SKMultiStepSearchSettings stepObject)
         {
+            var taskCompletionSource = new TaskCompletionSource<IList<SKSearchResult>>();
+            var searchListener = new SKSearchListener(taskCompletionSource);
+
+            SetSearchListener(searchListener);
+
             MultistepSearch(stepObject);
 
-            return await _taskCompletionSource.Task;
+            return await taskCompletionSource.Task;
         }
     }
 }
