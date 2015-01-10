@@ -7,25 +7,33 @@ I am not associated with either [Skobbler](http://www.skobbler.com/) or [Xamarin
 
 This repository includes a C# translation of the demo app included with the Skobbler SDK. This currently has a few bugs which I think are a result of my [mis]translation. I will be working to remove these bugs shortly.
 
-The bindings are in very early stages so event names may change and async methods may be added until it is good enough to tag a release. Keep in mind it is a relatively big project so please have patience.
+The bindings are in very early stages so event names may change and async methods may be added until it is good enough to tag a release & push out a nuget package.
 
-####This version currently uses v 2.3.0 of the Skobbler Android SDK.####
+**This version currently uses v 2.3.0 of the Skobbler Android SDK**
 
 ## Installation ##
 
-Clone the repo and build the Skobbler.Binding project. "Skobbler.dll" will then be found under "Xamarin.Android.Skobbler\Skobbler.Binding\bin\\[Debug|Release]\Skobbler.dll". Reference the assembly from your project. You can also remove a few ABIs should you wish to cut down on assembly size.
+1. Clone the repo.
+2. Build the Skobbler.Binding project.
+3. Reference "Skobbler.dll" from your project; found under `"Xamarin.Android.Skobbler\Skobbler.Binding\bin\\[Debug|Release][-$Abi]\Skobbler.dll"`
+
+There are build configurations for each ABI (x86/armeabi-v7a/armeabi) to cut down on assembly size. The Debug/Release build configurations include all 3 ABIs. If you don't know which one to select just use the Debug/Release configurations.
+
+
+## Documentation ##
 
 Fantastic documentation is [available from Skobbler](http://developer.skobbler.com/getting-started/android). The main difference you will find is that get/set method pairs in Java have been changed to  C# properties. The automatic binding generation process will also add events that correspond to callback interfaces.
 
-####The Skobbler sdk *requires* you to have a string resource called "app_name", which your manifest's application label points at. *If you do not add this your app will crash on initialization.* ####
-ie. in Resources\values\Strings.xml
+**The Skobbler sdk requires you to have a string resource called "app_name", which your manifest's application label points at. If you do not add this your app will crash on initialization.**
+
+ie. in `Resources\values\Strings.xml`
 
     <resources>
     	...
       <string name="app_name">AndroidOpenSourceDemo</string>
 		...
     </resources>
-and in Properties\AndroidManifest.xml
+and in `Properties\AndroidManifest.xml`
 
     <?xml version="1.0" encoding="utf-8"?>
     <manifest xmlns:android="http://schemas.android.com/apk/res/android" ... >
