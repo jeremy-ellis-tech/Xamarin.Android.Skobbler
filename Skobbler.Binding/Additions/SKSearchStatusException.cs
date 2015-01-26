@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Skobbler.Ngx.Search
 {
     [Serializable]
-    public class SKSearchStatusException : Exception
+    public sealed class SKSearchStatusException : Exception
     {
         private readonly SKSearchStatus _searchStatus;
 
@@ -30,7 +30,8 @@ namespace Skobbler.Ngx.Search
             _searchStatus = searchStatus;
         }
 
-        protected SKSearchStatusException(SerializationInfo info, StreamingContext context)
+        //Serializer invokes this through reflection -> can be private.
+        private SKSearchStatusException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _searchStatus = (SKSearchStatus)info.GetValue("SearchStatus", typeof(SKSearchStatus));
@@ -40,7 +41,7 @@ namespace Skobbler.Ngx.Search
         {
             if (info == null) throw new ArgumentNullException("info");
 
-            info.AddValue("SearchStatus", SearchStatus);
+            info.AddValue("SearchStatus", SearchStatus, typeof(SKSearchStatus));
 
             base.GetObjectData(info, context);
         }
