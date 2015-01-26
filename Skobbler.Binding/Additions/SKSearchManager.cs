@@ -24,7 +24,7 @@ namespace Skobbler.Ngx.Search
 
             if(searchStatus != SKSearchStatus.SkSearchNoError)
             {
-                taskCompletionSource.TrySetException(new SKSearchStatusException(searchStatus));
+                taskCompletionSource.TrySetException(new SKSearchStatusException(searchStatus, "The search status returned by NearbySearch is not SKSearchNoError"));
             }
 
             return await taskCompletionSource.Task;

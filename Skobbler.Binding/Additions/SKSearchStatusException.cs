@@ -6,15 +6,43 @@ namespace Skobbler.Ngx.Search
     [Serializable]
     public class SKSearchStatusException : Exception
     {
-        public SKSearchStatus SearchStatus { get; private set; }
+        private readonly SKSearchStatus _searchStatus;
 
-        public SKSearchStatusException(SKSearchStatus searchStatus)
+        public SKSearchStatus SearchStatus
         {
-            SearchStatus = searchStatus;
+            get { return _searchStatus; }
         }
 
-        public SKSearchStatusException(string message) : base(message) { }
-        public SKSearchStatusException(string message, Exception inner) : base(message, inner) { }
-        protected SKSearchStatusException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        internal SKSearchStatusException(SKSearchStatus searchStatus)
+        {
+            _searchStatus = searchStatus;
+        }
+
+        internal SKSearchStatusException(SKSearchStatus searchStatus, string message)
+            : base(message)
+        {
+            _searchStatus = searchStatus;
+        }
+
+        internal SKSearchStatusException(SKSearchStatus searchStatus, string message, Exception inner)
+            : base(message, inner)
+        {
+            _searchStatus = searchStatus;
+        }
+
+        protected SKSearchStatusException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            _searchStatus = (SKSearchStatus)info.GetValue("SearchStatus", typeof(SKSearchStatus));
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null) throw new ArgumentNullException("info");
+
+            info.AddValue("SearchStatus", SearchStatus);
+
+            base.GetObjectData(info, context);
+        }
     }
 }
