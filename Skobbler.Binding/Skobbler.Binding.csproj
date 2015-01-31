@@ -34,7 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-armeabi|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|armeabi'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-armeabi\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -43,7 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-armeabi-v7a|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|armeabi-v7a'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-armeabi-v7a\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -52,7 +52,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-x86|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug-x86\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -61,7 +61,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-armeabi|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|armeabi'">
     <OutputPath>bin\Release-armeabi\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
@@ -70,7 +70,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-armeabi-v7a|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|armeabi-v7a'">
     <OutputPath>bin\Release-armeabi-v7a\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
@@ -79,7 +79,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-x86|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\Release-x86\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
@@ -102,19 +102,14 @@
     <Compile Include="Additions\SKVersioningManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug-x86' Or '$(Configuration)' == 'Release-x86'">
+  <ItemGroup Condition=" '$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU'">
     <EmbeddedNativeLibrary Include="Jars\x86\libngnative.so" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug-armeabi' Or '$(Configuration)' == 'Release-armeabi'">
+  <ItemGroup Condition=" '$(Platform)' == 'armeabi' Or '$(Platform)' == 'AnyCPU'">
     <EmbeddedNativeLibrary Include="Jars\armeabi\libngnative.so" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug-armeabi-v7a' Or '$(Configuration)' == 'Release-armeabi-v7a'">
+  <ItemGroup Condition=" '$(Platform)' == 'armeabi-v7a' Or '$(Platform)' == 'AnyCPU'">
     <EmbeddedNativeLibrary Include="Jars\armeabi-v7a\libngnative.so" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Release'">
-    <EmbeddedNativeLibrary Include="Jars\armeabi-v7a\libngnative.so" />
-    <EmbeddedNativeLibrary Include="Jars\armeabi\libngnative.so" />
-    <EmbeddedNativeLibrary Include="Jars\x86\libngnative.so" />
   </ItemGroup>
   <ItemGroup>
 	<None Include="Jars\docs\META-INF\MANIFEST.MF" />

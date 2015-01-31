@@ -5,19 +5,17 @@ Xamarin.Android.Skobbler
 
 I am not associated with either [Skobbler](http://www.skobbler.com/) or [Xamarin .inc](http://xamarin.com/). All rights belong to their respective owners.
 
-This repository includes a C# translation of the demo app included with the Skobbler SDK. This currently has a few bugs which I think are a result of my [mis]translation. I will be working to remove these bugs shortly.
+This repository includes a C# translation of the demo included with the Skobbler SDK. This currently has a few small bugs which are probably a result of my [mis]translation. Raise an issue or send a pull request if you would like these fixed ASAP.
 
-The bindings are in very early stages so event names may change and async methods may be added until it is good enough to tag a release & push out a nuget package.
-
-**This version currently uses v 2.3.0 of the Skobbler Android SDK**
+**Xamarin.Android.Skobbler currently uses v 2.3.0 of the Skobbler Android SDK**
 
 ## Installation ##
 
 1. Clone the repo.
 2. Build the Skobbler.Binding project.
-3. Reference "Skobbler.dll" from your project; found under `"Xamarin.Android.Skobbler\Skobbler.Binding\bin\\[Debug|Release][-$Abi]\Skobbler.dll"`
+3. Reference "Skobbler.dll" from your project; found under `"Xamarin.Android.Skobbler\Skobbler.Binding\bin\[Debug|Release][-$ABI]\Skobbler.dll"`
 
-There are build configurations for each ABI (x86/armeabi-v7a/armeabi) to cut down on assembly size. The Debug/Release build configurations include all 3 ABIs. If you don't know which one to select just use the Debug/Release configurations.
+There are platform configurations for each native library ABI (`x86`, `armeabi-v7a` & `armeabi`). The `AnyCPU` platform configuration includes all 3 ABIs at the cost of a larger assembly (~5MB for specific platforms and ~11MB for any cpu). If you don't know which platform to select just use `AnyCPU`.
 
 
 ## Documentation ##
@@ -49,7 +47,7 @@ You will need to manually copy the SKMaps.zip file to your assets folder, with a
 
 ## Additions & Alterations ##
 
-I will be adding `async/await` methods to make things cleaner and more .NET friendly should you wish to use them. Here's an example using `NearbySearchAsync()` instead of `NearbySearch()`:
+I have added `async/await` methods to make things cleaner and more .NET friendly should you wish to use them. Here's an example using `NearbySearchAsync()` instead of `NearbySearch()`:
 
     try
     {
