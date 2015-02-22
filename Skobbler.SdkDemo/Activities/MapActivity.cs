@@ -23,7 +23,7 @@ using System.Collections.Generic;
 namespace Skobbler.SdkDemo.Activities
 {
     [Activity(Label = "MapActivity", ConfigurationChanges = ConfigChanges.Orientation)]
-    class MapActivity : Activity, ISKMapSurfaceListener, ISKCurrentPositionListener, ISKPOITrackerListener, ISKMapUpdateListener, ISKRealReachListener, ISensorListener, ISKNavigationListener, ISKRouteListener
+    class MapActivity : Activity, ISKMapSurfaceListener, ISKCurrentPositionListener, ISKPOITrackerListener, ISKMapUpdateListener, ISKRealReachListener, ISensorEventListener, ISKNavigationListener, ISKRouteListener
     {
         public const int Tracks = 1;
 
@@ -233,7 +233,7 @@ namespace Skobbler.SdkDemo.Activities
         {
             SensorManager sensorManager = GetSystemService(Context.SensorService) as SensorManager;
             Sensor orientationSensor = sensorManager.GetDefaultSensor(SensorType.Orientation);
-            sensorManager.RegisterListener(this, (int)orientationSensor, SensorDelay.Ui);
+            sensorManager.RegisterListener(this, orientationSensor, SensorDelay.Ui);
         }
 
         protected override void OnPause()
@@ -1185,13 +1185,13 @@ namespace Skobbler.SdkDemo.Activities
             _mapView.FitRealReachInView(xMin, xMax, yMin, yMax, false, 0);
         }
 
-        public void OnAccuracyChanged(SensorType sensor, SensorStatus accuracy)
+        public void OnAccuracyChanged(Sensor sensor, SensorStatus accuracy)
         {
         }
 
-        public void OnSensorChanged(SensorType sensor, float[] values)
+        public void OnSensorChanged(SensorEvent e)
         {
-            _mapView.ReportNewHeading(values[0]);
+            _mapView.ReportNewHeading(e.Values[0]);
         }
 
         public void OnDestinationReached()
