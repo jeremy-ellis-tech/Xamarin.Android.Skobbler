@@ -15,12 +15,7 @@ This repository includes a C# translation of the demo included with the Skobbler
 2. Build the Skobbler.Binding project.
 3. Reference "Skobbler.dll" from your project; found under `"Xamarin.Android.Skobbler\Skobbler.Binding\bin\[Debug|Release][-$ABI]\Skobbler.dll"`
 
-There are platform configurations for each native library ABI (`x86`, `armeabi-v7a` & `armeabi`). The `AnyCPU` platform configuration includes all 3 ABIs at the cost of a larger assembly (~5MB for specific platforms and ~11MB for any cpu). If you don't know which platform to select just use `AnyCPU`.
-
-
-## Documentation ##
-
-Fantastic documentation is [available from Skobbler](http://developer.skobbler.com/getting-started/android). The main difference you will find is that get/set method pairs in Java have been changed to  C# properties. The automatic binding generation process will also add events that correspond to callback interfaces.
+There are platform configurations for each native library ABI (`x86`, `armeabi-v7a` & `armeabi`). The `AnyCPU` platform configuration includes all 3 ABIs at the cost of a larger assembly (~5MB for specific platforms and ~11MB for AnyCPU). If you don't know which platform to select just use `AnyCPU`.
 
 **The Skobbler sdk requires you to have a string resource called "app_name", which your manifest's application label points at. If you do not add this your app will crash on initialization.**
 
@@ -41,6 +36,11 @@ and in `Properties\AndroidManifest.xml`
 
 
 
+
+## Documentation ##
+
+Fantastic documentation is [available from Skobbler](http://developer.skobbler.com/getting-started/android). The main difference you will find is that get/set method pairs in Java have been changed to  C# properties. The automatic binding generation process will also add events that correspond to callback interfaces.
+
 ## Assets ##
 
 You will need to manually copy the SKMaps.zip file to your assets folder, with a build configuration of an Android asset. The zip is available in the Android SDK from [Skobbler](http://developer.skobbler.com/support#download). See the demo app for an example.
@@ -60,6 +60,15 @@ I have added `async/await` methods to make things cleaner and more .NET friendly
 	}
     
 `com.skobbler.ngx.config` has been renamed to `Skobbler.Ngx.Configuration` to avoid a naming warning. All other namespace names should be the same as their respective Java packages, minus the `com` prefix and capitalization.
+
+## Demo App Screenshots ##
+
+![Map Activity](Skobbler.SdkDemo/Screenshots/MapActivity.png)
+![Map Styles](Skobbler.SdkDemo/Screenshots/MapStyleNight.png)
+![Simulated Navigation](Skobbler.SdkDemo/Screenshots/Navigation.png)
+![Real Reach](Skobbler.SdkDemo/Screenshots/RealReach.png)
+![Heat Map](Skobbler.SdkDemo/Screenshots/HeatMap.png)
+![Map Overlays](Skobbler.SdkDemo/Screenshots/MapOverlays.png)
 
 ## License ##
 Bindings & demo provided under the MIT license. See LICENSE for details.
