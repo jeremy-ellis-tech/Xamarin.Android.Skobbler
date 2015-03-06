@@ -63,12 +63,12 @@ Namespaces should be the same as their respective Java packages, minus the `com`
 
 ## Demo App Screenshots ##
 
-![Map Activity](Skobbler.SdkDemo/Screenshots/MapActivity.png)
-![Map Styles](Skobbler.SdkDemo/Screenshots/MapStyleNight.png)
-![Simulated Navigation](Skobbler.SdkDemo/Screenshots/Navigation.png)
-![Real Reach](Skobbler.SdkDemo/Screenshots/RealReach.png)
-![Heat Map](Skobbler.SdkDemo/Screenshots/HeatMap.png)
-![Map Overlays](Skobbler.SdkDemo/Screenshots/MapOverlays.png)
+![Map Activity](docs/Screenshots/MapActivity.png)
+![Map Styles](docs/Screenshots/MapStyleNight.png)
+![Simulated Navigation](docs/Screenshots/Navigation.png)
+![Real Reach](docs/Screenshots/RealReach.png)
+![Heat Map](docs/Screenshots/HeatMap.png)
+![Map Overlays](docs/Screenshots/MapOverlays.png)
 
 ## License ##
 Bindings & demo provided under the MIT license. See LICENSE for details.
