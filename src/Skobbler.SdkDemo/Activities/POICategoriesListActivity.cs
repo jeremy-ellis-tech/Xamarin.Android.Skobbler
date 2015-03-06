@@ -9,7 +9,7 @@ using Skobbler.Ngx;
 using Skobbler.Ngx.Util;
 using System.Collections.Generic;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "POICategoriesListActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class POICategoriesListActivity : Activity

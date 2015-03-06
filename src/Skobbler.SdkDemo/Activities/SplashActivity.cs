@@ -9,13 +9,13 @@ using Skobbler.Ngx.Map;
 using Skobbler.Ngx.Navigation;
 using Skobbler.Ngx.Util;
 using Skobbler.Ngx.Versioning;
-using Skobbler.SdkDemo.Application;
-using Skobbler.SdkDemo.Util;
+using Skobbler.SDKDemo.Application;
+using Skobbler.SDKDemo.Util;
 using System.Threading.Tasks;
 using Exception = System.Exception;
 using String = System.String;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "Skobbler.Demo", MainLauncher = true, Icon = "@drawable/ic_launcher")]
     public class SplashActivity : Activity, ISKPrepareMapTextureListener, ISKMapUpdateListener

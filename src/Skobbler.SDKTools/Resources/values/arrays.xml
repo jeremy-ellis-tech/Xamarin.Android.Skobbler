@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="road_blocks_in_meters">
+        <item>@string/unblock_all</item>
+        <item>100 m</item>
+        <item>500 m</item>
+        <item>2 km</item>
+        <item>5 km</item>
+        <item>10 km</item>
+        <item>15 km</item>
+    </string-array>
+    <string-array name="road_blocks_in_feet">
+        <item>@string/unblock_all</item>
+        <item>300 ft</item>
+        <item>1500 ft</item>
+        <item>1 mi</item>
+        <item>3 mi</item>
+        <item>6 mi</item>
+        <item>10 mi</item>
+    </string-array>
+    <string-array name="road_blocks_in_yards">
+        <item>@string/unblock_all</item>
+        <item>100 yd</item>
+        <item>500 yd</item>
+        <item>1 mi</item>
+        <item>3 mi</item>
+        <item>6 mi</item>
+        <item>10 mi</item>
+    </string-array>
+
+</resources>

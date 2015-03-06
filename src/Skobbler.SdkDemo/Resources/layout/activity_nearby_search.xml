@@ -108,7 +108,7 @@
                 android:layout_below="@id/longitude_field"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
-                android:onClick="OnClick"
+                android:onClick="onClick"
                 android:text="@string/search" />
         </RelativeLayout>
     </ScrollView>

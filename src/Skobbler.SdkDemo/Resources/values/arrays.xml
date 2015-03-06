@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_types">
+        <item>@string/route_type_car_shortest</item>
+        <item>@string/route_type_car_fastest</item>
+        <item>@string/route_type_car_efficient</item>
+        <item>@string/route_type_pedestrian</item>
+        <item>@string/route_type_bicycle_fast</item>
+        <item>@string/route_type_bicycle_short</item>
+        <item>@string/route_type_bicycle_quiet</item>
+    </string-array>
+    <string-array name="route_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="distance_unit">
+        <item>@string/km_m</item>
+        <item>@string/mi_feet</item>
+        <item>@string/mi_yards</item>
+    </string-array>
+    <string-array name="distance_unit_values">
+        <item>0</item>
+        <!-- KM - m -->
+        <item>1</item>
+        <!-- Miles / feet -->
+        <item>2</item>
+        <!-- Feet / yards -->
+    </string-array>
+    <string-array name="number_routes">
+        <item>@string/one_route</item>
+        <item>@string/two_routes</item>
+        <item>@string/three_routes</item>
+    </string-array>
+    <string-array name="number_routes_values">
+        <item>0</item>
+        <!-- 1 route -->
+        <item>1</item>
+        <!-- 2 routes -->
+        <item>2</item>
+        <!-- 3 routes -->
+    </string-array>
+    <string-array name="navigation_type">
+        <item>@string/real_navigation</item>
+        <item>@string/simulation_navigation</item>
+    </string-array>
+    <string-array name="navigation_type_value">
+        <item>0</item>
+        <!-- real -->
+        <item>1</item>
+        <!-- simulation -->
+    </string-array>
+
+
+
+</resources>

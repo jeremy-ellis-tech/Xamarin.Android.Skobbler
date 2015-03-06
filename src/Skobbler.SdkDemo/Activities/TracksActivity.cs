@@ -6,7 +6,7 @@ using Android.OS;
 using Android.Views;
 using Java.Interop;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "TracksActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class TracksActivity : Activity

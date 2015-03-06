@@ -1,10 +1,10 @@
 using Android.App;
 using Android.Runtime;
-using Skobbler.SdkDemo.Model;
+using Skobbler.SDKDemo.Model;
 using System;
 using System.Collections.Generic;
 
-namespace Skobbler.SdkDemo.Application
+namespace Skobbler.SDKDemo.Application
 {
     [Application]
     class DemoApplication : Android.App.Application

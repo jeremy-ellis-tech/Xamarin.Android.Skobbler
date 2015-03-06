@@ -8,7 +8,7 @@ using System.IO;
 using System.Text;
 using File = Java.IO.File;
 
-namespace Skobbler.SdkDemo.Util
+namespace Skobbler.SDKDemo.Util
 {
     static class DemoUtils
     {

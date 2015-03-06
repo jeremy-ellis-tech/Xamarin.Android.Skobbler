@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/navigation_free_drive_speed_limit_panel"
+        android:layout_width="@dimen/navigation_panel_landscape_height"
+        android:layout_height="@dimen/navigation_panel_landscape_height"
+        android:clickable="true"
+        android:visibility="gone"
+        android:background="@color/gray">
+
+        <ImageView
+            android:id="@+id/navigation_speed_sign_image"
+            android:layout_width="@dimen/navigation_speed_limit_speed_cam"
+            android:layout_height="@dimen/navigation_speed_limit_speed_cam"
+            android:layout_centerInParent="true"
+            android:background="@drawable/background_speed_sign" />
+
+        <ImageView
+            android:id="@+id/navigation_alert_sign_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_alert_exclamationmark"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/speed_limit_value"
+            style="@style/pre_navigation_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/black"
+            android:textSize="25dp" />
+
+        <View
+            android:layout_width="70dp"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/free_drive_current_speed_linear_layout"
+        android:layout_below="@id/navigation_free_drive_speed_limit_panel"
+        android:layout_width="@dimen/navigation_panel_landscape_height"
+        android:layout_height="@dimen/navigation_bottom_panel_height"
+        android:background="@color/gray"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/free_drive_current_speed_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_view_medium"
+            tools:text="120" />
+
+        <TextView
+            android:id="@+id/free_drive_current_speed_text_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_view_medium"
+            tools:text="km/h" />
+    </LinearLayout>
+
+
+</RelativeLayout>

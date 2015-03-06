@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="@dimen/navigation_panel_landscape_height"
+        android:layout_height="@dimen/navigation_bottom_panel_height"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/arriving_time_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_view_medium"
+            android:textColor="@color/white"
+            tools:text="09:20" />
+
+        <TextView
+            android:id="@+id/arriving_time_text_ampm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/text_view_medium"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:drawableLeft="@drawable/bullet_gray"
+            android:drawableRight="@drawable/bullet_green"
+            android:text="@string/hour_value"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

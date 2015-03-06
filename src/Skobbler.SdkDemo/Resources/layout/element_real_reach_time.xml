@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="0.6" >
+
+            <TextView
+                android:id="@+id/time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Time"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/real_reach_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:text="0 min"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:id="@+id/real_reach_seekbar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:max="60"
+                android:progress="0" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.4"
+            android:orientation="horizontal"
+            android:paddingTop="2dp"
+            android:weightSum="1" >
+
+            <ImageButton
+                android:id="@+id/real_reach_pedestrian_button"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="-4dp"
+                android:layout_marginRight="-4dp"
+                android:layout_weight="0.33"
+                android:clickable="true"
+                android:background="@color/blue_filling"
+                android:onClick="onClick"
+                android:src="@drawable/icon_dropdownmenu_pedestrian" />
+
+            <ImageButton
+                android:id="@+id/real_reach_bike_button"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="-4dp"
+                android:layout_marginRight="-4dp"
+                android:layout_weight="0.33"
+                android:clickable="true"
+                android:background="@color/grey"
+                android:onClick="onClick"
+                android:src="@drawable/icon_dropdownmenu_bike" />
+
+            <ImageButton
+                android:id="@+id/real_reach_car_button"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="-4dp"
+                android:layout_marginRight="-4dp"
+                android:layout_weight="0.33"
+                android:clickable="true"
+                android:background="@color/grey"
+                android:onClick="onClick"
+                android:src="@drawable/icon_dropdownmenu_car" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/exit_real_reach_time"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="Exit"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>

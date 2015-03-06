@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 
-namespace Skobbler.SdkDemo.Model
+namespace Skobbler.SDKDemo.Model
 {
     class DownloadPackage
     {

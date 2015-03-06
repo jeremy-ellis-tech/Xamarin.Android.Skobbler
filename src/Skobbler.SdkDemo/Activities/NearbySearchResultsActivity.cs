@@ -9,7 +9,7 @@ using Skobbler.Ngx.Search;
 using System;
 using System.Collections.Generic;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "NearbySearchresultsActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class NearbySearchResultsActivity : Activity, ISKSearchListener

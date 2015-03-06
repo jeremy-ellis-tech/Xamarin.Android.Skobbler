@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/road_block_relative_layout"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:background="@color/navigation_style_day"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/roadblock_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@android:color/transparent"
+            android:listSelector="@android:color/transparent" />
+    </RelativeLayout>
+</RelativeLayout>

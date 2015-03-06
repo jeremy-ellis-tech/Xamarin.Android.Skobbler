@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+
+    <string name="cancel_label">Cancel</string>
+    <string name="ok_label">OK</string>
+    <string name="hour_value">h</string>
+    <string name="minute_value">min</string>
+    <string name="seconds_value">s</string>
+    <string name="kmh_label">km/h</string>
+    <string name="mph_label">mph</string>
+    <string name="meters_label">m</string>
+    <string name="mi_label">mi</string>
+    <string name="feet_label">ft</string>
+    <string name="km_label">km</string>
+    <string name="yards_label">yd</string>
+
+    <string name="exit_highway_advice_label">Exit</string>
+    <string name="destination_label">Destination</string>
+    <string name="starting_pos_label">Starting position</string>
+    <string name="re_routing">Rerouting in progress</string>
+    <string name="settings_label">Settings</string>
+    <string name="quit_navigation">Quit navigation</string>
+    <string name="via_point_reached"> Intermediate destination reached</string>
+    <string name="increase_speed">Increase\n simulation speed</string>
+    <string name="decrease_speed">Decrease\n simulation speed</string>
+
+    <string name="searching_for_gps_label">Searching for GPS signal</string>
+    <string name="exit_navigation_dialog_message">Do you really want to abort the navigation?</string>
+    <string name="exit_navigation_dialog_title">Really quit?</string>
+    <string name="destination_reached_info_text">You have reached your destination</string>
+    <string name="no_position_available">Current position is not available</string>
+
+    <!-- Route statuses messages -->
+    <string name="route_same_start_and_destination">The start and destination points are identical.</string>
+    <string name="route_invalid_destination">Invalid destination point</string>
+    <string name="route_invalid_start">Invalid starting point</string>
+    <string name="route_unknown_server_error">Route unknown server error</string>
+    <string name="route_cannot_be_calculated">Route cannot be calculated.</string>
+    <string name="routing_server_error">Routing error</string>
+
+    <!-- Settings items -->
+    <string name="navigate_settings_overview">Overview</string>
+    <string name="navigate_settings_audio_off">Audio off</string>
+    <string name="navigate_settings_audio_on">Audio on</string>
+    <string name="navigate_settings_nightmode">Night mode</string>
+    <string name="navigate_settings_daymode">Day mode</string>
+    <string name="navigate_settings_reload">Reload</string>
+    <string name="navigate_settings_routeinfo">Route info</string>
+    <string name="navigate_settings_panning">Panning</string>
+    <string name="navigate_settings_2d_view">2D</string>
+    <string name="navigate_settings_3d_view">3D</string>
+    <string name="navigate_settings_volume">Volume</string>
+    <string name="navigate_settings_quit">Quit</string>
+    <string name="navigate_settings_block_road">Block road</string>
+    <string name="current_position">Current position</string>
+    <string name="unblock_all">Unblock all</string>
+
+    <!-- Pre navigation items-->
+    <string name="start_prim_navigation">Start navigation</string>
+    <string name="distance_time">Loading...</string>
+    <string name="less"><![CDATA[<]]></string>
+    <string name="more"><![CDATA[>]]></string>
+
+    <string name="download_start">START</string>
+    <string name="download_cancel">CANCEL</string>
+    <string name="download_pause">PAUSE</string>
+    <string name="download_resume">RESUME</string>
+</resources>

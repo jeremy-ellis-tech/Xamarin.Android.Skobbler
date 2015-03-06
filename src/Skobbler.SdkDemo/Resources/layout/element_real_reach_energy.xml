@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <Button
+        android:id="@+id/exit_real_reach_energy"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="Exit"
+        android:layout_below="@+id/real_reach_energy_seekbar"
+        android:layout_alignParentRight="true" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/exit_real_reach_energy"
+        android:layout_alignParentLeft="true"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="0.6" >
+
+            <TextView
+                android:id="@+id/time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Energy"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/real_reach_energy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:text="0%"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/real_reach_energy_seekbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="0"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="50dp"
+        android:layout_toLeftOf="@+id/exit_real_reach_energy" />
+
+</RelativeLayout>

@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map_layout_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#80000000" >
+        android:background="#80000000">
 
         <com.skobbler.ngx.map.SKMapViewHolder
             android:id="@+id/view_group_map"
@@ -19,17 +19,27 @@
             android:id="@+id/chess_board_background"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/map_background" >
+            android:background="@drawable/map_background">
+
+
         </RelativeLayout>
     </FrameLayout>
 
     <include
-        android:id="@+id/real_reach_layout"
+        android:id="@+id/real_reach_time_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
-        layout="@layout/element_real_reach"
+        layout="@layout/element_real_reach_time"
         android:visibility="gone" />
+
+    <include
+        android:id="@+id/real_reach_energy_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        layout="@layout/element_real_reach_energy"
+        android:visibility="gone"/>
 
     <include
         android:id="@+id/options_menu"
@@ -54,6 +64,13 @@
         layout="@layout/layout_map_styles"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/navigation_ui_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/layout_navigation_ui"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/bottom_button"
         style="@style/button_style"
@@ -65,16 +82,14 @@
         style="@style/button_style"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
-        android:text="@string/label_position_me"
-        android:visibility="gone" />
+        android:text="@string/label_position_me" />
 
     <Button
         android:id="@+id/heading_button"
         style="@style/button_style"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:text="@string/label_heading"
-        android:visibility="gone" />
+        android:text="@string/label_heading" />
 
     <ImageView
         android:id="@+id/customView"

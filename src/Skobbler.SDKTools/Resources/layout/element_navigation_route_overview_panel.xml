@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:clickable="true">
+
+    <LinearLayout
+        android:id="@+id/navigation_route_overview_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:background="@color/navigation_style_day"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/navigation_route_overview_starting_position_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/navigation_route_overview_current_position_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/starting_pos_label"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_view_large" />
+
+            <TextView
+                android:id="@+id/navigation_route_overview_current_position_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/navigation_route_overview_current_position_label"
+                android:maxLines="3"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_view_medium" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/navigation_route_overview_destination_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/navigation_semitransparent_separator" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/navigation_route_overview_destination_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/destination_label"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_view_large" />
+
+                <TextView
+                    android:id="@+id/navigation_route_overview_destination_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/navigation_route_overview_destination_label"
+                    android:maxLines="3"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_view_medium" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

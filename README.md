@@ -7,7 +7,7 @@ I am not associated with either [Skobbler](http://www.skobbler.com/) or [Xamarin
 
 This repository includes a C# translation of the demo included with the Skobbler SDK. This currently has a few small bugs which are probably a result of my [mis]translation. Raise an issue or send a pull request if you would like these fixed ASAP.
 
-**Xamarin.Android.Skobbler currently uses v 2.3.0 of the Skobbler Android SDK**
+**Xamarin.Android.Skobbler currently uses v2.4.0 of the Skobbler Android SDK**
 
 ## Installation ##
 
@@ -59,7 +59,7 @@ I have added `async/await` methods to make things cleaner and more .NET friendly
 		//Catch invalid search status here.
 	}
     
-`com.skobbler.ngx.config` has been renamed to `Skobbler.Ngx.Configuration` to avoid a naming warning. All other namespace names should be the same as their respective Java packages, minus the `com` prefix and capitalization.
+Namespaces should be the same as their respective Java packages, minus the `com` prefix and capitalization.
 
 ## Demo App Screenshots ##
 

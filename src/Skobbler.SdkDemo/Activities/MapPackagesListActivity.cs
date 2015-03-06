@@ -4,12 +4,12 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
-using Skobbler.SdkDemo.Application;
-using Skobbler.SdkDemo.Model;
+using Skobbler.SDKDemo.Application;
+using Skobbler.SDKDemo.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "MapPackagesListActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class MapPackagesListActivity : Activity

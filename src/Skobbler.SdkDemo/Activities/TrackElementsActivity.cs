@@ -5,11 +5,11 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Skobbler.Ngx.Tracks;
-using Skobbler.SdkDemo.Application;
+using Skobbler.SDKDemo.Application;
 using System;
 using System.Collections.Generic;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "TrackElementsActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class TrackElementsActivity : Activity

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/menu_back_follower_mode_button"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130dp"
+        android:text="@string/less" />
+
+    <RelativeLayout
+        android:id="@+id/increase_decrease_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130dp"
+        android:layout_toRightOf="@id/menu_back_follower_mode_button">
+
+        <Button
+            android:id="@+id/navigation_increase_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/increase_speed" />
+
+        <Button
+            android:id="@+id/navigation_decrease_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/navigation_increase_speed"
+            android:padding="10dp"
+            android:text="@string/decrease_speed" />
+    </RelativeLayout>
+</RelativeLayout>

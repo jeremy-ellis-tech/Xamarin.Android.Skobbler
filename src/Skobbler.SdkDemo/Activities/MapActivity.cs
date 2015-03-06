@@ -16,11 +16,11 @@ using Skobbler.Ngx.Positioner;
 using Skobbler.Ngx.Routing;
 using Skobbler.Ngx.Util;
 using Skobbler.Ngx.Versioning;
-using Skobbler.SdkDemo.Application;
-using Skobbler.SdkDemo.Util;
+using Skobbler.SDKDemo.Application;
+using Skobbler.SDKDemo.Util;
 using System.Collections.Generic;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "MapActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     class MapActivity : Activity, ISKMapSurfaceListener, ISKCurrentPositionListener, ISKPOITrackerListener, ISKMapUpdateListener, ISKRealReachListener, ISensorEventListener, ISKNavigationListener, ISKRouteListener

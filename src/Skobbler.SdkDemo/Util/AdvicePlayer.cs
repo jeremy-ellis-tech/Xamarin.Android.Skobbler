@@ -5,7 +5,7 @@ using Skobbler.Ngx.Navigation;
 using System;
 
 
-namespace Skobbler.SdkDemo.Util
+namespace Skobbler.SDKDemo.Util
 {
     class AdvicePlayer
     {

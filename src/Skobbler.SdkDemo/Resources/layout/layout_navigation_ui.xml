@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/navigation_ui_back_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="@string/less"
+        android:onClick="onClick" />
+
+    <LinearLayout
+        android:id="@+id/navigation_ui_buttons"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/navigation_ui_back_button">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/select_start_point_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:textOff="@string/start_point_nav"
+                android:textOn="@string/start_point_nav" />
+
+            <ToggleButton
+                android:id="@+id/select_end_point_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textOff="@string/end_point_nav"
+                android:textOn="@string/end_point_nav" />
+        </LinearLayout>
+
+        <ToggleButton
+            android:id="@+id/select_via_point_button"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:checked="false"
+            android:textOn="@string/select_via_point"
+            android:textOff="@string/select_via_point" />
+
+        <Button
+            android:id="@+id/clear_via_point_button"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:visibility="gone"
+            android:text="@string/clear_via_point" />
+
+        <Button
+            android:id="@+id/calculate_routes_button"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:text="@string/calculate_routes" />
+
+        <Button
+            android:id="@+id/start_free_drive_button"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:text="@string/start_free_drive" />
+
+        <Button
+            android:id="@+id/settings_button"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:onClick="onClick"
+            android:text="@string/settings_nav_ui" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/position_me_navigation_ui_button"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:src="@drawable/icon_position_me"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
+
+</RelativeLayout>

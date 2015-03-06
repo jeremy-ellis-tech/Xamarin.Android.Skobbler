@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JavaObject = Java.Lang.Object;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "OfflineAddressSearchActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class OfflineAddressSearchActivity : Activity, ISKSearchListener

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- panel sizes-->
+    <dimen name="navigation_current_advice_panel_landscape_height">70dp</dimen>
+    <dimen name="navigation_next_advice_panel_portrait_height">40dp</dimen>
+    <dimen name="navigation_current_advice_panel_portrait_width">100dp</dimen>
+
+    <!-- image sizes-->
+    <dimen name="navigation_current_image_portrait">65dp</dimen>
+    <dimen name="navigation_speed_limit_speed_cam">60dp</dimen>
+    <dimen name="navigation_current_image_landscape">60dp</dimen>
+    <dimen name="navigation_next_image_portrait">30dp</dimen>
+    <dimen name="navigation_next_image_landscape">35dp</dimen>
+    <!-- bottom panel text view sizes-->
+    <dimen name="navigation_bottom_text_title_size">23dp</dimen>
+    <dimen name="navigation_bottom_text_sub_title_size">14dp</dimen>
+    <dimen name="navigation_panel_landscape_height">70dp</dimen>
+    <dimen name="navigation_panel_landscape_width">90dp</dimen>
+    <dimen name="action_bar_size">48dp</dimen>
+    <dimen name="promotion_progress_wheel">190dp</dimen>
+    <dimen name="alternate_routes_top_bar_size">54dp</dimen>
+    <dimen name="alternate_routes_total_delay_panel_size">35dp</dimen>
+    <dimen name="map_controls_button_size">40dp</dimen>
+    <dimen name="map_controls_background_size">199dp</dimen>
+
+
+
+    <dimen name="text_view_small">14sp</dimen>
+    <dimen name="text_view_medium">18sp</dimen>
+    <dimen name="text_view_large">22sp</dimen>
+    <dimen name="navigation_panel_width_height">70dp</dimen>
+    <dimen name="navigation_bottom_panel_height">50dp</dimen>
+
+
+
+</resources>

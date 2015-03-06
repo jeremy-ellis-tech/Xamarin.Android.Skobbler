@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="70dp"
+    android:background="@color/white"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/navigation_settings_option_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_view_medium"
+        android:background="@color/white"
+        android:gravity="center"
+        android:clickable="true"
+        android:text="@string/settings_label" />
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/gray" />
+
+    <TextView
+        android:id="@+id/navigation_contribute_option_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_view_medium"
+        android:background="@color/white"
+        android:gravity="center"
+        android:clickable="true"
+        android:text="@string/quit_navigation" />
+</LinearLayout>
+

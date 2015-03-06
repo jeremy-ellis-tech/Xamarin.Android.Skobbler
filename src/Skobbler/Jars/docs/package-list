@@ -1,0 +1,17 @@
+com.skobbler.ngx
+com.skobbler.ngx.cache
+com.skobbler.ngx.map
+com.skobbler.ngx.map.realreach
+com.skobbler.ngx.navigation
+com.skobbler.ngx.packages
+com.skobbler.ngx.poitracker
+com.skobbler.ngx.positioner
+com.skobbler.ngx.positioner.logging
+com.skobbler.ngx.reversegeocode
+com.skobbler.ngx.routing
+com.skobbler.ngx.search
+com.skobbler.ngx.tile
+com.skobbler.ngx.tracks
+com.skobbler.ngx.trail
+com.skobbler.ngx.util
+com.skobbler.ngx.versioning

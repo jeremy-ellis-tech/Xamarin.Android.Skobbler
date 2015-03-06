@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListPreference
+        android:key="pref_route_type"
+        android:title="Route Type"
+        android:entries="@array/route_types"
+        android:entryValues="@array/route_values"
+        android:defaultValue="2"
+        android:summary="%s" />
+
+    <ListPreference
+        android:key="pref_distance_format"
+        android:title="Distance format"
+        android:entries="@array/distance_unit"
+        android:entryValues="@array/distance_unit_values"
+        android:summary="%s" />
+
+    <ListPreference
+        android:key="pref_navigation_types"
+        android:title="Navigation type"
+        android:entries="@array/navigation_type"
+        android:entryValues="@array/navigation_type_value"
+        android:defaultValue="1"
+        android:summary="%s" />
+
+    <ListPreference
+        android:key="pref_speed_warnings_in_town"
+        android:title="Speed warnings in town"
+        android:summary="%s" />
+
+    <ListPreference
+        android:key="pref_speed_warnings_out_town"
+        android:title="Speed warnings out of town"
+        android:summary="%s" />
+
+    <CheckBoxPreference
+        android:key="check_pref_automatic_day_night"
+        android:title="Automatic day/night"
+        android:defaultValue="true" />
+
+    <CheckBoxPreference
+        android:key="check_pref_avoid_toll_roads"
+        android:title="Avoid toll roads"
+        android:defaultValue="false" />
+
+    <CheckBoxPreference
+        android:key="check_pref_avoid_ferries"
+        android:title="Avoid ferries"
+        android:defaultValue="false" />
+
+    <CheckBoxPreference
+        android:key="check_pref_avoid_highways"
+        android:title="Avoid highways"
+        android:defaultValue="false" />
+
+    <CheckBoxPreference
+        android:key="check_pref_free_drive"
+        android:title="Continue free drive after navigation ends"
+        android:defaultValue="true" />
+
+
+</PreferenceScreen>

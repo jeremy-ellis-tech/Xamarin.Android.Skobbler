@@ -7,7 +7,7 @@ using Android.Widget;
 using Java.Interop;
 using System;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "NearbySearchActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class NearbySearchActivity : Activity

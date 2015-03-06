@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="general_black_button_label_normal_screen">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">39dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+
+    <style name="general_white_button_label">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">24dp</item>
+    </style>
+
+    <style name="general_white_button_label_normal_screen" parent="@style/general_white_button_label">
+        <item name="android:textSize">15dp</item>
+    </style>
+
+    <style name="pre_navigation_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="navigation_settings_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/navigation_style_day</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="navigation_settings_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:drawablePadding">10dp</item>
+    </style>
+
+    <style name="navigation_settings_text_normal" parent="@style/navigation_settings_text">
+        <item name="android:textSize">10dp</item>
+        <item name="android:drawablePadding">1dp</item>
+    </style>
+
+    <style name="alternate_route_text_style_normal">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textSize">17dp</item>
+    </style>
+
+    <style name="alternate_route_text_style_tvdpi" parent="@style/alternate_route_text_style_normal">
+        <item name="android:textSize">30dp</item>
+    </style>
+
+    <style name="alternate_route_cell_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:onClick">handleItemsClick</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="alternate_route_cell_style_landscape">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:onClick">handleItemsClick</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="alternate_route_text_holder_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+</resources>

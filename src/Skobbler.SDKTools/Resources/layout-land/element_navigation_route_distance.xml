@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true">
+
+    <LinearLayout
+        android:id="@+id/route_distance_linear_layout"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:background="@color/navigation_style_day"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/arriving_distance_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_view_large"
+            android:textStyle="bold"
+            tools:text="72" />
+
+        <TextView
+            android:id="@+id/arriving_distance_text_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_view_medium"
+            android:gravity="top"
+            tools:text="km" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="70dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/route_distance_linear_layout"/>
+
+</RelativeLayout>

@@ -7,10 +7,10 @@ using Java.Interop;
 using Skobbler.Ngx;
 using Skobbler.Ngx.ReverseGeocode;
 using Skobbler.Ngx.Search;
-using Skobbler.SdkDemo.Application;
+using Skobbler.SDKDemo.Application;
 using System;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "ReverseGeocodingActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class ReverseGeocodingActivity : Activity

@@ -6,7 +6,7 @@ using Android.Widget;
 using Skobbler.Ngx;
 using Skobbler.Ngx.Map;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "InteractionMapActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class InteractionMapActivity : Activity, ISKMapSurfaceListener

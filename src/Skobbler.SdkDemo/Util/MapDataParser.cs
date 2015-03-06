@@ -1,14 +1,14 @@
 using Javax.Xml.Parsers;
 using Org.Xml.Sax;
 using Org.Xml.Sax.Helpers;
-using Skobbler.SdkDemo.Model;
+using Skobbler.SDKDemo.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 
-namespace Skobbler.SdkDemo.Util
+namespace Skobbler.SDKDemo.Util
 {
     class MapDataParser
     {

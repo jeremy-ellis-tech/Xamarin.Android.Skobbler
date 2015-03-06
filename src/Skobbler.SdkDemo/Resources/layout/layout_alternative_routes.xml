@@ -1,29 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp"
-    android:weightSum="3" >
+    android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/alt_route_1"
-        style="@style/alt_routes_button_style"
-        android:layout_weight="1"
-        android:text="distance\ntime" />
+    <LinearLayout
+        android:id="@+id/alternative_routes_layout_traffic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:weightSum="3" >
 
-    <Button
-        android:id="@+id/alt_route_2"
-        style="@style/alt_routes_button_style"
-        android:layout_weight="1"
-        android:text="distance\ntime" />
+        <Button
+            android:id="@+id/alt_route_1"
+            style="@style/alt_routes_button_style"
+            android:layout_weight="1"
+            android:text="distance\ntime" />
 
-    <Button
-        android:id="@+id/alt_route_3"
-        style="@style/alt_routes_button_style"
-        android:layout_weight="1"
-        android:text="distance\ntime" />
+        <Button
+            android:id="@+id/alt_route_2"
+            style="@style/alt_routes_button_style"
+            android:layout_weight="1"
+            android:text="distance\ntime" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/alt_route_3"
+            style="@style/alt_routes_button_style"
+            android:layout_weight="1"
+            android:text="distance\ntime" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/route_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/alternative_routes_layout_traffic"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone"
+        android:weightSum="3" >
+
+        <Button
+            android:id="@+id/route_info_0"
+            style="@style/alt_routes_button_style"
+            android:layout_weight="1"
+            android:text="Route info" />
+
+        <Button
+            android:id="@+id/route_info_1"
+            style="@style/alt_routes_button_style"
+            android:layout_weight="1"
+            android:text="Route info" />
+
+        <Button
+            android:id="@+id/route_info_2"
+            style="@style/alt_routes_button_style"
+            android:layout_weight="1"
+            android:text="Route info" />
+    </LinearLayout>
+
+</RelativeLayout>

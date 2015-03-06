@@ -24,6 +24,28 @@ namespace Skobbler.SDKTools
 			global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 		}
 		
+		public partial class Array
+		{
+			
+			// aapt resource value: 0x7f040001
+			public static int road_blocks_in_feet = 2130968577;
+			
+			// aapt resource value: 0x7f040000
+			public static int road_blocks_in_meters = 2130968576;
+			
+			// aapt resource value: 0x7f040002
+			public static int road_blocks_in_yards = 2130968578;
+			
+			static Array()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Array()
+			{
+			}
+		}
+		
 		public partial class Attribute
 		{
 			
@@ -37,14 +59,784 @@ namespace Skobbler.SDKTools
 			}
 		}
 		
+		public partial class Color
+		{
+			
+			// aapt resource value: 0x7f050000
+			public static int black = 2131034112;
+			
+			// aapt resource value: 0x7f05000f
+			public static int blue_panel_day_background = 2131034127;
+			
+			// aapt resource value: 0x7f050010
+			public static int blue_panel_night_background = 2131034128;
+			
+			// aapt resource value: 0x7f050011
+			public static int blue_panel_night_text = 2131034129;
+			
+			// aapt resource value: 0x7f050004
+			public static int bullet_gray = 2131034116;
+			
+			// aapt resource value: 0x7f050005
+			public static int bullet_green = 2131034117;
+			
+			// aapt resource value: 0x7f050003
+			public static int gray = 2131034115;
+			
+			// aapt resource value: 0x7f05000c
+			public static int green_panel_day_background = 2131034124;
+			
+			// aapt resource value: 0x7f05000d
+			public static int green_panel_night_background = 2131034125;
+			
+			// aapt resource value: 0x7f05000e
+			public static int green_panel_night_text = 2131034126;
+			
+			// aapt resource value: 0x7f050008
+			public static int navigation_next_advice_overlay_background = 2131034120;
+			
+			// aapt resource value: 0x7f050007
+			public static int navigation_semitransparent_separator = 2131034119;
+			
+			// aapt resource value: 0x7f05000a
+			public static int navigation_style_day = 2131034122;
+			
+			// aapt resource value: 0x7f05000b
+			public static int navigation_style_night = 2131034123;
+			
+			// aapt resource value: 0x7f050002
+			public static int red = 2131034114;
+			
+			// aapt resource value: 0x7f050006
+			public static int speed_exceeded = 2131034118;
+			
+			// aapt resource value: 0x7f050009
+			public static int speed_panel_night_background = 2131034121;
+			
+			// aapt resource value: 0x7f050001
+			public static int white = 2131034113;
+			
+			// aapt resource value: 0x7f050012
+			public static int yellow_panel_day_background = 2131034130;
+			
+			// aapt resource value: 0x7f050013
+			public static int yellow_panel_night_background = 2131034131;
+			
+			// aapt resource value: 0x7f050014
+			public static int yellow_panel_night_text = 2131034132;
+			
+			static Color()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Color()
+			{
+			}
+		}
+		
+		public partial class Dimension
+		{
+			
+			// aapt resource value: 0x7f06000c
+			public static int action_bar_size = 2131099660;
+			
+			// aapt resource value: 0x7f06000e
+			public static int alternate_routes_top_bar_size = 2131099662;
+			
+			// aapt resource value: 0x7f06000f
+			public static int alternate_routes_total_delay_panel_size = 2131099663;
+			
+			// aapt resource value: 0x7f060011
+			public static int map_controls_background_size = 2131099665;
+			
+			// aapt resource value: 0x7f060010
+			public static int map_controls_button_size = 2131099664;
+			
+			// aapt resource value: 0x7f060016
+			public static int navigation_bottom_panel_height = 2131099670;
+			
+			// aapt resource value: 0x7f060009
+			public static int navigation_bottom_text_sub_title_size = 2131099657;
+			
+			// aapt resource value: 0x7f060008
+			public static int navigation_bottom_text_title_size = 2131099656;
+			
+			// aapt resource value: 0x7f060000
+			public static int navigation_current_advice_panel_landscape_height = 2131099648;
+			
+			// aapt resource value: 0x7f060002
+			public static int navigation_current_advice_panel_portrait_width = 2131099650;
+			
+			// aapt resource value: 0x7f060005
+			public static int navigation_current_image_landscape = 2131099653;
+			
+			// aapt resource value: 0x7f060003
+			public static int navigation_current_image_portrait = 2131099651;
+			
+			// aapt resource value: 0x7f060001
+			public static int navigation_next_advice_panel_portrait_height = 2131099649;
+			
+			// aapt resource value: 0x7f060007
+			public static int navigation_next_image_landscape = 2131099655;
+			
+			// aapt resource value: 0x7f060006
+			public static int navigation_next_image_portrait = 2131099654;
+			
+			// aapt resource value: 0x7f06000a
+			public static int navigation_panel_landscape_height = 2131099658;
+			
+			// aapt resource value: 0x7f06000b
+			public static int navigation_panel_landscape_width = 2131099659;
+			
+			// aapt resource value: 0x7f060015
+			public static int navigation_panel_width_height = 2131099669;
+			
+			// aapt resource value: 0x7f060004
+			public static int navigation_speed_limit_speed_cam = 2131099652;
+			
+			// aapt resource value: 0x7f06000d
+			public static int promotion_progress_wheel = 2131099661;
+			
+			// aapt resource value: 0x7f060014
+			public static int text_view_large = 2131099668;
+			
+			// aapt resource value: 0x7f060013
+			public static int text_view_medium = 2131099667;
+			
+			// aapt resource value: 0x7f060012
+			public static int text_view_small = 2131099666;
+			
+			static Dimension()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Dimension()
+			{
+			}
+		}
+		
+		public partial class Drawable
+		{
+			
+			// aapt resource value: 0x7f020000
+			public static int background_alert_sign = 2130837504;
+			
+			// aapt resource value: 0x7f020001
+			public static int background_alert_sign_us = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public static int background_speed_sign = 2130837506;
+			
+			// aapt resource value: 0x7f020003
+			public static int background_speed_sign_us = 2130837507;
+			
+			// aapt resource value: 0x7f020004
+			public static int bullet_gray = 2130837508;
+			
+			// aapt resource value: 0x7f020005
+			public static int bullet_green = 2130837509;
+			
+			// aapt resource value: 0x7f020006
+			public static int ic_2d = 2130837510;
+			
+			// aapt resource value: 0x7f020007
+			public static int ic_3d = 2130837511;
+			
+			// aapt resource value: 0x7f020008
+			public static int ic_alert_exclamationmark = 2130837512;
+			
+			// aapt resource value: 0x7f020009
+			public static int ic_audio_off = 2130837513;
+			
+			// aapt resource value: 0x7f02000a
+			public static int ic_audio_on = 2130837514;
+			
+			// aapt resource value: 0x7f02000b
+			public static int ic_back_arrow = 2130837515;
+			
+			// aapt resource value: 0x7f02000c
+			public static int ic_contribute = 2130837516;
+			
+			// aapt resource value: 0x7f02000d
+			public static int ic_daymode = 2130837517;
+			
+			// aapt resource value: 0x7f02000e
+			public static int ic_destination_advise_black = 2130837518;
+			
+			// aapt resource value: 0x7f02000f
+			public static int ic_destination_advise_white = 2130837519;
+			
+			// aapt resource value: 0x7f020010
+			public static int ic_launcher = 2130837520;
+			
+			// aapt resource value: 0x7f020011
+			public static int ic_nav_arrow = 2130837521;
+			
+			// aapt resource value: 0x7f020012
+			public static int ic_nightmode = 2130837522;
+			
+			// aapt resource value: 0x7f020013
+			public static int ic_no_gps = 2130837523;
+			
+			// aapt resource value: 0x7f020014
+			public static int ic_overview = 2130837524;
+			
+			// aapt resource value: 0x7f020015
+			public static int ic_panning = 2130837525;
+			
+			// aapt resource value: 0x7f020016
+			public static int ic_quit = 2130837526;
+			
+			// aapt resource value: 0x7f020017
+			public static int ic_roadblock = 2130837527;
+			
+			// aapt resource value: 0x7f020018
+			public static int ic_roadblock_inact = 2130837528;
+			
+			// aapt resource value: 0x7f020019
+			public static int ic_routeinfo = 2130837529;
+			
+			// aapt resource value: 0x7f02001a
+			public static int ic_zoom_in = 2130837530;
+			
+			// aapt resource value: 0x7f02001b
+			public static int ic_zoom_out = 2130837531;
+			
+			// aapt resource value: 0x7f02001c
+			public static int icon_arrow_list = 2130837532;
+			
+			// aapt resource value: 0x7f02001d
+			public static int icon_position_me = 2130837533;
+			
+			// aapt resource value: 0x7f02001e
+			public static int scrubber_control_disabled_holo = 2130837534;
+			
+			// aapt resource value: 0x7f02001f
+			public static int scrubber_control_focused_holo = 2130837535;
+			
+			// aapt resource value: 0x7f020020
+			public static int scrubber_control_normal_holo = 2130837536;
+			
+			// aapt resource value: 0x7f020021
+			public static int scrubber_control_pressed_holo = 2130837537;
+			
+			// aapt resource value: 0x7f020022
+			public static int scrubber_primary_holo = 2130837538;
+			
+			// aapt resource value: 0x7f020023
+			public static int scrubber_secondary_holo = 2130837539;
+			
+			// aapt resource value: 0x7f020024
+			public static int scrubber_track_holo_dark = 2130837540;
+			
+			// aapt resource value: 0x7f020025
+			public static int volume_seekbar = 2130837541;
+			
+			// aapt resource value: 0x7f020026
+			public static int volume_thumb_selector = 2130837542;
+			
+			static Drawable()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Drawable()
+			{
+			}
+		}
+		
+		public partial class Id
+		{
+			
+			// aapt resource value: 0x7f090049
+			public static int alternative_routes_layout = 2131296329;
+			
+			// aapt resource value: 0x7f09001a
+			public static int arriving_distance_text = 2131296282;
+			
+			// aapt resource value: 0x7f09001b
+			public static int arriving_distance_text_value = 2131296283;
+			
+			// aapt resource value: 0x7f090002
+			public static int arriving_time_text = 2131296258;
+			
+			// aapt resource value: 0x7f090003
+			public static int arriving_time_text_ampm = 2131296259;
+			
+			// aapt resource value: 0x7f09004f
+			public static int cancel_pre_navigation_button = 2131296335;
+			
+			// aapt resource value: 0x7f090009
+			public static int current_advice_distance_text = 2131296265;
+			
+			// aapt resource value: 0x7f090006
+			public static int current_advice_image_holder = 2131296262;
+			
+			// aapt resource value: 0x7f090007
+			public static int current_advice_image_turn = 2131296263;
+			
+			// aapt resource value: 0x7f09000a
+			public static int current_advice_street_text = 2131296266;
+			
+			// aapt resource value: 0x7f090008
+			public static int current_advice_text_holder = 2131296264;
+			
+			// aapt resource value: 0x7f090004
+			public static int estimated_navigation_time_text = 2131296260;
+			
+			// aapt resource value: 0x7f090005
+			public static int estimated_navigation_time_text_value = 2131296261;
+			
+			// aapt resource value: 0x7f09004a
+			public static int first_route = 2131296330;
+			
+			// aapt resource value: 0x7f090044
+			public static int free_drive_current_speed_linear_layout = 2131296324;
+			
+			// aapt resource value: 0x7f090045
+			public static int free_drive_current_speed_text = 2131296325;
+			
+			// aapt resource value: 0x7f090046
+			public static int free_drive_current_speed_text_value = 2131296326;
+			
+			// aapt resource value: 0x7f090000
+			public static int free_drive_current_street_text = 2131296256;
+			
+			// aapt resource value: 0x7f09003d
+			public static int increase_decrease_layout = 2131296317;
+			
+			// aapt resource value: 0x7f09003c
+			public static int menu_back_follower_mode_button = 2131296316;
+			
+			// aapt resource value: 0x7f09004e
+			public static int menu_back_prenavigation_button = 2131296334;
+			
+			// aapt resource value: 0x7f090026
+			public static int nav_settings_first_row = 2131296294;
+			
+			// aapt resource value: 0x7f090035
+			public static int nav_settings_forth_row = 2131296309;
+			
+			// aapt resource value: 0x7f09002b
+			public static int nav_settings_second_row = 2131296299;
+			
+			// aapt resource value: 0x7f090030
+			public static int nav_settings_third_row = 2131296304;
+			
+			// aapt resource value: 0x7f090042
+			public static int navigation_alert_sign_image = 2131296322;
+			
+			// aapt resource value: 0x7f09000c
+			public static int navigation_bottom_right_arriving_panel = 2131296268;
+			
+			// aapt resource value: 0x7f09000b
+			public static int navigation_bottom_right_estimated_panel = 2131296267;
+			
+			// aapt resource value: 0x7f09000e
+			public static int navigation_contribute_option_text = 2131296270;
+			
+			// aapt resource value: 0x7f09003f
+			public static int navigation_decrease_speed = 2131296319;
+			
+			// aapt resource value: 0x7f090040
+			public static int navigation_free_drive_speed_limit_panel = 2131296320;
+			
+			// aapt resource value: 0x7f09003e
+			public static int navigation_increase_speed = 2131296318;
+			
+			// aapt resource value: 0x7f090012
+			public static int navigation_next_advice_image_distance_overlay_background = 2131296274;
+			
+			// aapt resource value: 0x7f090015
+			public static int navigation_next_advice_street_overlay_background = 2131296277;
+			
+			// aapt resource value: 0x7f09001e
+			public static int navigation_route_overview_current_position_label = 2131296286;
+			
+			// aapt resource value: 0x7f09001f
+			public static int navigation_route_overview_current_position_text = 2131296287;
+			
+			// aapt resource value: 0x7f090021
+			public static int navigation_route_overview_destination_label = 2131296289;
+			
+			// aapt resource value: 0x7f090020
+			public static int navigation_route_overview_destination_layout = 2131296288;
+			
+			// aapt resource value: 0x7f090022
+			public static int navigation_route_overview_destination_text = 2131296290;
+			
+			// aapt resource value: 0x7f09001c
+			public static int navigation_route_overview_linear_layout = 2131296284;
+			
+			// aapt resource value: 0x7f09001d
+			public static int navigation_route_overview_starting_position_layout = 2131296285;
+			
+			// aapt resource value: 0x7f090023
+			public static int navigation_searching_for_gps_text = 2131296291;
+			
+			// aapt resource value: 0x7f090027
+			public static int navigation_settings_audio_button = 2131296295;
+			
+			// aapt resource value: 0x7f090028
+			public static int navigation_settings_audio_text = 2131296296;
+			
+			// aapt resource value: 0x7f090024
+			public static int navigation_settings_back_button = 2131296292;
+			
+			// aapt resource value: 0x7f090029
+			public static int navigation_settings_day_night_mode_button = 2131296297;
+			
+			// aapt resource value: 0x7f09002a
+			public static int navigation_settings_day_night_mode_text = 2131296298;
+			
+			// aapt resource value: 0x7f09000d
+			public static int navigation_settings_option_text = 2131296269;
+			
+			// aapt resource value: 0x7f09002c
+			public static int navigation_settings_overview_button = 2131296300;
+			
+			// aapt resource value: 0x7f09002d
+			public static int navigation_settings_overview_text = 2131296301;
+			
+			// aapt resource value: 0x7f090033
+			public static int navigation_settings_panning_button = 2131296307;
+			
+			// aapt resource value: 0x7f090034
+			public static int navigation_settings_panning_text = 2131296308;
+			
+			// aapt resource value: 0x7f090038
+			public static int navigation_settings_quit_button = 2131296312;
+			
+			// aapt resource value: 0x7f090039
+			public static int navigation_settings_quit_text = 2131296313;
+			
+			// aapt resource value: 0x7f090031
+			public static int navigation_settings_roadblock_info_button = 2131296305;
+			
+			// aapt resource value: 0x7f090032
+			public static int navigation_settings_roadblock_info_text = 2131296306;
+			
+			// aapt resource value: 0x7f09002e
+			public static int navigation_settings_route_info_button = 2131296302;
+			
+			// aapt resource value: 0x7f09002f
+			public static int navigation_settings_route_info_text = 2131296303;
+			
+			// aapt resource value: 0x7f090025
+			public static int navigation_settings_seek_bar_layout = 2131296293;
+			
+			// aapt resource value: 0x7f090036
+			public static int navigation_settings_view_mode_button = 2131296310;
+			
+			// aapt resource value: 0x7f090037
+			public static int navigation_settings_view_mode_text = 2131296311;
+			
+			// aapt resource value: 0x7f09003a
+			public static int navigation_settings_volume = 2131296314;
+			
+			// aapt resource value: 0x7f09003b
+			public static int navigation_settings_volume_text = 2131296315;
+			
+			// aapt resource value: 0x7f090041
+			public static int navigation_speed_sign_image = 2131296321;
+			
+			// aapt resource value: 0x7f090001
+			public static int navigation_top_back_button = 2131296257;
+			
+			// aapt resource value: 0x7f090011
+			public static int next_advice_distance_text = 2131296273;
+			
+			// aapt resource value: 0x7f090014
+			public static int next_advice_street_name_text = 2131296276;
+			
+			// aapt resource value: 0x7f090013
+			public static int next_advice_street_name_text_layout = 2131296275;
+			
+			// aapt resource value: 0x7f090010
+			public static int next_image_turn_advice = 2131296272;
+			
+			// aapt resource value: 0x7f09000f
+			public static int next_image_turn_advice_distance_layout = 2131296271;
+			
+			// aapt resource value: 0x7f090048
+			public static int position_me_real_navigation_button = 2131296328;
+			
+			// aapt resource value: 0x7f090016
+			public static int re_routing_text = 2131296278;
+			
+			// aapt resource value: 0x7f090017
+			public static int road_block_relative_layout = 2131296279;
+			
+			// aapt resource value: 0x7f090018
+			public static int roadblock_list = 2131296280;
+			
+			// aapt resource value: 0x7f090019
+			public static int route_distance_linear_layout = 2131296281;
+			
+			// aapt resource value: 0x7f09004b
+			public static int second_route = 2131296331;
+			
+			// aapt resource value: 0x7f090043
+			public static int speed_limit_value = 2131296323;
+			
+			// aapt resource value: 0x7f09004d
+			public static int start_navigation_button = 2131296333;
+			
+			// aapt resource value: 0x7f09004c
+			public static int third_route = 2131296332;
+			
+			// aapt resource value: 0x7f090047
+			public static int via_point_text_view = 2131296327;
+			
+			static Id()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Id()
+			{
+			}
+		}
+		
+		public partial class Layout
+		{
+			
+			// aapt resource value: 0x7f030000
+			public static int element_free_drive_current_street_panel = 2130903040;
+			
+			// aapt resource value: 0x7f030001
+			public static int element_navigation_back_button = 2130903041;
+			
+			// aapt resource value: 0x7f030002
+			public static int element_navigation_bottom_right_arriving_panel = 2130903042;
+			
+			// aapt resource value: 0x7f030003
+			public static int element_navigation_bottom_right_estimated_panel = 2130903043;
+			
+			// aapt resource value: 0x7f030004
+			public static int element_navigation_current_advice_panel = 2130903044;
+			
+			// aapt resource value: 0x7f030005
+			public static int element_navigation_eta_arriving_group_panels = 2130903045;
+			
+			// aapt resource value: 0x7f030006
+			public static int element_navigation_menu_options = 2130903046;
+			
+			// aapt resource value: 0x7f030007
+			public static int element_navigation_next_advice_panel = 2130903047;
+			
+			// aapt resource value: 0x7f030008
+			public static int element_navigation_rerouting_panel = 2130903048;
+			
+			// aapt resource value: 0x7f030009
+			public static int element_navigation_roadblocks_list = 2130903049;
+			
+			// aapt resource value: 0x7f03000a
+			public static int element_navigation_route_distance = 2130903050;
+			
+			// aapt resource value: 0x7f03000b
+			public static int element_navigation_route_overview_panel = 2130903051;
+			
+			// aapt resource value: 0x7f03000c
+			public static int element_navigation_searching_for_gps = 2130903052;
+			
+			// aapt resource value: 0x7f03000d
+			public static int element_navigation_settings = 2130903053;
+			
+			// aapt resource value: 0x7f03000e
+			public static int element_navigation_simulation_buttons = 2130903054;
+			
+			// aapt resource value: 0x7f03000f
+			public static int element_navigation_speed_panel = 2130903055;
+			
+			// aapt resource value: 0x7f030010
+			public static int element_navigation_via_point_panel = 2130903056;
+			
+			// aapt resource value: 0x7f030011
+			public static int element_position_me_button = 2130903057;
+			
+			// aapt resource value: 0x7f030012
+			public static int element_pre_navigation_buttons_panel = 2130903058;
+			
+			static Layout()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Layout()
+			{
+			}
+		}
+		
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f020001
-			public static int ApplicationName = 2130837505;
+			// aapt resource value: 0x7f070000
+			public static int cancel_label = 2131165184;
 			
-			// aapt resource value: 0x7f020000
-			public static int Hello = 2130837504;
+			// aapt resource value: 0x7f07002d
+			public static int current_position = 2131165229;
+			
+			// aapt resource value: 0x7f070014
+			public static int decrease_speed = 2131165204;
+			
+			// aapt resource value: 0x7f07000d
+			public static int destination_label = 2131165197;
+			
+			// aapt resource value: 0x7f070018
+			public static int destination_reached_info_text = 2131165208;
+			
+			// aapt resource value: 0x7f070030
+			public static int distance_time = 2131165232;
+			
+			// aapt resource value: 0x7f070034
+			public static int download_cancel = 2131165236;
+			
+			// aapt resource value: 0x7f070035
+			public static int download_pause = 2131165237;
+			
+			// aapt resource value: 0x7f070036
+			public static int download_resume = 2131165238;
+			
+			// aapt resource value: 0x7f070033
+			public static int download_start = 2131165235;
+			
+			// aapt resource value: 0x7f07000c
+			public static int exit_highway_advice_label = 2131165196;
+			
+			// aapt resource value: 0x7f070016
+			public static int exit_navigation_dialog_message = 2131165206;
+			
+			// aapt resource value: 0x7f070017
+			public static int exit_navigation_dialog_title = 2131165207;
+			
+			// aapt resource value: 0x7f070009
+			public static int feet_label = 2131165193;
+			
+			// aapt resource value: 0x7f070002
+			public static int hour_value = 2131165186;
+			
+			// aapt resource value: 0x7f070013
+			public static int increase_speed = 2131165203;
+			
+			// aapt resource value: 0x7f07000a
+			public static int km_label = 2131165194;
+			
+			// aapt resource value: 0x7f070005
+			public static int kmh_label = 2131165189;
+			
+			// aapt resource value: 0x7f070031
+			public static int less = 2131165233;
+			
+			// aapt resource value: 0x7f070007
+			public static int meters_label = 2131165191;
+			
+			// aapt resource value: 0x7f070008
+			public static int mi_label = 2131165192;
+			
+			// aapt resource value: 0x7f070003
+			public static int minute_value = 2131165187;
+			
+			// aapt resource value: 0x7f070032
+			public static int more = 2131165234;
+			
+			// aapt resource value: 0x7f070006
+			public static int mph_label = 2131165190;
+			
+			// aapt resource value: 0x7f070028
+			public static int navigate_settings_2d_view = 2131165224;
+			
+			// aapt resource value: 0x7f070029
+			public static int navigate_settings_3d_view = 2131165225;
+			
+			// aapt resource value: 0x7f070021
+			public static int navigate_settings_audio_off = 2131165217;
+			
+			// aapt resource value: 0x7f070022
+			public static int navigate_settings_audio_on = 2131165218;
+			
+			// aapt resource value: 0x7f07002c
+			public static int navigate_settings_block_road = 2131165228;
+			
+			// aapt resource value: 0x7f070024
+			public static int navigate_settings_daymode = 2131165220;
+			
+			// aapt resource value: 0x7f070023
+			public static int navigate_settings_nightmode = 2131165219;
+			
+			// aapt resource value: 0x7f070020
+			public static int navigate_settings_overview = 2131165216;
+			
+			// aapt resource value: 0x7f070027
+			public static int navigate_settings_panning = 2131165223;
+			
+			// aapt resource value: 0x7f07002b
+			public static int navigate_settings_quit = 2131165227;
+			
+			// aapt resource value: 0x7f070025
+			public static int navigate_settings_reload = 2131165221;
+			
+			// aapt resource value: 0x7f070026
+			public static int navigate_settings_routeinfo = 2131165222;
+			
+			// aapt resource value: 0x7f07002a
+			public static int navigate_settings_volume = 2131165226;
+			
+			// aapt resource value: 0x7f070019
+			public static int no_position_available = 2131165209;
+			
+			// aapt resource value: 0x7f070001
+			public static int ok_label = 2131165185;
+			
+			// aapt resource value: 0x7f070011
+			public static int quit_navigation = 2131165201;
+			
+			// aapt resource value: 0x7f07000f
+			public static int re_routing = 2131165199;
+			
+			// aapt resource value: 0x7f07001e
+			public static int route_cannot_be_calculated = 2131165214;
+			
+			// aapt resource value: 0x7f07001b
+			public static int route_invalid_destination = 2131165211;
+			
+			// aapt resource value: 0x7f07001c
+			public static int route_invalid_start = 2131165212;
+			
+			// aapt resource value: 0x7f07001a
+			public static int route_same_start_and_destination = 2131165210;
+			
+			// aapt resource value: 0x7f07001d
+			public static int route_unknown_server_error = 2131165213;
+			
+			// aapt resource value: 0x7f07001f
+			public static int routing_server_error = 2131165215;
+			
+			// aapt resource value: 0x7f070015
+			public static int searching_for_gps_label = 2131165205;
+			
+			// aapt resource value: 0x7f070004
+			public static int seconds_value = 2131165188;
+			
+			// aapt resource value: 0x7f070010
+			public static int settings_label = 2131165200;
+			
+			// aapt resource value: 0x7f07002f
+			public static int start_prim_navigation = 2131165231;
+			
+			// aapt resource value: 0x7f07000e
+			public static int starting_pos_label = 2131165198;
+			
+			// aapt resource value: 0x7f07002e
+			public static int unblock_all = 2131165230;
+			
+			// aapt resource value: 0x7f070012
+			public static int via_point_reached = 2131165202;
+			
+			// aapt resource value: 0x7f07000b
+			public static int yards_label = 2131165195;
 			
 			static String()
 			{
@@ -52,6 +844,55 @@ namespace Skobbler.SDKTools
 			}
 			
 			private String()
+			{
+			}
+		}
+		
+		public partial class Style
+		{
+			
+			// aapt resource value: 0x7f080009
+			public static int alternate_route_cell_style = 2131230729;
+			
+			// aapt resource value: 0x7f08000a
+			public static int alternate_route_cell_style_landscape = 2131230730;
+			
+			// aapt resource value: 0x7f08000b
+			public static int alternate_route_text_holder_style = 2131230731;
+			
+			// aapt resource value: 0x7f080007
+			public static int alternate_route_text_style_normal = 2131230727;
+			
+			// aapt resource value: 0x7f080008
+			public static int alternate_route_text_style_tvdpi = 2131230728;
+			
+			// aapt resource value: 0x7f080000
+			public static int general_black_button_label_normal_screen = 2131230720;
+			
+			// aapt resource value: 0x7f080001
+			public static int general_white_button_label = 2131230721;
+			
+			// aapt resource value: 0x7f080002
+			public static int general_white_button_label_normal_screen = 2131230722;
+			
+			// aapt resource value: 0x7f080004
+			public static int navigation_settings_layout = 2131230724;
+			
+			// aapt resource value: 0x7f080005
+			public static int navigation_settings_text = 2131230725;
+			
+			// aapt resource value: 0x7f080006
+			public static int navigation_settings_text_normal = 2131230726;
+			
+			// aapt resource value: 0x7f080003
+			public static int pre_navigation_text = 2131230723;
+			
+			static Style()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
+			private Style()
 			{
 			}
 		}

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:clickable="true"
+     android:orientation="horizontal">
+
+
+     <RelativeLayout
+         android:id="@+id/next_image_turn_advice_distance_layout"
+         android:layout_width="@dimen/navigation_current_advice_panel_portrait_width"
+         android:layout_height="@dimen/navigation_next_advice_panel_portrait_height"
+         android:background="@color/navigation_style_day">
+
+         <ImageView
+             android:id="@+id/next_image_turn_advice"
+             android:layout_width="@dimen/navigation_next_image_portrait"
+             android:layout_height="@dimen/navigation_next_image_portrait"
+             android:layout_centerVertical="true"
+             android:layout_marginLeft="15dp"
+             tools:src="@drawable/icon_arrow_list" />
+
+         <TextView
+             android:id="@+id/next_advice_distance_text"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_centerVertical="true"
+             android:layout_marginLeft="5dp"
+             android:layout_marginRight="5dp"
+             android:layout_toRightOf="@+id/next_image_turn_advice"
+             android:gravity="center_horizontal"
+             android:maxLines="2"
+             android:textColor="@color/white"
+             android:textSize="17dp"
+             android:textStyle="bold"
+             tools:text="999 m" />
+
+         <View
+             android:id="@+id/navigation_next_advice_image_distance_overlay_background"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/navigation_next_advice_overlay_background"
+             android:visibility="gone"
+             tools:visibility="visible" />
+     </RelativeLayout>
+
+
+     <RelativeLayout
+         android:id="@+id/next_advice_street_name_text_layout"
+         android:layout_width="match_parent"
+         android:layout_height="@dimen/navigation_next_advice_panel_portrait_height"
+         android:background="@color/navigation_style_day"
+         tools:visibility="visible">
+
+         <View
+             android:layout_width="1dp"
+             android:layout_height="match_parent"
+             android:background="@color/navigation_semitransparent_separator" />
+
+         <TextView
+             android:id="@+id/next_advice_street_name_text"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_centerVertical="true"
+             android:layout_marginLeft="10dp"
+             android:layout_marginRight="10dp"
+             android:ellipsize="marquee"
+             android:marqueeRepeatLimit="marquee_forever"
+             android:singleLine="true"
+             android:textColor="@color/white"
+             android:textSize="20dp"
+             tools:text="Piata Avraam Iancu" />
+
+         <View
+             android:id="@+id/navigation_next_advice_street_overlay_background"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/navigation_next_advice_overlay_background"
+             android:visibility="gone"
+             tools:visibility="gone" />
+     </RelativeLayout>
+
+
+ </LinearLayout>

@@ -1,13 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <color name="blue_filling">#e0e0ff</color>
-  <color name="blue_outline">#6060ff</color>
-  <color name="darker_grey">#404040</color>
-  <color name="grey">#c0c0c0</color>
-  <color name="grey_options_group">#a0a0a0</color>
-  <color name="black">#000000</color>
-  <color name="white">#ffffff</color>
-  <color name="selected">#FAEFAA</color>
+    <color name="blue_filling">#e0e0ff</color>
+    <color name="blue_outline">#6060ff</color>
+    <color name="darker_grey">#404040</color>
+    <color name="grey">#c0c0c0</color>
+    <color name="grey_options_group">#a0a0a0</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="selected">#FAEFAA</color>
+    <color name="orange">#ffff8800</color>
+    <color name="light_orange">#ffe27d18</color>
+    <color name="list_text_color">#1b1b1b</color>
 
 </resources>

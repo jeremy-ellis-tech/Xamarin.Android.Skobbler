@@ -9,7 +9,7 @@ using Skobbler.Ngx.Search;
 using System.Collections.Generic;
 using JavaObject = Java.Lang.Object;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "CategorySearchResultsActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class CategorySearchResultsActivity : Activity, ISKSearchListener

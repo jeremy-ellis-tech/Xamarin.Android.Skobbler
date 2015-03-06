@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true">
+
+
+    <ImageButton
+        android:id="@+id/navigation_settings_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:src="@drawable/ic_back_arrow"
+        android:background="@color/navigation_style_day"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/navigation_settings_back_button"
+        android:layout_above="@+id/navigation_settings_seek_bar_layout"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:id="@+id/nav_settings_first_row"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp">
+
+            <RelativeLayout
+                android:id="@+id/navigation_settings_audio_button"
+                style="@style/navigation_settings_layout"
+                android:layout_width="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/navigation_settings_audio_text"
+                    style="@style/navigation_settings_text_normal"
+                    android:drawableTop="@drawable/ic_audio_off"
+                    android:text="@string/navigate_settings_audio_off" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/navigation_settings_day_night_mode_button"
+                style="@style/navigation_settings_layout"
+                android:layout_width="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/navigation_settings_day_night_mode_text"
+                    style="@style/navigation_settings_text_normal"
+                    android:drawableTop="@drawable/ic_nightmode"
+                    android:text="@string/navigate_settings_nightmode" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/navigation_settings_overview_button"
+                style="@style/navigation_settings_layout"
+                android:layout_width="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/navigation_settings_overview_text"
+                    style="@style/navigation_settings_text_normal"
+                    android:drawableTop="@drawable/ic_overview"
+                    android:text="@string/navigate_settings_overview" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/navigation_settings_route_info_button"
+                style="@style/navigation_settings_layout"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/navigation_settings_route_info_text"
+                    style="@style/navigation_settings_text_normal"
+                    android:drawableTop="@drawable/ic_routeinfo"
+                    android:text="@string/navigate_settings_routeinfo" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nav_settings_second_row"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/navigation_settings_roadblock_info_button"
+                style="@style/navigation_settings_layout"
+                android:layout_width="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/navigation_settings_roadblock_info_text"
+                    style="@style/navigation_settings_text_normal"
+                    android:drawableTop="@drawable/ic_roadblock"
+                    android:text="@string/navigate_settings_block_road" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/navigation_settings_panning_button"
+                style="@style/navigation_settings_layout"
+                android:layout_width="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/navigation_settings_panning_text"
+                    style="@style/navigation_settings_text_normal"
+                    android:drawableTop="@drawable/ic_panning"
+                    android:text="@string/navigate_settings_panning" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/navigation_settings_view_mode_button"
+                style="@style/navigation_settings_layout"
+                android:layout_width="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/navigation_settings_view_mode_text"
+                    style="@style/navigation_settings_text_normal"
+                    android:drawableTop="@drawable/ic_2d"
+                    android:text="@string/navigate_settings_2d_view" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/navigation_settings_quit_button"
+                style="@style/navigation_settings_layout"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/navigation_settings_quit_text"
+                    style="@style/navigation_settings_text_normal"
+                    android:drawableTop="@drawable/ic_quit"
+                    android:text="@string/navigate_settings_quit" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/navigation_settings_seek_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/navigation_style_day"
+        android:clickable="true"
+        android:gravity="center">
+
+        <SeekBar
+            android:id="@+id/navigation_settings_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:progressDrawable="@drawable/volume_seekbar"
+            android:thumb="@drawable/volume_thumb_selector"
+            android:thumbOffset="15dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

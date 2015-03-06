@@ -7,15 +7,15 @@ using Android.Widget;
 using Java.Interop;
 using Java.IO;
 using Skobbler.Ngx.Packages;
-using Skobbler.SdkDemo.Application;
-using Skobbler.SdkDemo.Model;
+using Skobbler.SDKDemo.Application;
+using Skobbler.SDKDemo.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Skobbler.SdkDemo.Activities
+namespace Skobbler.SDKDemo.Activities
 {
     [Activity(Label = "DownloadActivity", ConfigurationChanges = ConfigChanges.Orientation)]
     public class DownloadActivity : Activity

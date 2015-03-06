@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:background="@color/navigation_style_day"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/current_advice_image_holder"
+            android:layout_width="@dimen/navigation_current_advice_panel_portrait_width"
+            android:layout_height="@dimen/navigation_panel_width_height"
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/current_advice_image_turn"
+                android:layout_width="@dimen/navigation_current_image_portrait"
+                android:layout_height="@dimen/navigation_current_image_portrait"
+                android:layout_centerInParent="true"
+                tools:src="@drawable/icon_arrow_list" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/current_advice_text_holder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/navigation_panel_width_height"
+            android:clickable="true"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/navigation_semitransparent_separator" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/current_advice_distance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="28dp"
+                    tools:text="0.2 km"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/current_advice_street_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="23dp"
+                    tools:text="@string/destination_reached_info_text" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/navigation_semitransparent_separator" />
+</LinearLayout>
