@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.Binding", "Skobbler.Binding\Skobbler.Binding.csproj", "{C399B111-040E-485C-85F0-40AE7BB88AF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.Binding", "src\Skobbler.Binding\Skobbler.Binding.csproj", "{C399B111-040E-485C-85F0-40AE7BB88AF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SdkDemo", "Skobbler.SdkDemo\Skobbler.SdkDemo.csproj", "{795B9ED9-17BA-4319-9646-B938FCBAEE7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SdkDemo", "src\Skobbler.SdkDemo\Skobbler.SdkDemo.csproj", "{795B9ED9-17BA-4319-9646-B938FCBAEE7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
