@@ -5,7 +5,9 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.Binding", "src\Skobbler.Binding\Skobbler.Binding.csproj", "{C399B111-040E-485C-85F0-40AE7BB88AF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SdkDemo", "src\Skobbler.SdkDemo\Skobbler.SdkDemo.csproj", "{795B9ED9-17BA-4319-9646-B938FCBAEE7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SDKDemo", "src\Skobbler.SDKDemo\Skobbler.SDKDemo.csproj", "{795B9ED9-17BA-4319-9646-B938FCBAEE7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SDKTools", "src\Skobbler.SDKTools\Skobbler.SDKTools.csproj", "{328179FC-C649-40A9-A7FF-5D4F00F4137B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,16 @@ Global
 		{795B9ED9-17BA-4319-9646-B938FCBAEE7D}.Release|x86.ActiveCfg = Release|Any CPU
 		{795B9ED9-17BA-4319-9646-B938FCBAEE7D}.Release|x86.Build.0 = Release|Any CPU
 		{795B9ED9-17BA-4319-9646-B938FCBAEE7D}.Release|x86.Deploy.0 = Release|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Debug|armeabi.ActiveCfg = Debug|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Debug|armeabi-v7a.ActiveCfg = Debug|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Release|armeabi.ActiveCfg = Release|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Release|armeabi-v7a.ActiveCfg = Release|Any CPU
+		{328179FC-C649-40A9-A7FF-5D4F00F4137B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
