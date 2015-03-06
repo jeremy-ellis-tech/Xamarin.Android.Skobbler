@@ -64,13 +64,13 @@
     <Compile Include="Activities\SplashActivity.cs" />
     <Compile Include="Activities\TrackElementsActivity.cs" />
     <Compile Include="Activities\TracksActivity.cs" />
+    <Compile Include="Application\ApplicationPreferences.cs" />
     <Compile Include="Application\DemoApplication.cs" />
     <Compile Include="Model\DownloadPackage.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\AdvicePlayer.cs" />
     <Compile Include="Util\DemoUtils.cs" />
-    <Compile Include="Util\MapDataParser.cs" />
+    <Compile Include="Util\PreferenceTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\SKMaps.zip" />
@@ -313,6 +313,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\xml\settings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Database\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

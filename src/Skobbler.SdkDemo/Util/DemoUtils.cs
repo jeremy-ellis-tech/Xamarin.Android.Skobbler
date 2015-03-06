@@ -1,9 +1,13 @@
-
 using Android.Content;
 using Android.Content.Res;
 using Android.Locations;
 using Android.Net;
 using Java.IO;
+using Skobbler.Ngx;
+using Skobbler.Ngx.Map;
+using Skobbler.Ngx.Navigation;
+using Skobbler.SDKDemo.Application;
+using System;
 using System.IO;
 using System.Text;
 using File = Java.IO.File;
@@ -12,6 +16,8 @@ namespace Skobbler.SDKDemo.Util
 {
     static class DemoUtils
     {
+        private static readonly string ApiKey = "API_KEY_HERE";
+
         public static bool HasGpsModule(Context context)
         {
             LocationManager locationManager = context.GetSystemService(Context.LocationService) as LocationManager;
@@ -145,6 +151,42 @@ namespace Skobbler.SDKDemo.Util
             }
 
             return false;
+        }
+
+        public static bool HasNetworkModule(Context context)
+        {
+            LocationManager locationManager = context.GetSystemService(Context.LocationService) as LocationManager;
+            foreach (var provider in locationManager.AllProviders)
+            {
+                if (String.Equals(provider, LocationManager.NetworkProvider))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static void InitializeLibrary(Context context)
+        {
+            var app = context.ApplicationContext as DemoApplication;
+
+            if (app == null) return;
+
+            var initMapSettings = new SKMapsInitSettings();
+            initMapSettings.SetMapResourcesPaths(app.MapResourcesDirPath, new SKMapViewStyle(app.MapResourcesDirPath + "daystyle/", "daystyle.json"));
+
+            SKAdvisorSettings advisorSettings = initMapSettings.AdvisorSettings;
+            advisorSettings.AdvisorConfigPath = app.MapResourcesDirPath + "/Advisor";
+            advisorSettings.ResourcePath = app.MapResourcesDirPath + "Advisor/Languages";
+            advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LanguageEn;
+            advisorSettings.AdvisorVoice = "en";
+
+            initMapSettings.AdvisorSettings = advisorSettings;
+
+            initMapSettings.MapDetailLevel = SKMapsInitSettings.SkMapDetailLight;
+
+            SKMaps.Instance.InitializeSKMaps(context, initMapSettings, ApiKey);
         }
     }
 }
