@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gpx xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd" version="1.1" creator="Sports Tracker" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+  <metadata>
+    <name>Running 12/03/2014/15:44:27.66</name>
+    <desc></desc>
+    <author>
+      <name>Tudor Dulau</name>
+    </author>
+    <link href="www.sports-tracker.com">
+      <text>Sports Tracker</text>
+    </link>
+  </metadata>
+  <trk>
+    <trkseg>
+      <trkpt lat="46.77375" lon="23.58803">
+        <ele>0</ele>
+        <time>2014-03-12T15:44:27.66</time>
+      </trkpt>
+      <trkpt lat="46.77375" lon="23.58803">
+        <ele>0</ele>
+        <time>2014-03-12T15:44:42.49</time>
+      </trkpt>
+      <trkpt lat="46.773936666666664" lon="23.587886666666666">
+        <ele>0</ele>
+        <time>2014-03-12T15:44:54.82</time>
+      </trkpt>
+      <trkpt lat="46.77412" lon="23.58776">
+        <ele>0</ele>
+        <time>2014-03-12T15:45:07.83</time>
+      </trkpt>
+      <trkpt lat="46.77437" lon="23.58756">
+        <ele>0</ele>
+        <time>2014-03-12T15:45:13.38</time>
+      </trkpt>
+      <trkpt lat="46.77445" lon="23.5875">
+        <ele>0</ele>
+        <time>2014-03-12T15:45:19.40</time>
+      </trkpt>
+      <trkpt lat="46.77453" lon="23.587436666666665">
+        <ele>0</ele>
+        <time>2014-03-12T15:45:38.11</time>
+      </trkpt>
+      <trkpt lat="46.7746" lon="23.58741">
+        <ele>0</ele>
+        <time>2014-03-12T15:45:50.43</time>
+      </trkpt>
+      <trkpt lat="46.774696666666664" lon="23.58737">
+        <ele>0</ele>
+        <time>2014-03-12T15:46:08.64</time>
+      </trkpt>
+      <trkpt lat="46.77478" lon="23.58735">
+        <ele>0</ele>
+        <time>2014-03-12T15:46:20.96</time>
+      </trkpt>
+      <trkpt lat="46.77489" lon="23.58734">
+        <ele>0</ele>
+        <time>2014-03-12T15:46:33.27</time>
+      </trkpt>
+      <trkpt lat="46.77574" lon="23.58724">
+        <ele>0</ele>
+        <time>2014-03-12T15:46:39.81</time>
+      </trkpt>
+      <trkpt lat="46.77585" lon="23.58723">
+        <ele>0</ele>
+        <time>2014-03-12T15:46:45.60</time>
+      </trkpt>
+      <trkpt lat="46.77619" lon="23.58718">
+        <ele>0</ele>
+        <time>2014-03-12T15:46:52.10</time>
+      </trkpt>
+      <trkpt lat="46.776376666666664" lon="23.58716">
+        <ele>0</ele>
+        <time>2014-03-12T15:46:57.85</time>
+      </trkpt>
+      <trkpt lat="46.776376666666664" lon="23.58716">
+        <ele>0</ele>
+        <time>2014-03-12T15:47:00.35</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

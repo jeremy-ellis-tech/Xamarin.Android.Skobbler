@@ -73,26 +73,12 @@
     <Compile Include="Util\PreferenceTypes.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\SKMaps.zip" />
-    <AndroidAsset Include="Assets\MapCreator\mapcreatorFile.json" />
-    <AndroidAsset Include="Assets\GPXTracks\Route_1_BerlinUnterDenLinden_BerlinHohenzollerndamm.gpx" />
-    <AndroidAsset Include="Assets\GPXTracks\Route_2_BerlinUnterDenLinden_BerlinGrunewaldstrasse.gpx" />
-    <AndroidAsset Include="Assets\GPXTracks\Route_3_MunchenOskarVonMillerRing_Herterichstrasse.gpx" />
-    <AndroidAsset Include="Assets\GPXTracks\Route_4_Berlin_Hamburg.gpx" />
-    <AndroidAsset Include="Assets\GPXTracks\Route_5_Chicago_city_track.gpx" />
-    <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\raw\maps.json" />
   </ItemGroup>
   <ItemGroup>
     <TransformFile Include="Properties\AndroidManifest.xml">
       <SubType>Designer</SubType>
     </TransformFile>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\images\dot_blue_high.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\images\dot_blue_medium.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Skobbler\Skobbler.csproj">
@@ -316,6 +302,51 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\foxboro.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\MysticBasin.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\Route_1_BerlinUnterDenLinden_BerlinHohenzollerndamm.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\Route_2_BerlinUnterDenLinden_BerlinGrunewaldstrasse.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\Route_3_MunchenOskarVonMillerRing_Herterichstrasse.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\Route_4_Berlin_Hamburg.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\Route_5_Chicago_city_track.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\trackA.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\trackB.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\trackC.gpx" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\images\dot_blue_high.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\images\dot_blue_medium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\logFile\Seattle.log" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\MapCreator\mapcreatorFile.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\SKMaps.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
