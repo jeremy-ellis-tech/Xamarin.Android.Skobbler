@@ -11,6 +11,7 @@ using Android.Widget;
 using JavaObject = Java.Lang.Object;
 using Android.Media;
 using Java.IO;
+using Console = System.Console;
 using Skobbler.Ngx.Navigation;
 using Android.Util;
 
@@ -158,8 +159,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 try
                 {
                     System.IO.Stream @is = new System.IO.FileStream(soundFilePath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-                    int availableBytes = @is.available();
-                    sbyte[] tmp = new sbyte[availableBytes];
+                    int availableBytes = 0;// @is.Available();
+                    byte[] tmp = new byte[availableBytes];
                     @is.Read(tmp, 0, availableBytes);
                     if (stream != null)
                     {
@@ -235,7 +236,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Writes "data" to the "filePath" path on the disk </summary>
         /// <param name="data"> </param>
         /// <param name="filePath"> </param>
-        private void writeFile(sbyte[] data, string filePath)
+        private void writeFile(byte[] data, string filePath)
         {
             System.IO.Stream @out = null;
             try
@@ -270,8 +271,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 player.Reset();
                 File file = new File(filePath);
-                System.IO.FileStream fileInputStream = new System.IO.FileStream(file, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-                FileDescriptor fileDescriptor = fileInputStream.FD;
+                System.IO.FileStream fileInputStream = null;//new System.IO.FileStream(file, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                FileDescriptor fileDescriptor = null;// fileInputStream.FD;
                 try
                 {
                     player.SetDataSource(fileDescriptor);
@@ -293,7 +294,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
         }
 
-        public override void onCompletion(MediaPlayer mp)
+        public void OnCompletion(MediaPlayer mp)
         {
             reset();
             if (nextAdvice != null)
@@ -305,7 +306,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
         }
 
-        public override bool onError(MediaPlayer mp, int what, int extra)
+        public bool OnError(MediaPlayer mp, MediaError what, int extra)
         {
             return true; //error was handled
         }

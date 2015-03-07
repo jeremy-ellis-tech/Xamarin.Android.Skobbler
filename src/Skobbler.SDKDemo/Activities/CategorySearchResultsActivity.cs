@@ -36,7 +36,7 @@ namespace Skobbler.SDKDemo.Activities
 		/// <summary>
 		/// Search results grouped by their main category field
 		/// </summary>
-		private IDictionary<SKCategories.SKPOIMainCategory, IList<SKSearchResult>> results = new LinkedHashMap<Skobbler.Ngx.SKCategories.SKPOIMainCategory, IList<SKSearchResult>>();
+		private IDictionary<SKCategories.SKPOIMainCategory, IList<SKSearchResult>> results = new Dictionary<SKCategories.SKPOIMainCategory, IList<SKSearchResult>>();
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
@@ -84,7 +84,7 @@ namespace Skobbler.SDKDemo.Activities
 		{
 			foreach (int mainCategory in mainCategories)
 			{
-				results[Skobbler.Ngx.SKCategories.SKPOIMainCategory.forInt(mainCategory)] = new List<SKSearchResult>();
+				results[Skobbler.Ngx.SKCategories.SKPOIMainCategory.ForInt(mainCategory)] = new List<SKSearchResult>();
 			}
 			foreach (SKSearchResult result in searchResults)
 			{
@@ -100,26 +100,14 @@ namespace Skobbler.SDKDemo.Activities
 			adapter = new ResultsListAdapter(this);
 			listView.Adapter = adapter;
 
-			listView.OnItemClickListener = new OnItemClickListenerAnonymousInnerClassHelper(this);
-		}
-
-		private class OnItemClickListenerAnonymousInnerClassHelper : AdapterView.OnItemClickListener
-		{
-			private readonly CategorySearchResultsActivity outerInstance;
-
-			public OnItemClickListenerAnonymousInnerClassHelper(CategorySearchResultsActivity outerInstance)
-			{
-				this.outerInstance = outerInstance;
-			}
-
-			public override void onItemClick<T1>(AdapterView<T1> parent, View view, int position, long id)
-			{
-				if (outerInstance.selectedMainCategory == null)
-				{
-					outerInstance.selectedMainCategory = SKPOIMainCategory.forInt(mainCategories[position]);
-					outerInstance.adapter.NotifyDataSetChanged();
-				}
-			}
+            listView.ItemClick += (s, e) =>
+            {
+                if (selectedMainCategory == null)
+                {
+                    selectedMainCategory = SKCategories.SKPOIMainCategory.ForInt(mainCategories[e.Position]);
+                    adapter.NotifyDataSetChanged();
+                }
+            };
 		}
 
 		public override void onBackPressed()
@@ -164,7 +152,7 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				if (outerInstance.selectedMainCategory == null)
 				{
-					return outerInstance.results[mainCategories[position]];
+                    return outerInstance.results[SKCategories.SKPOIMainCategory.ForInt(mainCategories[position])];
 				}
 				else
 				{
@@ -182,7 +170,7 @@ namespace Skobbler.SDKDemo.Activities
 				View view = null;
 				if (convertView == null)
 				{
-					LayoutInflater inflater = (LayoutInflater) GetSystemService(Context.LayoutInflaterService);
+					LayoutInflater inflater = (LayoutInflater)outerInstance.GetSystemService(Context.LayoutInflaterService);
 					view = inflater.Inflate(Resource.Layout.layout_search_list_item, null);
 				}
 				else
@@ -191,14 +179,14 @@ namespace Skobbler.SDKDemo.Activities
 				}
 				if (outerInstance.selectedMainCategory == null)
 				{
-					((TextView) view.FindViewById(Resource.Id.title)).Text = SKCategories.SKPOIMainCategory.ForInt(mainCategories[position]).ToString().ReplaceFirst(".*_", "");
+					((TextView) view.FindViewById(Resource.Id.title)).Text = SKCategories.SKPOIMainCategory.ForInt(mainCategories[position]).ToString().Replace(".*_", "");
 					((TextView) view.FindViewById(Resource.Id.subtitle)).Text = "number of POIs: " + outerInstance.results[SKCategories.SKPOIMainCategory.ForInt(mainCategories[position])].Count;
 				}
 				else
 				{
 					SKSearchResult result = outerInstance.results[outerInstance.selectedMainCategory][position];
-					((TextView) view.FindViewById(Resource.Id.title)).Text = !result.Name.Equals("") ? result.Name : result.MainCategory.ToString().ReplaceAll(".*_", "");
-					((TextView) view.FindViewById(Resource.Id.subtitle)).Text = "type: " + result.Category.ToString().ReplaceAll(".*_", "");
+                    ((TextView)view.FindViewById(Resource.Id.title)).Text = !result.Name.Equals("") ? result.Name : result.MainCategory.ToString().Replace(".*_", "");
+                    ((TextView)view.FindViewById(Resource.Id.subtitle)).Text = "type: " + result.Category.ToString().Replace(".*_", "");
 				}
 				return view;
 			}

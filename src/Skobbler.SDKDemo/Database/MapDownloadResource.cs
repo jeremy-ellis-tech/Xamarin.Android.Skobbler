@@ -93,7 +93,7 @@ namespace Skobbler.SDKDemo.Database
 		/// </summary>
 		public MapDownloadResource()
 		{
-			names = new LinkedHashMap<string, string>();
+			names = new Dictionary<string, string>();
 		}
 
 		/// <returns> the resource parent code </returns>
@@ -143,11 +143,11 @@ namespace Skobbler.SDKDemo.Database
 		/// <param name="newNames"> resource names in all languages </param>
 		public virtual void setNames(string newNames)
 		{
-			this.names = new LinkedHashMap<string, string>();
-			string[] keyValuePairs = newNames.Split(";", true);
+			this.names = new Dictionary<string, string>();
+			string[] keyValuePairs = newNames.Split(';');
 			foreach (String keyValue in keyValuePairs)
 			{
-				string[] newName = keyValue.Split("=");
+				string[] newName = keyValue.Split('=');
 				this.names[newName[0]] = newName[1];
 			}
 		}

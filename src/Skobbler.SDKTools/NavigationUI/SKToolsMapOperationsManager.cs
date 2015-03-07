@@ -320,7 +320,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             else
             {
-                if (currentActivity.Resources.Configuration.ScreenLayout == Configuration.ORIENTATION_PORTRAIT)
+                if (currentActivity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait)
                 {
                     SKRouteManager.Instance.ZoomToRoute(1.3f, 2.2f, offsetPixelsTop, 10, 5, 5);
                 }

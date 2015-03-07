@@ -59,7 +59,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// installs a list of DOWNLOADED resources
         /// </summary>
-        public override void run()
+        public override void Run()
         {
             while (existsAnyRemainingInstall())
             {

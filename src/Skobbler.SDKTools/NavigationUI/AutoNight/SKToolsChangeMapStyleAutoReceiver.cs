@@ -19,7 +19,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
         private const string TAG = "ChangeMapStyleAutoReceiver";
 
-        public override void onReceive(Context context, Intent intent)
+        public override void OnReceive(Context context, Intent intent)
         {
             Log.Error(TAG, "Received Broadcast from alarm manager to change the map style");
             if (!SKToolsLogicManager.Instance.NavigationStopped)

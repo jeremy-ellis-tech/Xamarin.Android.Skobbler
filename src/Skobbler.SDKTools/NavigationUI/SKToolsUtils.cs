@@ -161,7 +161,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <returns> a generated ID value </returns>
         public static int generateViewId()
         {
-            if (Build.VERSION.SdkInt < Build.VERSION_CODES.JELLY_BEAN_MR1)
+            if (Build.VERSION.SdkInt < Build.VERSION_CODES.JellyBeanMr1)
             {
                 for (; ; )
                 {
@@ -180,7 +180,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             else
             {
-                return View.GenerateViewId;
+                return View.GenerateViewId();
             }
         }
 
@@ -363,7 +363,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     builder.Append(skSearchResultParent.ParentName + " ");
                 }
 
-                string formattedAddress = builder.ToString().ReplaceAll("\n(\\s)*$", "");
+                string formattedAddress = builder.ToString().Replace("\n(\\s)*$", "");
                 return formattedAddress.Trim().Equals("") ? "" : formattedAddress;
             }
             return "";

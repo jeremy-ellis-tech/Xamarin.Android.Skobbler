@@ -14,6 +14,9 @@ using Java.IO;
 using Java.Lang.Reflect;
 using Java.Lang;
 using Environment = Android.OS.Environment;
+using Exception = System.Exception;
+using System.IO;
+using IOException = System.IO.IOException;
 
 namespace Skobbler.Ngx.SDKTools.Download
 {
@@ -127,7 +130,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 Method getAvailableBytesMethod = null;
                 try
                 {
-                    getAvailableBytesMethod = statFs.GetType().GetMethod("getAvailableBytes");
+                    getAvailableBytesMethod = statFs.Class.GetMethod("getAvailableBytes");
                 }
                 catch (NoSuchMethodException e)
                 {
@@ -187,9 +190,10 @@ namespace Skobbler.Ngx.SDKTools.Download
                         bool check = false;
                         try
                         {
-                            System.IO.FileStream fs = new System.IO.FileStream("/proc/mounts", System.IO.FileMode.Open, System.IO.FileAccess.Read);
-                            DataInputStream @in = new DataInputStream(fs);
-                            StreamReader br = new StreamReader(@in);
+                            FileStream fs = new FileStream("/proc/mounts", FileMode.OpenOrCreate); 
+                            StreamReader @in = new StreamReader(fs);
+                            //BufferedReader br = new BufferedReader(new InputStreamReader(@in));
+                            BufferedReader br = null;
                             string strLine;
                             while ((strLine = br.ReadLine()) != null && !check)
                             {

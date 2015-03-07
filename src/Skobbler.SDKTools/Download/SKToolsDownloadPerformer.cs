@@ -16,6 +16,14 @@ using System.IO;
 using Java.IO;
 using Java.Net;
 using Skobbler.Ngx.Packages;
+using Skobbler.Ngx.SDKTools.Util;
+using IOException = System.IO.IOException;
+using FileNotFoundException = System.IO.FileNotFoundException;
+using StringBuilder = System.Text.StringBuilder;
+using Exception = System.Exception;
+using System.Threading.Tasks;
+using Org.Apache.Http.Client.Methods;
+using System.Net.Http;
 
 namespace Skobbler.Ngx.SDKTools.Download
 {
@@ -113,7 +121,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// runs when download request cannot return a response, after a while
         /// </summary>
-        private Runnable downloadTimeoutRunnable;
+        private Action downloadTimeoutAction;
 
         /// <summary>
         /// time at first retry
@@ -160,11 +168,11 @@ namespace Skobbler.Ngx.SDKTools.Download
             }
         }
 
-        public override void run()
+        public override void Run()
         {
             // current input stream
             System.IO.Stream responseStream = null;
-            sbyte[] data;
+            byte[] data;
             // total bytes read
             long bytesReadSoFar;
             // bytes read during current INTERNET connection
@@ -176,7 +184,7 @@ namespace Skobbler.Ngx.SDKTools.Download
 
             anyRetryMade = false;
             timeAtFirstRetry = 0;
-            lastTimeWhenInternetWorked = DateTimeHelperClass.CurrentUnixTimeMillis();
+            lastTimeWhenInternetWorked = DateTimeUtil.JavaTime();
 
             initializeResourcesWhenDownloadThreadStarts();
 
@@ -255,7 +263,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                         // starts the timeout handler
                         startsDownloadTimeoutHandler();
                         // executes the download request
-                        HttpResponse response = httpClient.execute(httpRequest);
+                        HttpResponseMessage response = null;
                         if (response == null)
                         {
                             throw new SocketException();
@@ -263,10 +271,10 @@ namespace Skobbler.Ngx.SDKTools.Download
                         else
                         {
                             anyRetryMade = false;
-                            HttpEntity entity = response.Entity;
-                            int statusCode = response.StatusLine.StatusCode;
+                            HttpResponseMessage entity = null; //response.Entity;
+                            int statusCode = 0; // response.StatusLine.StatusCode;
                             // if other status code than 200 or 206(partial download) throw exception
-                            if (statusCode != HttpURLConnection.HTTP_OK && statusCode != HttpURLConnection.HTTP_PARTIAL)
+                            if (statusCode != (int)HttpURLConnection.HttpOk && statusCode != (int)HttpURLConnection.HttpPartial)
                             {
                                 SKLogging.WriteLog(TAG, "Wrong status code returned !", SKLogging.LogDebug);
                                 throw new IOException("HTTP response code: " + statusCode);
@@ -278,7 +286,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                             {
                                 if (entity != null)
                                 {
-                                    responseStream = entity.Content;
+                                    responseStream = null; //entity.Content;
                                 }
                             }
                             catch (IllegalStateException)
@@ -291,7 +299,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                             }
 
                             // create a byte array buffer of 1Mb
-                            data = new sbyte[NO_BYTES_INTO_ONE_MB];
+                            data = new byte[NO_BYTES_INTO_ONE_MB];
                             // creates the randomAccessFile - if exists it opens it
                             RandomAccessFile localFile = new RandomAccessFile(currentDownloadStep.DestinationPath, "rw");
                             bytesReadSoFar = localFile.Length();
@@ -308,14 +316,14 @@ namespace Skobbler.Ngx.SDKTools.Download
                                 // check number of read bytes
                                 if (bytesReadThisTime > 0)
                                 {
-                                    lastTimeWhenInternetWorked = DateTimeHelperClass.CurrentUnixTimeMillis();
+                                    lastTimeWhenInternetWorked = DateTimeUtil.JavaTime();
                                     bytesReadSoFar += bytesReadThisTime;
                                     currentDownloadItem.NoDownloadedBytes = bytesReadSoFar;
                                     bytesReadInThisConnection += bytesReadThisTime;
                                     currentDownloadItem.NoDownloadedBytesInThisConnection = bytesReadInThisConnection;
                                     // write the chunk of data in the file
                                     localFile.Write(data, 0, bytesReadThisTime);
-                                    long newTime = DateTimeHelperClass.CurrentUnixTimeMillis();
+                                    long newTime = DateTimeUtil.JavaTime();
                                     // notify the UI every second
                                     if ((newTime - lastDownloadProgressTime) > NO_MILLIS_INTO_ONE_SEC)
                                     {
@@ -385,7 +393,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                             stopIfTimeoutLimitEnded(false);
                         }
                     }
-                    catch (System.IndexOutOfRangeException e)
+                    catch (IndexOutOfRangeException e)
                     {
                         SKLogging.WriteLog(TAG, "Index Out Of Bounds Exception ; " + e.Message, SKLogging.LogDebug);
                         stopsDownloadTimeoutHandler();
@@ -452,7 +460,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     else
                     {
                         SKLogging.WriteLog(TAG, "Current resource is only partially downloaded, so its download will continue = ", SKLogging.LogDebug);
-                        httpRequest.addHeader(HTTP_PROP_RANGE, "bytes=" + bytesRead + "-");
+                        httpRequest.AddHeader(HTTP_PROP_RANGE, "bytes=" + bytesRead + "-");
                     }
                 }
                 destinationFile.Close();
@@ -502,7 +510,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                                 // add current resource to install queue
                                 lock (typeof(SKToolsUnzipPerformer))
                                 {
-                                    if ((skToolsUnzipPerformer == null) || (!skToolsUnzipPerformer.Alive))
+                                    if ((skToolsUnzipPerformer == null) || (!skToolsUnzipPerformer.IsAlive))
                                     {
                                         skToolsUnzipPerformer = new SKToolsUnzipPerformer(downloadListener);
                                         skToolsUnzipPerformer.addItemForInstall(currentDownloadItem);
@@ -543,7 +551,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         private void initializeResourcesWhenDownloadThreadStarts()
         {
             // instance of HttpClient instance
-            httpClient = new DefaultHttpClient();
+            httpClient = new HttpClient();
             if ((downloadListener != null) && (downloadListener is Activity))
             {
                 WifiManager wifimanager = (WifiManager)((Activity)downloadListener).GetSystemService(Context.WifiService);
@@ -564,11 +572,11 @@ namespace Skobbler.Ngx.SDKTools.Download
             // release the HttpClient resource
             if (httpClient != null)
             {
-                if (httpClient.ConnectionManager != null)
+                if (httpClient != null)
                 {
                     try
                     {
-                        httpClient.ConnectionManager.shutdown();
+                        httpClient.Dispose();
                     }
                     catch (Exception ex)
                     {
@@ -585,83 +593,45 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             if ((downloadListener != null) && downloadListener is Activity)
             {
-                ((Activity)downloadListener).RunOnUiThread(new RunnableAnonymousInnerClassHelper(this));
+                ((Activity)downloadListener).RunOnUiThread(() =>
+                {
+                    if (downloadTimeoutHandler == null)
+                    {
+                        downloadTimeoutHandler = new Handler();
+                        downloadTimeoutAction = CancelAction;
+                        downloadTimeoutHandler.PostDelayed(downloadTimeoutAction, TIME_OUT_LIMIT_FOR_EDGE_CASES);
+                    }
+                });
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper : IRunnable
+        private void CancelAction()
         {
-            private readonly SKToolsDownloadPerformer outerInstance;
+            SKLogging.WriteLog(TAG, "The blocked request is stopped now => the user is notified that connection was lost", SKLogging.LogDebug);
+            isDownloadRequestUnresponsive = true;
 
-            public RunnableAnonymousInnerClassHelper(SKToolsDownloadPerformer outerInstance)
+            // abort current request
+            if (httpRequest != null)
             {
-                this.outerInstance = outerInstance;
+                httpRequest.Abort();
             }
 
-            public override void run()
+            downloadTimeoutHandler = null;
+            if (!isDownloadProcessCancelled && !isCurrentDownloadCancelled || !isDownloadProcessPaused)
             {
-                if (outerInstance.downloadTimeoutHandler == null)
-                {
-                    outerInstance.downloadTimeoutHandler = new Handler();
-                    outerInstance.downloadTimeoutRunnable = new RunnableAnonymousInnerClassHelper2(this);
-                    outerInstance.downloadTimeoutHandler.postDelayed(outerInstance.downloadTimeoutRunnable, TIME_OUT_LIMIT_FOR_EDGE_CASES);
-                }
+                stopDownloadProcessWhenInternetConnectionFails(false);
             }
-
-            private class RunnableAnonymousInnerClassHelper2 : IRunnable
+            else if (isDownloadProcessCancelled)
             {
-                private readonly RunnableAnonymousInnerClassHelper outerInstance;
-
-                public RunnableAnonymousInnerClassHelper2(RunnableAnonymousInnerClassHelper outerInstance)
-                {
-                    this.outerInstance = outerInstance;
-                }
-
-
-                public override void run()
-                {
-                    SKLogging.WriteLog(TAG, "The blocked request is stopped now => the user is notified that connection was lost", SKLogging.LogDebug);
-                    outerInstance.outerInstance.isDownloadRequestUnresponsive = true;
-                    // abort current request
-                    new AsyncTaskAnonymousInnerClassHelper(this)
-                    .execute();
-                    outerInstance.outerInstance.downloadTimeoutHandler = null;
-                    if (!outerInstance.outerInstance.isDownloadProcessCancelled && !outerInstance.outerInstance.isCurrentDownloadCancelled || !outerInstance.outerInstance.isDownloadProcessPaused)
-                    {
-                        outerInstance.outerInstance.stopDownloadProcessWhenInternetConnectionFails(false);
-                    }
-                    else if (outerInstance.outerInstance.isDownloadProcessCancelled)
-                    {
-                        outerInstance.outerInstance.cancelDownloadProcess();
-                    }
-                    else if (outerInstance.outerInstance.isCurrentDownloadCancelled)
-                    {
-                        outerInstance.outerInstance.cancelCurrentDownload();
-                    }
-                    else if (outerInstance.outerInstance.isDownloadProcessPaused)
-                    {
-                        outerInstance.outerInstance.pauseDownloadProcess();
-                    }
-                }
-
-                private class AsyncTaskAnonymousInnerClassHelper : AsyncTask<Void, Void, Void>
-                {
-                    private readonly RunnableAnonymousInnerClassHelper2 outerInstance;
-
-                    public AsyncTaskAnonymousInnerClassHelper(RunnableAnonymousInnerClassHelper2 outerInstance)
-                    {
-                        this.outerInstance = outerInstance;
-                    }
-
-                    protected internal override Void doInBackground(params Void[] @params)
-                    {
-                        if (outerInstance.outerInstance.outerInstance.httpRequest != null)
-                        {
-                            outerInstance.outerInstance.outerInstance.httpRequest.abort();
-                        }
-                        return null;
-                    }
-                }
+                cancelDownloadProcess();
+            }
+            else if (isCurrentDownloadCancelled)
+            {
+                cancelCurrentDownload();
+            }
+            else if (isDownloadProcessPaused)
+            {
+                pauseDownloadProcess();
             }
         }
 
@@ -672,27 +642,15 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             if ((downloadListener != null) && downloadListener is Activity)
             {
-                ((Activity)downloadListener).RunOnUiThread(new RunnableAnonymousInnerClassHelper3(this));
-            }
-        }
-
-        private class RunnableAnonymousInnerClassHelper3 : IRunnable
-        {
-            private readonly SKToolsDownloadPerformer outerInstance;
-
-            public RunnableAnonymousInnerClassHelper3(SKToolsDownloadPerformer outerInstance)
-            {
-                this.outerInstance = outerInstance;
-            }
-
-            public override void run()
-            {
-                if (outerInstance.downloadTimeoutHandler != null)
+                ((Activity)downloadListener).RunOnUiThread(() =>
                 {
-                    outerInstance.downloadTimeoutHandler.RemoveCallbacks(outerInstance.downloadTimeoutRunnable);
-                    outerInstance.downloadTimeoutRunnable = null;
-                    outerInstance.downloadTimeoutHandler = null;
-                }
+                    if (downloadTimeoutHandler != null)
+                    {
+                        downloadTimeoutHandler.RemoveCallbacks(downloadTimeoutAction);
+                        downloadTimeoutAction = null;
+                        downloadTimeoutHandler = null;
+                    }
+                });
             }
         }
 
@@ -702,7 +660,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         private void stopIfTimeoutLimitEnded(bool stopRequest)
         {
             stopsDownloadTimeoutHandler();
-            if (((DateTimeHelperClass.CurrentUnixTimeMillis() - lastTimeWhenInternetWorked) > TIME_OUT_LIMIT) || stopRequest)
+            if (((DateTimeUtil.JavaTime() - lastTimeWhenInternetWorked) > TIME_OUT_LIMIT) || stopRequest)
             {
                 SKLogging.WriteLog(TAG, "The request last more than 15 seconds, so no timeout is made", SKLogging.LogDebug);
                 if (!isDownloadProcessCancelled && !isCurrentDownloadCancelled && !isDownloadProcessPaused)
@@ -739,12 +697,12 @@ namespace Skobbler.Ngx.SDKTools.Download
                 // if no retry was made, during current INTERNET connection, then retain the time at which the first one is made
                 if (!anyRetryMade)
                 {
-                    timeAtFirstRetry = DateTimeHelperClass.CurrentUnixTimeMillis();
+                    timeAtFirstRetry = DateTimeUtil.JavaTime();
                     anyRetryMade = true;
                 }
 
                 // if it didn't pass 15 seconds from the first retry, will sleep 0.5 seconds and then will make a new attempt to download the resource
-                if ((DateTimeHelperClass.CurrentUnixTimeMillis() - timeAtFirstRetry) < TIME_OUT_LIMIT)
+                if ((DateTimeUtil.JavaTime() - timeAtFirstRetry) < TIME_OUT_LIMIT)
                 {
                     SKLogging.WriteLog(TAG, "Sleep and then retry", SKLogging.LogDebug);
                     try
@@ -906,7 +864,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                             // add current resource to install queue
                             lock (typeof(SKToolsUnzipPerformer))
                             {
-                                if ((skToolsUnzipPerformer == null) || (!skToolsUnzipPerformer.Alive))
+                                if ((skToolsUnzipPerformer == null) || (!skToolsUnzipPerformer.IsAlive))
                                 {
                                     skToolsUnzipPerformer = new SKToolsUnzipPerformer(downloadListener);
                                     skToolsUnzipPerformer.addItemForInstall(currentDownloadItem);

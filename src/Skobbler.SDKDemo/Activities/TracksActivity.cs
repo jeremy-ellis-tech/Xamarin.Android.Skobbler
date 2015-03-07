@@ -9,44 +9,23 @@ namespace Skobbler.SDKDemo.Activities
     [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class TracksActivity : Activity
 	{
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
 
-		protected internal override void onCreate(Bundle savedInstanceState)
-		{
-			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_tracks);
+            SetContentView(Resource.Layout.activity_tracks);
 
-			AlertDialog alertDialog = (new AlertDialog.Builder(this)).Create();
-			alertDialog.SetMessage(GetString(Resource.String.gpx_license_notification_text));
-			alertDialog.SetCancelable(true);
-			alertDialog.SetButton(AlertDialog.BUTTON_POSITIVE, GetString(Resource.String.ok_text), new OnClickListenerAnonymousInnerClassHelper(this, alertDialog));
-			alertDialog.Show();
-
-
-		}
-
-		private class OnClickListenerAnonymousInnerClassHelper : IDialogInterfaceOnClickListener
-		{
-			private readonly TracksActivity outerInstance;
-
-			private AlertDialog alertDialog;
-
-			public OnClickListenerAnonymousInnerClassHelper(TracksActivity outerInstance, AlertDialog alertDialog)
-			{
-				this.outerInstance = outerInstance;
-				this.alertDialog = alertDialog;
-			}
-
-
-			public virtual void onClick(DialogInterface dialog, int id)
-			{
-				alertDialog.Cancel();
-			}
-		}
+            AlertDialog alertDialog = (new AlertDialog.Builder(this)).Create();
+            alertDialog.SetMessage(GetString(Resource.String.gpx_license_notification_text));
+            alertDialog.SetCancelable(true);
+            alertDialog.SetButton(GetString(Resource.String.ok_text), (s, e) => { alertDialog.Cancel(); });
+            alertDialog.Show();
+        }
 
         [Export("OnMenuOptionClick")]
 		public virtual void onMenuOptionClick(View v)
 		{
-			Intent intent = new Intent(typeof(TracksActivity), typeof(TrackElementsActivity));
+			Intent intent = new Intent(this, typeof(TrackElementsActivity));
 			switch (v.Id)
 			{
 				case Resource.Id.gpx_chicago:

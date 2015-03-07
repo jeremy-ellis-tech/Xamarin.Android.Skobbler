@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Util;
+using Skobbler.Ngx.SDKTools.Util;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 {
@@ -76,7 +77,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                     Intent intent = new Intent(value, typeof(SKToolsCalculateSunriseSunsetTimeAutoReceiver));
                     pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(value, 0, intent, 0);
 
-                    hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeHelperClass.CurrentUnixTimeMillis(), SKToolsSunriseSunsetCalculator.NR_OF_MILLISECONDS_IN_A_HOUR, pendingHourlyAlarmIntent);
+                    hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeUtil.JavaTime(), SKToolsSunriseSunsetCalculator.NR_OF_MILLISECONDS_IN_A_HOUR, pendingHourlyAlarmIntent);
 
                 }
             }
@@ -88,7 +89,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// <param name="startNow"> start now or after an hour </param>
         public virtual void setAlarmForHourlyNotificationAfterKitKat(Context context, bool startNow)
         {
-            if (hourlyAlarmManager == null && Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
+            if (hourlyAlarmManager == null && Build.VERSION.SdkInt >= Build.VERSION_CODES.Kitkat)
             {
                 //if it already an existing alarm for hourly notification, cancel it
                 cancelAlarmForForHourlyNotification();
@@ -96,12 +97,12 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 Intent intent = new Intent(context, typeof(SKToolsCalculateSunriseSunsetTimeAutoReceiver));
                 pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(context, 0, intent, 0);
 
-                long timeToStart = DateTimeHelperClass.CurrentUnixTimeMillis();
+                long timeToStart = DateTimeUtil.JavaTime();
                 if (!startNow)
                 {
                     timeToStart += SKToolsSunriseSunsetCalculator.NR_OF_MILLISECONDS_IN_A_HOUR;
                 }
-                hourlyAlarmManager.Set(AlarmType.Rtc, timeToStart, pendingHourlyAlarmIntent);
+                hourlyAlarmManager.SetExact(AlarmType.Rtc, timeToStart, pendingHourlyAlarmIntent);
             }
         }
 
@@ -146,9 +147,10 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 alarmManagerForAutoNightForCalculatedSunriseSunsetHours = (AlarmManager)value.GetSystemService(Context.AlarmService);
 
                 DateTime date = DateTime.Now; // initializes to now
-                DateTime mapStyleChangeCalendar = new DateTime();
-                mapStyleChangeCalendar = new DateTime(date);
+                DateTime mapStyleChangeCalendar = new DateTime(date.Ticks);
+
                 wasSetAlarmForSunriseSunsetCalculation = true;
+
                 if (!SKToolsDateUtils.Daytime)
                 {
                     if (shouldSetAlarmNextDay())
@@ -156,18 +158,15 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                         mapStyleChangeCalendar.AddDays(1);
                     }
                     // set the hour for starting the day style
-                    mapStyleChangeCalendar.Set(DateTime.HOUR_OF_DAY, SKToolsDateUtils.AUTO_NIGHT_SUNRISE_HOUR);
-                    mapStyleChangeCalendar.Set(DateTime.MINUTE, SKToolsDateUtils.AUTO_NIGHT_SUNRISE_MINUTE);
+                    mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month, mapStyleChangeCalendar.Day, SKToolsDateUtils.AUTO_NIGHT_SUNRISE_HOUR, SKToolsDateUtils.AUTO_NIGHT_SUNRISE_MINUTE, 0, 0);
                 }
                 else
                 {
                     // set the hour for starting the night style
-                    mapStyleChangeCalendar.set(DateTime.HOUR_OF_DAY, SKToolsDateUtils.AUTO_NIGHT_SUNSET_HOUR);
-                    mapStyleChangeCalendar.set(DateTime.MINUTE, SKToolsDateUtils.AUTO_NIGHT_SUNSET_MINUTE);
+                    mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month, mapStyleChangeCalendar.Day, SKToolsDateUtils.AUTO_NIGHT_SUNSET_HOUR, SKToolsDateUtils.AUTO_NIGHT_SUNSET_MINUTE, 0, 0);
                 }
-                mapStyleChangeCalendar.set(DateTime.SECOND, 0);
 
-                if (Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
+                if (Build.VERSION.SdkInt >= Build.VERSION_CODES.Kitkat)
                 {
                     alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
                 }

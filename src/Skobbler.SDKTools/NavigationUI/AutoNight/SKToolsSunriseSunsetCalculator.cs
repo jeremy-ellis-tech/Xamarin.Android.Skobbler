@@ -1,16 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.Util;
 using Java.Util;
+using System;
+using TimeZone = Java.Util.TimeZone;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 {
@@ -74,13 +65,13 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
             // calculate the Sun's true longitude
 
-            double sunLongitude = meanAnomaly + (1.916 * Math.Sin(Math.toRadians(meanAnomaly))) + (0.020 * Math.Sin(2 * Math.toRadians(meanAnomaly))) + 282.634;
+            double sunLongitude = meanAnomaly + (1.916 * Math.Sin(meanAnomaly * Math.PI / 180.0)) + (0.020 * Math.Sin(2 * meanAnomaly * Math.PI / 180.0)) + 282.634;
 
             sunLongitude = getNormalizedValue(sunLongitude, 360);
 
             // calculate the Sun's right ascension
 
-            double sunRightAscension = Math.toDegrees(Math.Atan(0.91764 * Math.Tan(Math.toRadians(sunLongitude))));
+            double sunRightAscension = Math.Atan(0.91764 * Math.Tan(sunLongitude * Math.PI / 180)) * 180.0 / Math.PI;
             sunRightAscension = getNormalizedValue(sunRightAscension, 360);
             // right ascension value needs to be in the same quadrant as L
 
@@ -94,12 +85,12 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
             // calculate the Sun's declination
 
-            double sunSinDeclination = 0.39782 * Math.Sin(Math.toRadians(sunLongitude));
+            double sunSinDeclination = 0.39782 * Math.Sin(sunLongitude * Math.PI / 180.0);
             double sunCosDeclination = Math.Cos(Math.Asin(sunSinDeclination));
 
             // calculate the Sun's local hour angle
 
-            double cosLocalHour = (Math.Cos(Math.toRadians(zenith)) - (sunSinDeclination * Math.Sin(Math.toRadians(latitude)))) / (sunCosDeclination * Math.Cos(Math.toRadians(latitude)));
+            double cosLocalHour = (Math.Cos(zenith * Math.PI / 180.0) - (sunSinDeclination * Math.Sin(latitude * Math.PI / 180.0))) / (sunCosDeclination * Math.Cos(latitude * Math.PI / 180.0));
 
             if (cosLocalHour > 1)
             {
@@ -115,11 +106,11 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
             if (calculateSunrise)
             {
-                localHour = 360.0 - Math.toDegrees(Math.Acos(cosLocalHour));
+                localHour = 360.0 - Math.Acos(cosLocalHour) * 180.0 / Math.PI;
             }
             else
             {
-                localHour = Math.toDegrees(Math.Acos(cosLocalHour));
+                localHour = Math.Acos(cosLocalHour) * 180.0 / Math.PI;
             }
             localHour = localHour / 15.0;
 
@@ -183,8 +174,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
             get
             {
                 TimeZone timezone = TimeZone.Default;
-                DateTime calendar = GregorianCalendar.getInstance(timezone);
-                int offsetInMillis = timezone.getOffset(calendar.Ticks);
+                Calendar calendar = GregorianCalendar.GetInstance(timezone);
+                int offsetInMillis = timezone.GetOffset(calendar.TimeInMillis);
                 int offset = offsetInMillis / NR_OF_MILLISECONDS_IN_A_HOUR;
                 return offset;
             }

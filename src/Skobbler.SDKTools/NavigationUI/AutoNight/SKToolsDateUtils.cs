@@ -75,21 +75,19 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         {
             get
             {
-                SimpleDateFormat format = new SimpleDateFormat("H");
-                return sbyte.Parse(format.Format(DateTime.Now));
+                return DateTime.Now.Hour;
             }
         }
 
         /// <summary>
-        /// Returns the current hour of the day as set on the device.
+        /// Returns the current minute of the day as set on the device.
         /// @return
         /// </summary>
         public static int MinuteOfDay
         {
             get
             {
-                SimpleDateFormat format = new SimpleDateFormat("m");
-                return sbyte.Parse(format.Format(DateTime.Now));
+                return DateTime.Now.Minute;
             }
         }
 

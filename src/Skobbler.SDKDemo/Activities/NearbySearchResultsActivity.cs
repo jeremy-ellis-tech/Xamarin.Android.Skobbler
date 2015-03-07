@@ -114,14 +114,14 @@ namespace Skobbler.SDKDemo.Activities
 				View view = null;
 				if (convertView == null)
 				{
-					LayoutInflater inflater = (LayoutInflater) GetSystemService(Context.LayoutInflaterService);
+                    LayoutInflater inflater = (LayoutInflater)outerInstance.GetSystemService(Context.LayoutInflaterService);
 					view = inflater.Inflate(Resource.Layout.layout_search_list_item, null);
 				}
 				else
 				{
 					view = convertView;
 				}
-				((TextView) view.FindViewById(Resource.Id.title)).Text = !outerInstance.items[position].Item1.Equals("") ? outerInstance.items[position].first : " - ";
+				((TextView) view.FindViewById(Resource.Id.title)).Text = !outerInstance.items[position].Item1.Equals("") ? outerInstance.items[position].Item1 : " - ";
 				((TextView) view.FindViewById(Resource.Id.subtitle)).Text = "type: " + outerInstance.items[position].Item2;
 				return view;
 			}

@@ -3,7 +3,10 @@ using Org.Json;
 using Skobbler.Ngx.Util;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using Console = System.Console;
+using StringWriter = Java.IO.StringWriter;
 
 namespace Skobbler.SDKDemo.Database
 {
@@ -93,9 +96,9 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void parseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, System.IO.Stream inputStream)
 		{
 			Console.WriteLine("Catalin ; start parsing !!!");
-			long startTime = DateTimeHelperClass.CurrentUnixTimeMillis();
+			long startTime = DateTimeUtil.JavaTime();
 			JSONObject reader = new JSONObject(convertJSONFileContentToAString(inputStream));
-			JSONArray regionsArray = reader.getJSONArray(REGIONS_ID);
+			JSONArray regionsArray = reader.GetJSONArray(REGIONS_ID);
 			if (regionsArray != null)
 			{
 				readUSRegionsHierarchy(regionItemsCodes, regionsArray);
@@ -130,7 +133,7 @@ namespace Skobbler.SDKDemo.Database
 			Writer stringWriter = new StringWriter();
 			try
 			{
-				Reader bufferedReader = new System.IO.StreamReader(inputStream, Encoding.UTF8);
+				var bufferedReader = new StreamReader(inputStream, Encoding.UTF8);
 				int n;
 				while ((n = bufferedReader.Read(buffer)) != -1)
 				{

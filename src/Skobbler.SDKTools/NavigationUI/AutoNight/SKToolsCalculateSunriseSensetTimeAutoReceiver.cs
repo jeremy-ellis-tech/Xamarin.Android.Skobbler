@@ -19,7 +19,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
         private const string TAG = "CalculateSunriseSunsetTimeAutoReceiver";
 
-        public override void onReceive(Context context, Intent intent)
+        public override void OnReceive(Context context, Intent intent)
         {
             Log.Error(TAG, "Received Broadcast from alarm manager to recalculate the sunrise / sunset hours");
             if (SKToolsLogicManager.lastUserPosition != null && !SKToolsLogicManager.Instance.NavigationStopped)
@@ -27,7 +27,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 SKToolsSunriseSunsetCalculator.calculateSunriseSunsetHours(SKToolsLogicManager.lastUserPosition.Latitude, SKToolsLogicManager.lastUserPosition.Longitude, SKToolsSunriseSunsetCalculator.OFFICIAL);
             }
 
-            if (Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
+            if (Build.VERSION.SdkInt >= Build.VERSION_CODES.Kitkat)
             {
                 SKToolsAutoNightManager.Instance.setAlarmForHourlyNotificationAfterKitKat(context, false);
             }
