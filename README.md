@@ -13,7 +13,7 @@ This repository includes a C# translation of the demo included with the Skobbler
 
 1. Clone the repo.
 2. Build the Skobbler.Binding project.
-3. Reference "Skobbler.dll" from your project; found under `"Xamarin.Android.Skobbler\Skobbler.Binding\bin\[Debug|Release][-$ABI]\Skobbler.dll"`
+3. Reference "Skobbler.dll" from your project; found under `"Xamarin.Android.Skobbler\src\Skobbler\bin\[Debug|Release][-$ABI]\Skobbler.dll"`
 
 There are platform configurations for each native library ABI (`x86`, `armeabi-v7a` & `armeabi`). The `AnyCPU` platform configuration includes all 3 ABIs at the cost of a larger assembly (~5MB for specific platforms and ~11MB for AnyCPU). If you don't know which platform to select just use `AnyCPU`.
 
@@ -70,8 +70,11 @@ Namespaces should be the same as their respective Java packages, minus the `com`
 ![Heat Map](docs/Screenshots/HeatMap.png)
 ![Map Overlays](docs/Screenshots/MapOverlays.png)
 
+## Contributing ##
+If you would like to add a feature or fix a known issue, please add any contributions to the `develop` branch and raise a pull request.
+
 ## License ##
-Bindings & demo provided under the MIT license. See LICENSE for details.
+The Bindings, SDKTools and SDKDemo are provided under the MIT license. See LICENSE for details.
 
 ## Thanks ##
 [Skobbler](http://www.skobbler.com/)

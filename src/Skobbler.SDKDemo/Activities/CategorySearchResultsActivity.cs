@@ -1,191 +1,199 @@
-using Android.App;
-using Android.Content;
-using Android.Content.PM;
-using Android.OS;
-using Android.Views;
-using Android.Widget;
-using Skobbler.Ngx;
-using Skobbler.Ngx.Search;
-using System.Collections.Generic;
-using JavaObject = Java.Lang.Object;
+﻿using System.Collections.Generic;
 
 namespace Skobbler.SDKDemo.Activities
 {
-    [Activity(Label = "CategorySearchResultsActivity", ConfigurationChanges = ConfigChanges.Orientation)]
-    public class CategorySearchResultsActivity : Activity, ISKSearchListener
-    {
-        private static readonly int[] MainCategories = new[]
-        {
-            SKCategories.SKPOIMainCategory.SkpoiMainCategoryAccomodation.Value,
-            SKCategories.SKPOIMainCategory.SkpoiMainCategoryAccomodation.Value,
-            SKCategories.SKPOIMainCategory.SkpoiMainCategoryAccomodation.Value,
-            SKCategories.SKPOIMainCategory.SkpoiMainCategoryAccomodation.Value
-        };
+	/// <summary>
+	/// Activity in which a nearby search for some main categories is performed
+	/// </summary>
+	public class CategorySearchResultsActivity : Activity, SKSearchListener
+	{
 
-        private SKCategories.SKPOIMainCategory _selectedMainCategory;
-        private ListView _listView;
-        private TextView _operationInProgressLabel;
-        private ResultsListAdapter _adaper;
+		/// <summary>
+		/// The main categories for which the nearby search will be executed
+		/// </summary>
+		private static readonly int[] mainCategories = new int[]{SKPOIMainCategory.SKPOI_MAIN_CATEGORY_ACCOMODATION.Value, SKPOIMainCategory.SKPOI_MAIN_CATEGORY_SERVICES.Value, SKPOIMainCategory.SKPOI_MAIN_CATEGORY_SHOPPING.Value, SKPOIMainCategory.SKPOI_MAIN_CATEGORY_LEISURE.Value};
 
-        private Dictionary<SKCategories.SKPOIMainCategory, List<SKSearchResult>> _results = new Dictionary<SKCategories.SKPOIMainCategory, List<SKSearchResult>>();
+		/// <summary>
+		/// The main category selected
+		/// </summary>
+		private SKPOIMainCategory selectedMainCategory;
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
-            SetContentView(Resource.Layout.activity_list);
+		private ListView listView;
 
-            _operationInProgressLabel = FindViewById<TextView>(Resource.Id.label_operation_in_progress);
-            _listView = FindViewById<ListView>(Resource.Id.list_view);
-            _operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
+		private TextView operationInProgressLabel;
 
-            StartSearch();
-        }
+		private ResultsListAdapter adapter;
 
-        private void StartSearch()
-        {
-            var searchManager = new SKSearchManager(this);
-            var searchObject = new SKNearbySearchSettings();
+		/// <summary>
+		/// Search results grouped by their main category field
+		/// </summary>
+		private IDictionary<SKPOIMainCategory, IList<SKSearchResult>> results = new LinkedHashMap<SKPOIMainCategory, IList<SKSearchResult>>();
 
-            searchObject.Location = new SKCoordinate(13.387165, 52.516929);
-            searchObject.Radius = 1500;
+		protected internal override void onCreate(Bundle savedInstanceState)
+		{
+			base.onCreate(savedInstanceState);
+			ContentView = R.layout.activity_list;
 
-            searchObject.SearchResultsNumber = 300;
-            searchObject.SetSearchCategories(MainCategories);
-            searchObject.SearchTerm = "";
+			operationInProgressLabel = (TextView) findViewById(R.id.label_operation_in_progress);
+			listView = (ListView) findViewById(R.id.list_view);
+			operationInProgressLabel.Text = Resources.getString(R.@string.searching);
 
-            SKSearchStatus status = searchManager.NearbySearch(searchObject);
+			startSearch();
+		}
 
-            if(status != SKSearchStatus.SkSearchNoError)
-            {
-                Toast.MakeText(this, "An error occurred", ToastLength.Short).Show();
-            }
-        }
+		/// <summary>
+		/// Initiates a nearby search with the specified categories
+		/// </summary>
+		private void startSearch()
+		{
+			// get a search manager object on which the search listener is specified
+			SKSearchManager searchManager = new SKSearchManager(this);
+			// get a search object
+			SKNearbySearchSettings searchObject = new SKNearbySearchSettings();
+			// set nearby search center and radius
+			searchObject.Location = new SKCoordinate(13.387165, 52.516929);
+			searchObject.Radius = 1500;
+			// set the maximum number of search results to be returned
+			searchObject.SearchResultsNumber = 300;
+			// set the main categories for which to search
+			searchObject.SearchCategories = mainCategories;
+			// set the search term
+			searchObject.SearchTerm = "";
+			// launch nearby search
+			SKSearchStatus status = searchManager.nearbySearch(searchObject);
+			if (status != SKSearchStatus.SK_SEARCH_NO_ERROR)
+			{
+				Toast.makeText(this, "An error occurred", Toast.LENGTH_SHORT).show();
+			}
+		}
 
-        public void OnReceivedSearchResults(IList<SKSearchResult> results)
-        {
-            BuildResultsMap(results);
+		/// <summary>
+		/// Build the search results map from the results of the search
+		/// </summary>
+		/// <param name="searchResults"> </param>
+		private void buildResultsMap(IList<SKSearchResult> searchResults)
+		{
+			foreach (int mainCategory in mainCategories)
+			{
+				results[SKPOIMainCategory.forInt(mainCategory)] = new List<SKSearchResult>();
+			}
+			foreach (SKSearchResult result in searchResults)
+			{
+				results[result.MainCategory].Add(result);
+			}
+		}
 
-            RunOnUiThread(() =>
-            {
-                _operationInProgressLabel.Visibility = ViewStates.Gone;
-                _listView.Visibility = ViewStates.Visible;
+		public override void onReceivedSearchResults(IList<SKSearchResult> results)
+		{
+			buildResultsMap(results);
+			operationInProgressLabel.Visibility = View.GONE;
+			listView.Visibility = View.VISIBLE;
+			adapter = new ResultsListAdapter(this);
+			listView.Adapter = adapter;
 
-                _adaper = new ResultsListAdapter(this, _selectedMainCategory, _results);
-                _listView.Adapter = _adaper;
+			listView.OnItemClickListener = new OnItemClickListenerAnonymousInnerClassHelper(this);
+		}
 
-                _listView.ItemClick += OnItemClick;
-            });
-        }
+		private class OnItemClickListenerAnonymousInnerClassHelper : AdapterView.OnItemClickListener
+		{
+			private readonly CategorySearchResultsActivity outerInstance;
 
-        void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
-        {
-            if(_selectedMainCategory == null)
-            {
-                _selectedMainCategory = SKCategories.SKPOIMainCategory.ForInt(MainCategories[e.Position]);
-                _adaper.NotifyDataSetChanged();
-            }
-        }
+			public OnItemClickListenerAnonymousInnerClassHelper(CategorySearchResultsActivity outerInstance)
+			{
+				this.outerInstance = outerInstance;
+			}
 
-        private void BuildResultsMap(IList<SKSearchResult> searchResults)
-        {
-            foreach (var mainCategory in MainCategories)
-            {
-                _results.Add(SKCategories.SKPOIMainCategory.ForInt(mainCategory), new List<SKSearchResult>());
-            }
+			public override void onItemClick<T1>(AdapterView<T1> parent, View view, int position, long id)
+			{
+				if (outerInstance.selectedMainCategory == null)
+				{
+					outerInstance.selectedMainCategory = SKPOIMainCategory.forInt(mainCategories[position]);
+					outerInstance.adapter.notifyDataSetChanged();
+				}
+			}
+		}
 
-            foreach (var result in searchResults)
-            {
-                _results[result.MainCategory].Add(result);
-            }
-        }
+		public override void onBackPressed()
+		{
+			if (selectedMainCategory == null)
+			{
+				base.onBackPressed();
+			}
+			else
+			{
+				selectedMainCategory = null;
+				adapter.notifyDataSetChanged();
+			}
+		}
 
-        public override void OnBackPressed()
-        {
-            if(_selectedMainCategory == null)
-            {
-                base.OnBackPressed();
-            }
-            else
-            {
-                _selectedMainCategory = null;
-                _adaper.NotifyDataSetChanged();
-            }
-            
-        }
+		private class ResultsListAdapter : BaseAdapter
+		{
+			private readonly CategorySearchResultsActivity outerInstance;
 
-        private class ResultsListAdapter : BaseAdapter
-        {
-            private Context _context;
-            private SKCategories.SKPOIMainCategory _selectedMainCategory;
-            private Dictionary<SKCategories.SKPOIMainCategory, List<SKSearchResult>> _results;
+			public ResultsListAdapter(CategorySearchResultsActivity outerInstance)
+			{
+				this.outerInstance = outerInstance;
+			}
 
-            public ResultsListAdapter(Context context, SKCategories.SKPOIMainCategory selectedMainCategory, Dictionary<SKCategories.SKPOIMainCategory, List<SKSearchResult>> results)
-            {
-                _context = context;
-                _selectedMainCategory = selectedMainCategory;
-                _results = results;
-            }
 
-            public override int Count
-            {
-                get
-                {
-                    if (_selectedMainCategory == null)
-                    {
-                        return _results.Count;
-                    }
-                    else
-                    {
-                        return _results[_selectedMainCategory].Count;
-                    }
-                }
-            }
+			public override int Count
+			{
+				get
+				{
+					if (outerInstance.selectedMainCategory == null)
+					{
+						return outerInstance.results.Count;
+					}
+					else
+					{
+						return outerInstance.results[outerInstance.selectedMainCategory].Count;
+					}
+				}
+			}
 
-            public override JavaObject GetItem(int position)
-            {
-                if(_selectedMainCategory == null)
-                {
-                    return _results[_selectedMainCategory][position];
-                }
-                else
-                {
-                    return _results[_selectedMainCategory][position];
-                }
-            }
+			public override object getItem(int position)
+			{
+				if (outerInstance.selectedMainCategory == null)
+				{
+					return outerInstance.results[mainCategories[position]];
+				}
+				else
+				{
+					return outerInstance.results[outerInstance.selectedMainCategory][position];
+				}
+			}
 
-            public override long GetItemId(int position)
-            {
-                return 0;
-            }
+			public override long getItemId(int position)
+			{
+				return 0;
+			}
 
-            public override View GetView(int position, View convertView, ViewGroup parent)
-            {
-                View view = null;
+			public override View getView(int position, View convertView, ViewGroup parent)
+			{
+				View view = null;
+				if (convertView == null)
+				{
+					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					view = inflater.inflate(R.layout.layout_search_list_item, null);
+				}
+				else
+				{
+					view = convertView;
+				}
+				if (outerInstance.selectedMainCategory == null)
+				{
+					((TextView) view.findViewById(R.id.title)).Text = SKPOIMainCategory.forInt(mainCategories[position]).ToString().replaceFirst(".*_", "");
+					((TextView) view.findViewById(R.id.subtitle)).Text = "number of POIs: " + outerInstance.results[SKPOIMainCategory.forInt(mainCategories[position])].Count;
+				}
+				else
+				{
+					SKSearchResult result = outerInstance.results[outerInstance.selectedMainCategory][position];
+					((TextView) view.findViewById(R.id.title)).Text = !result.Name.Equals("") ? result.Name : result.MainCategory.ToString().replaceAll(".*_", "");
+					((TextView) view.findViewById(R.id.subtitle)).Text = "type: " + result.Category.ToString().replaceAll(".*_", "");
+				}
+				return view;
+			}
+		}
+	}
 
-                if(convertView == null)
-                {
-                    LayoutInflater inflater = _context.GetSystemService(Context.LayoutInflaterService) as LayoutInflater;
-                    view = inflater.Inflate(Resource.Layout.layout_search_list_item, null);
-                }
-                else
-                {
-                    view = convertView;
-                }
-
-                if(_selectedMainCategory == null)
-                {
-                    view.FindViewById<TextView>(Resource.Id.title).Text = SKCategories.SKPOIMainCategory.ForInt(MainCategories[position]).ToString().Replace(".*_", "");
-                    view.FindViewById<TextView>(Resource.Id.subtitle).Text = "number of POIs: " + _results[SKCategories.SKPOIMainCategory.ForInt(MainCategories[position])].Count;
-                }
-                else
-	            {
-                    SKSearchResult result = _results[_selectedMainCategory][position];
-                    view.FindViewById<TextView>(Resource.Id.title).Text = result.Name == "" ? result.Name : " - ";
-                    view.FindViewById<TextView>(Resource.Id.subtitle).Text = "type: " + result.Category.ToString().Replace(".*_", "");
-	            }
-
-                return view;
-            }
-        }
-    }
 }

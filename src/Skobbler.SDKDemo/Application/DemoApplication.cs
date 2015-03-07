@@ -1,30 +1,70 @@
-using Android.App;
-using Android.Runtime;
-using Skobbler.SDKDemo.Model;
-using System;
-using System.Collections.Generic;
-using AndroidApplication = Android.App.Application;
-
-namespace Skobbler.SDKDemo.Application
+﻿namespace Skobbler.SDKDemo.Application
 {
-    [Application]
-    class DemoApplication : AndroidApplication
-    {
-        public DemoApplication(IntPtr javaReference, JniHandleOwnership transfer)
-            : base(javaReference, transfer)
-        {
+	/// <summary>
+	/// Class that stores global application state
+	/// </summary>
+	public class DemoApplication : Application
+	{
 
-        }
+		/// <summary>
+		/// Path to the map resources directory on the device
+		/// </summary>
+		private string mapResourcesDirPath;
 
-        public string MapResourcesDirPath { get; set; }
-        public Dictionary<string, DownloadPackage> PackageMap { get; set; }
-        public string MapCreatorFilePath { get; set; }
-        public ApplicationPreferences AppPrefs { get; set; }
+		/// <summary>
+		/// Absolute path to the file used for mapCreator - mapcreatorFile.json
+		/// </summary>
+		private string mapCreatorFilePath;
 
-        public override void OnCreate()
-        {
-            base.OnCreate();
-            AppPrefs = new ApplicationPreferences(this);
-        }
-    }
+		/// <summary>
+		/// Object for accessing application preferences
+		/// </summary>
+		private ApplicationPreferences appPrefs;
+
+		public override void onCreate()
+		{
+			base.onCreate();
+			appPrefs = new ApplicationPreferences(this);
+		}
+
+		public virtual string MapResourcesDirPath
+		{
+			set
+			{
+				this.mapResourcesDirPath = value;
+			}
+			get
+			{
+				return mapResourcesDirPath;
+			}
+		}
+
+
+		public virtual string MapCreatorFilePath
+		{
+			get
+			{
+				return mapCreatorFilePath;
+			}
+			set
+			{
+				this.mapCreatorFilePath = value;
+			}
+		}
+
+
+		public virtual ApplicationPreferences AppPrefs
+		{
+			get
+			{
+				return appPrefs;
+			}
+			set
+			{
+				this.appPrefs = value;
+			}
+		}
+
+	}
+
 }

@@ -10,9 +10,26 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace Skobbler.SDKTools.NavigationUI.AutoNight
+namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 {
-    class SKToolsChangeMapStyleAutoReceiver
+    [BroadcastReceiver]
+    public class SKToolsChangeMapStyleAutoReceiver : BroadcastReceiver
     {
+
+        private const string TAG = "ChangeMapStyleAutoReceiver";
+
+        public override void onReceive(Context context, Intent intent)
+        {
+            Log.e(TAG, "Received Broadcast from alarm manager to change the map style");
+            if (!SKToolsLogicManager.Instance.NavigationStopped)
+            {
+                if (SKToolsAutoNightManager.wasSetAlarmForSunriseSunsetCalculation)
+                {
+                    SKToolsAutoNightManager.Instance.AlarmForDayNightModeWithSunriseSunset = SKToolsLogicManager.Instance.CurrentActivity;
+                }
+                SKToolsLogicManager.Instance.computeMapStyle(SKToolsDateUtils.Daytime);
+            }
+        }
     }
+
 }

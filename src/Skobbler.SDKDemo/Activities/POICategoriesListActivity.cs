@@ -1,190 +1,193 @@
-using Android.App;
-using Android.Content;
-using Android.Content.PM;
-using Android.OS;
-using Android.Views;
-using Android.Widget;
-using Java.Interop;
-using Skobbler.Ngx;
-using Skobbler.Ngx.Util;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Skobbler.SDKDemo.Activities
+namespace Skobbler.SDKDemo.Activity
 {
-    [Activity(Label = "POICategoriesListActivity", ConfigurationChanges = ConfigChanges.Orientation)]
-    public class POICategoriesListActivity : Activity
-    {
-        private ListView _listView;
-        private POICategoryListAdapter _adapter;
-        private List<POICategoryListItem> _listItems;
-        private List<int> _selectedCategories = new List<int>();
+	public class POICategoriesListActivity : Activity
+	{
 
-        private class POICategoryListItem
-        {
-            public bool IsMainCategory{get; private set;}
-            public string Name { get; private set; }
-            public int Id { get; private set; }
+		private ListView listView;
 
-            public POICategoryListItem(bool isMainCategory, string name, int id)
-            {
-                IsMainCategory = isMainCategory;
-                Name = name;
-                Id = id;
-            }
+		private POICategoryListAdapter adapter;
 
-            public override string ToString()
-            {
-                return "[isMainCategory=" + IsMainCategory + ", name=" + Name + ", id=" + Id + "]";
-            }
-        }
+		private IList<POICategoryListItem> listItems;
 
-        private List<POICategoryListItem> GetListItems()
-        {
-            List<POICategoryListItem> listItems = new List<POICategoryListItem>();
+		private IList<int?> selectedCategories = new List<int?>();
 
-            foreach (var mainCategory in SKCategories.SKPOIMainCategory.Values())
-            {
-                listItems.Add(new POICategoryListItem(true, mainCategory.ToString().Replace("SKPOI_MAIN_CATEGORY_", ""), -1));
+		private class POICategoryListItem
+		{
 
-                foreach (var categoryId in SKUtils.GetSubcategoriesForCategory(mainCategory.Value))
-                {
-                    listItems.Add(new POICategoryListItem(false, SKUtils.GetMainCategoryForCategory((int)categoryId).GetNames()[0].ToUpper().Replace("_", " "), (int)categoryId));
-                }
-            }
+			internal bool isMainCategory;
 
-            return listItems;
-        }
+			internal string name;
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
-            SetContentView(Resource.Layout.activity_list);
+			internal int id;
 
-            FindViewById<View>(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
+			public POICategoryListItem(bool isMainCategory, string name, int id) : base()
+			{
+				this.isMainCategory = isMainCategory;
+				this.name = name;
+				this.id = id;
+			}
 
-            _listItems = GetListItems();
+			public override string ToString()
+			{
+				return "[isMainCategory=" + isMainCategory + ", name=" + name + ", id=" + id + "]";
+			}
+		}
 
-            _listView = FindViewById<ListView>(Resource.Id.list_view);
-            _listView.Visibility = ViewStates.Visible;
+		private static IList<POICategoryListItem> ListItems
+		{
+			get
+			{
+				IList<POICategoryListItem> listItems = new List<POICategoryListItem>();
+				foreach (SKPOIMainCategory mainCategory in SKPOIMainCategory.values())
+				{
+					listItems.Add(new POICategoryListItem(true, mainCategory.ToString().Replace("SKPOI_MAIN_CATEGORY_", ""), -1));
+					foreach (int categoryId in SKUtils.getSubcategoriesForCategory(mainCategory.Value))
+					{
+						listItems.Add(new POICategoryListItem(false, SKUtils.getMainCategoryForCategory(categoryId).Names[0].ToUpper().Replace("_", " "), categoryId));
+					}
+				}
+				return listItems;
+			}
+		}
 
-            _adapter = new POICategoryListAdapter(this, _listItems, _selectedCategories);
-            _listView.Adapter = _adapter;
+		protected internal override void onCreate(Bundle savedInstanceState)
+		{
+			base.onCreate(savedInstanceState);
+			ContentView = R.layout.activity_list;
 
-            Toast.MakeText(this, "Select the desired POI categories for heat map display", ToastLength.Short).Show();
+			findViewById(R.id.label_operation_in_progress).Visibility = View.GONE;
 
-            _listView.ItemClick += OnItemClick;
-        }
+			listItems = ListItems;
 
-        [Export("OnClick")]
-        public void OnClick(View v)
-        {
-            if(v.Id == Resource.Id.show_heat_map)
-            {
-                SKCategories.SKPOICategory[] categories = new SKCategories.SKPOICategory[_selectedCategories.Count];
-                for (int i = 0; i < _selectedCategories.Count; i++)
-                {
-                    categories[i] = SKCategories.SKPOICategory.ForInt(_selectedCategories[i]);
-                }
+			listView = (ListView) findViewById(R.id.list_view);
+			listView.Visibility = View.VISIBLE;
 
-                MapActivity.HeatMapCategories = categories;
-                Finish();
-            }
-        }
+			adapter = new POICategoryListAdapter(this);
+			listView.Adapter = adapter;
 
-        void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
-        {
-            POICategoryListItem selectedItem = _listItems[e.Position];
-            
-            if(selectedItem.Id > 0)
-            {
-                if(_selectedCategories.Contains(selectedItem.Id))
-                {
-                    _selectedCategories.Remove(selectedItem.Id);
-                    e.View.SetBackgroundColor(Resources.GetColor(Resource.Color.white));
-                }
-                else
-                {
-                    _selectedCategories.Add(selectedItem.Id);
-                    e.View.SetBackgroundColor(Resources.GetColor(Resource.Color.selected));
-                }
+			Toast.makeText(this, "Select the desired POI categories for heat map display", Toast.LENGTH_SHORT).show();
 
-                Button showButton = FindViewById<Button>(Resource.Id.show_heat_map);
-                if(_selectedCategories.Count == 0)
-                {
-                    showButton.Visibility = ViewStates.Gone;
-                }
-                else
-                {
-                    showButton.Visibility = ViewStates.Visible;
-                }
-            }
-        }
+			listView.OnItemClickListener = new OnItemClickListenerAnonymousInnerClassHelper(this);
+		}
 
-        private class POICategoryListAdapter : BaseAdapter<POICategoryListItem>
-        {
-            private Context _context;
-            private List<POICategoryListItem> _listItems;
-            private List<int> _selectedCategories;
+		private class OnItemClickListenerAnonymousInnerClassHelper : AdapterView.OnItemClickListener
+		{
+			private readonly POICategoriesListActivity outerInstance;
 
-            public POICategoryListAdapter(Context context, List<POICategoryListItem> listItems, List<int> selectedCategories)
-            {
-                _context = context;
-                _listItems = listItems;
-                _selectedCategories = selectedCategories;
-            }
+			public OnItemClickListenerAnonymousInnerClassHelper(POICategoriesListActivity outerInstance)
+			{
+				this.outerInstance = outerInstance;
+			}
 
-            public override int Count
-            {
-                get { return _listItems.Count; }
-            }
+			public override void onItemClick<T1>(AdapterView<T1> parent, View view, int position, long id)
+			{
+				POICategoryListItem selectedItem = outerInstance.listItems[position];
+				if (selectedItem.id > 0)
+				{
+					if (outerInstance.selectedCategories.Contains(selectedItem.id))
+					{
+						outerInstance.selectedCategories.RemoveAt(Convert.ToInt32(selectedItem.id));
+						view.BackgroundColor = Resources.getColor(R.color.white);
+					}
+					else
+					{
+						outerInstance.selectedCategories.Add(selectedItem.id);
+						view.BackgroundColor = Resources.getColor(R.color.selected);
+					}
 
-            public override POICategoryListItem this[int position]
-            {
-                get { return _listItems[position]; }
-            }
+					Button showButton = (Button) findViewById(R.id.show_heat_map);
+					if (outerInstance.selectedCategories.Count == 0)
+					{
+						showButton.Visibility = View.GONE;
+					}
+					else
+					{
+						showButton.Visibility = View.VISIBLE;
+					}
+				}
+			}
+		}
 
-            public override long GetItemId(int position)
-            {
-                return 0;
-            }
+		public virtual void onClick(View v)
+		{
+			if (v.Id == R.id.show_heat_map)
+			{
+				SKPOICategory[] categories = new SKPOICategory[selectedCategories.Count];
+				for (int i = 0; i < selectedCategories.Count; i++)
+				{
+					categories[i] = SKPOICategory.forInt(selectedCategories[i]);
+				}
+				MapActivity.heatMapCategories = categories;
+				finish();
+			}
+		}
 
-            public override View GetView(int position, View convertView, ViewGroup parent)
-            {
-                TextView view = null;
+		private class POICategoryListAdapter : BaseAdapter
+		{
+			private readonly POICategoriesListActivity outerInstance;
 
-                if(convertView == null)
-                {
-                    view = new TextView(_context);
-                }
-                else
-                {
-                    view = convertView as TextView;
-                }
+			public POICategoryListAdapter(POICategoriesListActivity outerInstance)
+			{
+				this.outerInstance = outerInstance;
+			}
 
-                POICategoryListItem item = _listItems[position];
 
-                view.Text = " " + item.Name;
+			public override int Count
+			{
+				get
+				{
+					return outerInstance.listItems.Count;
+				}
+			}
 
-                if(item.IsMainCategory)
-                {
-                    view.SetTextAppearance(_context, Resource.Style.menu_options_group_style);
-                    view.SetBackgroundColor(_context.Resources.GetColor(Resource.Color.grey_options_group));
-                }
-                else
-                {
-                    view.SetTextAppearance(_context, Resource.Style.menu_options_style);
-                    if(!_selectedCategories.Contains(item.Id))
-                    {
-                        view.SetBackgroundColor(_context.Resources.GetColor(Resource.Color.white));
-                    }
-                    else
-                    {
-                        view.SetBackgroundColor(_context.Resources.GetColor(Resource.Color.selected));
-                    }
-                }
+			public override object getItem(int position)
+			{
+				return outerInstance.listItems[position];
+			}
 
-                return view;
-            }
-        }
-    }
+			public override long getItemId(int position)
+			{
+				return 0;
+			}
+
+			public override View getView(int position, View convertView, ViewGroup parent)
+			{
+				TextView view = null;
+				if (convertView == null)
+				{
+					view = new TextView(outerInstance);
+				}
+				else
+				{
+					view = (TextView) convertView;
+				}
+
+				POICategoryListItem item = outerInstance.listItems[position];
+
+				view.Text = "  " + item.name;
+				if (item.isMainCategory)
+				{
+					view.setTextAppearance(outerInstance, R.style.menu_options_group_style);
+					view.BackgroundColor = Resources.getColor(R.color.grey_options_group);
+				}
+				else
+				{
+					view.setTextAppearance(outerInstance, R.style.menu_options_style);
+					if (!outerInstance.selectedCategories.Contains(item.id))
+					{
+						view.BackgroundColor = Resources.getColor(R.color.white);
+					}
+					else
+					{
+						view.BackgroundColor = Resources.getColor(R.color.selected);
+					}
+				}
+				return view;
+			}
+		}
+	}
+
 }

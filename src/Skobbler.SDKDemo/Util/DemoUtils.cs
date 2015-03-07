@@ -1,192 +1,226 @@
-using Android.Content;
-using Android.Content.Res;
-using Android.Locations;
-using Android.Net;
-using Java.IO;
-using Skobbler.Ngx;
-using Skobbler.Ngx.Map;
-using Skobbler.Ngx.Navigation;
-using Skobbler.SDKDemo.Application;
-using System;
-using System.IO;
-using System.Text;
-using File = Java.IO.File;
+﻿using System.Text;
 
 namespace Skobbler.SDKDemo.Util
 {
-    static class DemoUtils
-    {
-        private static readonly string ApiKey = "API_KEY_HERE";
 
-        public static bool HasGpsModule(Context context)
-        {
-            LocationManager locationManager = context.GetSystemService(Context.LocationService) as LocationManager;
 
-            foreach (var provider in locationManager.AllProviders)
-            {
-                if (provider == LocationManager.GpsProvider)
-                {
-                    return true;
-                }
-            }
 
-            return false;
-        }
 
-        public static string FormatTime(int timeInSec)
-        {
-            StringBuilder builder = new StringBuilder();
-            int hours = timeInSec / 3600;
-            int minutes = (timeInSec - hours * 3600) / 60;
-            int seconds = timeInSec - hours * 3600 - minutes * 60;
-            builder.Insert(0, seconds + "s");
-            if (minutes > 0 || hours > 0)
-            {
-                builder.Insert(0, minutes + "m ");
-            }
-            if (hours > 0)
-            {
-                builder.Insert(0, hours + "h ");
-            }
-            return builder.ToString();
-        }
+	using Context = android.content.Context;
+	using AssetManager = android.content.res.AssetManager;
+	using LocationManager = android.location.LocationManager;
+	using ConnectivityManager = android.net.ConnectivityManager;
+	using NetworkInfo = android.net.NetworkInfo;
+	using ByteStreams = com.google.common.io.ByteStreams;
+	using SKMaps = com.skobbler.ngx.SKMaps;
+	using SKMapsInitSettings = com.skobbler.ngx.SKMapsInitSettings;
+	using SKMapViewStyle = com.skobbler.ngx.map.SKMapViewStyle;
+	using SKAdvisorSettings = com.skobbler.ngx.navigation.SKAdvisorSettings;
+	using DemoApplication = com.skobbler.sdkdemo.application.DemoApplication;
 
-        public static string FormatDistance(int distInMeters)
-        {
-            if (distInMeters < 1000)
-            {
-                return distInMeters + "m";
-            }
-            else
-            {
-                return ((float)distInMeters / 1000) + "km";
-            }
-        }
 
-        public static void CopyAsset(AssetManager assetManager, string assetName, string destinationFolder)
-        {
+	public class DemoUtils
+	{
 
-            FileOutputStream destinationStream = new FileOutputStream(new File(destinationFolder + "/" + assetName));
-            Stream asset = assetManager.Open(assetName);
-            try
-            {
-                byte[] buff = new byte[32768];
-                int read;
-                while ((read = asset.Read(buff, 0, buff.Length)) > 0)
-                {
-                    destinationStream.Write(buff, 0, 0);
-                }
-            }
-            finally
-            {
-                asset.Close();
-                destinationStream.Close();
-            }
-        }
+		private const string API_KEY = "";
 
-        public static void CopyAssetsToFolder(AssetManager assetManager, string sourceFolder, string destinationFolder)
-        {
-            string[] assests = assetManager.List(sourceFolder);
+		/// <summary>
+		/// Gets formatted time from a given number of seconds </summary>
+		/// <param name="timeInSec">
+		/// @return </param>
+		public static string formatTime(int timeInSec)
+		{
+			StringBuilder builder = new StringBuilder();
+			int hours = timeInSec / 3600;
+			int minutes = (timeInSec - hours * 3600) / 60;
+			int seconds = timeInSec - hours * 3600 - minutes * 60;
+			builder.Insert(0, seconds + "s");
+			if (minutes > 0 || hours > 0)
+			{
+				builder.Insert(0, minutes + "m ");
+			}
+			if (hours > 0)
+			{
+				builder.Insert(0, hours + "h ");
+			}
+			return builder.ToString();
+		}
 
-            var destFolderFile = new File(destinationFolder);
+		/// <summary>
+		/// Formats a given distance value (given in meters) </summary>
+		/// <param name="distInMeters">
+		/// @return </param>
+		public static string formatDistance(int distInMeters)
+		{
+			if (distInMeters < 1000)
+			{
+				return distInMeters + "m";
+			}
+			else
+			{
+				return ((float) distInMeters / 1000) + "km";
+			}
+		}
 
-            if (!destFolderFile.Exists())
-            {
-                destFolderFile.Mkdirs();
-            }
+		/// <summary>
+		/// Copies files from assets to destination folder </summary>
+		/// <param name="assetManager"> </param>
+		/// <param name="sourceFolder"> </param>
+		/// <param name="destination"> </param>
+		/// <exception cref="IOException"> </exception>
+		public static void copyAssetsToFolder(AssetManager assetManager, string sourceFolder, string destinationFolder)
+		{
+			string[] assets = assetManager.list(sourceFolder);
+			File destFolderFile = new File(destinationFolder);
+			if (!destFolderFile.exists())
+			{
+				destFolderFile.mkdirs();
+			}
+			copyAsset(assetManager, sourceFolder, destinationFolder, assets);
+		}
 
-            CopyAsset(assetManager, sourceFolder, destinationFolder, assests);
-        }
+		/// <summary>
+		/// Copies files from assets to destination folder </summary>
+		/// <param name="assetManager"> </param>
+		/// <param name="sourceFolder"> </param>
+		/// <param name="assetsNames"> </param>
+		/// <exception cref="IOException"> </exception>
+		public static void copyAsset(AssetManager assetManager, string sourceFolder, string destinationFolder, params string[] assetsNames)
+		{
 
-        public static void CopyAsset(AssetManager assetManager, string sourceFolder, string destinationFolder, params string[] assestsNames)
-        {
-            foreach (var assetName in assestsNames)
-            {
-                var destinationStream = new FileOutputStream(new File(destinationFolder + "/" + assetName));
-                string[] files = assetManager.List(sourceFolder + "/" + assetName);
+			foreach (string assetName in assetsNames)
+			{
+				System.IO.Stream destinationStream = new System.IO.FileStream(destinationFolder + "/" + assetName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+				string[] files = assetManager.list(sourceFolder + "/" + assetName);
+				if (files == null || files.Length == 0)
+				{
 
-                if (files == null || files.Length == 0)
-                {
-                    var asset = assetManager.Open(sourceFolder + "/" + assetName);
+					System.IO.Stream asset = assetManager.open(sourceFolder + "/" + assetName);
+					try
+					{
+						ByteStreams.copy(asset, destinationStream);
+					}
+					finally
+					{
+						asset.Close();
+						destinationStream.Close();
+					}
+				}
+			}
+		}
 
-                    try
-                    {
-                        byte[] buff = new byte[32768];
-                        int read;
-                        while ((read = asset.Read(buff, 0, buff.Length)) > 0)
-                        {
-                            destinationStream.Write(buff, 0, 0);
-                        }
-                    }
-                    finally
-                    {
-                        asset.Close();
-                        destinationStream.Close();
-                    }
-                }
-            }
-        }
+		/// <summary>
+		/// Copies files from assets to destination folder. </summary>
+		/// <param name="assetManager"> </param>
+		/// <param name="assetName"> the asset that needs to be copied </param>
+		/// <param name="destinationFolder"> path to folder where you want to store the asset
+		/// archive </param>
+		/// <exception cref="IOException"> </exception>
+		public static void copyAsset(AssetManager assetManager, string assetName, string destinationFolder)
+		{
 
-        internal static bool IsInternetAvailable(Context context)
-        {
-            ConnectivityManager conectivityManager = context.GetSystemService(Context.ConnectivityService) as ConnectivityManager;
-            NetworkInfo networkInfo = conectivityManager.ActiveNetworkInfo;
+			System.IO.Stream destinationStream = new System.IO.FileStream(destinationFolder + "/" + assetName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+			System.IO.Stream asset = assetManager.open(assetName);
+			try
+			{
+				ByteStreams.copy(asset, destinationStream);
+			}
+			finally
+			{
+				asset.Close();
+				destinationStream.Close();
+			}
+		}
 
-            if (networkInfo != null)
-            {
-                if (networkInfo.Type == ConnectivityType.Wifi)
-                {
-                    if (networkInfo.IsConnected)
-                    {
-                        return true;
-                    }
-                }
-                else if (networkInfo.Type == ConnectivityType.Mobile)
-                {
-                    if (networkInfo.IsConnected)
-                    {
-                        return true;
-                    }
-                }
-            }
+		/// <summary>
+		/// Tells if internet is currently available on the device </summary>
+		/// <param name="currentContext">
+		/// @return </param>
+		public static bool isInternetAvailable(Context currentContext)
+		{
+			ConnectivityManager conectivityManager = (ConnectivityManager) currentContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = conectivityManager.ActiveNetworkInfo;
+			if (networkInfo != null)
+			{
+				if (networkInfo.Type == ConnectivityManager.TYPE_WIFI)
+				{
+					if (networkInfo.Connected)
+					{
+						return true;
+					}
+				}
+				else if (networkInfo.Type == ConnectivityManager.TYPE_MOBILE)
+				{
+					if (networkInfo.Connected)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 
-            return false;
-        }
+		/// <summary>
+		/// Checks if the current device has a GPS module (hardware) </summary>
+		/// <returns> true if the current device has GPS </returns>
+		public static bool hasGpsModule(Context context)
+		{
+			LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+			foreach (String provider in locationManager.AllProviders)
+			{
+				if (provider.Equals(LocationManager.GPS_PROVIDER))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		/// <summary>
+		/// Checks if the current device has a  NETWORK module (hardware) </summary>
+		/// <returns> true if the current device has NETWORK </returns>
+		public static bool hasNetworkModule(Context context)
+		{
+			LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+			foreach (String provider in locationManager.AllProviders)
+			{
+				if (provider.Equals(LocationManager.NETWORK_PROVIDER))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 
-        public static bool HasNetworkModule(Context context)
-        {
-            LocationManager locationManager = context.GetSystemService(Context.LocationService) as LocationManager;
-            foreach (var provider in locationManager.AllProviders)
-            {
-                if (String.Equals(provider, LocationManager.NetworkProvider))
-                {
-                    return true;
-                }
-            }
 
-            return false;
-        }
+		/// <summary>
+		/// Initializes the SKMaps framework
+		/// </summary>
+		public static void initializeLibrary(Context context)
+		{
+			DemoApplication app = (DemoApplication)context.ApplicationContext;
+			// get object holding map initialization settings
+			SKMapsInitSettings initMapSettings = new SKMapsInitSettings();
+			// set path to map resources and initial map style
+			initMapSettings.setMapResourcesPaths(app.MapResourcesDirPath, new SKMapViewStyle(app.MapResourcesDirPath + "daystyle/", "daystyle.json"));
 
-        public static void InitializeLibrary(Context context)
-        {
-            var app = context.ApplicationContext as DemoApplication;
+			SKAdvisorSettings advisorSettings = initMapSettings.AdvisorSettings;
+			advisorSettings.AdvisorConfigPath = app.MapResourcesDirPath + "/Advisor";
+			advisorSettings.ResourcePath = app.MapResourcesDirPath + "/Advisor/Languages";
+			advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LANGUAGE_EN;
+			advisorSettings.AdvisorVoice = "en";
+			initMapSettings.AdvisorSettings = advisorSettings;
 
-            if (app == null) return;
+			// EXAMPLE OF ADDING PREINSTALLED MAPS
+			// initMapSettings.setPreinstalledMapsPath(app.getMapResourcesDirPath()
+			// + "/PreinstalledMaps");
+			// initMapSettings.setConnectivityMode(SKMaps.CONNECTIVITY_MODE_OFFLINE);
 
-            var initMapSettings = new SKMapsInitSettings();
-            initMapSettings.SetMapResourcesPaths(app.MapResourcesDirPath, new SKMapViewStyle(app.MapResourcesDirPath + "daystyle/", "daystyle.json"));
+			// Example of setting light maps
+			 initMapSettings.MapDetailLevel = SKMapsInitSettings.SK_MAP_DETAIL_LIGHT;
+			// initialize map using the settings object
 
-            SKAdvisorSettings advisorSettings = initMapSettings.AdvisorSettings;
-            advisorSettings.AdvisorConfigPath = app.MapResourcesDirPath + "/Advisor";
-            advisorSettings.ResourcePath = app.MapResourcesDirPath + "Advisor/Languages";
-            advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LanguageEn;
-            advisorSettings.AdvisorVoice = "en";
+			SKMaps.Instance.initializeSKMaps(context, initMapSettings, API_KEY);
+		}
 
-            initMapSettings.AdvisorSettings = advisorSettings;
-
-            initMapSettings.MapDetailLevel = SKMapsInitSettings.SkMapDetailLight;
-
-            SKMaps.Instance.InitializeSKMaps(context, initMapSettings, ApiKey);
-        }
-    }
+	}
 }

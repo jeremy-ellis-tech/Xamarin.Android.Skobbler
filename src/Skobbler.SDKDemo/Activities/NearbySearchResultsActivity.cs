@@ -1,111 +1,123 @@
-using Android.App;
-using Android.Content;
-using Android.Content.PM;
-using Android.OS;
-using Android.Views;
-using Android.Widget;
-using Skobbler.Ngx;
-using Skobbler.Ngx.Search;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Skobbler.SDKDemo.Activities
+namespace Skobbler.SDKDemo.Activity
 {
-    [Activity(Label = "NearbySearchresultsActivity", ConfigurationChanges = ConfigChanges.Orientation)]
-    public class NearbySearchResultsActivity : Activity, ISKSearchListener
-    {
+	/// <summary>
+	/// Activity in which a nearby search with some user provided parameters is
+	/// performed
+	/// </summary>
+	public class NearbySearchResultsActivity : Activity, SKSearchListener
+	{
 
-        private SKSearchManager _searchManager;
-        private ListView _listView;
-        private ResultsListAdapter _adapter;
+		/// <summary>
+		/// Search manager object
+		/// </summary>
+		private SKSearchManager searchManager;
 
-        private List<Tuple<string, string>> _items = new List<Tuple<string, string>>();
+		private ListView listView;
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
-            SetContentView(Resource.Layout.activity_list);
+		private ResultsListAdapter adapter;
 
-            FindViewById<TextView>(Resource.Id.label_operation_in_progress).Text = Resources.GetString(Resource.String.searching);
-            _listView = FindViewById<ListView>(Resource.Id.list_view);
+		/// <summary>
+		/// List of pairs containing the search results names and categories
+		/// </summary>
+		private IList<Pair<string, string>> items = new List<Pair<string, string>>();
 
-            _searchManager = new SKSearchManager(this);
+		protected internal override void onCreate(Bundle savedInstanceState)
+		{
+			base.onCreate(savedInstanceState);
+			ContentView = R.layout.activity_list;
 
-            var nearbySearchObject = new SKNearbySearchSettings();
-            nearbySearchObject.Location = new SKCoordinate(Intent.GetDoubleExtra("longitude", 0.0), Intent.GetDoubleExtra("latitude", 0.0));
-            nearbySearchObject.Radius = Intent.GetIntExtra("radius", 0);
-            nearbySearchObject.SearchTerm = Intent.GetStringExtra("searchTopic");
+			((TextView) findViewById(R.id.label_operation_in_progress)).Text = Resources.getString(R.@string.searching);
+			listView = (ListView) findViewById(R.id.list_view);
 
-            SKSearchStatus status = _searchManager.NearbySearch(nearbySearchObject);
+			// get the search manager and set the search result listener
+			searchManager = new SKSearchManager(this);
+			// get a nearby search object
+			SKNearbySearchSettings nearbySearchObject = new SKNearbySearchSettings();
+			// set the position around which to do the search and the search radius
+			nearbySearchObject.Location = new SKCoordinate(Intent.getDoubleExtra("longitude", 0), Intent.getDoubleExtra("latitude", 0));
+			nearbySearchObject.Radius = Intent.getIntExtra("radius", 0);
+			// set the search topic
+			nearbySearchObject.SearchTerm = Intent.getStringExtra("searchTopic");
+			// initiate the nearby search
+			SKSearchStatus status = searchManager.nearbySearch(nearbySearchObject);
+			if (status != SKSearchStatus.SK_SEARCH_NO_ERROR)
+			{
+				Toast.makeText(this, "An error occurred", Toast.LENGTH_SHORT).show();
+			}
+		}
 
-            if(status != SKSearchStatus.SkSearchNoError)
-            {
-                Toast.MakeText(this, "An error occured", ToastLength.Short).Show();
-            }
-        }
+		public override void onReceivedSearchResults(IList<SKSearchResult> results)
+		{
+			findViewById(R.id.label_operation_in_progress).Visibility = View.GONE;
+			listView.Visibility = View.VISIBLE;
+			// populate the pair list when receiving search results
+			foreach (SKSearchResult result in results)
+			{
+				string firstLine;
+				if (result.Name == null || result.Name.Equals(""))
+				{
+					firstLine = result.Category.name();
+					firstLine = firstLine.Substring(firstLine.LastIndexOf("_", StringComparison.Ordinal) + 1);
+				}
+				else
+				{
+					firstLine = result.Name;
+				}
+				items.Add(new Pair<string, string>(firstLine, Convert.ToString(result.Category.Value)));
+			}
+			adapter = new ResultsListAdapter(this);
+			listView.Adapter = adapter;
+		}
 
-        public void OnReceivedSearchResults(IList<SKSearchResult> results)
-        {
-            RunOnUiThread(() =>
-            {
-                FindViewById<View>(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
-                _listView.Visibility = ViewStates.Visible;
+		private class ResultsListAdapter : BaseAdapter
+		{
+			private readonly NearbySearchResultsActivity outerInstance;
 
-                foreach (SKSearchResult result in results)
-                {
-                    _items.Add(new Tuple<string, string>(result.Name, result.Category.Value.ToString()));
-                }
+			public ResultsListAdapter(NearbySearchResultsActivity outerInstance)
+			{
+				this.outerInstance = outerInstance;
+			}
 
-                _adapter = new ResultsListAdapter(this, _items);
-                _listView.Adapter = _adapter;
-            });
-        }
 
-        private class ResultsListAdapter : BaseAdapter<Tuple<string,string>>
-        {
-            private Context _context;
-            private List<Tuple<string, string>> _items;
+			public override int Count
+			{
+				get
+				{
+					return outerInstance.items.Count;
+				}
+			}
 
-            public ResultsListAdapter(Context context, List<Tuple<string, string>> items)
-            {
-                _context = context;
-                _items = items;
-            }
+			public override object getItem(int position)
+			{
+				return outerInstance.items[position];
+			}
 
-            public override Tuple<string, string> this[int position]
-            {
-                get { return _items[position]; }
-            }
+			public override long getItemId(int position)
+			{
+				return 0;
+			}
 
-            public override int Count
-            {
-                get { return _items.Count; }
-            }
+			public override View getView(int position, View convertView, ViewGroup parent)
+			{
+				View view = null;
+				if (convertView == null)
+				{
+					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					view = inflater.inflate(R.layout.layout_search_list_item, null);
+				}
+				else
+				{
+					view = convertView;
+				}
+				((TextView) view.findViewById(R.id.title)).Text = !outerInstance.items[position].first.Equals("") ? outerInstance.items[position].first : " - ";
+				((TextView) view.findViewById(R.id.subtitle)).Text = "type: " + outerInstance.items[position].second;
+				return view;
+			}
 
-            public override long GetItemId(int position)
-            {
-                return 0;
-            }
+		}
+	}
 
-            public override View GetView(int position, View convertView, ViewGroup parent)
-            {
-                View view = null;
-
-                if(convertView == null)
-                {
-                    LayoutInflater layoutInflater = _context.GetSystemService(Context.LayoutInflaterService) as LayoutInflater;
-                    view = layoutInflater.Inflate(Resource.Layout.layout_search_list_item, null);
-                }
-                else
-                {
-                    view = convertView;
-                }
-
-                view.FindViewById<TextView>(Resource.Id.title).Text = _items[position].Item1 != "" ? _items[position].Item2 : " - ";
-                view.FindViewById<TextView>(Resource.Id.subtitle).Text = "type: " + _items[position].Item2;
-
-                return view;
-            }
-        }
-    }
 }

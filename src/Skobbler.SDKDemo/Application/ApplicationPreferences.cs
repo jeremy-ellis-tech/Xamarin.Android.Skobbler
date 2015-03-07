@@ -1,56 +1,67 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using System.Collections.Generic;
 
 namespace Skobbler.SDKDemo.Application
 {
-    class ApplicationPreferences
-    {
-        public static readonly string DownloadStepIndexPrefKey = "downloadStepIndex";
-        public static readonly string DownloadQueuePrefKey = "downloadQueue";
+	public class ApplicationPreferences
+	{
 
-        public static readonly string PrefsName = "demoAppPrefs";
+		public const string DOWNLOAD_STEP_INDEX_PREF_KEY = "downloadStepIndex";
 
-        private SharedPreferences.Editor _prefsEditor;
-        private SharedPreferences _prefs;
-        private Context _context;
+		public const string DOWNLOAD_QUEUE_PREF_KEY = "downloadQueue";
 
-        public ApplicationPreferences(Context context)
-        {
-            _context = context;
-            _prefs = _context.GetSharedPreferences(PrefsName, FileCreationMode.Private);
-            _prefsEditor = _prefs.Edit();
-        }
+		/// <summary>
+		/// preference name
+		/// </summary>
+		public const string PREFS_NAME = "demoAppPrefs";
 
-        public int GetIntPreference(string key)
-        {
-            return _prefs.GetInt(key, 0);
-        }
+		/// <summary>
+		/// used for modifying values in a SharedPreferences prefs
+		/// </summary>
+		private SharedPreferences.Editor prefsEditor;
 
-        public string GetStringPreference(string key)
-        {
-            return _prefs.GetString(key, "");
-        }
+		/// <summary>
+		/// reference to preference
+		/// </summary>
+		private SharedPreferences prefs;
 
-        public void SaveDownloadStepPreferences(int downloadStepIndex)
-        {
-            _prefsEditor.PutInt(DownloadStepIndexPrefKey, downloadStepIndex);
-            _prefsEditor.Commit();
-        }
+		/// <summary>
+		/// the context
+		/// </summary>
+		private Context context;
 
-        public void SaveDownloadQueuePreference(List<DownloadResource> downloads)
-        {
-            IEnumerable<string> resourcesCodes = downloads.Select(x => x.Get().GetCode());
-            _prefsEditor.PutString(DownloadQueuePrefKey, new Gson().toJson(resourcesCodes));
-            _prefsEditor.Commit();
-        }
-    }
+		public ApplicationPreferences(Context context)
+		{
+			this.context = context;
+			prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+			prefsEditor = prefs.edit();
+		}
+
+		public virtual int getIntPreference(string key)
+		{
+			return prefs.getInt(key, 0);
+		}
+
+		public virtual string getStringPreference(string key)
+		{
+			return prefs.getString(key, "");
+		}
+
+		public virtual void saveDownloadStepPreference(int downloadStepIndex)
+		{
+			prefsEditor.putInt(DOWNLOAD_STEP_INDEX_PREF_KEY, downloadStepIndex);
+			prefsEditor.commit();
+		}
+
+		public virtual void saveDownloadQueuePreference(IList<DownloadResource> downloads)
+		{
+			string[] resourceCodes = new string[downloads.Count];
+			for (int i = 0; i < downloads.Count; i++)
+			{
+				resourceCodes[i] = downloads[i].Code;
+			}
+			prefsEditor.putString(DOWNLOAD_QUEUE_PREF_KEY, (new Gson()).toJson(resourceCodes));
+			prefsEditor.commit();
+		}
+	}
+
 }

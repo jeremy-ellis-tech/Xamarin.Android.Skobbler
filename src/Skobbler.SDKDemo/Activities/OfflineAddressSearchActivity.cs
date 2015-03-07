@@ -1,209 +1,246 @@
-using Android.App;
-using Android.Content;
-using Android.Content.PM;
-using Android.OS;
-using Android.Views;
-using Android.Widget;
-using Skobbler.Ngx;
-using Skobbler.Ngx.Packages;
-using Skobbler.Ngx.Search;
-using System.Collections.Generic;
-using System.Linq;
-using JavaObject = Java.Lang.Object;
+﻿using System.Collections.Generic;
 
-namespace Skobbler.SDKDemo.Activities
+namespace Skobbler.SDKDemo.Activity
 {
-    [Activity(Label = "OfflineAddressSearchActivity", ConfigurationChanges = ConfigChanges.Orientation)]
-    public class OfflineAddressSearchActivity : Activity, ISKSearchListener
-    {
-        private short _currentListLevel;
-        private List<SKPackage> _packages;
-        private ListView _listView;
-        private TextView _operationInProgressLabel;
-        private ResultsListAdapter _adapter;
+	/// <summary>
+	/// Activity where offline address searches are performed and results are listed
+	/// </summary>
+	public class OfflineAddressSearchActivity : Activity, SKSearchListener
+	{
 
-        private Dictionary<short, List<SKSearchResult>> _resultsPerLevel = new Dictionary<short, List<SKSearchResult>>();
-        private string _currentCountryCode;
-        private SKSearchManager _searchManager;
+		/// <summary>
+		/// The current list level (see)
+		/// </summary>
+		private short currentListLevel;
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
-            SetContentView(Resource.Layout.activity_list);
+		/// <summary>
+		/// Top level packages available offline (countries and US states)
+		/// </summary>
+		private IList<SKPackage> packages;
 
-            _operationInProgressLabel = FindViewById<TextView>(Resource.Id.label_operation_in_progress);
-            _listView = FindViewById<ListView>(Resource.Id.list_view);
-            _operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
+		private ListView listView;
 
-            _packages = SKPackageManager.Instance.GetInstalledPackages().ToList();
+		private TextView operationInProgressLabel;
 
-            _searchManager = new SKSearchManager(this);
+		private ResultsListAdapter adapter;
 
-            if (_packages.Count == 0)
-            {
-                Toast.MakeText(this, "No offline map packages are available", ToastLength.Short).Show();
-            }
+		/// <summary>
+		/// Offline address search results grouped by level
+		/// </summary>
+		private IDictionary<short?, IList<SKSearchResult>> resultsPerLevel = new Dictionary<short?, IList<SKSearchResult>>();
 
-            InitializeList();
-        }
+		/// <summary>
+		/// Current top level package code
+		/// </summary>
+		private string currentCountryCode;
 
-        private void InitializeList()
-        {
-            _adapter = new ResultsListAdapter(this, _currentListLevel, _resultsPerLevel, _packages);
-            _listView.Adapter = _adapter;
-            _operationInProgressLabel.Visibility = ViewStates.Gone;
-            _listView.Visibility = ViewStates.Visible;
-            _listView.ItemClick += OnItemClick;
-        }
+		/// <summary>
+		/// Search manager object
+		/// </summary>
+		private SKSearchManager searchManager;
 
-        void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
-        {
-            if (_currentListLevel == 0)
-            {
-                _currentCountryCode = _packages[e.Position].Name;
-                ChangeLevel((short)(_currentListLevel + 1), -1, _currentCountryCode);
-            }
-            else if (_currentListLevel < 3)
-            {
-                ChangeLevel((short)(_currentListLevel + 1), (int)(_resultsPerLevel[_currentListLevel][e.Position].Id), _currentCountryCode);
-            }
-        }
+		protected internal override void onCreate(Bundle savedInstanceState)
+		{
+			base.onCreate(savedInstanceState);
+			ContentView = R.layout.activity_list;
 
-        private void ChangeLevel(short newLevel, int parentId, string countryCode)
-        {
-            if (newLevel == 0 || newLevel < _currentListLevel)
-            {
-                _operationInProgressLabel.Visibility = ViewStates.Gone;
-                _listView.Visibility = ViewStates.Visible;
-                _currentListLevel = newLevel;
-                _adapter.NotifyDataSetChanged();
-            }
-            else if (newLevel > _currentListLevel && newLevel > 0)
-            {
-                _operationInProgressLabel.Visibility = ViewStates.Visible;
-                _listView.Visibility = ViewStates.Gone;
+			operationInProgressLabel = (TextView) findViewById(R.id.label_operation_in_progress);
+			listView = (ListView) findViewById(R.id.list_view);
+			operationInProgressLabel.Text = Resources.getString(R.@string.searching);
 
-                var searchObject = new SKMultiStepSearchSettings();
-                searchObject.MaxSearchResultsNumber = 25;
-                searchObject.OfflinePackageCode = _currentCountryCode;
-                searchObject.SearchTerm = "";
-                searchObject.ParentIndex = parentId;
-                searchObject.ListLevel = SKSearchManager.SKListLevel.ForInt(newLevel + 1);
+		packages = Arrays.asList(SKPackageManager.Instance.InstalledPackages);
+			searchManager = new SKSearchManager(this);
 
-                _searchManager.MultistepSearch(searchObject);
-            }
-        }
+			if (packages.Count == 0)
+			{
+				Toast.makeText(this, "No offline map packages are available", Toast.LENGTH_SHORT).show();
+			}
 
-        public void OnReceivedSearchResults(IList<SKSearchResult> results)
-        {
-            _resultsPerLevel.Add(_currentListLevel, results.ToList());
+			initializeList();
+		}
 
-            RunOnUiThread(() =>
-            {
-                _operationInProgressLabel.Visibility = ViewStates.Gone;
-                _listView.Visibility = ViewStates.Visible;
-                if(results.Count > 0)
-                {
-                    _adapter.NotifyDataSetChanged();
-                }
-                else
-                {
-                    _currentListLevel--;
-                    _adapter.NotifyDataSetChanged();
-                }
-            });
-        }
+		/// <summary>
+		/// Initializes list with top level packages
+		/// </summary>
+		private void initializeList()
+		{
+			adapter = new ResultsListAdapter(this);
+			listView.Adapter = adapter;
+			operationInProgressLabel.Visibility = View.GONE;
+			listView.Visibility = View.VISIBLE;
+			listView.OnItemClickListener = new OnItemClickListenerAnonymousInnerClassHelper(this);
+		}
 
-        public override void OnBackPressed()
-        {
-            if(_currentListLevel == 0)
-            {
-                base.OnBackPressed();
-            }
-            else
-            {
-                ChangeLevel((short)(_currentListLevel - 1), -1, _currentCountryCode);
-            }
-            
-        }
+		private class OnItemClickListenerAnonymousInnerClassHelper : AdapterView.OnItemClickListener
+		{
+			private readonly OfflineAddressSearchActivity outerInstance;
 
-        private class ResultsListAdapter : BaseAdapter
-        {
-            private Context _context;
-            private short _currentListLevel;
-            private Dictionary<short, List<SKSearchResult>> _resultsPerLevel;
-            private List<SKPackage> _packages;
+			public OnItemClickListenerAnonymousInnerClassHelper(OfflineAddressSearchActivity outerInstance)
+			{
+				this.outerInstance = outerInstance;
+			}
 
-            public ResultsListAdapter(Context context, short currentListLevel, Dictionary<short, List<SKSearchResult>> resultsPerLevel, List<SKPackage> packages)
-            {
-                _context = context;
-                _currentListLevel = currentListLevel;
-                _resultsPerLevel = resultsPerLevel;
-                _packages = packages;
-            }
+			public override void onItemClick<T1>(AdapterView<T1> parent, View view, int position, long id)
+			{
+				if (outerInstance.currentListLevel == 0)
+				{
+					outerInstance.currentCountryCode = outerInstance.packages[position].Name;
+					outerInstance.changeLevel((short)(outerInstance.currentListLevel + 1), -1, outerInstance.currentCountryCode);
+				}
+				else if (outerInstance.currentListLevel < 3)
+				{
+					outerInstance.changeLevel((short)(outerInstance.currentListLevel + 1), outerInstance.resultsPerLevel[outerInstance.currentListLevel][position].Id, outerInstance.currentCountryCode);
+				}
+			}
+		}
 
-            public override int Count
-            {
-                get
-                {
-                    if (_currentListLevel > 0)
-                    {
-                        return _resultsPerLevel[_currentListLevel].Count;
-                    }
-                    else
-                    {
-                        return _packages.Count;
-                    }
-                }
-            }
+		/// <summary>
+		/// Changes the list level and executes the corresponding action for the list
+		/// level change
+		/// </summary>
+		/// <param name="newLevel">    the new level </param>
+		/// <param name="parentId">    the parent id for which to execute offline address search </param>
+		/// <param name="countryCode"> the current code to use in offline address search </param>
+		private void changeLevel(short newLevel, long parentId, string countryCode)
+		{
+			if (newLevel == 0 || newLevel < currentListLevel)
+			{
+				// for new list level 0 or smaller than previous one just change the
+				// level and update the adapter
+				operationInProgressLabel.Visibility = View.GONE;
+				listView.Visibility = View.VISIBLE;
+				currentListLevel = newLevel;
+				adapter.notifyDataSetChanged();
+			}
+			else if (newLevel > currentListLevel && newLevel > 0)
+			{
+				// for new list level greater than previous one execute an offline
+				// address search
+				operationInProgressLabel.Visibility = View.VISIBLE;
+				listView.Visibility = View.GONE;
+				// get a search object
+				SKMultiStepSearchSettings searchObject = new SKMultiStepSearchSettings();
+				// set the maximum number of results to be returned
+				searchObject.MaxSearchResultsNumber = 25;
+				// set the country code
+				searchObject.OfflinePackageCode = currentCountryCode;
+				// set the search term
+				searchObject.SearchTerm = "";
+				// set the id of the parent node in which to search
+				searchObject.ParentIndex = parentId;
+				// set the list level
+				searchObject.ListLevel = SKSearchManager.SKListLevel.forInt(newLevel + 1);
+				// change the list level to the new one
+				currentListLevel = newLevel;
+				// initiate the search
+				searchManager.multistepSearch(searchObject);
+			}
+		}
 
-            public override JavaObject GetItem(int position)
-            {
-                if(_currentListLevel > 0)
-                {
-                    return _resultsPerLevel[_currentListLevel][position];
-                }
-                else
-                {
-                    return _packages[position];
-                }
-            }
+		public override void onReceivedSearchResults(IList<SKSearchResult> results)
+		{
+			// put in the map at the corresponding level the received results
+			resultsPerLevel[currentListLevel] = results;
+			operationInProgressLabel.Visibility = View.GONE;
+			listView.Visibility = View.VISIBLE;
+			if (results.Count > 0)
+			{
+				// received results - update adapter to show the results
+				adapter.notifyDataSetChanged();
+			}
+			else
+			{
+				// zero results - no change
+				currentListLevel--;
+				adapter.notifyDataSetChanged();
+			}
+		}
 
-            public override long GetItemId(int position)
-            {
-                return 0;
-            }
+		public override void onBackPressed()
+		{
+			if (currentListLevel == 0)
+			{
+				base.onBackPressed();
+			}
+			else
+			{
+				// if not top level - decrement the current list level and show
+				// results for the new level
+				changeLevel((short)(currentListLevel - 1), -1, currentCountryCode);
+			}
+		}
 
-            public override View GetView(int position, View convertView, ViewGroup parent)
-            {
-                View view = null;
+		private class ResultsListAdapter : BaseAdapter
+		{
+			private readonly OfflineAddressSearchActivity outerInstance;
 
-                if(convertView == null)
-                {
-                    LayoutInflater inflater = _context.GetSystemService(Context.LayoutInflaterService) as LayoutInflater;
-                    view = inflater.Inflate(Resource.Layout.layout_search_list_item, null);
-                }
-                else
-                {
-                    view = convertView;
-                }
+			public ResultsListAdapter(OfflineAddressSearchActivity outerInstance)
+			{
+				this.outerInstance = outerInstance;
+			}
 
-                if(_currentListLevel > 0)
-                {
-                    view.FindViewById<TextView>(Resource.Id.title).Text = _resultsPerLevel[_currentListLevel][position].Name;
 
-                    SKCoordinate location = _resultsPerLevel[_currentListLevel][position].Location;
-                    view.FindViewById<TextView>(Resource.Id.subtitle).Visibility = ViewStates.Visible;
-                    view.FindViewById<TextView>(Resource.Id.subtitle).Text = "location: (" + location.Latitude + ", " + location.Longitude + ")";
-                }
-                else
-                {
-                    view.FindViewById<TextView>(Resource.Id.title).Text = _packages[position].Name;
-                    view.FindViewById<TextView>(Resource.Id.subtitle).Visibility = ViewStates.Gone;
-                }
+			public override int Count
+			{
+				get
+				{
+					if (outerInstance.currentListLevel > 0)
+					{
+						return outerInstance.resultsPerLevel[outerInstance.currentListLevel].Count;
+					}
+					else
+					{
+						return outerInstance.packages.Count;
+					}
+				}
+			}
 
-                return view;
-            }
-        }
-    }
+			public override object getItem(int position)
+			{
+				if (outerInstance.currentListLevel > 0)
+				{
+					return outerInstance.resultsPerLevel[outerInstance.currentListLevel][position];
+				}
+				else
+				{
+					return outerInstance.packages[position];
+				}
+			}
+
+			public override long getItemId(int position)
+			{
+				return 0;
+			}
+
+			public override View getView(int position, View convertView, ViewGroup parent)
+			{
+				View view = null;
+				if (convertView == null)
+				{
+					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+					view = inflater.inflate(R.layout.layout_search_list_item, null);
+				}
+				else
+				{
+					view = convertView;
+				}
+				if (outerInstance.currentListLevel > 0)
+				{
+					// for offline address search results show the result name and
+					// position
+					((TextView) view.findViewById(R.id.title)).Text = outerInstance.resultsPerLevel[outerInstance.currentListLevel][position].Name;
+					SKCoordinate location = outerInstance.resultsPerLevel[outerInstance.currentListLevel][position].Location;
+					((TextView) view.findViewById(R.id.subtitle)).Visibility = View.VISIBLE;
+					((TextView) view.findViewById(R.id.subtitle)).Text = "location: (" + location.Latitude + ", " + location.Longitude + ")";
+				}
+				else
+				{
+					((TextView) view.findViewById(R.id.title)).Text = outerInstance.packages[position].Name;
+					((TextView) view.findViewById(R.id.subtitle)).Visibility = View.GONE;
+				}
+				return view;
+			}
+		}
+	}
+
 }

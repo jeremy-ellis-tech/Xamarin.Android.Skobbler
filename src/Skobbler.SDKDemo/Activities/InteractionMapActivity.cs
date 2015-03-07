@@ -1,171 +1,150 @@
-using Android.App;
-using Android.Content.PM;
-using Android.OS;
-using Android.Views;
-using Android.Widget;
-using Skobbler.Ngx;
-using Skobbler.Ngx.Map;
-
-namespace Skobbler.SDKDemo.Activities
+﻿namespace Skobbler.SDKDemo.Activity
 {
-    [Activity(Label = "InteractionMapActivity", ConfigurationChanges = ConfigChanges.Orientation)]
-    public class InteractionMapActivity : Activity, ISKMapSurfaceListener
-    {
-        private SKMapSurfaceView _mapView;
-        private bool _mapSurfaceCreated;
+	public class InteractionMapActivity : Activity, SKMapSurfaceListener
+	{
 
-        protected override void OnCreate(Bundle bundle)
-        {
-            base.OnCreate(bundle);
+		private SKMapSurfaceView mapView;
 
-            SetContentView(Resource.Layout.activity_new_map);
+		private bool mapSurfaceCreated;
 
-            SKMapViewHolder mapViewGroup = FindViewById<SKMapViewHolder>(Resource.Id.view_group_map);
-            _mapView = mapViewGroup.MapSurfaceView;
-            _mapView.SetMapSurfaceListener(this);
-        }
+		protected internal override void onCreate(Bundle savedInstanceState)
+		{
+			base.onCreate(savedInstanceState);
+			ContentView = R.layout.activity_new_map;
+			SKMapViewHolder mapViewGroup = (SKMapViewHolder) findViewById(R.id.view_group_map);
+			mapView = mapViewGroup.MapSurfaceView;
+			mapView.MapSurfaceListener = this;
+		}
 
-        protected override void OnResume()
-        {
-            base.OnResume();
-            _mapView.OnResume();
-        }
+		public override void onResume()
+		{
+			base.onResume();
+			mapView.onResume();
+		}
 
-        protected override void OnPause()
-        {
-            base.OnPause();
-            _mapView.OnPause();
-        }
+		public override void onPause()
+		{
+			base.onPause();
+			mapView.onPause();
+		}
 
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            _mapView = null;
-        }
+		protected internal override void onDestroy()
+		{
+			base.onDestroy();
+			mapView = null;
+		}
 
-        public void OnActionPan()
-        {
+		public override void onActionPan()
+		{
+		}
 
-        }
+		public override void onActionZoom()
+		{
+		}
 
-        public void OnActionZoom()
-        {
+		public override void onSurfaceCreated()
+		{
+			// a chess background is displayed until the map becomes available
+			if (!mapSurfaceCreated)
+			{
+				mapSurfaceCreated = true;
+				// hiding the chess background when map is available
+				RelativeLayout chessBackground = (RelativeLayout) findViewById(R.id.chess_table_background);
+				chessBackground.Visibility = View.GONE;
 
-        }
+				mapView.centerMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
+			}
+		}
 
-        public void OnAnnotationSelected(SKAnnotation annotation)
-        {
+		public override void onScreenOrientationChanged()
+		{
+		}
 
-        }
+		public override void onMapRegionChanged(SKCoordinateRegion region)
+		{
+		}
 
-        public void OnCompassSelected()
-        {
+		public override void onDoubleTap(SKScreenPoint point)
+		{
+		}
 
-        }
+		public override void onSingleTap(SKScreenPoint point)
+		{
+		}
 
-        public void OnCurrentPositionSelected()
-        {
+		public override void onRotateMap()
+		{
+		}
 
-        }
+		public override void onLongPress(SKScreenPoint point)
+		{
+		}
 
-        public void OnCustomPOISelected(SKMapCustomPOI customPoi)
-        {
+		public override void onInternetConnectionNeeded()
+		{
+		}
 
-        }
+		public override void onMapActionDown(SKScreenPoint point)
+		{
+		}
 
-        public void OnDoubleTap(SKScreenPoint point)
-        {
+		public override void onMapActionUp(SKScreenPoint point)
+		{
+		}
 
-        }
+		public override void onMapPOISelected(SKMapPOI mapPOI)
+		{
+		}
 
-        public void OnInternationalisationCalled(int result)
-        {
+		public override void onAnnotationSelected(SKAnnotation annotation)
+		{
+		}
 
-        }
+		public override void onCompassSelected()
+		{
+		}
 
-        public void OnInternetConnectionNeeded()
-        {
+		public override void onInternationalisationCalled(int result)
+		{
+		}
 
-        }
+		public override void onCustomPOISelected(SKMapCustomPOI customPoi)
+		{
+		}
 
-        public void OnLongPress(SKScreenPoint point)
-        {
+		public override void onPOIClusterSelected(SKPOICluster arg0)
+		{
+		}
 
-        }
+		public override void onMapRegionChangeEnded(SKCoordinateRegion arg0)
+		{
+		}
 
-        public void OnMapActionDown(SKScreenPoint point)
-        {
+		public override void onMapRegionChangeStarted(SKCoordinateRegion arg0)
+		{
+		}
 
-        }
 
-        public void OnMapActionUp(SKScreenPoint point)
-        {
+		public override void onCurrentPositionSelected()
+		{
+		}
 
-        }
+		public override void onObjectSelected(int arg0)
+		{
+		}
 
-        public void OnMapPOISelected(SKMapPOI mapPOI)
-        {
 
-        }
 
-        public void OnMapRegionChangeEnded(SKCoordinateRegion mapRegion)
-        {
+		public override void onBoundingBoxImageRendered(int i)
+		{
 
-        }
+		}
 
-        public void OnMapRegionChangeStarted(SKCoordinateRegion mapRegion)
-        {
+		public override void onGLInitializationError(string messsage)
+		{
 
-        }
+		}
 
-        public void OnMapRegionChanged(SKCoordinateRegion mapVisibleRegion)
-        {
+	}
 
-        }
-
-        public void OnObjectSelected(int objectId)
-        {
-
-        }
-
-        public void OnOffportRequestCompleted(int requestId)
-        {
-        }
-
-        public void OnPOIClusterSelected(SKPOICluster poiCluster)
-        {
-
-        }
-
-        public void OnRotateMap()
-        {
-
-        }
-
-        public void OnScreenOrientationChanged()
-        {
-
-        }
-
-        public void OnSingleTap(SKScreenPoint point)
-        {
-
-        }
-
-        public void OnSurfaceCreated()
-        {
-            RunOnUiThread(() =>
-            {
-                if(!_mapSurfaceCreated)
-                {
-                    _mapSurfaceCreated = true;
-
-                    RelativeLayout chessBackground = FindViewById<RelativeLayout>(Resource.Id.chess_table_background);
-                    chessBackground.Visibility = ViewStates.Gone;
-
-                    _mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
-                }
-            });
-        }
-    }
 }

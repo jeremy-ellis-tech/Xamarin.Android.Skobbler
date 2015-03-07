@@ -52,23 +52,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\CategorySearchResultsActivity.cs" />
-    <Compile Include="Activities\DownloadActivity.cs" />
     <Compile Include="Activities\InteractionMapActivity.cs" />
     <Compile Include="Activities\MapActivity.cs" />
-    <Compile Include="Activities\MapPackagesListActivity.cs" />
     <Compile Include="Activities\NearbySearchActivity.cs" />
     <Compile Include="Activities\NearbySearchResultsActivity.cs" />
     <Compile Include="Activities\OfflineAddressSearchActivity.cs" />
     <Compile Include="Activities\POICategoriesListActivity.cs" />
+    <Compile Include="Activities\ResourceDownloadsListActivity.cs" />
     <Compile Include="Activities\ReverseGeocodingActivity.cs" />
+    <Compile Include="Activities\SettingsActivity.cs" />
     <Compile Include="Activities\SplashActivity.cs" />
     <Compile Include="Activities\TrackElementsActivity.cs" />
     <Compile Include="Activities\TracksActivity.cs" />
     <Compile Include="Application\ApplicationPreferences.cs" />
     <Compile Include="Application\DemoApplication.cs" />
-    <Compile Include="Model\DownloadPackage.cs" />
+    <Compile Include="Database\DownloadResource.cs" />
+    <Compile Include="Database\MapDataParser.cs" />
+    <Compile Include="Database\MapDownloadResource.cs" />
+    <Compile Include="Database\MapsDAO.cs" />
+    <Compile Include="Database\ResourcesDAO.cs" />
+    <Compile Include="Database\ResourcesDAOHandler.cs" />
+    <Compile Include="Database\SecondMapDataParser.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\DateTimeUtil.cs" />
     <Compile Include="Util\DemoUtils.cs" />
     <Compile Include="Util\PreferenceTypes.cs" />
   </ItemGroup>
@@ -300,9 +307,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\xml\settings.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <AndroidAsset Include="Assets\GPXTracks\foxboro.gpx" />
   </ItemGroup>

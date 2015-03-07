@@ -1,4 +1,4 @@
-namespace Skobbler.SDKTools.Download
+namespace Skobbler.Ngx.SDKTools.Download
 {
     public class SKToolsFileDownloadStep
     {
