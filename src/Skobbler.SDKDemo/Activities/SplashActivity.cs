@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Util;
 using Android.Widget;
@@ -19,7 +20,7 @@ namespace Skobbler.SDKDemo.Activities
 	/// Activity that installs required resources (from assets/MapResources.zip) to
 	/// the device
 	/// </summary>
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class SplashActivity : Activity, ISKPrepareMapTextureListener, ISKMapUpdateListener
 	{
 
@@ -31,7 +32,7 @@ namespace Skobbler.SDKDemo.Activities
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_splash;
+			SetContentView(Resource.Layout.activity_splash);
 
 			SKLogging.EnableLogs(true);
 
@@ -54,7 +55,7 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				// if map resources are not already present copy them to
 				// mapResourcesDirPath in the following thread
-				(new SKPrepareMapTextureThread(this, mapResourcesDirPath, "SKMaps.zip", this)).start();
+				(new SKPrepareMapTextureThread(this, mapResourcesDirPath, "SKMaps.zip", this)).Start();
 				// copy some other resource needed
 				copyOtherResources();
 				prepareMapCreatorFile();
@@ -62,10 +63,10 @@ namespace Skobbler.SDKDemo.Activities
 			else
 			{
 				// map resources have already been copied - start the map activity
-				Toast.MakeText(SplashActivity.this, "Map resources copied in a previous run", ToastLength.Short).Show();
+				Toast.MakeText(this, "Map resources copied in a previous run", ToastLength.Short).Show();
 				prepareMapCreatorFile();
 				DemoUtils.initializeLibrary(this);
-				SKVersioningManager.Instance.MapUpdateListener = this;
+				SKVersioningManager.Instance.SetMapUpdateListener(this);
 				Finish();
 				StartActivity(new Intent(this, typeof(MapActivity)));
 			}
@@ -74,10 +75,10 @@ namespace Skobbler.SDKDemo.Activities
 		public override void onMapTexturesPrepared(bool prepared)
 		{
 			DemoUtils.initializeLibrary(this);
-			SKVersioningManager.Instance.MapUpdateListener = this;
-			Toast.MakeText(SplashActivity.this, "Map resources were copied", ToastLength.Short).Show();
+			SKVersioningManager.Instance.SetMapUpdateListener(this);
+			Toast.MakeText(this, "Map resources were copied", ToastLength.Short).Show();
 			Finish();
-			StartActivity(new Intent(SplashActivity.this, typeof(MapActivity)));
+			StartActivity(new Intent(this, typeof(MapActivity)));
 		}
 
 		/// <summary>
@@ -86,7 +87,7 @@ namespace Skobbler.SDKDemo.Activities
 		private void copyOtherResources()
 		{
 			new ThreadAnonymousInnerClassHelper(this)
-			.start();
+			.Start();
 		}
 
 		private class ThreadAnonymousInnerClassHelper : System.Threading.Thread
@@ -137,7 +138,7 @@ namespace Skobbler.SDKDemo.Activities
 			prepareGPXFileThread.Start();
 		}
 
-		private class RunnableAnonymousInnerClassHelper : Runnable
+		private class RunnableAnonymousInnerClassHelper : IRunnable
 		{
 			private readonly SplashActivity outerInstance;
 
@@ -158,18 +159,18 @@ namespace Skobbler.SDKDemo.Activities
 					string mapCreatorFolderPath = mapResourcesDirPath + "MapCreator";
 					File mapCreatorFolder = new File(mapCreatorFolderPath);
 					// create the folder where you want to copy the json file
-					if (!mapCreatorFolder.exists())
+					if (!mapCreatorFolder.Exists())
 					{
-						mapCreatorFolder.mkdirs();
+						mapCreatorFolder.Mkdirs();
 					}
 					app.MapCreatorFilePath = mapCreatorFolderPath + "/mapcreatorFile.json";
 					DemoUtils.copyAsset(Assets, "MapCreator", mapCreatorFolderPath, "mapcreatorFile.json");
 					// Copies the log file from assets to a storage.
 					string logFolderPath = mapResourcesDirPath + "logFile";
 					File logFolder = new File(logFolderPath);
-					if (!logFolder.exists())
+					if (!logFolder.Exists())
 					{
-						logFolder.mkdirs();
+						logFolder.Mkdirs();
 					}
 					DemoUtils.copyAsset(Assets, "logFile", logFolderPath, "Seattle.log");
 				}

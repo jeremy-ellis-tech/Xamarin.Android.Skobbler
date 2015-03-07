@@ -192,7 +192,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         public virtual void setMapInNavigationMode()
         {
-            mapView.Zoom = zoomBeforeSwitch;
+            mapView.SetZoom(zoomBeforeSwitch);
             mapView.MapSettings.MapZoomingEnabled = false;
 
             mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.Navigation;
@@ -219,7 +219,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             mapView.MapSettings.MapStyle = new SKMapViewStyle(SKToolsUtils.getMapStyleFilesFolderPath(configuration, mapStyle), SKToolsUtils.getStyleFileName(mapStyle));
 
-            mapView.FastSwitchStyle = fastSwitchStyleIndex;
+            mapView.SetFastSwitchStyle(fastSwitchStyleIndex);
         }
 
 
@@ -308,7 +308,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         public virtual void zoomToRoute(Activity currentActivity)
         {
             int offsetPixelsTop = 100;
-            if ((currentActivity.Resources.Configuration.ScreenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE || (currentActivity.Resources.Configuration.screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            if ((currentActivity.Resources.Configuration.ScreenLayout & ScreenLayout.SizeMask) == ScreenLayout.SizeLarge || (currentActivity.Resources.Configuration.ScreenLayout & ScreenLayout.SizeMask) == ScreenLayout.SizeXlarge)
             {
                 // large and xlarge
                 SKRouteManager.Instance.ZoomToRoute(1.3f, 1.5f, offsetPixelsTop, 10, 5, 5);

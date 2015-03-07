@@ -1,24 +1,16 @@
-﻿using System.Text;
+﻿using Android.Content;
+using Android.Content.Res;
+using Android.Locations;
+using Android.Net;
+using Java.IO;
+using Skobbler.Ngx;
+using Skobbler.Ngx.Map;
+using Skobbler.Ngx.Navigation;
+using Skobbler.SDKDemo.Application;
+using System.Text;
 
 namespace Skobbler.SDKDemo.Util
 {
-
-
-
-
-	using Context = android.content.Context;
-	using AssetManager = android.content.res.AssetManager;
-	using LocationManager = android.location.LocationManager;
-	using ConnectivityManager = android.net.ConnectivityManager;
-	using NetworkInfo = android.net.NetworkInfo;
-	using ByteStreams = com.google.common.io.ByteStreams;
-	using SKMaps = com.skobbler.ngx.SKMaps;
-	using SKMapsInitSettings = com.skobbler.ngx.SKMapsInitSettings;
-	using SKMapViewStyle = com.skobbler.ngx.map.SKMapViewStyle;
-	using SKAdvisorSettings = com.skobbler.ngx.navigation.SKAdvisorSettings;
-	using DemoApplication = com.skobbler.sdkdemo.application.DemoApplication;
-
-
 	public class DemoUtils
 	{
 
@@ -70,11 +62,11 @@ namespace Skobbler.SDKDemo.Util
 		/// <exception cref="IOException"> </exception>
 		public static void copyAssetsToFolder(AssetManager assetManager, string sourceFolder, string destinationFolder)
 		{
-			string[] assets = assetManager.list(sourceFolder);
+			string[] assets = assetManager.List(sourceFolder);
 			File destFolderFile = new File(destinationFolder);
-			if (!destFolderFile.exists())
+			if (!destFolderFile.Exists())
 			{
-				destFolderFile.mkdirs();
+				destFolderFile.Mkdirs();
 			}
 			copyAsset(assetManager, sourceFolder, destinationFolder, assets);
 		}
@@ -91,11 +83,11 @@ namespace Skobbler.SDKDemo.Util
 			foreach (string assetName in assetsNames)
 			{
 				System.IO.Stream destinationStream = new System.IO.FileStream(destinationFolder + "/" + assetName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
-				string[] files = assetManager.list(sourceFolder + "/" + assetName);
+				string[] files = assetManager.List(sourceFolder + "/" + assetName);
 				if (files == null || files.Length == 0)
 				{
 
-					System.IO.Stream asset = assetManager.open(sourceFolder + "/" + assetName);
+					System.IO.Stream asset = assetManager.Open(sourceFolder + "/" + assetName);
 					try
 					{
 						ByteStreams.copy(asset, destinationStream);
@@ -120,7 +112,7 @@ namespace Skobbler.SDKDemo.Util
 		{
 
 			System.IO.Stream destinationStream = new System.IO.FileStream(destinationFolder + "/" + assetName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
-			System.IO.Stream asset = assetManager.open(assetName);
+			System.IO.Stream asset = assetManager.Open(assetName);
 			try
 			{
 				ByteStreams.copy(asset, destinationStream);
@@ -138,20 +130,20 @@ namespace Skobbler.SDKDemo.Util
 		/// @return </param>
 		public static bool isInternetAvailable(Context currentContext)
 		{
-			ConnectivityManager conectivityManager = (ConnectivityManager) currentContext.GetSystemService(Context.CONNECTIVITY_SERVICE);
+			ConnectivityManager conectivityManager = (ConnectivityManager) currentContext.GetSystemService(Context.ConnectivityService);
 			NetworkInfo networkInfo = conectivityManager.ActiveNetworkInfo;
 			if (networkInfo != null)
 			{
-				if (networkInfo.Type == ConnectivityManager.TYPE_WIFI)
+				if (networkInfo.Type == ConnectivityType.Wifi)
 				{
-					if (networkInfo.Connected)
+					if (networkInfo.IsConnected)
 					{
 						return true;
 					}
 				}
-				else if (networkInfo.Type == ConnectivityManager.TYPE_MOBILE)
+                else if (networkInfo.Type == ConnectivityType.Mobile)
 				{
-					if (networkInfo.Connected)
+                    if (networkInfo.IsConnected)
 					{
 						return true;
 					}
@@ -165,10 +157,10 @@ namespace Skobbler.SDKDemo.Util
 		/// <returns> true if the current device has GPS </returns>
 		public static bool hasGpsModule(Context context)
 		{
-			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LOCATION_SERVICE);
-			foreach (String provider in locationManager.AllProviders)
+			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
+			foreach (string provider in locationManager.AllProviders)
 			{
-				if (provider.Equals(LocationManager.GPS_PROVIDER))
+				if (provider.Equals(LocationManager.GpsProvider))
 				{
 					return true;
 				}
@@ -180,10 +172,10 @@ namespace Skobbler.SDKDemo.Util
 		/// <returns> true if the current device has NETWORK </returns>
 		public static bool hasNetworkModule(Context context)
 		{
-			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LOCATION_SERVICE);
-			foreach (String provider in locationManager.AllProviders)
+			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
+            foreach (string provider in locationManager.AllProviders)
 			{
-				if (provider.Equals(LocationManager.NETWORK_PROVIDER))
+				if (provider.Equals(LocationManager.NetworkProvider))
 				{
 					return true;
 				}
@@ -201,12 +193,12 @@ namespace Skobbler.SDKDemo.Util
 			// get object holding map initialization settings
 			SKMapsInitSettings initMapSettings = new SKMapsInitSettings();
 			// set path to map resources and initial map style
-			initMapSettings.setMapResourcesPaths(app.MapResourcesDirPath, new SKMapViewStyle(app.MapResourcesDirPath + "daystyle/", "daystyle.json"));
+			initMapSettings.SetMapResourcesPaths(app.MapResourcesDirPath, new SKMapViewStyle(app.MapResourcesDirPath + "daystyle/", "daystyle.json"));
 
 			SKAdvisorSettings advisorSettings = initMapSettings.AdvisorSettings;
 			advisorSettings.AdvisorConfigPath = app.MapResourcesDirPath + "/Advisor";
 			advisorSettings.ResourcePath = app.MapResourcesDirPath + "/Advisor/Languages";
-			advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LANGUAGE_EN;
+			advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LanguageEn;
 			advisorSettings.AdvisorVoice = "en";
 			initMapSettings.AdvisorSettings = advisorSettings;
 
@@ -216,10 +208,10 @@ namespace Skobbler.SDKDemo.Util
 			// initMapSettings.setConnectivityMode(SKMaps.CONNECTIVITY_MODE_OFFLINE);
 
 			// Example of setting light maps
-			 initMapSettings.MapDetailLevel = SKMapsInitSettings.SK_MAP_DETAIL_LIGHT;
+			 initMapSettings.MapDetailLevel = SKMapsInitSettings.SkMapDetailLight;
 			// initialize map using the settings object
 
-			SKMaps.Instance.initializeSKMaps(context, initMapSettings, API_KEY);
+			SKMaps.Instance.InitializeSKMaps(context, initMapSettings, API_KEY);
 		}
 
 	}

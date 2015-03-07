@@ -10,7 +10,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:text="@string/less"
-        android:onClick="onClick" />
+        android:onClick="OnClick" />
 
     <LinearLayout
         android:id="@+id/pedestrian_navigation_ui_buttons"
@@ -46,14 +46,14 @@
             android:id="@+id/calculate_pedestrian_routes_button"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:onClick="onClick"
+            android:onClick="OnClick"
             android:text="@string/calculate_routes" />
 
         <Button
             android:id="@+id/start_free_walk_button"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:onClick="onClick"
+            android:onClick="OnClick"
             android:text="@string/start_free_walk" />
 
     </LinearLayout>
@@ -62,7 +62,7 @@
         android:id="@+id/position_me_pedestrian_navigation_ui_button"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        android:onClick="onClick"
+        android:onClick="OnClick"
         android:src="@drawable/icon_position_me"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true" />

@@ -1,4 +1,5 @@
-﻿using Skobbler.Ngx.Packages;
+﻿using Java.Util;
+using Skobbler.Ngx.Packages;
 using Skobbler.Ngx.SDKTools.Download;
 using System;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace Skobbler.SDKDemo.Database
 				{
 					if (names[localLanguage] == null)
 					{
-						return names[Locale.ENGLISH.Language];
+						return names[Locale.English.Language];
 					}
 					else
 					{
@@ -389,7 +390,7 @@ namespace Skobbler.SDKDemo.Database
 
 		public override SKToolsDownloadItem toDownloadItem()
 		{
-			SKPackageURLInfo info = SKPackageManager.Instance.getURLInfoForPackageWithCode(code);
+			SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(code);
 			IList<SKToolsFileDownloadStep> downloadSteps = new List<SKToolsFileDownloadStep>();
 			downloadSteps.Add(new SKToolsFileDownloadStep(info.MapURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.SKM_FILE_EXTENSION).ToString(), skmFileSize));
 			if (txgFileSize != 0)

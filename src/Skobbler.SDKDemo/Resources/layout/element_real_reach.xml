@@ -65,7 +65,7 @@
                 android:layout_weight="0.33"
                 android:clickable="true"
                 android:background="@color/grey"
-                android:onClick="onClick"
+                android:onClick="OnClick"
                 android:src="@drawable/icon_dropdownmenu_pedestrian" />
 
             <ImageButton
@@ -77,7 +77,7 @@
                 android:layout_weight="0.33"
                 android:clickable="true"
                 android:background="@color/grey"
-                android:onClick="onClick"
+                android:onClick="OnClick"
                 android:src="@drawable/icon_dropdownmenu_bike" />
 
             <ImageButton
@@ -89,7 +89,7 @@
                 android:layout_weight="0.33"
                 android:clickable="true"
                 android:background="@color/grey"
-                android:onClick="onClick"
+                android:onClick="OnClick"
                 android:src="@drawable/icon_dropdownmenu_car" />
         </LinearLayout>
     </LinearLayout>
@@ -101,7 +101,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
-       android:onClick="onClick"
+       android:onClick="OnClick"
         android:text="Exit" />
 
 </RelativeLayout>

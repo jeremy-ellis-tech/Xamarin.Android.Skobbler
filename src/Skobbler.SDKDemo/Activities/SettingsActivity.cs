@@ -1,81 +1,81 @@
 ﻿using Android.App;
+using Android.Content.PM;
 using Android.OS;
 using Android.Preferences;
 using Android.Util;
+using Skobbler.SDKDemo.Util;
 namespace Skobbler.SDKDemo.Activities
 {
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class SettingsActivity : PreferenceActivity
 	{
-
-
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.settings);
-			ListPreference listPreference = (ListPreference) findPreference(PreferenceTypes.K_ROUTE_TYPE);
+			AddPreferencesFromResource(Resource.Xml.settings);
+			ListPreference listPreference = (ListPreference) FindPreference(PreferenceTypes.K_ROUTE_TYPE);
 			listPreference.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper(this, listPreference);
-			ListPreference listDistanceFormat = (ListPreference) findPreference(PreferenceTypes.K_DISTANCE_UNIT);
+			ListPreference listDistanceFormat = (ListPreference) FindPreference(PreferenceTypes.K_DISTANCE_UNIT);
 			if (listDistanceFormat.Value == null)
 			{
-				listDistanceFormat.ValueIndex = 0;
+				listDistanceFormat.SetValueIndex(0);
 			}
 			listDistanceFormat.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper2(this, listDistanceFormat);
 
-			ListPreference listNavigationType = (ListPreference) findPreference(PreferenceTypes.K_NAVIGATION_TYPE);
+			ListPreference listNavigationType = (ListPreference) FindPreference(PreferenceTypes.K_NAVIGATION_TYPE);
 			if (listNavigationType.Value == null)
 			{
-				listNavigationType.ValueIndex = 1;
+				listNavigationType.SetValueIndex(1);
 			}
 			listNavigationType.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper3(this, listNavigationType);
 
-			ListPreference listSpeedWarningsInTown = (ListPreference) findPreference(PreferenceTypes.K_IN_TOWN_SPEED_WARNING);
+			ListPreference listSpeedWarningsInTown = (ListPreference) FindPreference(PreferenceTypes.K_IN_TOWN_SPEED_WARNING);
 			if (listDistanceFormat.Summary.Equals("Kilometers/Meters"))
 			{
-				listSpeedWarningsInTown.Entries = new string[]{"5km/h", "10km/h", "15km/h", "20km/h", "25km/h"};
-				listSpeedWarningsInTown.EntryValues = new string[]{"0", "1", "2", "3", "4"};
+				listSpeedWarningsInTown.SetEntries(new string[]{"5km/h", "10km/h", "15km/h", "20km/h", "25km/h"});
+				listSpeedWarningsInTown.SetEntryValues(new string[]{"0", "1", "2", "3", "4"});
 			}
 			else
 			{
-				listSpeedWarningsInTown.Entries = new string[]{"5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h"};
-				listSpeedWarningsInTown.EntryValues = new string[]{"0", "1", "2", "3", "4"};
+				listSpeedWarningsInTown.SetEntries(new string[]{"5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h"});
+				listSpeedWarningsInTown.SetEntryValues(new string[]{"0", "1", "2", "3", "4"});
 			}
 			if (listSpeedWarningsInTown.Value == null)
 			{
-				listSpeedWarningsInTown.ValueIndex = 3;
+				listSpeedWarningsInTown.SetValueIndex(3);
 			}
 			listSpeedWarningsInTown.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper4(this, listSpeedWarningsInTown);
 
-			ListPreference listSpeedWarningsOutTown = (ListPreference) findPreference(PreferenceTypes.K_OUT_TOWN_SPEED_WARNING);
+			ListPreference listSpeedWarningsOutTown = (ListPreference) FindPreference(PreferenceTypes.K_OUT_TOWN_SPEED_WARNING);
 			if (listDistanceFormat.Summary.Equals("Kilometers/Meters"))
 			{
-				listSpeedWarningsOutTown.Entries = new string[]{"5km/h", "10km/h", "15km/h", "20km/h", "25km/h"};
-				listSpeedWarningsOutTown.EntryValues = new string[]{"0", "1", "2", "3", "4"};
+				listSpeedWarningsOutTown.SetEntries(new string[]{"5km/h", "10km/h", "15km/h", "20km/h", "25km/h"});
+				listSpeedWarningsOutTown.SetEntryValues(new string[]{"0", "1", "2", "3", "4"});
 			}
 			else
 			{
-				listSpeedWarningsOutTown.Entries = new string[]{"5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h"};
-				listSpeedWarningsOutTown.EntryValues = new string[]{"0", "1", "2", "3", "4"};
+				listSpeedWarningsOutTown.SetEntries(new string[]{"5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h"});
+				listSpeedWarningsOutTown.SetEntryValues(new string[]{"0", "1", "2", "3", "4"});
 			}
 			if (listSpeedWarningsOutTown.Value == null)
 			{
-				listSpeedWarningsOutTown.ValueIndex = 3;
+				listSpeedWarningsOutTown.SetValueIndex(3);
 			}
 			listSpeedWarningsOutTown.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper5(this, listSpeedWarningsOutTown);
 
-			CheckBoxPreference checkBoxDayNight = (CheckBoxPreference) findPreference(PreferenceTypes.K_AUTO_DAY_NIGHT);
+			CheckBoxPreference checkBoxDayNight = (CheckBoxPreference) FindPreference(PreferenceTypes.K_AUTO_DAY_NIGHT);
 			checkBoxDayNight.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper6(this);
 
-			CheckBoxPreference checkBoxTollRoads = (CheckBoxPreference) findPreference(PreferenceTypes.K_AVOID_TOLL_ROADS);
+			CheckBoxPreference checkBoxTollRoads = (CheckBoxPreference) FindPreference(PreferenceTypes.K_AVOID_TOLL_ROADS);
 			checkBoxTollRoads.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper7(this);
 
-			CheckBoxPreference checkBoxFerries = (CheckBoxPreference) findPreference(PreferenceTypes.K_AVOID_FERRIES);
+			CheckBoxPreference checkBoxFerries = (CheckBoxPreference) FindPreference(PreferenceTypes.K_AVOID_FERRIES);
 			checkBoxFerries.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper8(this);
 
-			CheckBoxPreference checkBoxHighways = (CheckBoxPreference) findPreference(PreferenceTypes.K_AVOID_HIGHWAYS);
+			CheckBoxPreference checkBoxHighways = (CheckBoxPreference) FindPreference(PreferenceTypes.K_AVOID_HIGHWAYS);
 			checkBoxHighways.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper9(this);
 
-			CheckBoxPreference checkBoxFreeDrive = (CheckBoxPreference) findPreference(PreferenceTypes.K_FREE_DRIVE);
+			CheckBoxPreference checkBoxFreeDrive = (CheckBoxPreference) FindPreference(PreferenceTypes.K_FREE_DRIVE);
 			checkBoxFreeDrive.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper10(this);
 
 		}
@@ -101,13 +101,13 @@ namespace Skobbler.SDKDemo.Activities
 				preference.Summary = listPreference.Entry;
 				if (preference.Summary.Equals("Car shortest"))
 				{
-					PreferenceScreen.findPreference("pref_routes_number").Summary = "1";
-					PreferenceScreen.findPreference("pref_routes_number").Enabled = false;
+					PreferenceScreen.FindPreference("pref_routes_number").Summary = "1";
+					PreferenceScreen.FindPreference("pref_routes_number").Enabled = false;
 				}
 				else if (preference.Summary.Equals("Bicycle shortest"))
 				{
-					PreferenceScreen.findPreference("pref_routes_number").Summary = "1";
-					PreferenceScreen.findPreference("pref_routes_number").Enabled = false;
+					PreferenceScreen.FindPreference("pref_routes_number").Summary = "1";
+					PreferenceScreen.FindPreference("pref_routes_number").Enabled = false;
 				}
 				return false;
 			}
@@ -135,21 +135,21 @@ namespace Skobbler.SDKDemo.Activities
 				if (preference.Summary.Equals("Miles/Feet") || preference.Summary.Equals("Miles/Yards"))
 				{
 
-					ListPreference listSpeedWarningsInTown = (ListPreference) findPreference("pref_speed_warnings_in_town");
-					listSpeedWarningsInTown.Entries = new string[]{"5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h"};
-					listSpeedWarningsInTown.EntryValues = new string[]{"0", "1", "2", "3", "4"};
-					ListPreference listSpeedWarningsOutTown = (ListPreference) findPreference("pref_speed_warnings_out_town");
-					listSpeedWarningsOutTown.Entries = new string[]{"5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h"};
-					listSpeedWarningsOutTown.EntryValues = new string[]{"0", "1", "2", "3", "4"};
+					ListPreference listSpeedWarningsInTown = (ListPreference) FindPreference("pref_speed_warnings_in_town");
+					listSpeedWarningsInTown.SetEntries(new string[]{"5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h"});
+					listSpeedWarningsInTown.SetEntryValues(new string[]{"0", "1", "2", "3", "4"});
+					ListPreference listSpeedWarningsOutTown = (ListPreference) FindPreference("pref_speed_warnings_out_town");
+					listSpeedWarningsOutTown.SetEntries(new string[]{"5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h"});
+					listSpeedWarningsOutTown.SetEntryValues(new string[]{"0", "1", "2", "3", "4"});
 				}
 				else if (preference.Summary.Equals("Kilometers/Meters"))
 				{
-					ListPreference listSpeedWarningsInTown = (ListPreference) findPreference("pref_speed_warnings_in_town");
-					listSpeedWarningsInTown.Entries = new string[]{"5km/h", "10km/h", "15km/h", "20km/h", "25km/h"};
-					listSpeedWarningsInTown.EntryValues = new string[]{"0", "1", "2", "3", "4"};
-					ListPreference listSpeedWarningsOutTown = (ListPreference) findPreference("pref_speed_warnings_out_town");
-					listSpeedWarningsOutTown.Entries = new string[]{"5km/h", "10km/h", "15km/h", "20km/h", "25km/h"};
-					listSpeedWarningsOutTown.EntryValues = new string[]{"0", "1", "2", "3", "4"};
+					ListPreference listSpeedWarningsInTown = (ListPreference) FindPreference("pref_speed_warnings_in_town");
+					listSpeedWarningsInTown.SetEntries(new string[]{"5km/h", "10km/h", "15km/h", "20km/h", "25km/h"});
+					listSpeedWarningsInTown.SetEntryValues(new string[]{"0", "1", "2", "3", "4"});
+					ListPreference listSpeedWarningsOutTown = (ListPreference) FindPreference("pref_speed_warnings_out_town");
+					listSpeedWarningsOutTown.SetEntries(new string[]{"5km/h", "10km/h", "15km/h", "20km/h", "25km/h"});
+					listSpeedWarningsOutTown.SetEntryValues(new string[]{"0", "1", "2", "3", "4"});
 				}
 				return false;
 			}

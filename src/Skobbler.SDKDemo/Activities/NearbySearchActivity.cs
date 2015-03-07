@@ -1,19 +1,26 @@
 ﻿using Android.App;
+using Android.Content;
+using Android.Content.PM;
+using Android.OS;
+using Android.Views;
+using Android.Widget;
+using Java.Interop;
 namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
 	/// Activity in which nearby search parameters are introduced
 	/// </summary>
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class NearbySearchActivity : Activity
 	{
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_nearby_search;
+			SetContentView(Resource.Layout.activity_nearby_search);
 		}
 
+        [Export("OnClick")]
 		public virtual void onClick(View v)
 		{
 			switch (v.Id)

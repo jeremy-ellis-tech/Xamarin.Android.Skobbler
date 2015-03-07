@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Android.Util;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 {
@@ -20,7 +21,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
         public override void onReceive(Context context, Intent intent)
         {
-            Log.e(TAG, "Received Broadcast from alarm manager to recalculate the sunrise / sunset hours");
+            Log.Error(TAG, "Received Broadcast from alarm manager to recalculate the sunrise / sunset hours");
             if (SKToolsLogicManager.lastUserPosition != null && !SKToolsLogicManager.Instance.NavigationStopped)
             {
                 SKToolsSunriseSunsetCalculator.calculateSunriseSunsetHours(SKToolsLogicManager.lastUserPosition.Latitude, SKToolsLogicManager.lastUserPosition.Longitude, SKToolsSunriseSunsetCalculator.OFFICIAL);

@@ -80,9 +80,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         private SKToolsAdvicePlayer()
         {
             player = new MediaPlayer();
-            player.AudioStreamType = Stream.Music;
-            player.OnCompletionListener = this;
-            player.OnErrorListener = this;
+            player.SetAudioStreamType(Stream.Music);
+            player.SetOnCompletionListener(this);
+            player.SetOnErrorListener(this);
         }
 
         /// <summary>
@@ -274,17 +274,17 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 FileDescriptor fileDescriptor = fileInputStream.FD;
                 try
                 {
-                    player.DataSource = fileDescriptor;
+                    player.SetDataSource(fileDescriptor);
                 }
                 catch (System.InvalidOperationException)
                 {
-                    player.reset();
-                    player.DataSource = fileDescriptor;
+                    player.Reset();
+                    player.SetDataSource(fileDescriptor);
                 }
                 fileInputStream.Close();
 
-                player.prepare();
-                player.start();
+                player.Prepare();
+                player.Start();
             }
             catch (IOException ioe)
             {

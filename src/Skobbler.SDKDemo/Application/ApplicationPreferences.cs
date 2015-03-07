@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Android.Content;
+using Skobbler.SDKDemo.Database;
+using System.Collections.Generic;
 
 namespace Skobbler.SDKDemo.Application
 {
@@ -17,12 +19,12 @@ namespace Skobbler.SDKDemo.Application
 		/// <summary>
 		/// used for modifying values in a SharedPreferences prefs
 		/// </summary>
-		private SharedPreferences.Editor prefsEditor;
+		private ISharedPreferencesEditor prefsEditor;
 
 		/// <summary>
 		/// reference to preference
 		/// </summary>
-		private SharedPreferences prefs;
+		private ISharedPreferences prefs;
 
 		/// <summary>
 		/// the context
@@ -32,13 +34,13 @@ namespace Skobbler.SDKDemo.Application
 		public ApplicationPreferences(Context context)
 		{
 			this.context = context;
-			prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-			prefsEditor = prefs.edit();
+			prefs = context.GetSharedPreferences(PREFS_NAME, FileCreationMode.Private);
+			prefsEditor = prefs.Edit();
 		}
 
 		public virtual int getIntPreference(string key)
 		{
-			return prefs.getInt(key, 0);
+			return prefs.GetInt(key, 0);
 		}
 
 		public virtual string getStringPreference(string key)
@@ -48,8 +50,8 @@ namespace Skobbler.SDKDemo.Application
 
 		public virtual void saveDownloadStepPreference(int downloadStepIndex)
 		{
-			prefsEditor.putInt(DOWNLOAD_STEP_INDEX_PREF_KEY, downloadStepIndex);
-			prefsEditor.commit();
+			prefsEditor.PutInt(DOWNLOAD_STEP_INDEX_PREF_KEY, downloadStepIndex);
+			prefsEditor.Commit();
 		}
 
 		public virtual void saveDownloadQueuePreference(IList<DownloadResource> downloads)
@@ -59,8 +61,8 @@ namespace Skobbler.SDKDemo.Application
 			{
 				resourceCodes[i] = downloads[i].Code;
 			}
-			prefsEditor.putString(DOWNLOAD_QUEUE_PREF_KEY, (new Gson()).toJson(resourceCodes));
-			prefsEditor.commit();
+			prefsEditor.PutString(DOWNLOAD_QUEUE_PREF_KEY, (new Gson()).toJson(resourceCodes));
+			prefsEditor.Commit();
 		}
 	}
 

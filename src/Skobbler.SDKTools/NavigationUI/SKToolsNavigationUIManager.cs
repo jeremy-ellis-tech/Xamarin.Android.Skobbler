@@ -9,6 +9,10 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Skobbler.Ngx.Routing;
+using Android.Content.Res;
+using Skobbler.Ngx.Navigation;
+using Java.Lang;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI
 {
@@ -503,7 +507,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             activity.RunOnUiThread(new RunnableAnonymousInnerClassHelper(this));
         }
 
-        private class RunnableAnonymousInnerClassHelper : Runnable
+        private class RunnableAnonymousInnerClassHelper : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -520,48 +524,48 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
                 outerInstance.inflateSettingsMenu();
 
-                android.widget.RelativeLayout.LayoutParams relativeLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                RelativeLayout.LayoutParams relativeLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
 
                 outerInstance.backButtonPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_back_button, null, false);
-                outerInstance.rootLayout.addView(outerInstance.backButtonPanel, relativeLayoutParams);
+                outerInstance.rootLayout.AddView(outerInstance.backButtonPanel, relativeLayoutParams);
                 outerInstance.backButtonPanel.Id = SKToolsUtils.generateViewId();
                 outerInstance.backButtonPanel.Visibility = ViewStates.Gone;
                 outerInstance.backButtonPanel.FindViewById(Resource.Id.navigation_top_back_button).OnClickListener = itemsClickListener;
 
-                android.widget.RelativeLayout.LayoutParams routeOverviewRelativeLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                routeOverviewRelativeLayoutParams.addRule(RelativeLayout.BELOW, outerInstance.backButtonPanel.Id);
+                RelativeLayout.LayoutParams routeOverviewRelativeLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
+                routeOverviewRelativeLayoutParams.AddRule(RelativeLayout.BELOW, outerInstance.backButtonPanel.Id);
 
                 outerInstance.routeOverviewPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_route_overview_panel, null, false);
-                outerInstance.rootLayout.addView(outerInstance.routeOverviewPanel, routeOverviewRelativeLayoutParams);
+                outerInstance.rootLayout.AddView(outerInstance.routeOverviewPanel, routeOverviewRelativeLayoutParams);
                 outerInstance.routeOverviewPanel.Visibility = ViewStates.Gone;
 
                 outerInstance.roadBlockPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_roadblocks_list, null, false);
-                outerInstance.rootLayout.addView(outerInstance.roadBlockPanel, routeOverviewRelativeLayoutParams);
+                outerInstance.rootLayout.AddView(outerInstance.roadBlockPanel, routeOverviewRelativeLayoutParams);
                 outerInstance.roadBlockPanel.Visibility = ViewStates.Gone;
 
 
                 outerInstance.reRoutingPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_rerouting_panel, null, false);
-                android.widget.RelativeLayout.LayoutParams reRoutingPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                reRoutingPanelParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                outerInstance.rootLayout.addView(outerInstance.reRoutingPanel, reRoutingPanelParams);
+                RelativeLayout.LayoutParams reRoutingPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
+                reRoutingPanelParams.AddRule(LayoutRules.AlignParentTop);
+                outerInstance.rootLayout.AddView(outerInstance.reRoutingPanel, reRoutingPanelParams);
                 outerInstance.reRoutingPanel.Visibility = ViewStates.Gone;
 
                 outerInstance.menuOptions = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_menu_options, null, false);
-                outerInstance.rootLayout.addView(outerInstance.menuOptions, relativeLayoutParams);
+                outerInstance.rootLayout.AddView(outerInstance.menuOptions, relativeLayoutParams);
                 outerInstance.menuOptions.Visibility = ViewStates.Gone;
 
                 outerInstance.topCurrentNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_current_advice_panel, null, false);
-                android.widget.RelativeLayout.LayoutParams topCurrentAdviceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                topCurrentAdviceParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                RelativeLayout.LayoutParams topCurrentAdviceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
+                topCurrentAdviceParams.AddRule(LayoutRules.AlignParentTop);
                 outerInstance.rootLayout.AddView(outerInstance.topCurrentNavigationPanel, topCurrentAdviceParams);
                 outerInstance.topCurrentNavigationPanel.Id = SKToolsUtils.generateViewId();
-                outerInstance.topCurrentNavigationPanel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                outerInstance.topCurrentNavigationPanel.Measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                 outerInstance.topCurrentNavigationPanel.Visibility = ViewStates.Gone;
 
                 outerInstance.topCurrentNavigationDistanceStreetPanel = (LinearLayout)outerInstance.topCurrentNavigationPanel.FindViewById(Resource.Id.current_advice_text_holder);
                 outerInstance.topCurrentNavigationDistanceStreetPanel.OnClickListener = itemsClickListener;
                 RelativeLayout topCurrentNavigationImagePanel = (RelativeLayout)outerInstance.topCurrentNavigationPanel.FindViewById(Resource.Id.current_advice_image_holder);
-                topCurrentNavigationImagePanel.OnClickListener = itemsClickListener;
+                topCurrentNavigationImagePanel.SetOnClickListener(itemsClickListener);
                 outerInstance.currentAdviceImage = (ImageView)topCurrentNavigationImagePanel.FindViewById(Resource.Id.current_advice_image_turn);
                 outerInstance.currentAdviceName = (TextView)outerInstance.topCurrentNavigationDistanceStreetPanel.FindViewById(Resource.Id.current_advice_street_text);
                 outerInstance.currentAdviceName.Selected = true;
@@ -570,9 +574,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
                 // next advice panel
                 outerInstance.topNextNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_next_advice_panel, null, false);
-                android.widget.RelativeLayout.LayoutParams nextAdviceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                nextAdviceParams.addRule(RelativeLayout.BELOW, outerInstance.topCurrentNavigationPanel.Id);
-                outerInstance.rootLayout.addView(outerInstance.topNextNavigationPanel, nextAdviceParams);
+                RelativeLayout.LayoutParams nextAdviceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
+                nextAdviceParams.AddRule(RelativeLayout.BELOW, outerInstance.topCurrentNavigationPanel.Id);
+                outerInstance.rootLayout.AddView(outerInstance.topNextNavigationPanel, nextAdviceParams);
                 outerInstance.topNextNavigationPanel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
                 outerInstance.topNextNavigationPanel.Visibility = ViewStates.Gone;
 
@@ -584,15 +588,15 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 outerInstance.nextAdviceStreetNameTextView.Selected = true;
 
                 outerInstance.freeDriveCurrentStreetPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_free_drive_current_street_panel, null, false);
-                android.widget.RelativeLayout.LayoutParams freeDrivePanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                freeDrivePanelParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                outerInstance.rootLayout.addView(outerInstance.freeDriveCurrentStreetPanel, freeDrivePanelParams);
+                RelativeLayout.LayoutParams freeDrivePanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
+                freeDrivePanelParams.AddRule(LayoutRules.AlignParentTop);
+                outerInstance.rootLayout.AddView(outerInstance.freeDriveCurrentStreetPanel, freeDrivePanelParams);
                 outerInstance.freeDriveCurrentStreetPanel.Visibility = ViewStates.Gone;
                 TextView freeDriveCurrentStreetText = (TextView)outerInstance.freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text);
                 freeDriveCurrentStreetText.Text = "";
 
                 outerInstance.viaPointPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_via_point_panel, null, false);
-                outerInstance.rootLayout.addView(outerInstance.viaPointPanel, freeDrivePanelParams);
+                outerInstance.rootLayout.AddView(outerInstance.viaPointPanel, freeDrivePanelParams);
                 outerInstance.viaPointPanel.Visibility = ViewStates.Gone;
                 TextView viaPointText = (TextView)outerInstance.viaPointPanel.FindViewById(Resource.Id.via_point_text_view);
                 viaPointText.Text = "";
@@ -608,21 +612,21 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             LayoutInflater inflater = currentActivity.LayoutInflater;
             speedPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_speed_panel, null, false);
-            android.widget.RelativeLayout.LayoutParams currentSpeedParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            currentSpeedParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            currentSpeedParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            rootLayout.addView(speedPanel, currentSpeedParams);
+            RelativeLayout.LayoutParams currentSpeedParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WrapContent, RelativeLayout.LayoutParams.WrapContent);
+            currentSpeedParams.AddRule(LayoutRules.AlignParentBottom);
+            currentSpeedParams.AddRule(LayoutRules.AlignParentLeft);
+            rootLayout.AddView(speedPanel, currentSpeedParams);
             speedPanel.Id = SKToolsUtils.generateViewId();
             speedPanel.Visibility = ViewStates.Gone;
             currentSpeedText = (TextView)speedPanel.FindViewById(Resource.Id.free_drive_current_speed_text);
             currentSpeedTextValue = (TextView)speedPanel.FindViewById(Resource.Id.free_drive_current_speed_text_value);
-            speedPanel.OnClickListener = null;
+            speedPanel.SetOnClickListener(null);
 
             arrivingETATimeGroupPanels = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_eta_arriving_group_panels, null, false);
-            android.widget.RelativeLayout.LayoutParams etaGroupPanelsParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            etaGroupPanelsParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            etaGroupPanelsParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            rootLayout.addView(arrivingETATimeGroupPanels, etaGroupPanelsParams);
+            RelativeLayout.LayoutParams etaGroupPanelsParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WrapContent, RelativeLayout.LayoutParams.WrapContent);
+            etaGroupPanelsParams.AddRule(LayoutRules.AlignParentBottom);
+            etaGroupPanelsParams.AddRule(LayoutRules.AlignParentRight);
+            rootLayout.AddView(arrivingETATimeGroupPanels, etaGroupPanelsParams);
             arrivingETATimeGroupPanels.Id = SKToolsUtils.generateViewId();
             arrivingETATimeGroupPanels.Visibility = ViewStates.Gone;
             estimatedTimePanel = (ViewGroup)arrivingETATimeGroupPanels.FindViewById(Resource.Id.navigation_bottom_right_estimated_panel);
@@ -633,30 +637,30 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             arrivingTimeText = (TextView)arrivingTimePanel.FindViewById(Resource.Id.arriving_time_text);
 
 
-            android.widget.RelativeLayout.LayoutParams routeDistanceParams;
+            RelativeLayout.LayoutParams routeDistanceParams;
             if (currentActivity.Resources.Configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
             {
-                routeDistanceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                routeDistanceParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                routeDistanceParams.addRule(RelativeLayout.LEFT_OF, arrivingETATimeGroupPanels.Id);
-                routeDistanceParams.addRule(RelativeLayout.RIGHT_OF, speedPanel.Id);
+                routeDistanceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
+                routeDistanceParams.AddRule(LayoutRules.AlignParentBottom);
+                routeDistanceParams.AddRule(LayoutRules.LeftOf, arrivingETATimeGroupPanels.Id);
+                routeDistanceParams.AddRule(LayoutRules.RightOf, speedPanel.Id);
             }
             else
             {
-                routeDistanceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                routeDistanceParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                routeDistanceParams.addRule(RelativeLayout.ABOVE, arrivingETATimeGroupPanels.Id);
+                routeDistanceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WrapContent, RelativeLayout.LayoutParams.WrapContent);
+                routeDistanceParams.AddRule(LayoutRules.AlignParentRight);
+                routeDistanceParams.AddRule(RelativeLayout.ABOVE, arrivingETATimeGroupPanels.Id);
             }
 
             routeDistancePanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_route_distance, null, false);
-            rootLayout.addView(routeDistancePanel, routeDistanceParams);
+            rootLayout.AddView(routeDistancePanel, routeDistanceParams);
             routeDistancePanel.Visibility = ViewStates.Gone;
             routeDistanceText = (TextView)routeDistancePanel.FindViewById(Resource.Id.arriving_distance_text);
             routeDistanceTextValue = (TextView)routeDistancePanel.FindViewById(Resource.Id.arriving_distance_text_value);
-            android.widget.RelativeLayout.LayoutParams positionMeParams;
+            RelativeLayout.LayoutParams positionMeParams;
             positionMeButtonPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_position_me_button, null, false);
-            positionMeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rootLayout.addView(positionMeButtonPanel, positionMeParams);
+            positionMeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
+            rootLayout.AddView(positionMeButtonPanel, positionMeParams);
             positionMeButtonPanel.Visibility = ViewStates.Gone;
             positionMeButtonPanel.FindViewById(Resource.Id.position_me_real_navigation_button).OnClickListener = itemsClickListener;
 
@@ -669,9 +673,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             LayoutInflater inflater = currentActivity.LayoutInflater;
             navigationSimulationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_simulation_buttons, null, false);
-            RelativeLayout.LayoutParams simulationPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            navigationSimulationPanel.LayoutParams = simulationPanelParams;
-            rootLayout.addView(navigationSimulationPanel, simulationPanelParams);
+            RelativeLayout.LayoutParams simulationPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WrapContent, RelativeLayout.LayoutParams.WrapContent);
+            navigationSimulationPanel.SetLayoutParams(simulationPanelParams);
+            rootLayout.AddView(navigationSimulationPanel, simulationPanelParams);
             navigationSimulationPanel.FindViewById(Resource.Id.menu_back_follower_mode_button).OnClickListener = itemsClickListener;
             navigationSimulationPanel.FindViewById(Resource.Id.navigation_increase_speed).OnClickListener = itemsClickListener;
             navigationSimulationPanel.FindViewById(Resource.Id.navigation_decrease_speed).OnClickListener = itemsClickListener;
@@ -685,19 +689,19 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             LayoutInflater inflater = currentActivity.LayoutInflater;
 
             settingsPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_settings, null, false);
-            RelativeLayout.LayoutParams settingsPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            rootLayout.addView(settingsPanel, settingsPanelParams);
-            settingsPanel.setVisibility(ViewStates.Gone);
+            RelativeLayout.LayoutParams settingsPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.MatchParent);
+            rootLayout.AddView(settingsPanel, settingsPanelParams);
+            settingsPanel.Visibility = ViewStates.Gone;
 
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_button).setOnClickListener(settingsItemsClickListener);
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_day_night_mode_button).setOnClickListener(settingsItemsClickListener);
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_overview_button).setOnClickListener(settingsItemsClickListener);
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_route_info_button).setOnClickListener(settingsItemsClickListener);
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).setOnClickListener(settingsItemsClickListener);
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_panning_button).setOnClickListener(settingsItemsClickListener);
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_view_mode_button).setOnClickListener(settingsItemsClickListener);
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_quit_button).setOnClickListener(settingsItemsClickListener);
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_back_button).setOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_button).SetOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_day_night_mode_button).SetOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_overview_button).SetOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_route_info_button).SetOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).SetOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_panning_button).SetOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_view_mode_button).SetOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_quit_button).SetOnClickListener(settingsItemsClickListener);
+            settingsPanel.FindViewById(Resource.Id.navigation_settings_back_button).SetOnClickListener(settingsItemsClickListener);
         }
 
         /// <summary>
@@ -707,16 +711,16 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             LayoutInflater inflater = currentActivity.LayoutInflater;
             preNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_pre_navigation_buttons_panel, null, false);
-            RelativeLayout.LayoutParams preNavigationPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            rootLayout.addView(preNavigationPanel, preNavigationPanelParams);
+            RelativeLayout.LayoutParams preNavigationPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
+            rootLayout.AddView(preNavigationPanel, preNavigationPanelParams);
             preNavigationPanel.Visibility = ViewStates.Gone;
 
-            preNavigationPanel.FindViewById(Resource.Id.first_route).OnClickListener = itemsClickListener;
-            preNavigationPanel.FindViewById(Resource.Id.second_route).OnClickListener = itemsClickListener;
-            preNavigationPanel.FindViewById(Resource.Id.third_route).OnClickListener = itemsClickListener;
-            preNavigationPanel.FindViewById(Resource.Id.cancel_pre_navigation_button).OnClickListener = itemsClickListener;
-            preNavigationPanel.FindViewById(Resource.Id.menu_back_prenavigation_button).OnClickListener = itemsClickListener;
-            preNavigationPanel.FindViewById(Resource.Id.start_navigation_button).OnClickListener = itemsClickListener;
+            preNavigationPanel.FindViewById(Resource.Id.first_route).SetOnClickListener(itemsClickListener);
+            preNavigationPanel.FindViewById(Resource.Id.second_route).SetOnClickListener(itemsClickListener);
+            preNavigationPanel.FindViewById(Resource.Id.third_route).SetOnClickListener(itemsClickListener);
+            preNavigationPanel.FindViewById(Resource.Id.cancel_pre_navigation_button).SetOnClickListener(itemsClickListener);
+            preNavigationPanel.FindViewById(Resource.Id.menu_back_prenavigation_button).SetOnClickListener(itemsClickListener);
+            preNavigationPanel.FindViewById(Resource.Id.start_navigation_button).SetOnClickListener(itemsClickListener);
         }
 
         /// <summary>
@@ -746,7 +750,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper2 : Runnable
+        private class RunnableAnonymousInnerClassHelper2 : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -866,16 +870,16 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 if (!value)
                 {
-                    currentActivity.FindViewById(Resource.Id.nav_settings_second_row).setVisibility(ViewStates.Gone);
+                    currentActivity.FindViewById(Resource.Id.nav_settings_second_row).Visibility = ViewStates.Gone;
 
                     TextView routeInfo = (TextView)currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_text);
-                    routeInfo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_routeinfo, 0, 0);
+                    routeInfo.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_routeinfo, 0, 0);
                     routeInfo.Text = currentActivity.Resources.GetString(Resource.String.navigate_settings_routeinfo);
                 }
                 else
                 {
-                    currentActivity.FindViewById(Resource.Id.navigation_settings_overview_button).setVisibility(ViewStates.Gone);
-                    currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).setVisibility(ViewStates.Gone);
+                    currentActivity.FindViewById(Resource.Id.navigation_settings_overview_button).Visibility = ViewStates.Gone;
+                    currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).Visibility = ViewStates.Gone;
                 }
 
             }
@@ -919,7 +923,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper3(this, listAdapter));
         }
 
-        private class RunnableAnonymousInnerClassHelper3 : Runnable
+        private class RunnableAnonymousInnerClassHelper3 : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -1210,14 +1214,14 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(currentActivity);
 
-            alertDialog.Title = Resource.String.exit_navigation_dialog_title;
-            alertDialog.Message = currentActivity.Resources.GetString(Resource.String.exit_navigation_dialog_message);
-            alertDialog.setPositiveButton(currentActivity.Resources.GetString(Resource.String.ok_label), new OnClickListenerAnonymousInnerClassHelper(this));
-            alertDialog.setNegativeButton(currentActivity.Resources.GetString(Resource.String.cancel_label), new OnClickListenerAnonymousInnerClassHelper2(this));
-            alertDialog.show();
+            alertDialog.SetTitle(Resource.String.exit_navigation_dialog_title);
+            alertDialog.SetMessage(currentActivity.Resources.GetString(Resource.String.exit_navigation_dialog_message));
+            alertDialog.SetPositiveButton(currentActivity.Resources.GetString(Resource.String.ok_label), new OnClickListenerAnonymousInnerClassHelper(this));
+            alertDialog.SetNegativeButton(currentActivity.Resources.GetString(Resource.String.cancel_label), new OnClickListenerAnonymousInnerClassHelper2(this));
+            alertDialog.Show();
         }
 
-        private class OnClickListenerAnonymousInnerClassHelper : DialogInterface.OnClickListener
+        private class OnClickListenerAnonymousInnerClassHelper : IDialogInterfaceOnClickListener
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -1229,14 +1233,14 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
             public virtual void onClick(DialogInterface dialog, int which)
             {
-                dialog.cancel();
+                dialog.Cancel();
                 isFreeDrive = false;
                 currentNavigationMode = NavigationMode.POST_NAVIGATION;
                 SKToolsLogicManager.Instance.stopNavigation();
             }
         }
 
-        private class OnClickListenerAnonymousInnerClassHelper2 : DialogInterface.OnClickListener
+        private class OnClickListenerAnonymousInnerClassHelper2 : IDialogInterfaceOnClickListener
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -1248,7 +1252,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
             public virtual void onClick(DialogInterface dialog, int which)
             {
-                dialog.cancel();
+                dialog.Cancel();
             }
         }
 
@@ -1256,18 +1260,18 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Shows a dialog that notifies that the route calculation failed.
         /// </summary>
         /// <param name="statusCode"> </param>
-        public virtual void showRouteCalculationFailedDialog(SKRouteListener.SKRoutingErrorCode statusCode)
+        public virtual void showRouteCalculationFailedDialog(ISKRouteListener.SKRoutingErrorCode statusCode)
         {
             currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper(this, statusCode));
         }
 
-        private class RunnableAnonymousInnerClassHelper : Runnable
+        private class RunnableAnonymousInnerClassHelper : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
-            private SKRouteListener.SKRoutingErrorCode statusCode;
+            private ISKRouteListener.SKRoutingErrorCode statusCode;
 
-            public RunnableAnonymousInnerClassHelper(SKToolsNavigationUIManager outerInstance, SKRouteListener.SKRoutingErrorCode statusCode)
+            public RunnableAnonymousInnerClassHelper(SKToolsNavigationUIManager outerInstance, ISKRouteListener.SKRoutingErrorCode statusCode)
             {
                 this.outerInstance = outerInstance;
                 this.statusCode = statusCode;
@@ -1299,13 +1303,13 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 }
 
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(currentActivity);
-                alertDialog.Title = Resource.String.routing_server_error;
-                alertDialog.Message = dialogMessage;
-                alertDialog.setNeutralButton(res.GetString(Resource.String.ok_label), new OnClickListenerAnonymousInnerClassHelper3(this));
-                alertDialog.show();
+                alertDialog.SetTitle(Resource.String.routing_server_error);
+                alertDialog.SetMessage(dialogMessage);
+                alertDialog.SetNeutralButton(res.GetString(Resource.String.ok_label), new OnClickListenerAnonymousInnerClassHelper3(this));
+                alertDialog.Show();
             }
 
-            private class OnClickListenerAnonymousInnerClassHelper3 : DialogInterface.OnClickListener
+            private class OnClickListenerAnonymousInnerClassHelper3 : IDialogInterfaceOnClickListener
             {
                 private readonly RunnableAnonymousInnerClassHelper outerInstance;
 
@@ -1317,7 +1321,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
                 public override void onClick(DialogInterface dialog, int which)
                 {
-                    dialog.dismiss();
+                    dialog.Dismiss();
                 }
             }
         }
@@ -1359,7 +1363,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         }
 
-        private class RunnableAnonymousInnerClassHelper2 : Runnable
+        private class RunnableAnonymousInnerClassHelper2 : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -1871,7 +1875,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper3(this));
         }
 
-        private class RunnableAnonymousInnerClassHelper3 : Runnable
+        private class RunnableAnonymousInnerClassHelper3 : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -2117,7 +2121,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper4(this, countryCode, streetName, currentFreeDriveSpeed, speedLimit, distanceUnitType, mapStyle));
         }
 
-        private class RunnableAnonymousInnerClassHelper4 : Runnable
+        private class RunnableAnonymousInnerClassHelper4 : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -2193,7 +2197,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper : Runnable
+        private class RunnableAnonymousInnerClassHelper : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -2314,7 +2318,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 if (speedExceededThread == null || !speedExceededThread.Alive)
                 {
                     speedExceededThread = new SpeedExceededThread(this, true);
-                    speedExceededThread.start();
+                    speedExceededThread.Start();
                 }
             }
             else
@@ -2448,7 +2452,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         }
 
-        private class RunnableAnonymousInnerClassHelper2 : Runnable
+        private class RunnableAnonymousInnerClassHelper2 : IRunnable
         {
             private readonly SKToolsNavigationUIManager outerInstance;
 
@@ -2862,7 +2866,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 }
             }
 
-            private class RunnableAnonymousInnerClassHelper3 : Runnable
+            private class RunnableAnonymousInnerClassHelper3 : IRunnable
             {
                 private readonly SpeedExceededThread outerInstance;
 
@@ -2911,7 +2915,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 }
             }
 
-            private class RunnableAnonymousInnerClassHelper4 : Runnable
+            private class RunnableAnonymousInnerClassHelper4 : IRunnable
             {
                 private readonly SpeedExceededThread outerInstance;
 

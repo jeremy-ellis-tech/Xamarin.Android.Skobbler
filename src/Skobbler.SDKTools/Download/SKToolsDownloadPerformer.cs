@@ -15,6 +15,7 @@ using Skobbler.Ngx.Util;
 using System.IO;
 using Java.IO;
 using Java.Net;
+using Skobbler.Ngx.Packages;
 
 namespace Skobbler.Ngx.SDKTools.Download
 {
@@ -460,7 +461,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             {
                 bytesRead = 0;
             }
-            catch (va.io.IOException)
+            catch (IOException)
             {
                 bytesRead = 0;
             }
@@ -588,7 +589,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper : Runnable
+        private class RunnableAnonymousInnerClassHelper : IRunnable
         {
             private readonly SKToolsDownloadPerformer outerInstance;
 
@@ -607,7 +608,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 }
             }
 
-            private class RunnableAnonymousInnerClassHelper2 : Runnable
+            private class RunnableAnonymousInnerClassHelper2 : IRunnable
             {
                 private readonly RunnableAnonymousInnerClassHelper outerInstance;
 
@@ -675,7 +676,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper3 : Runnable
+        private class RunnableAnonymousInnerClassHelper3 : IRunnable
         {
             private readonly SKToolsDownloadPerformer outerInstance;
 
@@ -688,7 +689,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             {
                 if (outerInstance.downloadTimeoutHandler != null)
                 {
-                    outerInstance.downloadTimeoutHandler.removeCallbacks(outerInstance.downloadTimeoutRunnable);
+                    outerInstance.downloadTimeoutHandler.RemoveCallbacks(outerInstance.downloadTimeoutRunnable);
                     outerInstance.downloadTimeoutRunnable = null;
                     outerInstance.downloadTimeoutHandler = null;
                 }
@@ -800,7 +801,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             // notify the UI that current download was cancelled
             if (downloadListener != null)
             {
-                downloadListener.onDownloadCancelled(currentDownloadItem.ItemCode);
+                downloadListener.OnDownloadCancelled(currentDownloadItem.ItemCode);
             }
         }
 
@@ -833,7 +834,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             }
             if (downloadListener != null)
             {
-                downloadListener.onAllDownloadsCancelled();
+                downloadListener.OnAllDownloadsCancelled();
             }
         }
 
@@ -845,7 +846,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             pauseDownloadThread();
             if (downloadListener != null)
             {
-                downloadListener.onDownloadPaused(currentDownloadItem);
+                downloadListener.OnDownloadPaused(currentDownloadItem);
             }
         }
 
@@ -861,13 +862,13 @@ namespace Skobbler.Ngx.SDKTools.Download
                 try
                 {
                     RandomAccessFile currentDestinationFile = new RandomAccessFile(currentDownloadItem.CurrentStepDestinationPath, "r");
-                    totalBytesRead = currentDestinationFile.length();
+                    totalBytesRead = currentDestinationFile.Length();
                 }
-                catch (va.io.FileNotFoundException)
+                catch (FileNotFoundException)
                 {
                     totalBytesRead = 0;
                 }
-                catch (va.io.IOException)
+                catch (IOException)
                 {
                     totalBytesRead = 0;
                 }
@@ -899,7 +900,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                             // notify the UI that current resource was downloaded
                             if (downloadListener != null)
                             {
-                                downloadListener.onDownloadProgress(currentDownloadItem);
+                                downloadListener.OnDownloadProgress(currentDownloadItem);
                             }
 
                             // add current resource to install queue
@@ -909,7 +910,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                                 {
                                     skToolsUnzipPerformer = new SKToolsUnzipPerformer(downloadListener);
                                     skToolsUnzipPerformer.addItemForInstall(currentDownloadItem);
-                                    skToolsUnzipPerformer.start();
+                                    skToolsUnzipPerformer.Start();
                                 }
                                 else
                                 {
@@ -930,9 +931,9 @@ namespace Skobbler.Ngx.SDKTools.Download
                             SKLogging.WriteLog(TAG, "Current item = " + currentDownloadItem.ItemCode + " is now downloaded => unzip is not needed => install it now at base path" + " = " + rootFilePath, SKLogging.LogDebug);
                             if (rootFilePath != null)
                             {
-                                int result = SKPackageManager.Instance.addOfflinePackage(rootFilePath, currentDownloadItem.ItemCode);
+                                int result = SKPackageManager.Instance.AddOfflinePackage(rootFilePath, currentDownloadItem.ItemCode);
                                 SKLogging.WriteLog(TAG, "Current resource installing result code = " + result, SKLogging.LogDebug);
-                                if ((result & SKPackageManager.ADD_PACKAGE_MISSING_SKM_RESULT & SKPackageManager.ADD_PACKAGE_MISSING_NGI_RESULT & SKPackageManager.ADD_PACKAGE_MISSING_NGI_DAT_RESULT) == 0)
+                                if ((result & SKPackageManager.AddPackageMissingSkmResult & SKPackageManager.AddPackageMissingNgiResult & SKPackageManager.AddPackageMissingNgiDatResult) == 0)
                                 {
                                     // current install was performed with success set current resource as already download
                                     currentDownloadItem.DownloadState = SKToolsDownloadItem.INSTALLED;
@@ -940,7 +941,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                                     // notify the UI that current resource was installed
                                     if (downloadListener != null)
                                     {
-                                        downloadListener.onInstallFinished(currentDownloadItem);
+                                        downloadListener.OnInstallFinished(currentDownloadItem);
                                     }
                                 }
                                 else
@@ -951,7 +952,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                                     // notify the UI that current resource was not installed
                                     if (downloadListener != null)
                                     {
-                                        downloadListener.onDownloadProgress(currentDownloadItem);
+                                        downloadListener.OnDownloadProgress(currentDownloadItem);
                                     }
                                 }
                             }
@@ -963,7 +964,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                                 // notify the UI that current resource was not installed
                                 if (downloadListener != null)
                                 {
-                                    downloadListener.onDownloadProgress(currentDownloadItem);
+                                    downloadListener.OnDownloadProgress(currentDownloadItem);
                                 }
                             }
                         }
@@ -981,7 +982,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             // update the UI (set current resource as paused, shows a toast)
             if (downloadListener != null)
             {
-                downloadListener.onInternetConnectionFailed(currentDownloadItem, failureResponseReceivedFromServer);
+                downloadListener.OnInternetConnectionFailed(currentDownloadItem, failureResponseReceivedFromServer);
             }
         }
 
@@ -1017,13 +1018,13 @@ namespace Skobbler.Ngx.SDKTools.Download
                 try
                 {
                     RandomAccessFile currentDestinationFile = new RandomAccessFile(currentDownloadItem.CurrentStepDestinationPath, "r");
-                    totalBytesRead = currentDestinationFile.length();
+                    totalBytesRead = currentDestinationFile.Length();
                 }
-                catch (va.io.FileNotFoundException)
+                catch (FileNotFoundException)
                 {
                     totalBytesRead = 0;
                 }
-                catch (va.io.IOException)
+                catch (IOException)
                 {
                     totalBytesRead = 0;
                 }

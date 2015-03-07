@@ -61,7 +61,7 @@
             android:layout_below="@id/longitude_field"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
-            android:onClick="onClick"
+            android:onClick="OnClick"
             android:text="@string/reverse_geocode" />
 
         <TextView

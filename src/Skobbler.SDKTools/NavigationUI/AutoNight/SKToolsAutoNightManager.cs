@@ -101,7 +101,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 {
                     timeToStart += SKToolsSunriseSunsetCalculator.NR_OF_MILLISECONDS_IN_A_HOUR;
                 }
-                hourlyAlarmManager.SetExact(AlarmType.Rtc, timeToStart, pendingHourlyAlarmIntent);
+                hourlyAlarmManager.Set(AlarmType.Rtc, timeToStart, pendingHourlyAlarmIntent);
             }
         }
 
@@ -169,7 +169,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
                 if (Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
                 {
-                    alarmManagerForAutoNightForCalculatedSunriseSunsetHours.SetExact(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
+                    alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
                 }
                 else
                 {

@@ -1,10 +1,12 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Views;
+using Java.Interop;
 namespace Skobbler.SDKDemo.Activities
 {
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class TracksActivity : Activity
 	{
 
@@ -22,7 +24,7 @@ namespace Skobbler.SDKDemo.Activities
 
 		}
 
-		private class OnClickListenerAnonymousInnerClassHelper : DialogInterface.OnClickListener
+		private class OnClickListenerAnonymousInnerClassHelper : IDialogInterfaceOnClickListener
 		{
 			private readonly TracksActivity outerInstance;
 
@@ -41,10 +43,10 @@ namespace Skobbler.SDKDemo.Activities
 			}
 		}
 
-
+        [Export("OnMenuOptionClick")]
 		public virtual void onMenuOptionClick(View v)
 		{
-			Intent intent = new Intent(TracksActivity.this, typeof(TrackElementsActivity));
+			Intent intent = new Intent(typeof(TracksActivity), typeof(TrackElementsActivity));
 			switch (v.Id)
 			{
 				case Resource.Id.gpx_chicago:
@@ -68,26 +70,23 @@ namespace Skobbler.SDKDemo.Activities
 			StartActivityForResult(intent, MapActivity.TRACKS);
 		}
 
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
 
-		protected internal override void onActivityResult(int requestCode, int resultCode, Intent data)
-		{
-			base.OnActivityResult(requestCode, resultCode, data);
-
-			if (resultCode == RESULT_OK)
-			{
-				switch (requestCode)
-				{
-					case MapActivity.TRACKS:
-						Result = RESULT_OK;
-						this.Finish();
-						break;
-					default:
-						break;
-				}
-			}
-		}
-
-
+            if (resultCode == Result.Ok)
+            {
+                switch (requestCode)
+                {
+                    case MapActivity.TRACKS:
+                        SetResult(Result.Ok);
+                        this.Finish();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 	}
 
 }

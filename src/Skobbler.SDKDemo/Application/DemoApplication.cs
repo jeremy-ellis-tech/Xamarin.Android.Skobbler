@@ -1,9 +1,11 @@
-﻿namespace Skobbler.SDKDemo.Application
+﻿using AndroidApplication = Android.App.Application;
+
+namespace Skobbler.SDKDemo.Application
 {
 	/// <summary>
 	/// Class that stores global application state
 	/// </summary>
-	public class DemoApplication : Application
+    public class DemoApplication : AndroidApplication
 	{
 
 		/// <summary>

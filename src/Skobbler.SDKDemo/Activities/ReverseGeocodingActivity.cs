@@ -1,12 +1,19 @@
 ﻿using Android.App;
+using Android.Content.PM;
 using Android.OS;
+using Android.Views;
+using Android.Widget;
+using Java.Interop;
+using Skobbler.Ngx;
+using Skobbler.Ngx.ReverseGeocode;
+using Skobbler.Ngx.Search;
 using Skobbler.SDKDemo.Application;
 namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
 	/// Activity where offline reverse geocoding is performed
 	/// </summary>
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class ReverseGeocodingActivity : Activity
 	{
 
@@ -15,10 +22,11 @@ namespace Skobbler.SDKDemo.Activities
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_reverse_geocoding;
+			SetContentView(Resource.Layout.activity_reverse_geocoding);
 			application = (DemoApplication) Application;
 		}
 
+        [Export("OnClick")]
 		public virtual void onClick(View v)
 		{
 			switch (v.Id)
@@ -28,7 +36,7 @@ namespace Skobbler.SDKDemo.Activities
 					if (position != null)
 					{
 						// run reverse geocoding and obtain a search result
-						SKSearchResult result = SKReverseGeocoderManager.Instance.reverseGeocodePosition(position);
+						SKSearchResult result = SKReverseGeocoderManager.Instance.ReverseGeocodePosition(position);
 						// display the search result name
 						string text = result != null ? result.Name : "NULL";
 						if (result != null && result.ParentsList != null)

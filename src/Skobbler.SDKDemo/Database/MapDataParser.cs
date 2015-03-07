@@ -92,14 +92,14 @@ namespace Skobbler.SDKDemo.Database
 		{
 			JsonReader reader = new JsonReader(new System.IO.StreamReader(inputStream, Encoding.UTF8));
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
 				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(VERSION_ID) || key.Equals(XML_VERSION_ID))
 					{
-						reader.skipValue();
+						reader.SkipValue();
 					}
 					else if (key.Equals(PACKAGES_ID))
 					{
@@ -131,7 +131,7 @@ namespace Skobbler.SDKDemo.Database
 		private void readRegionsDetails(IDictionary<string, string> regionItemsCodes, JsonReader reader)
 		{
 			reader.BeginArray();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
 				readCurrentRegionDetails(regionItemsCodes, reader);
 			}
@@ -147,14 +147,14 @@ namespace Skobbler.SDKDemo.Database
 		{
 			reader.BeginObject();
 			string currentRegionCode = null;
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(REGION_CODE_ID))
 					{
-						currentRegionCode = reader.nextString();
+						currentRegionCode = reader.NextString();
 					}
 					else if (key.Equals(SUB_REGIONS_ID))
 					{
@@ -177,15 +177,15 @@ namespace Skobbler.SDKDemo.Database
 		private void readSubRegionsForCurrentRegion(IDictionary<string, string> regionItemsCodes, string currentRegionCode, JsonReader reader)
 		{
 			reader.BeginArray();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
 				reader.BeginObject();
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(SUB_REGION_CODE_ID))
 					{
-						string subRegionCode = reader.nextString();
+						string subRegionCode = reader.NextString();
 						if (subRegionCode != null)
 						{
 							regionItemsCodes[subRegionCode] = currentRegionCode;
@@ -205,7 +205,7 @@ namespace Skobbler.SDKDemo.Database
 		private void readMapsDetails(IList<MapDownloadResource> maps, JsonReader reader)
 		{
 			reader.BeginArray();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
 				readCurrentMapDetails(maps, reader);
 			}
@@ -221,23 +221,23 @@ namespace Skobbler.SDKDemo.Database
 		{
 			MapDownloadResource currentMap = new MapDownloadResource();
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(PACKAGE_CODE_ID))
 					{
-						currentMap.Code = reader.nextString();
+						currentMap.Code = reader.NextString();
 					}
 					else if (key.Equals(TYPE_ID))
 					{
-						currentMap.SubType = getMapType(reader.Next());
+						currentMap.SubType = getMapType(reader.NextInt());
 					}
 					else if (key.Equals(LANGUAGES_ID))
 					{
 						reader.BeginArray();
-						while (reader.HasNext())
+						while (reader.HasNext)
 						{
 							readCurrentMapNames(currentMap, reader);
 						}
@@ -249,19 +249,19 @@ namespace Skobbler.SDKDemo.Database
 					}
 					else if (key.Equals(SKM_SIZE_ID))
 					{
-						currentMap.SkmFileSize = reader.nextLong();
+						currentMap.SkmFileSize = reader.NextLong();
 					}
 					else if (key.Equals(FILE_ID))
 					{
-						currentMap.SkmFilePath = reader.nextString();
+						currentMap.SkmFilePath = reader.NextString();
 					}
 					else if (key.Equals(NB_ZIP_ID))
 					{
-						currentMap.ZipFilePath = reader.nextString();
+						currentMap.ZipFilePath = reader.NextString();
 					}
 					else if (key.Equals(UNZIP_SIZE_ID))
 					{
-						currentMap.UnzippedFileSize = reader.nextLong();
+						currentMap.UnzippedFileSize = reader.NextLong();
 					}
 					else if (key.Equals(TEXTURE_ID))
 					{
@@ -269,12 +269,12 @@ namespace Skobbler.SDKDemo.Database
 					}
 					else if (key.Equals(SIZE_ID))
 					{
-						currentMap.SkmAndZipFilesSize = reader.nextLong();
+						currentMap.SkmAndZipFilesSize = reader.NextLong();
 					}
 					else
 					{
 						// for now, we skip the elevation tag
-						reader.skipValue();
+						reader.SkipValue();
 					}
 				}
 			}
@@ -296,20 +296,20 @@ namespace Skobbler.SDKDemo.Database
 		{
 			string currentMapName = null;
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(TL_NAME_ID))
 					{
-						currentMapName = reader.nextString();
+						currentMapName = reader.NextString();
 					}
 					else if (key.Equals(LNG_CODE_ID))
 					{
 						if (currentMapName != null)
 						{
-							currentMap.setName(currentMapName, reader.nextString());
+							currentMap.setName(currentMapName, reader.NextString());
 						}
 					}
 				}
@@ -325,23 +325,23 @@ namespace Skobbler.SDKDemo.Database
 		private void readCurrentMapTXGDetails(MapDownloadResource currentMap, JsonReader reader)
 		{
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(TEXTURES_BIG_FILE_ID))
 					{
-						currentMap.TXGFilePath = reader.nextString();
+						currentMap.TXGFilePath = reader.NextString();
 					}
 					else if (key.Equals(SIZE_BIG_FILE_ID))
 					{
-						currentMap.TXGFileSize = reader.nextLong();
+						currentMap.TXGFileSize = reader.NextLong();
 					}
 					else
 					{
 						// for now, we skip the tags referring ZIP files details related to TXG files
-						reader.skipValue();
+						reader.SkipValue();
 					}
 				}
 			}
@@ -356,9 +356,9 @@ namespace Skobbler.SDKDemo.Database
 		private void readCurrentMapBoundingBoxDetails(MapDownloadResource currentMap, JsonReader reader)
 		{
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(LAT_MAX_ID))
@@ -390,7 +390,7 @@ namespace Skobbler.SDKDemo.Database
 		private void readWorldHierarchy(IDictionary<string, string> mapsItemsCodes, JsonReader reader)
 		{
 			reader.BeginArray();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
 				readContinentsHierarchy(mapsItemsCodes, reader);
 			}
@@ -406,14 +406,14 @@ namespace Skobbler.SDKDemo.Database
 		{
 			string currentContinentCode = null;
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(CONTINENT_CODE_ID))
 					{
-						currentContinentCode = reader.nextString();
+						currentContinentCode = reader.NextString();
 						if (currentContinentCode != null)
 						{
 							mapsItemsCodes[currentContinentCode] = "";
@@ -422,7 +422,7 @@ namespace Skobbler.SDKDemo.Database
 					else if (key.Equals(COUNTRIES_ID))
 					{
 						reader.BeginArray();
-						while (reader.HasNext())
+						while (reader.HasNext)
 						{
 							readCountriesHierarchy(mapsItemsCodes, currentContinentCode, reader);
 						}
@@ -443,14 +443,14 @@ namespace Skobbler.SDKDemo.Database
 		{
 			string currentCountryCode = null;
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(COUNTRY_CODE_ID))
 					{
-						currentCountryCode = reader.nextString();
+						currentCountryCode = reader.NextString();
 						if ((currentContinentCode != null) && (currentCountryCode != null))
 						{
 							mapsItemsCodes[currentCountryCode] = currentContinentCode;
@@ -459,7 +459,7 @@ namespace Skobbler.SDKDemo.Database
 					else if (key.Equals(CITY_CODES_ID))
 					{
 						reader.BeginArray();
-						while (reader.HasNext())
+						while (reader.HasNext)
 						{
 							readCitiesHierarchy(mapsItemsCodes, currentCountryCode, reader);
 						}
@@ -468,7 +468,7 @@ namespace Skobbler.SDKDemo.Database
 					else if (key.Equals(STATE_CODES_ID))
 					{
 						reader.BeginArray();
-						while (reader.HasNext())
+						while (reader.HasNext)
 						{
 							readStatesHierarchy(mapsItemsCodes, currentCountryCode, reader);
 						}
@@ -489,14 +489,14 @@ namespace Skobbler.SDKDemo.Database
 		{
 			string currentStateCode = null;
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(STATE_CODE_ID))
 					{
-						currentStateCode = reader.nextString();
+						currentStateCode = reader.NextString();
 						if ((currentStateCode != null) && (currentCountryCode != null))
 						{
 							mapsItemsCodes[currentStateCode] = currentCountryCode;
@@ -505,7 +505,7 @@ namespace Skobbler.SDKDemo.Database
 					else if (key.Equals(CITY_CODES_ID))
 					{
 						reader.BeginArray();
-						while (reader.HasNext())
+						while (reader.HasNext)
 						{
 							readCitiesHierarchy(mapsItemsCodes, currentStateCode, reader);
 						}
@@ -525,14 +525,14 @@ namespace Skobbler.SDKDemo.Database
 		private void readCitiesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentParentCode, JsonReader reader)
 		{
 			reader.BeginObject();
-			while (reader.HasNext())
+			while (reader.HasNext)
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(CITY_CODE_ID))
 					{
-						string currentCityCode = reader.nextString();
+						string currentCityCode = reader.NextString();
 						if ((currentCityCode != null) && (currentParentCode != null))
 						{
 							mapsItemsCodes[currentCityCode] = currentParentCode;

@@ -1,11 +1,18 @@
 ﻿using Android.App;
+using Android.Content.PM;
+using Android.Content.Res;
+using Android.OS;
+using Android.Views;
 using Android.Widget;
+using Java.Interop;
+using Skobbler.Ngx;
+using Skobbler.Ngx.Util;
 using System;
 using System.Collections.Generic;
 
 namespace Skobbler.SDKDemo.Activities
 {
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class POICategoriesListActivity : Activity
 	{
 
@@ -44,12 +51,12 @@ namespace Skobbler.SDKDemo.Activities
 			get
 			{
 				IList<POICategoryListItem> listItems = new List<POICategoryListItem>();
-				foreach (SKPOIMainCategory mainCategory in SKPOIMainCategory.values())
+				foreach (SKCategories.SKPOIMainCategory mainCategory in SKCategories.SKPOIMainCategory.Values())
 				{
 					listItems.Add(new POICategoryListItem(true, mainCategory.ToString().Replace("SKPOI_MAIN_CATEGORY_", ""), -1));
-					foreach (int categoryId in SKUtils.getSubcategoriesForCategory(mainCategory.Value))
+					foreach (int categoryId in SKUtils.GetSubcategoriesForCategory(mainCategory.Value))
 					{
-						listItems.Add(new POICategoryListItem(false, SKUtils.getMainCategoryForCategory(categoryId).Names[0].ToUpper().Replace("_", " "), categoryId));
+						listItems.Add(new POICategoryListItem(false, SKUtils.GetMainCategoryForCategory(categoryId).Names[0].ToUpper().Replace("_", " "), categoryId));
 					}
 				}
 				return listItems;
@@ -59,7 +66,7 @@ namespace Skobbler.SDKDemo.Activities
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_list;
+			SetContentView(Resource.Layout.activity_list);
 
 			FindViewById(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
 
@@ -93,12 +100,12 @@ namespace Skobbler.SDKDemo.Activities
 					if (outerInstance.selectedCategories.Contains(selectedItem.id))
 					{
 						outerInstance.selectedCategories.RemoveAt(Convert.ToInt32(selectedItem.id));
-						view.BackgroundColor = Resources.GetColor(Resource.Color.white);
+						view.SetBackgroundColor(Resources.GetColor(Resource.Color.white));
 					}
 					else
 					{
 						outerInstance.selectedCategories.Add(selectedItem.id);
-						view.BackgroundColor = Resources.GetColor(Resource.Color.selected);
+						view.SetBackgroundColor(Resources.GetColor(Resource.Color.selected));
 					}
 
 					Button showButton = (Button) FindViewById(Resource.Id.show_heat_map);
@@ -114,17 +121,18 @@ namespace Skobbler.SDKDemo.Activities
 			}
 		}
 
+        [Export("OnClick")]
 		public virtual void onClick(View v)
 		{
 			if (v.Id == Resource.Id.show_heat_map)
 			{
-				SKPOICategory[] categories = new SKPOICategory[selectedCategories.Count];
+				SKCategories.SKPOICategory[] categories = new SKCategories.SKPOICategory[selectedCategories.Count];
 				for (int i = 0; i < selectedCategories.Count; i++)
 				{
-					categories[i] = SKPOICategory.forInt(selectedCategories[i]);
+					categories[i] = SKCategories.SKPOICategory.ForInt(selectedCategories[i].Value);
 				}
 				MapActivity.heatMapCategories = categories;
-				finish();
+				Finish();
 			}
 		}
 
@@ -173,19 +181,19 @@ namespace Skobbler.SDKDemo.Activities
 				view.Text = "  " + item.name;
 				if (item.isMainCategory)
 				{
-					view.setTextAppearance(outerInstance, R.style.menu_options_group_style);
-					view.BackgroundColor = Resources.GetColor(Resource.Color.grey_options_group);
+					view.SetTextAppearance(outerInstance, Resource.Style.menu_options_group_style);
+					view.SetBackgroundColor(Resources.GetColor(Resource.Color.grey_options_group));
 				}
 				else
 				{
-					view.setTextAppearance(outerInstance, R.style.menu_options_style);
+					view.SetTextAppearance(outerInstance, Resource.Style.menu_options_style);
 					if (!outerInstance.selectedCategories.Contains(item.id))
 					{
-						view.BackgroundColor = Resources.GetColor(Resource.Color.white);
+						view.SetBackgroundColor(Resources.GetColor(Resource.Color.white));
 					}
 					else
 					{
-						view.BackgroundColor = Resources.GetColor(Resource.Color.selected);
+						view.SetBackgroundColor(Resources.GetColor(Resource.Color.selected));
 					}
 				}
 				return view;

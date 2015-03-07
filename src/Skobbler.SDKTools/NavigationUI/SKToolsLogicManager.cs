@@ -16,6 +16,9 @@ using Skobbler.Ngx.Positioner;
 using Skobbler.Ngx.SDKTools.NavigationUI.AutoNight;
 using Skobbler.Ngx.ReverseGeocode;
 using Skobbler.Ngx.Search;
+using Java.Lang;
+using Math = System.Math;
+using Android.Util;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI
 {
@@ -216,7 +219,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             route.TollRoadsAvoided = configuration.TollRoadsAvoided;
             route.AvoidFerries = configuration.FerriesAvoided;
             route.HighWaysAvoided = configuration.HighWaysAvoided;
-            SKRouteManager.Instance.RouteListener = this;
+            SKRouteManager.Instance.SetRouteListener(this);
 
 
             SKRouteManager.Instance.CalculateRoute(route);
@@ -259,7 +262,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.Navigation;
             currentUserDisplayMode = SKMapSettings.SKMapDisplayMode.Mode3d;
             mapView.MapSettings.MapDisplayMode = currentUserDisplayMode;
-            mapView.MapSettings.StreetNamePopupsShown = true;
+            mapView.MapSettings.SetStreetNamePopupsShown(true);
             mapView.MapSettings.MapZoomingEnabled = false;
             previousMapSurfaceListener = mapView.MapSurfaceListener;
             mapView.MapSurfaceListener = this;
@@ -272,13 +275,13 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             navigationSettings.DistanceUnit = configuration.DistanceUnitType;
             navigationSettings.SpeedWarningThresholdInCity = configuration.SpeedWarningThresholdInCity;
             navigationSettings.SpeedWarningThresholdOutsideCity = configuration.SpeedWarningThresholdOutsideCity;
-            if (configuration.NavigationType.Equals(SKNavigationSettings.SKNavigationType.FILE))
+            if (configuration.NavigationType.Equals(SKNavigationSettings.SKNavigationType.File))
             {
                 navigationSettings.FileNavigationPath = configuration.FreeDriveNavigationFilePath;
             }
-            naviManager.NavigationListener = this;
-            naviManager.MapView = mapView;
-            naviManager.startNavigation(navigationSettings);
+            naviManager.SetNavigationListener(this);
+            naviManager.SetMapView(mapView);
+            naviManager.StartNavigation(navigationSettings);
 
 
             SKToolsNavigationUIManager.Instance.inflateNavigationViews(currentActivity);
@@ -344,7 +347,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             SKToolsAdvicePlayer.Instance.stop();
         }
 
-        private class RunnableAnonymousInnerClassHelper : Runnable
+        private class RunnableAnonymousInnerClassHelper : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 
@@ -407,7 +410,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             int mapStyle = SKToolsMapOperationsManager.Instance.CurrentMapStyle;
             SKMapSettings.SKMapDisplayMode displayMode = mapView.MapSettings.MapDisplayMode;
-            SKToolsNavigationUIManager.Instance.HandleOrientationChanged(mapStyle, displayMode);
+            SKToolsNavigationUIManager.Instance.handleOrientationChanged(mapStyle, displayMode);
         }
 
         /// <summary>
@@ -419,7 +422,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
 
             SKToolsNavigationUIManager.Instance.setFollowerMode();
-            SKToolsNavigationUIManager.Instance.showFollowerModePanels(configuration.NavigationType == SKNavigationSettings.SKNavigationType.SIMULATION);
+            SKToolsNavigationUIManager.Instance.showFollowerModePanels(configuration.NavigationType == SKNavigationSettings.SKNavigationType.Simulation);
 
             string item = (string)parent.GetItemAtPosition(position);
             if (item.Equals(currentActivity.Resources.GetString(Resource.String.unblock_all)))
@@ -508,7 +511,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 SKToolsMapOperationsManager.Instance.setMapInNavigationMode();
                 SKToolsNavigationUIManager.Instance.setFollowerMode();
-                SKToolsNavigationUIManager.Instance.showFollowerModePanels(configuration.NavigationType == SKNavigationSettings.SKNavigationType.SIMULATION);
+                SKToolsNavigationUIManager.Instance.showFollowerModePanels(configuration.NavigationType == SKNavigationSettings.SKNavigationType.Simulation);
                 mapView.MapSettings.CompassShown = false;
                 mapView.MapSettings.MapZoomingEnabled = false;
                 if (currentUserDisplayMode != null)
@@ -604,7 +607,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             else if (id == Resource.Id.navigation_settings_overview_button)
             {
-                SKSearchResult destination = SKReverseGeocoderManager.Instance.reverseGeocodePosition(configuration.DestinationCoordinate);
+                SKSearchResult destination = SKReverseGeocoderManager.Instance.ReverseGeocodePosition(configuration.DestinationCoordinate);
                 if (destination != null)
                 {
                     SKToolsMapOperationsManager.Instance.switchToOverViewMode(currentActivity, configuration);
@@ -619,8 +622,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 {
                     SKSearchResult startCoord = SKReverseGeocoderManager.Instance.ReverseGeocodePosition(configuration.StartCoordinate);
                     SKSearchResult destCoord = SKReverseGeocoderManager.Instance.ReverseGeocodePosition(configuration.DestinationCoordinate);
-                    string startAdd = SKToolsUtils.GetFormattedAddress(startCoord.ParentsList);
-                    string destAdd = SKToolsUtils.GetFormattedAddress(destCoord.ParentsList);
+                    string startAdd = SKToolsUtils.getFormattedAddress(startCoord.ParentsList);
+                    string destAdd = SKToolsUtils.getFormattedAddress(destCoord.ParentsList);
                     SKToolsNavigationUIManager.Instance.showRouteInfoScreen(startAdd, destAdd);
                     naviScreenSet = true;
                 }
@@ -642,7 +645,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             else if (id == Resource.Id.navigation_settings_panning_button)
             {
                 SKToolsMapOperationsManager.Instance.startPanningMode();
-                SKToolsNavigationUIManager.Instance.showPanningMode(configuration.NavigationType == SKNavigationSettings.SKNavigationType.REAL);
+                SKToolsNavigationUIManager.Instance.showPanningMode(configuration.NavigationType == SKNavigationSettings.SKNavigationType.Real);
                 naviScreenSet = true;
             }
             else if (id == Resource.Id.navigation_settings_view_mode_button)
@@ -657,7 +660,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 if (currentUserDisplayMode != null)
                 {
-                    SKToolsMapOperationsManager.Instance.SwitchMapDisplayMode(currentUserDisplayMode);
+                    SKToolsMapOperationsManager.Instance.switchMapDisplayMode(currentUserDisplayMode);
                 }
             }
 
@@ -667,7 +670,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             if (!naviScreenSet)
             {
                 SKToolsNavigationUIManager.Instance.setFollowerMode();
-                SKToolsNavigationUIManager.Instance.showFollowerModePanels(configuration.NavigationType == SKNavigationSettings.SKNavigationType.SIMULATION);
+                SKToolsNavigationUIManager.Instance.showFollowerModePanels(configuration.NavigationType == SKNavigationSettings.SKNavigationType.Simulation);
             }
         }
 
@@ -750,8 +753,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
 
             currentUserDisplayMode = newDisplayMode;
-            SKToolsNavigationUIManager.Instance.SwitchMapMode(newDisplayMode);
-            SKToolsMapOperationsManager.Instance.SwitchMapDisplayMode(newDisplayMode);
+            SKToolsNavigationUIManager.Instance.switchMapMode(newDisplayMode);
+            SKToolsMapOperationsManager.Instance.switchMapDisplayMode(newDisplayMode);
         }
 
         public override void onActionPan()
@@ -880,7 +883,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper2 : Runnable
+        private class RunnableAnonymousInnerClassHelper2 : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 
@@ -924,7 +927,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper3 : Runnable
+        private class RunnableAnonymousInnerClassHelper3 : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 
@@ -956,7 +959,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         public override void onUpdateNavigationState(SKNavigationState skNavigationState)
         {
-            lastAudioAdvices = skNavigationState.CurrentAdviceAudioAdvices;
+            lastAudioAdvices = skNavigationState.GetCurrentAdviceAudioAdvices();
             navigationCurrentDistance = (int)Math.Round(skNavigationState.DistanceToDestination);
 
             if (reRoutingInProgress)
@@ -969,7 +972,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             SKToolsNavigationUIManager.Instance.handleNavigationState(skNavigationState, mapStyle);
         }
 
-        private class RunnableAnonymousInnerClassHelper4 : Runnable
+        private class RunnableAnonymousInnerClassHelper4 : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 
@@ -984,7 +987,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 bool followerMode = SKToolsNavigationUIManager.Instance.FollowerMode;
                 if (followerMode)
                 {
-                    SKToolsNavigationUIManager.Instance.showFollowerModePanels(outerInstance.configuration.NavigationType == SKNavigationSettings.SKNavigationType.SIMULATION);
+                    SKToolsNavigationUIManager.Instance.showFollowerModePanels(outerInstance.configuration.NavigationType == SKNavigationSettings.SKNavigationType.Simulation);
                 }
             }
         }
@@ -997,7 +1000,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper5 : Runnable
+        private class RunnableAnonymousInnerClassHelper5 : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 
@@ -1032,7 +1035,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         }
 
-        private class RunnableAnonymousInnerClassHelper6 : Runnable
+        private class RunnableAnonymousInnerClassHelper6 : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 
@@ -1074,7 +1077,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper7(this));
         }
 
-        private class RunnableAnonymousInnerClassHelper7 : Runnable
+        private class RunnableAnonymousInnerClassHelper7 : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 
@@ -1102,7 +1105,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
         }
 
-        private class RunnableAnonymousInnerClassHelper8 : Runnable
+        private class RunnableAnonymousInnerClassHelper8 : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 
@@ -1126,7 +1129,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 }
 
                 int routeId = outerInstance.skRouteInfoList[0].RouteID;
-                SKRouteManager.Instance.CurrentRouteByUniqueId = routeId;
+                SKRouteManager.Instance.SetCurrentRouteByUniqueId(routeId);
                 SKToolsNavigationUIManager.Instance.selectAlternativeRoute(0);
                 if (SKToolsNavigationUIManager.Instance.PreNavigationMode)
                 {
@@ -1159,7 +1162,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper9(this));
         }
 
-        private class RunnableAnonymousInnerClassHelper9 : Runnable
+        private class RunnableAnonymousInnerClassHelper9 : IRunnable
         {
             private readonly SKToolsLogicManager outerInstance;
 

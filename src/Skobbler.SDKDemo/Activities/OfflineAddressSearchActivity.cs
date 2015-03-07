@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -7,13 +8,14 @@ using Skobbler.Ngx;
 using Skobbler.Ngx.Packages;
 using Skobbler.Ngx.Search;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
 	/// Activity where offline address searches are performed and results are listed
 	/// </summary>
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class OfflineAddressSearchActivity : Activity, ISKSearchListener
 	{
 
@@ -51,13 +53,13 @@ namespace Skobbler.SDKDemo.Activities
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_list;
+			SetContentView(Resource.Layout.activity_list);
 
 			operationInProgressLabel = (TextView) FindViewById(Resource.Id.label_operation_in_progress);
 			listView = (ListView) FindViewById(Resource.Id.list_view);
 			operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
 
-		packages = Arrays.asList(SKPackageManager.Instance.InstalledPackages);
+		packages = SKPackageManager.Instance.GetInstalledPackages().ToList();
 			searchManager = new SKSearchManager(this);
 
 			if (packages.Count == 0)

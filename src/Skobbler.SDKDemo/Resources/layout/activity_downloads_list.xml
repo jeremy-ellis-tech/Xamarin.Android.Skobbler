@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true" />
 
     <Button
-        android:onClick="onClick"
+        android:onClick="OnClick"
         android:id="@+id/cancel_all_button"
         style="@style/general_white_button_label"
         android:layout_width="wrap_content"

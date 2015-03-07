@@ -1,4 +1,7 @@
 ﻿using Android.App;
+using Android.Content;
+using Android.Content.PM;
+using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Skobbler.Ngx;
@@ -12,7 +15,7 @@ namespace Skobbler.SDKDemo.Activities
 	/// Activity in which a nearby search with some user provided parameters is
 	/// performed
 	/// </summary>
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class NearbySearchResultsActivity : Activity, ISKSearchListener
 	{
 
@@ -33,7 +36,7 @@ namespace Skobbler.SDKDemo.Activities
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_list;
+			SetContentView(Resource.Layout.activity_list);
 
 			((TextView) FindViewById(Resource.Id.label_operation_in_progress)).Text = Resources.GetString(Resource.String.searching);
 			listView = (ListView) FindViewById(Resource.Id.list_view);
@@ -65,7 +68,7 @@ namespace Skobbler.SDKDemo.Activities
 				string firstLine;
 				if (result.Name == null || result.Name.Equals(""))
 				{
-					firstLine = result.Category.name();
+					firstLine = result.Category.Name();
 					firstLine = firstLine.Substring(firstLine.LastIndexOf("_", StringComparison.Ordinal) + 1);
 				}
 				else
@@ -118,8 +121,8 @@ namespace Skobbler.SDKDemo.Activities
 				{
 					view = convertView;
 				}
-				((TextView) view.FindViewById(Resource.Id.title)).Text = !outerInstance.items[position].first.Equals("") ? outerInstance.items[position].first : " - ";
-				((TextView) view.FindViewById(Resource.Id.subtitle)).Text = "type: " + outerInstance.items[position].second;
+				((TextView) view.FindViewById(Resource.Id.title)).Text = !outerInstance.items[position].Item1.Equals("") ? outerInstance.items[position].first : " - ";
+				((TextView) view.FindViewById(Resource.Id.subtitle)).Text = "type: " + outerInstance.items[position].Item2;
 				return view;
 			}
 

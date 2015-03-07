@@ -1,7 +1,14 @@
 ﻿using Android.App;
+using Android.OS;
 using Android.Views;
 using Android.Widget;
+using Java.IO;
+using Java.Lang;
+using Java.Net;
+using Java.Text;
+using Skobbler.Ngx.Packages;
 using Skobbler.Ngx.SDKTools.Download;
+using Skobbler.SDKDemo.Application;
 using Skobbler.SDKDemo.Database;
 using System;
 using System.Collections.Generic;
@@ -11,7 +18,7 @@ namespace Skobbler.SDKDemo.Activities
 	/// <summary>
 	/// Activity that displays a list of downloadable resources and provides the ability to download them
 	/// </summary>
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class ResourceDownloadsListActivity : Activity
 	{
 
@@ -128,7 +135,7 @@ namespace Skobbler.SDKDemo.Activities
 		{
 
 			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_downloads_list;
+			SetContentView(Resource.Layout.activity_downloads_list);
 			appContext = (DemoApplication) Application;
 			handler = new Handler();
 
@@ -161,7 +168,7 @@ namespace Skobbler.SDKDemo.Activities
 					outerInstance.populateWithChildMaps(mapResourcesItem);
 					outerInstance.currentListItems = mapResourcesItem.children;
 
-					outerInstance.listView = (ListView) FindViewById(Resource.Id.list_view);
+                    outerInstance.listView = (ListView)outerInstance.FindViewById(Resource.Id.list_view);
 					outerInstance.adapter = new DownloadsAdapter(outerInstance);
 					outerInstance.listView.Adapter = outerInstance.adapter;
 					outerInstance.FindViewById(Resource.Id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
@@ -174,7 +181,7 @@ namespace Skobbler.SDKDemo.Activities
 				else
 				{
 					Toast.MakeText(outerInstance, "Could not retrieve map data from the server", ToastLength.Short).Show();
-					outerInstance.finish();
+					outerInstance.Finish();
 				}
 			}
 		}
@@ -184,7 +191,7 @@ namespace Skobbler.SDKDemo.Activities
 		/// </summary>
 		private Runnable updater = new RunnableAnonymousInnerClassHelper();
 
-		private class RunnableAnonymousInnerClassHelper : Runnable
+		private class RunnableAnonymousInnerClassHelper : IRunnable
 		{
 			public RunnableAnonymousInnerClassHelper()
 			{
@@ -193,11 +200,11 @@ namespace Skobbler.SDKDemo.Activities
 			public override void run()
 			{
 				outerInstance.refreshDownloadEstimates = true;
-				runOnUiThread(new RunnableAnonymousInnerClassHelper2(this));
-				outerInstance.handler.postDelayed(this, 1000);
+				RunOnUiThread(new RunnableAnonymousInnerClassHelper2(this));
+				outerInstance.handler.PostDelayed(this, 1000);
 			}
 
-			private class RunnableAnonymousInnerClassHelper2 : Runnable
+			private class RunnableAnonymousInnerClassHelper2 : IRunnable
 			{
 				private readonly RunnableAnonymousInnerClassHelper outerInstance;
 
@@ -219,7 +226,7 @@ namespace Skobbler.SDKDemo.Activities
 		private void startPeriodicUpdates()
 		{
 			downloadStartTime = DateTimeHelperClass.CurrentUnixTimeMillis();
-			handler.postDelayed(updater, 3000);
+			handler.PostDelayed(updater, 3000);
 		}
 
 		/// <summary>
@@ -228,7 +235,7 @@ namespace Skobbler.SDKDemo.Activities
 		private void stopPeriodicUpdates()
 		{
 			downloadChunksMap.Clear();
-			handler.removeCallbacks(updater);
+			handler.RemoveCallbacks(updater);
 		}
 
 		/// <summary>
@@ -359,7 +366,7 @@ namespace Skobbler.SDKDemo.Activities
 		/// <summary>
 		/// Represents the adapter associated with maps list
 		/// </summary>
-		private class DownloadsAdapter : BaseAdapter, SKToolsDownloadListener
+		private class DownloadsAdapter : BaseAdapter, ISKToolsDownloadListener
 		{
 			private readonly ResourceDownloadsListActivity outerInstance;
 
@@ -507,11 +514,11 @@ namespace Skobbler.SDKDemo.Activities
 						startPauseImage.Visibility = ViewStates.Visible;
 						if (downloadResource.DownloadState == SKToolsDownloadItem.DOWNLOADING)
 						{
-							startPauseImage.ImageResource = R.drawable.pause;
+							startPauseImage.SetImageResource(Resource.Drawable.pause);
 						}
 						else
 						{
-							startPauseImage.ImageResource = R.drawable.download;
+                            startPauseImage.SetImageResource(Resource.Drawable.download);
 						}
 					}
 					else
@@ -557,10 +564,10 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				private readonly DownloadsAdapter outerInstance;
 
-				private com.skobbler.sdkdemo.activity.ResourceDownloadsListActivity.ListItem currentItem;
+				private ResourceDownloadsListActivity.ListItem currentItem;
 				private View view;
 
-				public OnClickListenerAnonymousInnerClassHelper(DownloadsAdapter outerInstance, com.skobbler.sdkdemo.activity.ResourceDownloadsListActivity.ListItem currentItem, View view)
+				public OnClickListenerAnonymousInnerClassHelper(DownloadsAdapter outerInstance, ResourceDownloadsListActivity.ListItem currentItem, View view)
 				{
 					this.outerInstance = outerInstance;
 					this.currentItem = currentItem;
@@ -584,10 +591,10 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				private readonly DownloadsAdapter outerInstance;
 
-				private com.skobbler.sdkdemo.activity.ResourceDownloadsListActivity.ListItem currentItem;
+				private ResourceDownloadsListActivity.ListItem currentItem;
 				private View view;
 
-				public OnClickListenerAnonymousInnerClassHelper2(DownloadsAdapter outerInstance, com.skobbler.sdkdemo.activity.ResourceDownloadsListActivity.ListItem currentItem, View view)
+				public OnClickListenerAnonymousInnerClassHelper2(DownloadsAdapter outerInstance, ResourceDownloadsListActivity.ListItem currentItem, View view)
 				{
 					this.outerInstance = outerInstance;
 					this.currentItem = currentItem;
@@ -605,9 +612,9 @@ namespace Skobbler.SDKDemo.Activities
 							outerInstance.outerInstance.appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);
 							string destinationPath = outerInstance.outerInstance.appContext.MapResourcesDirPath + "downloads/";
 							File destinationFile = new File(destinationPath);
-							if (!destinationFile.exists())
+							if (!destinationFile.Exists())
 							{
-								destinationFile.mkdirs();
+								destinationFile.Mkdirs();
 							}
 							currentItem.downloadResource.DownloadPath = destinationPath;
 							mapsDAO.updateMapResource((MapDownloadResource) currentItem.downloadResource);
@@ -643,10 +650,10 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				private readonly DownloadsAdapter outerInstance;
 
-				private com.skobbler.sdkdemo.activity.ResourceDownloadsListActivity.ListItem currentItem;
+				private ResourceDownloadsListActivity.ListItem currentItem;
 				private View view;
 
-				public OnClickListenerAnonymousInnerClassHelper3(DownloadsAdapter outerInstance, com.skobbler.sdkdemo.activity.ResourceDownloadsListActivity.ListItem currentItem, View view)
+				public OnClickListenerAnonymousInnerClassHelper3(DownloadsAdapter outerInstance, ResourceDownloadsListActivity.ListItem currentItem, View view)
 				{
 					this.outerInstance = outerInstance;
 					this.currentItem = currentItem;
@@ -670,7 +677,7 @@ namespace Skobbler.SDKDemo.Activities
 					}
 					else
 					{
-						bool packageDeleted = SKPackageManager.Instance.deleteOfflinePackage(currentItem.downloadResource.Code);
+						bool packageDeleted = SKPackageManager.Instance.DeleteOfflinePackage(currentItem.downloadResource.Code);
 						if (packageDeleted)
 						{
 							Toast.MakeText(outerInstance.outerInstance.appContext, ((MapDownloadResource) currentItem.downloadResource).Name + " was uninstalled", ToastLength.Short).Show();
@@ -690,21 +697,21 @@ namespace Skobbler.SDKDemo.Activities
 			/// <param name="resource"> currently downloading resource </param>
 			/// <param name="referencePeriodInSeconds"> the reference period (in seconds) </param>
 			/// <returns> formatted string representations of the current download speed and remaining time </returns>
-			internal virtual Pair<string, string> calculateDownloadEstimates(DownloadResource resource, int referencePeriodInSeconds)
+			internal virtual Tuple<string, string> calculateDownloadEstimates(DownloadResource resource, int referencePeriodInSeconds)
 			{
 				long referencePeriod = 1000 * referencePeriodInSeconds;
 				long currentTimestamp = DateTimeHelperClass.CurrentUnixTimeMillis();
 				long downloadPeriod = currentTimestamp - referencePeriod < outerInstance.downloadStartTime ? currentTimestamp - outerInstance.downloadStartTime : referencePeriod;
 				long totalBytesDownloaded = 0;
-				IEnumerator<KeyValuePair<long?, long?>> iterator = outerInstance.downloadChunksMap.SetOfKeyValuePairs().GetEnumerator();
+				IEnumerator<KeyValuePair<long?, long?>> iterator = outerInstance.downloadChunksMap.GetEnumerator();
 				while (iterator.MoveNext())
 				{
 					KeyValuePair<long?, long?> entry = iterator.Current;
-					long timestamp = entry.Key;
-					long bytesDownloaded = entry.Value;
+					long timestamp = entry.Key.Value;
+					long bytesDownloaded = entry.Value.Value;
 					if (currentTimestamp - timestamp > referencePeriod)
 					{
-						iterator.remove();
+						iterator.Remove();
 					}
 					else
 					{
@@ -726,14 +733,14 @@ namespace Skobbler.SDKDemo.Activities
 					formattedTimeLeft = getFormattedTime(timeLeft);
 				}
 
-				return new Pair<string, string>(convertBytesToStringRepresentation(bytesPerSecond) + "/s", formattedTimeLeft);
+				return new Tuple<string, string>(convertBytesToStringRepresentation(bytesPerSecond) + "/s", formattedTimeLeft);
 			}
 
 			public override void notifyDataSetChanged()
 			{
 				outerInstance.FindViewById(Resource.Id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
 				base.NotifyDataSetChanged();
-				outerInstance.listView.postInvalidate();
+				outerInstance.listView.PostInvalidate();
 			}
 
 			/// <summary>
@@ -765,7 +772,7 @@ namespace Skobbler.SDKDemo.Activities
 					affectedListItem.downloadResource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
 					affectedListItem.downloadResource.DownloadState = currentDownloadItem.DownloadState;
 					resource = affectedListItem.downloadResource;
-					runOnUiThread(new RunnableAnonymousInnerClassHelper3(this));
+					RunOnUiThread(new RunnableAnonymousInnerClassHelper3(this));
 				}
 				else
 				{
@@ -800,7 +807,7 @@ namespace Skobbler.SDKDemo.Activities
 				outerInstance.appContext.AppPrefs.saveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
 			}
 
-			private class RunnableAnonymousInnerClassHelper3 : Runnable
+			private class RunnableAnonymousInnerClassHelper3 : IRunnable
 			{
 				private readonly DownloadsAdapter outerInstance;
 
@@ -825,7 +832,7 @@ namespace Skobbler.SDKDemo.Activities
 					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.NOT_QUEUED;
 					activeDownloads.Remove(affectedListItem.downloadResource);
 					mapsDAO.updateMapResource((MapDownloadResource) affectedListItem.downloadResource);
-					runOnUiThread(new RunnableAnonymousInnerClassHelper4(this));
+					RunOnUiThread(new RunnableAnonymousInnerClassHelper4(this));
 				}
 				else
 				{
@@ -838,7 +845,7 @@ namespace Skobbler.SDKDemo.Activities
 				outerInstance.appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);
 			}
 
-			private class RunnableAnonymousInnerClassHelper4 : Runnable
+			private class RunnableAnonymousInnerClassHelper4 : IRunnable
 			{
 				private readonly DownloadsAdapter outerInstance;
 
@@ -865,10 +872,10 @@ namespace Skobbler.SDKDemo.Activities
 				mapsDAO.clearResourcesInDownloadQueue();
 				activeDownloads.Clear();
 				outerInstance.appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);
-				runOnUiThread(new RunnableAnonymousInnerClassHelper5(this));
+				RunOnUiThread(new RunnableAnonymousInnerClassHelper5(this));
 			}
 
-			private class RunnableAnonymousInnerClassHelper5 : Runnable
+			private class RunnableAnonymousInnerClassHelper5 : IRunnable
 			{
 				private readonly DownloadsAdapter outerInstance;
 
@@ -892,7 +899,7 @@ namespace Skobbler.SDKDemo.Activities
 					affectedListItem.downloadResource.DownloadState = currentDownloadItem.DownloadState;
 					affectedListItem.downloadResource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
 					mapsDAO.updateMapResource((MapDownloadResource) affectedListItem.downloadResource);
-					runOnUiThread(new RunnableAnonymousInnerClassHelper6(this));
+					RunOnUiThread(new RunnableAnonymousInnerClassHelper6(this));
 				}
 				else
 				{
@@ -905,7 +912,7 @@ namespace Skobbler.SDKDemo.Activities
 				outerInstance.appContext.AppPrefs.saveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
 			}
 
-			private class RunnableAnonymousInnerClassHelper6 : Runnable
+			private class RunnableAnonymousInnerClassHelper6 : IRunnable
 			{
 				private readonly DownloadsAdapter outerInstance;
 
@@ -929,7 +936,7 @@ namespace Skobbler.SDKDemo.Activities
 					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.INSTALLED;
 					resource = affectedListItem.downloadResource;
 					mapsDAO.updateMapResource((MapDownloadResource) affectedListItem.downloadResource);
-					runOnUiThread(new RunnableAnonymousInnerClassHelper7(this));
+					RunOnUiThread(new RunnableAnonymousInnerClassHelper7(this));
 				}
 				else
 				{
@@ -937,10 +944,10 @@ namespace Skobbler.SDKDemo.Activities
 					resource.DownloadState = SKToolsDownloadItem.INSTALLED;
 					mapsDAO.updateMapResource((MapDownloadResource) resource);
 				}
-				runOnUiThread(new RunnableAnonymousInnerClassHelper8(this, resource));
+				RunOnUiThread(new RunnableAnonymousInnerClassHelper8(this, resource));
 			}
 
-			private class RunnableAnonymousInnerClassHelper7 : Runnable
+			private class RunnableAnonymousInnerClassHelper7 : IRunnable
 			{
 				private readonly DownloadsAdapter outerInstance;
 
@@ -955,7 +962,7 @@ namespace Skobbler.SDKDemo.Activities
 				}
 			}
 
-			private class RunnableAnonymousInnerClassHelper8 : Runnable
+			private class RunnableAnonymousInnerClassHelper8 : IRunnable
 			{
 				private readonly DownloadsAdapter outerInstance;
 
@@ -980,7 +987,7 @@ namespace Skobbler.SDKDemo.Activities
 				{
 					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.INSTALLING;
 					mapsDAO.updateMapResource((MapDownloadResource) affectedListItem.downloadResource);
-					runOnUiThread(new RunnableAnonymousInnerClassHelper9(this));
+					RunOnUiThread(new RunnableAnonymousInnerClassHelper9(this));
 				}
 				else
 				{
@@ -990,7 +997,7 @@ namespace Skobbler.SDKDemo.Activities
 				}
 			}
 
-			private class RunnableAnonymousInnerClassHelper9 : Runnable
+			private class RunnableAnonymousInnerClassHelper9 : IRunnable
 			{
 				private readonly DownloadsAdapter outerInstance;
 
@@ -1013,10 +1020,10 @@ namespace Skobbler.SDKDemo.Activities
 
 			public override void onNotEnoughMemoryOnCurrentStorage(SKToolsDownloadItem currentDownloadItem)
 			{
-				runOnUiThread(new RunnableAnonymousInnerClassHelper10(this));
+				RunOnUiThread(new RunnableAnonymousInnerClassHelper10(this));
 			}
 
-			private class RunnableAnonymousInnerClassHelper10 : Runnable
+			private class RunnableAnonymousInnerClassHelper10 : IRunnable
 			{
 				private readonly DownloadsAdapter outerInstance;
 
@@ -1044,7 +1051,7 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				currentListItems = currentListItems[0].parent.parent.children;
 				buildCodesMap();
-				updateListAndScrollToPosition(previousListIndexes.Pop());
+				updateListAndScrollToPosition(previousListIndexes.Pop().Value);
 			}
 		}
 
@@ -1053,12 +1060,12 @@ namespace Skobbler.SDKDemo.Activities
 		/// <param name="position"> </param>
 		private void updateListAndScrollToPosition(int position)
 		{
-			listView.Visibility = View.INVISIBLE;
+			listView.Visibility = ViewStates.Invisible;
 			adapter.NotifyDataSetChanged();
-			listView.post(new RunnableAnonymousInnerClassHelper(this, position));
+			listView.Post(new RunnableAnonymousInnerClassHelper(this, position));
 		}
 
-		private class RunnableAnonymousInnerClassHelper : Runnable
+		private class RunnableAnonymousInnerClassHelper : IRunnable
 		{
 			private readonly ResourceDownloadsListActivity outerInstance;
 
@@ -1072,7 +1079,7 @@ namespace Skobbler.SDKDemo.Activities
 
 			public override void run()
 			{
-				outerInstance.listView.Selection = position;
+                outerInstance.listView.SetSelection(position);
 				outerInstance.listView.Visibility = ViewStates.Visible;
 			}
 		}
@@ -1116,9 +1123,9 @@ namespace Skobbler.SDKDemo.Activities
 		{
 			string format = string.Format("%0{0:D}d", 2);
 			time = time / 1000;
-			string seconds = string.format(format, time % 60);
-			string minutes = string.format(format, (time % 3600) / 60);
-			string hours = string.format(format, time / 3600);
+			string seconds = string.Format(format, time % 60);
+			string minutes = string.Format(format, (time % 3600) / 60);
+			string hours = string.Format(format, time / 3600);
 			string formattedTime = hours + ":" + minutes + ":" + seconds;
 			return formattedTime;
 		}
@@ -1133,7 +1140,7 @@ namespace Skobbler.SDKDemo.Activities
 		private static string formatDecimals(long value, long divider, string unit)
 		{
 			double result = divider > 1 ? (double) value / (double) divider : (double) value;
-			return (new DecimalFormat("#,##0.#")).format(result) + " " + unit;
+			return (new DecimalFormat("#,##0.#")).Format(result) + " " + unit;
 		}
 
 		/// <summary>

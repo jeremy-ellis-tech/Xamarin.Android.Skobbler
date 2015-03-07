@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Skobbler.SDKDemo.Activities
 {
-    [Activity]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class TrackElementsActivity : Activity
 	{
 
@@ -30,13 +31,13 @@ namespace Skobbler.SDKDemo.Activities
 		protected internal virtual void onCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_list;
+			SetContentView(Resource.Layout.activity_list);
 			FindViewById(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
 			listView = (ListView) FindViewById(Resource.Id.list_view);
 			app = (DemoApplication) Application;
 
 			string gpxName = Intent.Extras.GetString(Intent.ExtraText);
-			loadedFile = SKTracksFile.loadAtPath(app.MapResourcesDirPath + "GPXTracks/" + gpxName);
+			loadedFile = SKTracksFile.LoadAtPath(app.MapResourcesDirPath + "GPXTracks/" + gpxName);
 			initialize();
 		}
 
@@ -45,7 +46,7 @@ namespace Skobbler.SDKDemo.Activities
 			IList<object> children = new List<object>();
 			foreach (SKTrackElement childElement in parent.ChildElements)
 			{
-				if (childElement.Type.Equals(SKTrackElementType.COLLECTION))
+				if (childElement.Type.Equals(SKTrackElementType.Collection))
 				{
 					children.Add(childElement);
 				}
@@ -62,7 +63,7 @@ namespace Skobbler.SDKDemo.Activities
 			}
 			currentLevel = newLevel;
 			adapter.NotifyDataSetChanged();
-			listView.Selection = 0;
+			listView.SetSelection(0);
 		}
 
 		private void initialize()
@@ -189,8 +190,8 @@ namespace Skobbler.SDKDemo.Activities
 				public override void onClick(View v)
 				{
 					selectedTrackElement = trackElement;
-					Result = RESULT_OK;
-					outerInstance.outerInstance.finish();
+                    SetResult(Result.Ok);
+					outerInstance.outerInstance.Finish();
 				}
 			}
 		}
