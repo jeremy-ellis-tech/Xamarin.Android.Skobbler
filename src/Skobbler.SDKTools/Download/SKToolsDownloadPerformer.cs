@@ -203,7 +203,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     catch (SocketException)
                     {
                         // restart the download in this case
-                        SKLogging.writeLog(TAG, "Not possible, because in this case the download wouldn't appear to be finished => restart the download and remove the old data!!!", SKLogging.LOG_DEBUG);
+                        SKLogging.WriteLog(TAG, "Not possible, because in this case the download wouldn't appear to be finished => restart the download and remove the old data!!!", SKLogging.LogDebug);
                         // reset the number of downloaded bytes and remove them from storage
                         currentDownloadItem.NoDownloadedBytes = 0;
                         string deleteCmd = "rm -r " + currentDownloadItem.CurrentStepDestinationPath;
@@ -224,7 +224,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     // create a new download request
                     httpRequest = new HttpGet(currentDownloadStep.DownloadURL);
 
-                    SKLogging.WriteLog(TAG, "Current url = " + currentDownloadStep.DownloadURL + " ; current step = " + currentDownloadItem.CurrentStepIndex, SKLogging.LOG_DEBUG);
+                    SKLogging.WriteLog(TAG, "Current url = " + currentDownloadStep.DownloadURL + " ; current step = " + currentDownloadItem.CurrentStepIndex, SKLogging.LogDebug);
 
                     // resume operation => send already downloaded bytes
                     bytesReadSoFar = sendAlreadyDownloadedBytes();
@@ -233,7 +233,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     memoryNeeded = getNeededMemoryForCurrentDownload(bytesReadSoFar);
                     if (memoryNeeded != 0)
                     {
-                        SKLogging.WriteLog(TAG, "Not enough memory on current storage", SKLogging.LOG_DEBUG);
+                        SKLogging.WriteLog(TAG, "Not enough memory on current storage", SKLogging.LogDebug);
                         pauseDownloadProcess();
                         // notify the UI about memory issues
                         if (downloadListener != null)
@@ -619,7 +619,7 @@ namespace Skobbler.Ngx.SDKTools.Download
 
                 public override void run()
                 {
-                    SKLogging.writeLog(TAG, "The blocked request is stopped now => the user is notified that connection was lost", SKLogging.LOG_DEBUG);
+                    SKLogging.WriteLog(TAG, "The blocked request is stopped now => the user is notified that connection was lost", SKLogging.LogDebug);
                     outerInstance.outerInstance.isDownloadRequestUnresponsive = true;
                     // abort current request
                     new AsyncTaskAnonymousInnerClassHelper(this)
@@ -671,7 +671,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             if ((downloadListener != null) && downloadListener is Activity)
             {
-                ((Activity)downloadListener).runOnUiThread(new RunnableAnonymousInnerClassHelper3(this));
+                ((Activity)downloadListener).RunOnUiThread(new RunnableAnonymousInnerClassHelper3(this));
             }
         }
 
@@ -703,7 +703,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             stopsDownloadTimeoutHandler();
             if (((DateTimeHelperClass.CurrentUnixTimeMillis() - lastTimeWhenInternetWorked) > TIME_OUT_LIMIT) || stopRequest)
             {
-                SKLogging.writeLog(TAG, "The request last more than 15 seconds, so no timeout is made", SKLogging.LOG_DEBUG);
+                SKLogging.WriteLog(TAG, "The request last more than 15 seconds, so no timeout is made", SKLogging.LogDebug);
                 if (!isDownloadProcessCancelled && !isCurrentDownloadCancelled && !isDownloadProcessPaused)
                 {
                     // stop download process and notifies the UI
@@ -745,14 +745,14 @@ namespace Skobbler.Ngx.SDKTools.Download
                 // if it didn't pass 15 seconds from the first retry, will sleep 0.5 seconds and then will make a new attempt to download the resource
                 if ((DateTimeHelperClass.CurrentUnixTimeMillis() - timeAtFirstRetry) < TIME_OUT_LIMIT)
                 {
-                    SKLogging.writeLog(TAG, "Sleep and then retry", SKLogging.LOG_DEBUG);
+                    SKLogging.WriteLog(TAG, "Sleep and then retry", SKLogging.LogDebug);
                     try
                     {
                         Thread.Sleep(NO_MILLIS_INTO_ONE_SEC / 2);
                     }
                     catch (InterruptedException e1)
                     {
-                        SKLogging.writeLog(TAG, "Retry ; interrupted exception = " + e1.Message, SKLogging.LOG_DEBUG);
+                        SKLogging.WriteLog(TAG, "Retry ; interrupted exception = " + e1.Message, SKLogging.LogDebug);
                     }
                 }
                 else
@@ -873,7 +873,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 }
                 if (totalBytesRead < currentDownloadItem.CurrentDownloadStep.DownloadItemSize)
                 {
-                    SKLogging.writeLog(TAG, "The " + currentDownloadItem.ItemCode + " current file was not fully downloaded ; total bytes read = " + totalBytesRead + " ; size = " + currentDownloadItem.CurrentDownloadStep.DownloadItemSize + " ; current step index = " + currentDownloadItem.CurrentStepIndex, SKLogging.LOG_DEBUG);
+                    SKLogging.WriteLog(TAG, "The " + currentDownloadItem.ItemCode + " current file was not fully downloaded ; total bytes read = " + totalBytesRead + " ; size = " + currentDownloadItem.CurrentDownloadStep.DownloadItemSize + " ; current step index = " + currentDownloadItem.CurrentStepIndex, SKLogging.LogDebug);
                     throw new SocketException();
                 }
                 else
@@ -892,7 +892,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                         }
                         if (currentDownloadItem.unzipIsNeeded())
                         { // UNZIP is needed for current resource
-                            SKLogging.writeLog(TAG, "Current item = " + currentDownloadItem.ItemCode + " is now downloaded => add it to install queue for unzip", SKLogging.LOG_DEBUG);
+                            SKLogging.WriteLog(TAG, "Current item = " + currentDownloadItem.ItemCode + " is now downloaded => add it to install queue for unzip", SKLogging.LogDebug);
                             // we know that UNZIP operation corresponds to last download step
                             currentDownloadItem.CurrentStepIndex = (sbyte)(currentDownloadItem.CurrentStepIndex - 1);
 
@@ -927,16 +927,16 @@ namespace Skobbler.Ngx.SDKTools.Download
                             {
                                 rootFilePath = destinationPath.Substring(0, destinationPath.IndexOf((new StringBuilder(currentDownloadItem.ItemCode)).Append(SKToolsDownloadManager.POINT_EXTENSION).ToString(), StringComparison.Ordinal));
                             }
-                            SKLogging.writeLog(TAG, "Current item = " + currentDownloadItem.ItemCode + " is now downloaded => unzip is not needed => install it now at base path" + " = " + rootFilePath, SKLogging.LOG_DEBUG);
+                            SKLogging.WriteLog(TAG, "Current item = " + currentDownloadItem.ItemCode + " is now downloaded => unzip is not needed => install it now at base path" + " = " + rootFilePath, SKLogging.LogDebug);
                             if (rootFilePath != null)
                             {
                                 int result = SKPackageManager.Instance.addOfflinePackage(rootFilePath, currentDownloadItem.ItemCode);
-                                SKLogging.writeLog(TAG, "Current resource installing result code = " + result, SKLogging.LOG_DEBUG);
+                                SKLogging.WriteLog(TAG, "Current resource installing result code = " + result, SKLogging.LogDebug);
                                 if ((result & SKPackageManager.ADD_PACKAGE_MISSING_SKM_RESULT & SKPackageManager.ADD_PACKAGE_MISSING_NGI_RESULT & SKPackageManager.ADD_PACKAGE_MISSING_NGI_DAT_RESULT) == 0)
                                 {
                                     // current install was performed with success set current resource as already download
                                     currentDownloadItem.DownloadState = SKToolsDownloadItem.INSTALLED;
-                                    SKLogging.writeLog(TAG, "The " + currentDownloadItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LOG_DEBUG);
+                                    SKLogging.WriteLog(TAG, "The " + currentDownloadItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                                     // notify the UI that current resource was installed
                                     if (downloadListener != null)
                                     {
@@ -947,7 +947,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                                 {
                                     // current install was performed with error => set current resource as NOT_QUEUED, remove downloaded bytes etc
                                     currentDownloadItem.markAsNotQueued();
-                                    SKLogging.writeLog(TAG, "The " + currentDownloadItem.ItemCode + " resource couldn't be installed by our NG component, " + "although it was downloaded.", SKLogging.LOG_DEBUG);
+                                    SKLogging.WriteLog(TAG, "The " + currentDownloadItem.ItemCode + " resource couldn't be installed by our NG component, " + "although it was downloaded.", SKLogging.LogDebug);
                                     // notify the UI that current resource was not installed
                                     if (downloadListener != null)
                                     {
@@ -959,7 +959,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                             {
                                 // current install was performed with error => set current resource as NOT_QUEUED, remove downloaded bytes etc
                                 currentDownloadItem.markAsNotQueued();
-                                SKLogging.writeLog(TAG, "The " + currentDownloadItem.ItemCode + " resource couldn't be installed by our NG component, " + "although it was downloaded, because installing path is null", SKLogging.LOG_DEBUG);
+                                SKLogging.WriteLog(TAG, "The " + currentDownloadItem.ItemCode + " resource couldn't be installed by our NG component, " + "although it was downloaded, because installing path is null", SKLogging.LogDebug);
                                 // notify the UI that current resource was not installed
                                 if (downloadListener != null)
                                 {

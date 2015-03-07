@@ -26,7 +26,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 SKToolsSunriseSunsetCalculator.calculateSunriseSunsetHours(SKToolsLogicManager.lastUserPosition.Latitude, SKToolsLogicManager.lastUserPosition.Longitude, SKToolsSunriseSunsetCalculator.OFFICIAL);
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            if (Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
             {
                 SKToolsAutoNightManager.Instance.setAlarmForHourlyNotificationAfterKitKat(context, false);
             }

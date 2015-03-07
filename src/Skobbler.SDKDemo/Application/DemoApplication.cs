@@ -23,7 +23,7 @@
 
 		public override void onCreate()
 		{
-			base.onCreate();
+			base.OnCreate();
 			appPrefs = new ApplicationPreferences(this);
 		}
 

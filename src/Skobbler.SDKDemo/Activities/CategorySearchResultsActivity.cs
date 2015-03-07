@@ -1,22 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Views;
+using Android.Widget;
+using Skobbler.Ngx;
+using Skobbler.Ngx.Search;
+using System.Collections.Generic;
 
 namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
 	/// Activity in which a nearby search for some main categories is performed
 	/// </summary>
-	public class CategorySearchResultsActivity : Activity, SKSearchListener
+    [Activity]
+    public class CategorySearchResultsActivity : Activity, ISKSearchListener
 	{
 
 		/// <summary>
 		/// The main categories for which the nearby search will be executed
 		/// </summary>
-		private static readonly int[] mainCategories = new int[]{SKPOIMainCategory.SKPOI_MAIN_CATEGORY_ACCOMODATION.Value, SKPOIMainCategory.SKPOI_MAIN_CATEGORY_SERVICES.Value, SKPOIMainCategory.SKPOI_MAIN_CATEGORY_SHOPPING.Value, SKPOIMainCategory.SKPOI_MAIN_CATEGORY_LEISURE.Value};
+        private static readonly int[] mainCategories = new [] { SKCategories.SKPOIMainCategory.SKPOI_MAIN_CATEGORY_ACCOMODATION.Value, SKCategories.SKPOIMainCategory.SKPOI_MAIN_CATEGORY_SERVICES.Value, SKCategories.SKPOIMainCategory.SKPOI_MAIN_CATEGORY_SHOPPING.Value, SKCategories.SKPOIMainCategory.SKPOI_MAIN_CATEGORY_LEISURE.Value };
 
 		/// <summary>
 		/// The main category selected
 		/// </summary>
-		private SKPOIMainCategory selectedMainCategory;
+		private SKCategories.SKPOIMainCategory selectedMainCategory;
 
 		private ListView listView;
 
@@ -27,16 +35,16 @@ namespace Skobbler.SDKDemo.Activities
 		/// <summary>
 		/// Search results grouped by their main category field
 		/// </summary>
-		private IDictionary<SKPOIMainCategory, IList<SKSearchResult>> results = new LinkedHashMap<SKPOIMainCategory, IList<SKSearchResult>>();
+		private IDictionary<SKCategories.SKPOIMainCategory, IList<SKSearchResult>> results = new LinkedHashMap<SKPOIMainCategory, IList<SKSearchResult>>();
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
-			base.onCreate(savedInstanceState);
-			ContentView = R.layout.activity_list;
+			base.OnCreate(savedInstanceState);
+			SetContentView(Resource.Layout.activity_list;
 
-			operationInProgressLabel = (TextView) findViewById(R.id.label_operation_in_progress);
-			listView = (ListView) findViewById(R.id.list_view);
-			operationInProgressLabel.Text = Resources.getString(R.@string.searching);
+			operationInProgressLabel = (TextView) FindViewById(Resource.Id.label_operation_in_progress);
+			listView = (ListView) FindViewById(Resource.Id.list_view);
+			operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
 
 			startSearch();
 		}
@@ -60,10 +68,10 @@ namespace Skobbler.SDKDemo.Activities
 			// set the search term
 			searchObject.SearchTerm = "";
 			// launch nearby search
-			SKSearchStatus status = searchManager.nearbySearch(searchObject);
-			if (status != SKSearchStatus.SK_SEARCH_NO_ERROR)
+			SKSearchStatus status = searchManager.NearbySearch(searchObject);
+			if (status != SKSearchStatus.SkSearchNoError)
 			{
-				Toast.makeText(this, "An error occurred", Toast.LENGTH_SHORT).show();
+				Toast.MakeText(this, "An error occurred", ToastLength.Short).Show();
 			}
 		}
 
@@ -75,7 +83,7 @@ namespace Skobbler.SDKDemo.Activities
 		{
 			foreach (int mainCategory in mainCategories)
 			{
-				results[SKPOIMainCategory.forInt(mainCategory)] = new List<SKSearchResult>();
+				results[Skobbler.Ngx.SKCategories.SKPOIMainCategory.forInt(mainCategory)] = new List<SKSearchResult>();
 			}
 			foreach (SKSearchResult result in searchResults)
 			{
@@ -86,8 +94,8 @@ namespace Skobbler.SDKDemo.Activities
 		public override void onReceivedSearchResults(IList<SKSearchResult> results)
 		{
 			buildResultsMap(results);
-			operationInProgressLabel.Visibility = View.GONE;
-			listView.Visibility = View.VISIBLE;
+			operationInProgressLabel.Visibility = ViewStates.Gone;
+			listView.Visibility = ViewStates.Visible;
 			adapter = new ResultsListAdapter(this);
 			listView.Adapter = adapter;
 
@@ -108,7 +116,7 @@ namespace Skobbler.SDKDemo.Activities
 				if (outerInstance.selectedMainCategory == null)
 				{
 					outerInstance.selectedMainCategory = SKPOIMainCategory.forInt(mainCategories[position]);
-					outerInstance.adapter.notifyDataSetChanged();
+					outerInstance.adapter.NotifyDataSetChanged();
 				}
 			}
 		}
@@ -117,12 +125,12 @@ namespace Skobbler.SDKDemo.Activities
 		{
 			if (selectedMainCategory == null)
 			{
-				base.onBackPressed();
+				base.OnBackPressed();
 			}
 			else
 			{
 				selectedMainCategory = null;
-				adapter.notifyDataSetChanged();
+				adapter.NotifyDataSetChanged();
 			}
 		}
 
@@ -173,8 +181,8 @@ namespace Skobbler.SDKDemo.Activities
 				View view = null;
 				if (convertView == null)
 				{
-					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					view = inflater.inflate(R.layout.layout_search_list_item, null);
+					LayoutInflater inflater = (LayoutInflater) GetSystemService(Context.LayoutInflaterService);
+					view = inflater.Inflate(Resource.Layout.layout_search_list_item, null);
 				}
 				else
 				{
@@ -182,14 +190,14 @@ namespace Skobbler.SDKDemo.Activities
 				}
 				if (outerInstance.selectedMainCategory == null)
 				{
-					((TextView) view.findViewById(R.id.title)).Text = SKPOIMainCategory.forInt(mainCategories[position]).ToString().replaceFirst(".*_", "");
-					((TextView) view.findViewById(R.id.subtitle)).Text = "number of POIs: " + outerInstance.results[SKPOIMainCategory.forInt(mainCategories[position])].Count;
+					((TextView) view.FindViewById(Resource.Id.title)).Text = SKPOIMainCategory.forInt(mainCategories[position]).ToString().replaceFirst(".*_", "");
+					((TextView) view.FindViewById(Resource.Id.subtitle)).Text = "number of POIs: " + outerInstance.results[SKPOIMainCategory.forInt(mainCategories[position])].Count;
 				}
 				else
 				{
 					SKSearchResult result = outerInstance.results[outerInstance.selectedMainCategory][position];
-					((TextView) view.findViewById(R.id.title)).Text = !result.Name.Equals("") ? result.Name : result.MainCategory.ToString().replaceAll(".*_", "");
-					((TextView) view.findViewById(R.id.subtitle)).Text = "type: " + result.Category.ToString().replaceAll(".*_", "");
+					((TextView) view.FindViewById(Resource.Id.title)).Text = !result.Name.Equals("") ? result.Name : result.MainCategory.ToString().replaceAll(".*_", "");
+					((TextView) view.FindViewById(Resource.Id.subtitle)).Text = "type: " + result.Category.ToString().replaceAll(".*_", "");
 				}
 				return view;
 			}

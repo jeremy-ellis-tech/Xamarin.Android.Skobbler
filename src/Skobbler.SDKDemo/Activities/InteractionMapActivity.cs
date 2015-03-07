@@ -1,6 +1,13 @@
-﻿namespace Skobbler.SDKDemo.Activity
+﻿using Android.App;
+using Android.OS;
+using Android.Views;
+using Android.Widget;
+using Skobbler.Ngx;
+using Skobbler.Ngx.Map;
+namespace Skobbler.SDKDemo.Activities
 {
-	public class InteractionMapActivity : Activity, SKMapSurfaceListener
+    [Activity]
+	public class InteractionMapActivity : Activity, ISKMapSurfaceListener
 	{
 
 		private SKMapSurfaceView mapView;
@@ -9,28 +16,28 @@
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
-			base.onCreate(savedInstanceState);
-			ContentView = R.layout.activity_new_map;
-			SKMapViewHolder mapViewGroup = (SKMapViewHolder) findViewById(R.id.view_group_map);
+			base.OnCreate(savedInstanceState);
+			SetContentView(Resource.Layout.activity_new_map);
+			SKMapViewHolder mapViewGroup = (SKMapViewHolder) FindViewById(Resource.Id.view_group_map);
 			mapView = mapViewGroup.MapSurfaceView;
 			mapView.MapSurfaceListener = this;
 		}
 
 		public override void onResume()
 		{
-			base.onResume();
-			mapView.onResume();
+			base.OnResume();
+			mapView.OnResume();
 		}
 
 		public override void onPause()
 		{
-			base.onPause();
-			mapView.onPause();
+			base.OnPause();
+			mapView.OnPause();
 		}
 
 		protected internal override void onDestroy()
 		{
-			base.onDestroy();
+			base.OnDestroy();
 			mapView = null;
 		}
 
@@ -49,10 +56,10 @@
 			{
 				mapSurfaceCreated = true;
 				// hiding the chess background when map is available
-				RelativeLayout chessBackground = (RelativeLayout) findViewById(R.id.chess_table_background);
-				chessBackground.Visibility = View.GONE;
+				RelativeLayout chessBackground = (RelativeLayout) FindViewById(Resource.Id.chess_table_background);
+				chessBackground.Visibility = ViewStates.Gone;
 
-				mapView.centerMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
+				mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
 			}
 		}
 

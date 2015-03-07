@@ -1,11 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Views;
+using Android.Widget;
+using Skobbler.Ngx;
+using Skobbler.Ngx.Packages;
+using Skobbler.Ngx.Search;
+using System.Collections.Generic;
 
-namespace Skobbler.SDKDemo.Activity
+namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
 	/// Activity where offline address searches are performed and results are listed
 	/// </summary>
-	public class OfflineAddressSearchActivity : Activity, SKSearchListener
+    [Activity]
+	public class OfflineAddressSearchActivity : Activity, ISKSearchListener
 	{
 
 		/// <summary>
@@ -41,19 +50,19 @@ namespace Skobbler.SDKDemo.Activity
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
-			base.onCreate(savedInstanceState);
-			ContentView = R.layout.activity_list;
+			base.OnCreate(savedInstanceState);
+			SetContentView(Resource.Layout.activity_list;
 
-			operationInProgressLabel = (TextView) findViewById(R.id.label_operation_in_progress);
-			listView = (ListView) findViewById(R.id.list_view);
-			operationInProgressLabel.Text = Resources.getString(R.@string.searching);
+			operationInProgressLabel = (TextView) FindViewById(Resource.Id.label_operation_in_progress);
+			listView = (ListView) FindViewById(Resource.Id.list_view);
+			operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
 
 		packages = Arrays.asList(SKPackageManager.Instance.InstalledPackages);
 			searchManager = new SKSearchManager(this);
 
 			if (packages.Count == 0)
 			{
-				Toast.makeText(this, "No offline map packages are available", Toast.LENGTH_SHORT).show();
+				Toast.MakeText(this, "No offline map packages are available", ToastLength.Short).Show();
 			}
 
 			initializeList();
@@ -66,8 +75,8 @@ namespace Skobbler.SDKDemo.Activity
 		{
 			adapter = new ResultsListAdapter(this);
 			listView.Adapter = adapter;
-			operationInProgressLabel.Visibility = View.GONE;
-			listView.Visibility = View.VISIBLE;
+            operationInProgressLabel.Visibility = ViewStates.Gone;
+            listView.Visibility = ViewStates.Visible;
 			listView.OnItemClickListener = new OnItemClickListenerAnonymousInnerClassHelper(this);
 		}
 
@@ -107,17 +116,17 @@ namespace Skobbler.SDKDemo.Activity
 			{
 				// for new list level 0 or smaller than previous one just change the
 				// level and update the adapter
-				operationInProgressLabel.Visibility = View.GONE;
-				listView.Visibility = View.VISIBLE;
+				operationInProgressLabel.Visibility = ViewStates.Gone;
+                listView.Visibility = ViewStates.Visible;
 				currentListLevel = newLevel;
-				adapter.notifyDataSetChanged();
+				adapter.NotifyDataSetChanged();
 			}
 			else if (newLevel > currentListLevel && newLevel > 0)
 			{
 				// for new list level greater than previous one execute an offline
 				// address search
-				operationInProgressLabel.Visibility = View.VISIBLE;
-				listView.Visibility = View.GONE;
+                operationInProgressLabel.Visibility = ViewStates.Visible;
+                listView.Visibility = ViewStates.Gone;
 				// get a search object
 				SKMultiStepSearchSettings searchObject = new SKMultiStepSearchSettings();
 				// set the maximum number of results to be returned
@@ -129,11 +138,11 @@ namespace Skobbler.SDKDemo.Activity
 				// set the id of the parent node in which to search
 				searchObject.ParentIndex = parentId;
 				// set the list level
-				searchObject.ListLevel = SKSearchManager.SKListLevel.forInt(newLevel + 1);
+				searchObject.ListLevel = SKSearchManager.SKListLevel.ForInt(newLevel + 1);
 				// change the list level to the new one
 				currentListLevel = newLevel;
 				// initiate the search
-				searchManager.multistepSearch(searchObject);
+				searchManager.MultistepSearch(searchObject);
 			}
 		}
 
@@ -141,18 +150,18 @@ namespace Skobbler.SDKDemo.Activity
 		{
 			// put in the map at the corresponding level the received results
 			resultsPerLevel[currentListLevel] = results;
-			operationInProgressLabel.Visibility = View.GONE;
-			listView.Visibility = View.VISIBLE;
+            operationInProgressLabel.Visibility = ViewStates.Gone;
+            listView.Visibility = ViewStates.Visible;
 			if (results.Count > 0)
 			{
 				// received results - update adapter to show the results
-				adapter.notifyDataSetChanged();
+				adapter.NotifyDataSetChanged();
 			}
 			else
 			{
 				// zero results - no change
 				currentListLevel--;
-				adapter.notifyDataSetChanged();
+				adapter.NotifyDataSetChanged();
 			}
 		}
 
@@ -160,7 +169,7 @@ namespace Skobbler.SDKDemo.Activity
 		{
 			if (currentListLevel == 0)
 			{
-				base.onBackPressed();
+				base.OnBackPressed();
 			}
 			else
 			{
@@ -217,8 +226,8 @@ namespace Skobbler.SDKDemo.Activity
 				View view = null;
 				if (convertView == null)
 				{
-					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					view = inflater.inflate(R.layout.layout_search_list_item, null);
+					LayoutInflater inflater = (LayoutInflater) GetSystemService(Context.LayoutInflaterService);
+					view = inflater.Inflate(Resource.Layout.layout_search_list_item, null);
 				}
 				else
 				{
@@ -228,15 +237,15 @@ namespace Skobbler.SDKDemo.Activity
 				{
 					// for offline address search results show the result name and
 					// position
-					((TextView) view.findViewById(R.id.title)).Text = outerInstance.resultsPerLevel[outerInstance.currentListLevel][position].Name;
+					((TextView) view.FindViewById(Resource.Id.title)).Text = outerInstance.resultsPerLevel[outerInstance.currentListLevel][position].Name;
 					SKCoordinate location = outerInstance.resultsPerLevel[outerInstance.currentListLevel][position].Location;
-					((TextView) view.findViewById(R.id.subtitle)).Visibility = View.VISIBLE;
-					((TextView) view.findViewById(R.id.subtitle)).Text = "location: (" + location.Latitude + ", " + location.Longitude + ")";
+                    ((TextView)view.FindViewById(Resource.Id.subtitle)).Visibility = ViewStates.Visible;
+					((TextView) view.FindViewById(Resource.Id.subtitle)).Text = "location: (" + location.Latitude + ", " + location.Longitude + ")";
 				}
 				else
 				{
-					((TextView) view.findViewById(R.id.title)).Text = outerInstance.packages[position].Name;
-					((TextView) view.findViewById(R.id.subtitle)).Visibility = View.GONE;
+					((TextView) view.FindViewById(Resource.Id.title)).Text = outerInstance.packages[position].Name;
+                    ((TextView)view.FindViewById(Resource.Id.subtitle)).Visibility = ViewStates.Gone;
 				}
 				return view;
 			}

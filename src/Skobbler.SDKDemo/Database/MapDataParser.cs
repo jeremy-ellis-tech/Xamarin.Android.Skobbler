@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Android.Util;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Skobbler.SDKDemo.Database
@@ -90,10 +91,10 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void parseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, System.IO.Stream inputStream)
 		{
 			JsonReader reader = new JsonReader(new System.IO.StreamReader(inputStream, Encoding.UTF8));
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
-				string key = reader.nextName();
+				string key = reader.NextName();
 				if (key != null)
 				{
 					if (key.Equals(VERSION_ID) || key.Equals(XML_VERSION_ID))
@@ -106,12 +107,12 @@ namespace Skobbler.SDKDemo.Database
 					}
 					else if (key.Equals(WORLD_ID))
 					{
-						reader.beginObject();
+						reader.BeginObject();
 					}
 					else if (key.Equals(CONTINENTS_ID))
 					{
 						readWorldHierarchy(mapsItemsCodes, reader);
-						reader.endObject();
+						reader.EndObject();
 					}
 					else if (key.Equals(REGIONS_ID))
 					{
@@ -119,7 +120,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <summary>
@@ -129,12 +130,12 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		private void readRegionsDetails(IDictionary<string, string> regionItemsCodes, JsonReader reader)
 		{
-			reader.beginArray();
-			while (reader.hasNext())
+			reader.BeginArray();
+			while (reader.HasNext())
 			{
 				readCurrentRegionDetails(regionItemsCodes, reader);
 			}
-			reader.endArray();
+			reader.EndArray();
 		}
 
 		/// <summary>
@@ -144,9 +145,9 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		private void readCurrentRegionDetails(IDictionary<string, string> regionItemsCodes, JsonReader reader)
 		{
-			reader.beginObject();
+			reader.BeginObject();
 			string currentRegionCode = null;
-			while (reader.hasNext())
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -164,7 +165,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <summary>
@@ -175,10 +176,10 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		private void readSubRegionsForCurrentRegion(IDictionary<string, string> regionItemsCodes, string currentRegionCode, JsonReader reader)
 		{
-			reader.beginArray();
-			while (reader.hasNext())
+			reader.BeginArray();
+			while (reader.HasNext())
 			{
-				reader.beginObject();
+				reader.BeginObject();
 				string key = reader.nextName();
 				if (key != null)
 				{
@@ -191,9 +192,9 @@ namespace Skobbler.SDKDemo.Database
 						}
 					}
 				}
-				reader.endObject();
+				reader.EndObject();
 			}
-			reader.endArray();
+			reader.EndArray();
 		}
 
 		/// <summary>
@@ -203,12 +204,12 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		private void readMapsDetails(IList<MapDownloadResource> maps, JsonReader reader)
 		{
-			reader.beginArray();
-			while (reader.hasNext())
+			reader.BeginArray();
+			while (reader.HasNext())
 			{
 				readCurrentMapDetails(maps, reader);
 			}
-			reader.endArray();
+			reader.EndArray();
 		}
 
 		/// <summary>
@@ -219,8 +220,8 @@ namespace Skobbler.SDKDemo.Database
 		private void readCurrentMapDetails(IList<MapDownloadResource> maps, JsonReader reader)
 		{
 			MapDownloadResource currentMap = new MapDownloadResource();
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -235,12 +236,12 @@ namespace Skobbler.SDKDemo.Database
 					}
 					else if (key.Equals(LANGUAGES_ID))
 					{
-						reader.beginArray();
-						while (reader.hasNext())
+						reader.BeginArray();
+						while (reader.HasNext())
 						{
 							readCurrentMapNames(currentMap, reader);
 						}
-						reader.endArray();
+						reader.EndArray();
 					}
 					else if (key.Equals(BBOX_ID))
 					{
@@ -277,7 +278,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 
 			if ((currentMap.Code != null) && (currentMap.SubType != null))
 			{
@@ -294,8 +295,8 @@ namespace Skobbler.SDKDemo.Database
 		private void readCurrentMapNames(MapDownloadResource currentMap, JsonReader reader)
 		{
 			string currentMapName = null;
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -313,7 +314,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <summary>
@@ -323,8 +324,8 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		private void readCurrentMapTXGDetails(MapDownloadResource currentMap, JsonReader reader)
 		{
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -344,7 +345,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <summary>
@@ -354,8 +355,8 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		private void readCurrentMapBoundingBoxDetails(MapDownloadResource currentMap, JsonReader reader)
 		{
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -378,7 +379,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <summary>
@@ -388,12 +389,12 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		private void readWorldHierarchy(IDictionary<string, string> mapsItemsCodes, JsonReader reader)
 		{
-			reader.beginArray();
-			while (reader.hasNext())
+			reader.BeginArray();
+			while (reader.HasNext())
 			{
 				readContinentsHierarchy(mapsItemsCodes, reader);
 			}
-			reader.endArray();
+			reader.EndArray();
 		}
 
 		/// <summary>
@@ -404,8 +405,8 @@ namespace Skobbler.SDKDemo.Database
 		private void readContinentsHierarchy(IDictionary<string, string> mapsItemsCodes, JsonReader reader)
 		{
 			string currentContinentCode = null;
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -420,16 +421,16 @@ namespace Skobbler.SDKDemo.Database
 					}
 					else if (key.Equals(COUNTRIES_ID))
 					{
-						reader.beginArray();
-						while (reader.hasNext())
+						reader.BeginArray();
+						while (reader.HasNext())
 						{
 							readCountriesHierarchy(mapsItemsCodes, currentContinentCode, reader);
 						}
-						reader.endArray();
+						reader.EndArray();
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <summary>
@@ -441,8 +442,8 @@ namespace Skobbler.SDKDemo.Database
 		private void readCountriesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentContinentCode, JsonReader reader)
 		{
 			string currentCountryCode = null;
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -457,25 +458,25 @@ namespace Skobbler.SDKDemo.Database
 					}
 					else if (key.Equals(CITY_CODES_ID))
 					{
-						reader.beginArray();
-						while (reader.hasNext())
+						reader.BeginArray();
+						while (reader.HasNext())
 						{
 							readCitiesHierarchy(mapsItemsCodes, currentCountryCode, reader);
 						}
-						reader.endArray();
+						reader.EndArray();
 					}
 					else if (key.Equals(STATE_CODES_ID))
 					{
-						reader.beginArray();
-						while (reader.hasNext())
+						reader.BeginArray();
+						while (reader.HasNext())
 						{
 							readStatesHierarchy(mapsItemsCodes, currentCountryCode, reader);
 						}
-						reader.endArray();
+						reader.EndArray();
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <summary>
@@ -487,8 +488,8 @@ namespace Skobbler.SDKDemo.Database
 		private void readStatesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentCountryCode, JsonReader reader)
 		{
 			string currentStateCode = null;
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -503,16 +504,16 @@ namespace Skobbler.SDKDemo.Database
 					}
 					else if (key.Equals(CITY_CODES_ID))
 					{
-						reader.beginArray();
-						while (reader.hasNext())
+						reader.BeginArray();
+						while (reader.HasNext())
 						{
 							readCitiesHierarchy(mapsItemsCodes, currentStateCode, reader);
 						}
-						reader.endArray();
+						reader.EndArray();
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <summary>
@@ -523,8 +524,8 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		private void readCitiesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentParentCode, JsonReader reader)
 		{
-			reader.beginObject();
-			while (reader.hasNext())
+			reader.BeginObject();
+			while (reader.HasNext())
 			{
 				string key = reader.nextName();
 				if (key != null)
@@ -539,7 +540,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 				}
 			}
-			reader.endObject();
+			reader.EndObject();
 		}
 
 		/// <param name="mapTypeInt"> an integer associated with map type </param>

@@ -1,4 +1,5 @@
-﻿namespace Skobbler.SDKDemo.Database
+﻿using Skobbler.Ngx.SDKTools.Download;
+namespace Skobbler.SDKDemo.Database
 {
 	/// <summary>
 	/// Defines a resource that will be DOWNLOADED (e.g map, sound file)

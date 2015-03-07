@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Android.Content;
+using Android.Database;
+using Android.Database.Sqlite;
+using Skobbler.Ngx.SDKTools.Download;
+using Skobbler.Ngx.Util;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -180,24 +185,24 @@ namespace Skobbler.SDKDemo.Database
 						insertCommand.Append(",?");
 					}
 					insertCommand.Append(");");
-					resourcesDAO.Database.beginTransaction();
-					SQLiteStatement insertStatement = resourcesDAO.Database.compileStatement(insertCommand.ToString());
+					resourcesDAO.Database.BeginTransaction();
+					SQLiteStatement insertStatement = resourcesDAO.Database.CompileStatement(insertCommand.ToString());
 					int columnIndex , lineIndex = 0;
 					foreach (MapDownloadResource map in maps)
 					{
 						columnIndex = 1;
 						lineIndex++;
-						insertStatement.clearBindings();
-						insertStatement.bindLong(columnIndex++, lineIndex);
-						insertStatement.bindString(columnIndex++, map.Code);
-						insertStatement.bindString(columnIndex++, mapsItemsCodes[map.Code]);
+						insertStatement.ClearBindings();
+						insertStatement.BindLong(columnIndex++, lineIndex);
+						insertStatement.BindString(columnIndex++, map.Code);
+						insertStatement.BindString(columnIndex++, mapsItemsCodes[map.Code]);
 						if ((map.SubType != null) && map.SubType.Equals(STATE_TYPE, StringComparison.CurrentCultureIgnoreCase))
 						{
-							insertStatement.bindString(columnIndex++, regionItemsCodes[map.Code]);
+							insertStatement.BindString(columnIndex++, regionItemsCodes[map.Code]);
 						}
 						else
 						{
-							insertStatement.bindString(columnIndex++, "");
+							insertStatement.BindString(columnIndex++, "");
 						}
 
 						// compute the string that contains all the name translations
@@ -205,7 +210,7 @@ namespace Skobbler.SDKDemo.Database
 
 						if (map.getNames() != null)
 						{
-							foreach (KeyValuePair<string, string> currentEntry in map.getNames().SetOfKeyValuePairs())
+							foreach (KeyValuePair<string, string> currentEntry in map.getNames())
 							{
 								nameInAllSpecifiedLanguages.Append(currentEntry.Key).Append("=").Append(currentEntry.Value).Append(";");
 							}
@@ -213,29 +218,29 @@ namespace Skobbler.SDKDemo.Database
 
 						if (nameInAllSpecifiedLanguages.Length > 1)
 						{
-							insertStatement.bindString(columnIndex++, nameInAllSpecifiedLanguages.Substring(0, nameInAllSpecifiedLanguages.Length - 1));
+							insertStatement.BindString(columnIndex++, nameInAllSpecifiedLanguages.Substring(0, nameInAllSpecifiedLanguages.Length - 1));
 						}
 						else
 						{
-							insertStatement.bindString(columnIndex++, "");
+							insertStatement.BindString(columnIndex++, "");
 						}
-						insertStatement.bindString(columnIndex++, map.SKMFilePath);
-						insertStatement.bindString(columnIndex++, map.ZipFilePath);
-						insertStatement.bindString(columnIndex++, map.TXGFilePath);
-						insertStatement.bindLong(columnIndex++, (int) map.TXGFileSize);
-						insertStatement.bindLong(columnIndex++, (int) map.SkmAndZipFilesSize);
-						insertStatement.bindLong(columnIndex++, (int) map.SkmFileSize);
-						insertStatement.bindLong(columnIndex++, (int) map.UnzippedFileSize);
-						insertStatement.bindDouble(columnIndex++, map.BbLatMax);
-						insertStatement.bindDouble(columnIndex++, map.BbLatMin);
-						insertStatement.bindDouble(columnIndex++, map.BbLongMax);
-						insertStatement.bindDouble(columnIndex++, map.BbLongMin);
-						insertStatement.bindString(columnIndex++, map.SubType);
-						insertStatement.bindLong(columnIndex++, map.DownloadState);
-						insertStatement.bindLong(columnIndex++, map.NoDownloadedBytes);
-						insertStatement.bindLong(columnIndex++, 0);
-						insertStatement.bindString(columnIndex, map.DownloadPath);
-						insertStatement.execute();
+						insertStatement.BindString(columnIndex++, map.SKMFilePath);
+                        insertStatement.BindString(columnIndex++, map.ZipFilePath);
+                        insertStatement.BindString(columnIndex++, map.TXGFilePath);
+						insertStatement.BindLong(columnIndex++, (int) map.TXGFileSize);
+                        insertStatement.BindLong(columnIndex++, (int)map.SkmAndZipFilesSize);
+                        insertStatement.BindLong(columnIndex++, (int)map.SkmFileSize);
+                        insertStatement.BindLong(columnIndex++, (int)map.UnzippedFileSize);
+						insertStatement.BindDouble(columnIndex++, map.BbLatMax);
+                        insertStatement.BindDouble(columnIndex++, map.BbLatMin);
+                        insertStatement.BindDouble(columnIndex++, map.BbLongMax);
+                        insertStatement.BindDouble(columnIndex++, map.BbLongMin);
+						insertStatement.BindString(columnIndex++, map.SubType);
+						insertStatement.BindLong(columnIndex++, map.DownloadState);
+                        insertStatement.BindLong(columnIndex++, map.NoDownloadedBytes);
+                        insertStatement.BindLong(columnIndex++, 0);
+						insertStatement.BindString(columnIndex, map.DownloadPath);
+						insertStatement.Execute();
 					}
 				}
 			}
@@ -243,10 +248,10 @@ namespace Skobbler.SDKDemo.Database
 			{
 				if ((maps != null) && (mapsItemsCodes != null))
 				{
-					SKLogging.writeLog(TAG, "Maps were inserted into database !!!", SKLogging.LOG_DEBUG);
+					SKLogging.WriteLog(TAG, "Maps were inserted into database !!!", SKLogging.LogDebug);
 					// close the GENERAL transaction
-					resourcesDAO.Database.setTransactionSuccessful();
-					resourcesDAO.Database.endTransaction();
+					resourcesDAO.Database.SetTransactionSuccessful();
+					resourcesDAO.Database.EndTransaction();
 				}
 			}
 		}
@@ -266,43 +271,43 @@ namespace Skobbler.SDKDemo.Database
 					query.Append(" or ").Append(SUBTYPE).Append("=?");
 				}
 			}
-			Cursor resultCursor = resourcesDAO.Database.rawQuery(query.ToString(), mapType);
+			ICursor resultCursor = resourcesDAO.Database.RawQuery(query.ToString(), mapType);
 			if ((resultCursor != null) && (resultCursor.Count > 0))
 			{
 				IDictionary<string, MapDownloadResource> maps = new Dictionary<string, MapDownloadResource>();
 				MapDownloadResource currentMap;
 				try
 				{
-					resultCursor.moveToFirst();
-					while (!resultCursor.AfterLast)
+					resultCursor.MoveToFirst();
+					while (!resultCursor.IsAfterLast)
 					{
 						currentMap = new MapDownloadResource();
-						currentMap.Code = resultCursor.getString(0);
-						currentMap.ParentCode = resultCursor.getString(1);
-						currentMap.setNames(resultCursor.getString(3));
-						currentMap.SkmFilePath = resultCursor.getString(4);
-						currentMap.ZipFilePath = resultCursor.getString(5);
-						currentMap.TXGFilePath = resultCursor.getString(6);
-						currentMap.TXGFileSize = resultCursor.getInt(7);
-						currentMap.SkmAndZipFilesSize = resultCursor.getInt(8);
-						currentMap.SkmFileSize = resultCursor.getInt(9);
-						currentMap.UnzippedFileSize = resultCursor.getInt(10);
-						currentMap.BbLatMax = resultCursor.getDouble(11);
-						currentMap.BbLatMin = resultCursor.getDouble(12);
-						currentMap.BbLongMax = resultCursor.getDouble(13);
-						currentMap.BbLongMin = resultCursor.getDouble(14);
-						currentMap.SubType = resultCursor.getString(15);
-						currentMap.DownloadState = (sbyte) resultCursor.getInt(16);
-						currentMap.NoDownloadedBytes = resultCursor.getInt(17);
-						currentMap.FlagID = resultCursor.getInt(18);
-						currentMap.DownloadPath = resultCursor.getString(19);
+						currentMap.Code = resultCursor.GetString(0);
+                        currentMap.ParentCode = resultCursor.GetString(1);
+                        currentMap.setNames(resultCursor.GetString(3));
+                        currentMap.SkmFilePath = resultCursor.GetString(4);
+                        currentMap.ZipFilePath = resultCursor.GetString(5);
+                        currentMap.TXGFilePath = resultCursor.GetString(6);
+						currentMap.TXGFileSize = resultCursor.GetInt(7);
+                        currentMap.SkmAndZipFilesSize = resultCursor.GetInt(8);
+                        currentMap.SkmFileSize = resultCursor.GetInt(9);
+                        currentMap.UnzippedFileSize = resultCursor.GetInt(10);
+						currentMap.BbLatMax = resultCursor.GetDouble(11);
+                        currentMap.BbLatMin = resultCursor.GetDouble(12);
+                        currentMap.BbLongMax = resultCursor.GetDouble(13);
+                        currentMap.BbLongMin = resultCursor.GetDouble(14);
+						currentMap.SubType = resultCursor.GetString(15);
+						currentMap.DownloadState = (sbyte) resultCursor.GetInt(16);
+						currentMap.NoDownloadedBytes = resultCursor.GetInt(17);
+						currentMap.FlagID = resultCursor.GetInt(18);
+						currentMap.DownloadPath = resultCursor.GetString(19);
 						maps[currentMap.Code] = currentMap;
-						resultCursor.moveToNext();
+						resultCursor.MoveToNext();
 					}
 				}
 				finally
 				{
-					resultCursor.close();
+					resultCursor.Close();
 				}
 
 				return maps;
@@ -311,7 +316,7 @@ namespace Skobbler.SDKDemo.Database
 			{
 				if (resultCursor != null)
 				{
-					resultCursor.close();
+					resultCursor.Close();
 				}
 				return null;
 			}
@@ -324,29 +329,29 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void updateMapResource(MapDownloadResource mapResource)
 		{
 			ContentValues values = new ContentValues();
-			values.put(STATE, mapResource.DownloadState);
-			values.put(NO_DOWNLOADED_BYTES, mapResource.NoDownloadedBytes);
-			values.put(SKM_FILE_PATH, mapResource.SKMFilePath);
-			values.put(SKM_FILE_SIZE, mapResource.SkmFileSize);
-			values.put(TXG_FILE_PATH, mapResource.TXGFilePath);
-			values.put(TXG_FILE_SIZE, mapResource.TXGFileSize);
-			values.put(ZIP_FILE_PATH, mapResource.ZipFilePath);
-			values.put(SKM_AND_ZIP_FILES_SIZE, mapResource.SkmAndZipFilesSize);
-			values.put(UNZIPPED_FILE_SIZE, mapResource.UnzippedFileSize);
-			values.put(DOWNLOAD_PATH, mapResource.DownloadPath);
+			values.Put(STATE, mapResource.DownloadState);
+            values.Put(NO_DOWNLOADED_BYTES, mapResource.NoDownloadedBytes);
+            values.Put(SKM_FILE_PATH, mapResource.SKMFilePath);
+            values.Put(SKM_FILE_SIZE, mapResource.SkmFileSize);
+            values.Put(TXG_FILE_PATH, mapResource.TXGFilePath);
+            values.Put(TXG_FILE_SIZE, mapResource.TXGFileSize);
+            values.Put(ZIP_FILE_PATH, mapResource.ZipFilePath);
+            values.Put(SKM_AND_ZIP_FILES_SIZE, mapResource.SkmAndZipFilesSize);
+            values.Put(UNZIPPED_FILE_SIZE, mapResource.UnzippedFileSize);
+            values.Put(DOWNLOAD_PATH, mapResource.DownloadPath);
 			try
 			{
-				resourcesDAO.Database.beginTransaction();
-				resourcesDAO.Database.update(MAPS_TABLE, values, CODE + "=?", new string[]{mapResource.Code});
-				resourcesDAO.Database.setTransactionSuccessful();
+				resourcesDAO.Database.BeginTransaction();
+				resourcesDAO.Database.Update(MAPS_TABLE, values, CODE + "=?", new string[]{mapResource.Code});
+				resourcesDAO.Database.SetTransactionSuccessful();
 			}
 			catch (SQLException e)
 			{
-				SKLogging.writeLog(TAG, "SQL EXCEPTION SAVE MAP DATA " + e.Message, SKLogging.LOG_ERROR);
+				SKLogging.WriteLog(TAG, "SQL EXCEPTION SAVE MAP DATA " + e.Message, SKLogging.LogError);
 			}
 			finally
 			{
-				resourcesDAO.Database.endTransaction();
+				resourcesDAO.Database.EndTransaction();
 			}
 		}
 
@@ -356,21 +361,21 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void clearResourcesInDownloadQueue()
 		{
 			ContentValues values = new ContentValues();
-			values.put(STATE, SKToolsDownloadItem.NOT_QUEUED);
-			values.put(NO_DOWNLOADED_BYTES, 0);
+			values.Put(STATE, SKToolsDownloadItem.NOT_QUEUED);
+			values.Put(NO_DOWNLOADED_BYTES, 0);
 			try
 			{
-				resourcesDAO.Database.beginTransaction();
-				resourcesDAO.Database.update(MAPS_TABLE, values, STATE + "=? OR " + STATE + "=? OR " + STATE + "=?", new string[]{Convert.ToString(SKToolsDownloadItem.DOWNLOADING), Convert.ToString(SKToolsDownloadItem.PAUSED), Convert.ToString(SKToolsDownloadItem.QUEUED)});
-				resourcesDAO.Database.setTransactionSuccessful();
+				resourcesDAO.Database.BeginTransaction();
+				resourcesDAO.Database.Update(MAPS_TABLE, values, STATE + "=? OR " + STATE + "=? OR " + STATE + "=?", new string[]{Convert.ToString(SKToolsDownloadItem.DOWNLOADING), Convert.ToString(SKToolsDownloadItem.PAUSED), Convert.ToString(SKToolsDownloadItem.QUEUED)});
+				resourcesDAO.Database.SetTransactionSuccessful();
 			}
 			catch (SQLException e)
 			{
-				SKLogging.writeLog(TAG, "SQL EXCEPTION SAVE MAP DATA " + e.Message, SKLogging.LOG_ERROR);
+				SKLogging.WriteLog(TAG, "SQL EXCEPTION SAVE MAP DATA " + e.Message, SKLogging.LogError);
 			}
 			finally
 			{
-				resourcesDAO.Database.endTransaction();
+				resourcesDAO.Database.EndTransaction();
 			}
 		}
 	}

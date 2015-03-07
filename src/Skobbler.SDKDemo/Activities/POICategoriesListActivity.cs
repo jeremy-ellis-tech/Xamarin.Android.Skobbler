@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Android.App;
+using Android.Widget;
+using System;
 using System.Collections.Generic;
 
-namespace Skobbler.SDKDemo.Activity
+namespace Skobbler.SDKDemo.Activities
 {
+    [Activity]
 	public class POICategoriesListActivity : Activity
 	{
 
@@ -55,20 +58,20 @@ namespace Skobbler.SDKDemo.Activity
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
-			base.onCreate(savedInstanceState);
-			ContentView = R.layout.activity_list;
+			base.OnCreate(savedInstanceState);
+			SetContentView(Resource.Layout.activity_list;
 
-			findViewById(R.id.label_operation_in_progress).Visibility = View.GONE;
+			FindViewById(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
 
 			listItems = ListItems;
 
-			listView = (ListView) findViewById(R.id.list_view);
-			listView.Visibility = View.VISIBLE;
+			listView = (ListView) FindViewById(Resource.Id.list_view);
+			listView.Visibility = ViewStates.Visible;
 
 			adapter = new POICategoryListAdapter(this);
 			listView.Adapter = adapter;
 
-			Toast.makeText(this, "Select the desired POI categories for heat map display", Toast.LENGTH_SHORT).show();
+			Toast.MakeText(this, "Select the desired POI categories for heat map display", ToastLength.Short).Show();
 
 			listView.OnItemClickListener = new OnItemClickListenerAnonymousInnerClassHelper(this);
 		}
@@ -90,22 +93,22 @@ namespace Skobbler.SDKDemo.Activity
 					if (outerInstance.selectedCategories.Contains(selectedItem.id))
 					{
 						outerInstance.selectedCategories.RemoveAt(Convert.ToInt32(selectedItem.id));
-						view.BackgroundColor = Resources.getColor(R.color.white);
+						view.BackgroundColor = Resources.GetColor(Resource.Color.white);
 					}
 					else
 					{
 						outerInstance.selectedCategories.Add(selectedItem.id);
-						view.BackgroundColor = Resources.getColor(R.color.selected);
+						view.BackgroundColor = Resources.GetColor(Resource.Color.selected);
 					}
 
-					Button showButton = (Button) findViewById(R.id.show_heat_map);
+					Button showButton = (Button) FindViewById(Resource.Id.show_heat_map);
 					if (outerInstance.selectedCategories.Count == 0)
 					{
-						showButton.Visibility = View.GONE;
+						showButton.Visibility = ViewStates.Gone;
 					}
 					else
 					{
-						showButton.Visibility = View.VISIBLE;
+						showButton.Visibility = ViewStates.Visible;
 					}
 				}
 			}
@@ -113,7 +116,7 @@ namespace Skobbler.SDKDemo.Activity
 
 		public virtual void onClick(View v)
 		{
-			if (v.Id == R.id.show_heat_map)
+			if (v.Id == Resource.Id.show_heat_map)
 			{
 				SKPOICategory[] categories = new SKPOICategory[selectedCategories.Count];
 				for (int i = 0; i < selectedCategories.Count; i++)
@@ -171,18 +174,18 @@ namespace Skobbler.SDKDemo.Activity
 				if (item.isMainCategory)
 				{
 					view.setTextAppearance(outerInstance, R.style.menu_options_group_style);
-					view.BackgroundColor = Resources.getColor(R.color.grey_options_group);
+					view.BackgroundColor = Resources.GetColor(Resource.Color.grey_options_group);
 				}
 				else
 				{
 					view.setTextAppearance(outerInstance, R.style.menu_options_style);
 					if (!outerInstance.selectedCategories.Contains(item.id))
 					{
-						view.BackgroundColor = Resources.getColor(R.color.white);
+						view.BackgroundColor = Resources.GetColor(Resource.Color.white);
 					}
 					else
 					{
-						view.BackgroundColor = Resources.getColor(R.color.selected);
+						view.BackgroundColor = Resources.GetColor(Resource.Color.selected);
 					}
 				}
 				return view;

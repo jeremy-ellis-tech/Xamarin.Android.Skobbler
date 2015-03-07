@@ -1,7 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Views;
+using Android.Widget;
+using Skobbler.Ngx.Tracks;
+using Skobbler.SDKDemo.Application;
+using System.Collections.Generic;
 
-namespace Skobbler.SDKDemo.Activity
+namespace Skobbler.SDKDemo.Activities
 {
+    [Activity]
 	public class TrackElementsActivity : Activity
 	{
 
@@ -21,13 +29,13 @@ namespace Skobbler.SDKDemo.Activity
 
 		protected internal virtual void onCreate(Bundle savedInstanceState)
 		{
-			base.onCreate(savedInstanceState);
-			ContentView = R.layout.activity_list;
-			findViewById(R.id.label_operation_in_progress).Visibility = View.GONE;
-			listView = (ListView) findViewById(R.id.list_view);
+			base.OnCreate(savedInstanceState);
+			SetContentView(Resource.Layout.activity_list;
+			FindViewById(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
+			listView = (ListView) FindViewById(Resource.Id.list_view);
 			app = (DemoApplication) Application;
 
-			string gpxName = Intent.Extras.getString(Intent.EXTRA_TEXT);
+			string gpxName = Intent.Extras.GetString(Intent.ExtraText);
 			loadedFile = SKTracksFile.loadAtPath(app.MapResourcesDirPath + "GPXTracks/" + gpxName);
 			initialize();
 		}
@@ -53,7 +61,7 @@ namespace Skobbler.SDKDemo.Activity
 				elementsPerLevel[newLevel] = getChildrenForCollectionElement(parent);
 			}
 			currentLevel = newLevel;
-			adapter.notifyDataSetChanged();
+			adapter.NotifyDataSetChanged();
 			listView.Selection = 0;
 		}
 
@@ -88,7 +96,7 @@ namespace Skobbler.SDKDemo.Activity
 		{
 			if (currentLevel == 0)
 			{
-				base.onBackPressed();
+				base.OnBackPressed();
 			}
 			else
 			{
@@ -129,27 +137,27 @@ namespace Skobbler.SDKDemo.Activity
 				View view = null;
 				if (convertView == null)
 				{
-					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					view = inflater.inflate(R.layout.layout_track_element_list_item, null);
+					LayoutInflater inflater = (LayoutInflater) GetSystemService(Context.LayoutInflaterService);
+					view = inflater.Inflate(Resource.Layout.layout_track_element_list_item, null);
 				}
 				else
 				{
 					view = convertView;
 				}
-				Button drawButton = (Button) view.findViewById(R.id.draw_button);
-				TextView text = (TextView) view.findViewById(R.id.label_list_item);
+				Button drawButton = (Button) view.FindViewById(Resource.Id.draw_button);
+				TextView text = (TextView) view.FindViewById(Resource.Id.label_list_item);
 				object item = outerInstance.elementsPerLevel[outerInstance.currentLevel][position];
 				if (item is SKTracksPoint)
 				{
-					drawButton.Visibility = View.GONE;
-					view.findViewById(R.id.indicator_children_available).Visibility = View.GONE;
+					drawButton.Visibility = ViewStates.Gone;
+					view.FindViewById(Resource.Id.indicator_children_available).Visibility = ViewStates.Gone;
 					SKTracksPoint point = (SKTracksPoint) item;
 					text.Text = "POINT\n(" + point.Latitude + ", " + point.Longitude + ")";
 				}
 				else if (item is SKTrackElement)
 				{
-					drawButton.Visibility = View.VISIBLE;
-					view.findViewById(R.id.indicator_children_available).Visibility = View.VISIBLE;
+					drawButton.Visibility = ViewStates.Visible;
+					view.FindViewById(Resource.Id.indicator_children_available).Visibility = ViewStates.Visible;
 					SKTrackElement trackElement = (SKTrackElement) item;
 					string name = trackElement.Name;
 					if (name == null || name.Equals(""))
@@ -165,7 +173,7 @@ namespace Skobbler.SDKDemo.Activity
 				return view;
 			}
 
-			private class OnClickListenerAnonymousInnerClassHelper : View.OnClickListener
+			private class OnClickListenerAnonymousInnerClassHelper : View.IOnClickListener
 			{
 				private readonly TrackElementsListAdapter outerInstance;
 

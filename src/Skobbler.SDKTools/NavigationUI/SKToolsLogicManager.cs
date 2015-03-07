@@ -227,7 +227,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 checkCorrectMapStyle();
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                if (Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
                 {
                     SKToolsAutoNightManager.Instance.setAlarmForHourlyNotificationAfterKitKat(currentActivity, true);
                 }
@@ -300,7 +300,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 if (isFreeDrive)
                 {
                     checkCorrectMapStyle();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                    if (Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
                     {
                         SKToolsAutoNightManager.Instance.setAlarmForHourlyNotificationAfterKitKat(currentActivity, true);
                     }
@@ -422,7 +422,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             SKToolsNavigationUIManager.Instance.showFollowerModePanels(configuration.NavigationType == SKNavigationSettings.SKNavigationType.SIMULATION);
 
             string item = (string)parent.GetItemAtPosition(position);
-            if (item.Equals(currentActivity.Resources.GetString(R.@string.unblock_all)))
+            if (item.Equals(currentActivity.Resources.GetString(Resource.String.unblock_all)))
             {
                 naviManager.UnblockAllRoads();
                 roadBlocked = false;
@@ -536,7 +536,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 SKToolsNavigationUIManager.Instance.handleNavigationBackButton();
             }
-            else if (id == Resource.Id.navigation_bottom_right_estimated_panel || id == R.id.navigation_bottom_right_arriving_panel)
+            else if (id == Resource.Id.navigation_bottom_right_estimated_panel || id == Resource.Id.navigation_bottom_right_arriving_panel)
             {
                 SKToolsNavigationUIManager.Instance.switchEstimatedTime();
             }
@@ -551,7 +551,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     Toast.MakeText(currentActivity, currentActivity.Resources.GetString(Resource.String.no_position_available), ToastLength.Short).Show();
                 }
             }
-            else if (id == R.id.current_advice_image_holder || id == R.id.current_advice_text_holder)
+            else if (id == Resource.Id.current_advice_image_holder || id == Resource.Id.current_advice_text_holder)
             {
                 playLastAdvice();
             }
@@ -625,7 +625,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     naviScreenSet = true;
                 }
             }
-            else if (id == R.id.navigation_settings_roadblock_info_button)
+            else if (id == Resource.Id.navigation_settings_roadblock_info_button)
             {
                 naviScreenSet = true;
 
@@ -718,7 +718,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         public virtual void computeMapStyle(bool isDaytime)
         {
-            Log.d("", "Update the map style after receiving the broadcast");
+            Log.Debug("", "Update the map style after receiving the broadcast");
             int mapStyle;
             if (isDaytime)
             {
@@ -920,7 +920,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             if (!navigationStopped)
             {
-                currentActivity.runOnUiThread(new RunnableAnonymousInnerClassHelper3(this, adviceList, speedExceeded));
+                currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper3(this, adviceList, speedExceeded));
             }
         }
 
@@ -963,7 +963,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 reRoutingInProgress = false;
 
-                currentActivity.runOnUiThread(new RunnableAnonymousInnerClassHelper4(this));
+                currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper4(this));
             }
             int mapStyle = SKToolsMapOperationsManager.Instance.CurrentMapStyle;
             SKToolsNavigationUIManager.Instance.handleNavigationState(skNavigationState, mapStyle);
@@ -993,7 +993,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             if (SKToolsNavigationUIManager.Instance.FollowerMode)
             {
-                currentActivity.runOnUiThread(new RunnableAnonymousInnerClassHelper5(this));
+                currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper5(this));
             }
         }
 
@@ -1028,7 +1028,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         public override void onVisualAdviceChanged(bool firstVisualAdviceChanged, bool secondVisualAdviceChanged, SKNavigationState skNavigationState)
         {
             int mapStyle = SKToolsMapOperationsManager.Instance.CurrentMapStyle;
-            currentActivity.runOnUiThread(new RunnableAnonymousInnerClassHelper6(this, firstVisualAdviceChanged, secondVisualAdviceChanged, mapStyle));
+            currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper6(this, firstVisualAdviceChanged, secondVisualAdviceChanged, mapStyle));
 
         }
 
@@ -1071,7 +1071,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         public override void onRouteCalculationFailed(SKRoutingErrorCode skRoutingErrorCode)
         {
             SKToolsNavigationUIManager.Instance.showRouteCalculationFailedDialog(skRoutingErrorCode);
-            currentActivity.runOnUiThread(new RunnableAnonymousInnerClassHelper7(this));
+            currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper7(this));
         }
 
         private class RunnableAnonymousInnerClassHelper7 : Runnable
@@ -1093,7 +1093,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             if (skRouteInfoList.Count > 0)
             {
-                currentActivity.runOnUiThread(new RunnableAnonymousInnerClassHelper8(this));
+                currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper8(this));
             }
 
             if (navigationListener != null)
@@ -1156,7 +1156,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         public override void onViaPointReached(int index)
         {
-            currentActivity.runOnUiThread(new RunnableAnonymousInnerClassHelper9(this));
+            currentActivity.RunOnUiThread(new RunnableAnonymousInnerClassHelper9(this));
         }
 
         private class RunnableAnonymousInnerClassHelper9 : Runnable

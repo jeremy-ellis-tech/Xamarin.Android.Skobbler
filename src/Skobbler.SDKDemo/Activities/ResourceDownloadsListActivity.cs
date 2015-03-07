@@ -1,11 +1,17 @@
-﻿using System;
+﻿using Android.App;
+using Android.Views;
+using Android.Widget;
+using Skobbler.Ngx.SDKTools.Download;
+using Skobbler.SDKDemo.Database;
+using System;
 using System.Collections.Generic;
 
-namespace Skobbler.SDKDemo.Activity
+namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
 	/// Activity that displays a list of downloadable resources and provides the ability to download them
 	/// </summary>
+    [Activity]
 	public class ResourceDownloadsListActivity : Activity
 	{
 
@@ -121,8 +127,8 @@ namespace Skobbler.SDKDemo.Activity
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
 
-			base.onCreate(savedInstanceState);
-			ContentView = R.layout.activity_downloads_list;
+			base.OnCreate(savedInstanceState);
+			SetContentView(Resource.Layout.activity_downloads_list;
 			appContext = (DemoApplication) Application;
 			handler = new Handler();
 
@@ -155,10 +161,10 @@ namespace Skobbler.SDKDemo.Activity
 					outerInstance.populateWithChildMaps(mapResourcesItem);
 					outerInstance.currentListItems = mapResourcesItem.children;
 
-					outerInstance.listView = (ListView) findViewById(R.id.list_view);
+					outerInstance.listView = (ListView) FindViewById(Resource.Id.list_view);
 					outerInstance.adapter = new DownloadsAdapter(outerInstance);
 					outerInstance.listView.Adapter = outerInstance.adapter;
-					outerInstance.findViewById(R.id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? View.GONE : View.VISIBLE;
+					outerInstance.FindViewById(Resource.Id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
 					outerInstance.downloadManager = SKToolsDownloadManager.getInstance(outerInstance.adapter);
 					if (activeDownloads.Count > 0 && activeDownloads[0].DownloadState == SKToolsDownloadItem.DOWNLOADING)
 					{
@@ -167,7 +173,7 @@ namespace Skobbler.SDKDemo.Activity
 				}
 				else
 				{
-					Toast.makeText(outerInstance, "Could not retrieve map data from the server", Toast.LENGTH_SHORT).show();
+					Toast.MakeText(outerInstance, "Could not retrieve map data from the server", ToastLength.Short).Show();
 					outerInstance.finish();
 				}
 			}
@@ -202,7 +208,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					outerInstance.outerInstance.adapter.notifyDataSetChanged();
+					outerInstance.outerInstance.adapter.NotifyDataSetChanged();
 				}
 			}
 		}
@@ -387,36 +393,36 @@ namespace Skobbler.SDKDemo.Activity
 				View view = null;
 				if (convertView == null)
 				{
-					LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					view = inflater.inflate(R.layout.element_download_list_item, null);
+					LayoutInflater inflater = (LayoutInflater) GetSystemService(Context.LayoutInflaterService);
+					view = inflater.Inflate(Resource.Layout.element_download_list_item, null);
 				}
 				else
 				{
 					view = convertView;
 				}
 
-				ImageView arrowImage = (ImageView) view.findViewById(R.id.arrow);
-				TextView downloadSizeText = (TextView) view.findViewById(R.id.package_size);
-				TextView downloadNameText = (TextView) view.findViewById(R.id.package_name);
-				RelativeLayout middleLayout = (RelativeLayout) view.findViewById(R.id.middle_layout);
-				ImageView startPauseImage = (ImageView) view.findViewById(R.id.start_pause);
-				ImageView cancelImage = (ImageView) view.findViewById(R.id.cancel);
-				TextView stateText = (TextView) view.findViewById(R.id.current_state);
-				ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.download_progress);
-				RelativeLayout progressDetailsLayout = (RelativeLayout) view.findViewById(R.id.progress_details);
-				TextView percentageText = (TextView) view.findViewById(R.id.percentage);
-				TextView timeLeftText = (TextView) view.findViewById(R.id.time_left);
-				TextView speedText = (TextView) view.findViewById(R.id.speed);
+				ImageView arrowImage = (ImageView) view.FindViewById(Resource.Id.arrow);
+				TextView downloadSizeText = (TextView) view.FindViewById(Resource.Id.package_size);
+				TextView downloadNameText = (TextView) view.FindViewById(Resource.Id.package_name);
+				RelativeLayout middleLayout = (RelativeLayout) view.FindViewById(Resource.Id.middle_layout);
+				ImageView startPauseImage = (ImageView) view.FindViewById(Resource.Id.start_pause);
+				ImageView cancelImage = (ImageView) view.FindViewById(Resource.Id.cancel);
+				TextView stateText = (TextView) view.FindViewById(Resource.Id.current_state);
+				ProgressBar progressBar = (ProgressBar) view.FindViewById(Resource.Id.download_progress);
+				RelativeLayout progressDetailsLayout = (RelativeLayout) view.FindViewById(Resource.Id.progress_details);
+				TextView percentageText = (TextView) view.FindViewById(Resource.Id.percentage);
+				TextView timeLeftText = (TextView) view.FindViewById(Resource.Id.time_left);
+				TextView speedText = (TextView) view.FindViewById(Resource.Id.speed);
 
 				downloadNameText.Text = currentItem.name;
 
 				if (currentItem.children == null || currentItem.children.Count == 0)
 				{
-					arrowImage.Visibility = View.GONE;
+					arrowImage.Visibility = ViewStates.Gone;
 				}
 				else
 				{
-					arrowImage.Visibility = View.VISIBLE;
+					arrowImage.Visibility = ViewStates.Visible;
 				}
 
 				if (currentItem.downloadResource != null)
@@ -427,8 +433,8 @@ namespace Skobbler.SDKDemo.Activity
 					bool progressShown = downloadResource.DownloadState == SKToolsDownloadItem.DOWNLOADING || downloadResource.DownloadState == SKToolsDownloadItem.PAUSED;
 					if (progressShown)
 					{
-						progressBar.Visibility = View.VISIBLE;
-						progressDetailsLayout.Visibility = View.VISIBLE;
+						progressBar.Visibility = ViewStates.Visible;
+						progressDetailsLayout.Visibility = ViewStates.Visible;
 						progressBar.Progress = getPercentage(downloadResource);
 						percentageText.Text = getPercentage(downloadResource) + "%";
 						if (downloadResource.DownloadState == SKToolsDownloadItem.PAUSED)
@@ -438,16 +444,16 @@ namespace Skobbler.SDKDemo.Activity
 						}
 						else if (outerInstance.refreshDownloadEstimates)
 						{
-							Pair<string, string> pair = calculateDownloadEstimates(downloadResource, 20);
-							speedText.Text = pair.first;
-							timeLeftText.Text = pair.second;
+							Tuple<string, string> pair = calculateDownloadEstimates(downloadResource, 20);
+							speedText.Text = pair.Item1;
+                            timeLeftText.Text = pair.Item2;
 							outerInstance.refreshDownloadEstimates = false;
 						}
 					}
 					else
 					{
-						progressBar.Visibility = View.GONE;
-						progressDetailsLayout.Visibility = View.GONE;
+						progressBar.Visibility = ViewStates.Gone;
+						progressDetailsLayout.Visibility = ViewStates.Gone;
 					}
 
 					long bytesToDownload = 0;
@@ -459,14 +465,14 @@ namespace Skobbler.SDKDemo.Activity
 
 					if (bytesToDownload != 0)
 					{
-						middleLayout.Visibility = View.VISIBLE;
-						downloadSizeText.Visibility = View.VISIBLE;
+						middleLayout.Visibility = ViewStates.Visible;
+						downloadSizeText.Visibility = ViewStates.Visible;
 						downloadSizeText.Text = convertBytesToStringRepresentation(bytesToDownload);
 					}
 					else
 					{
-						middleLayout.Visibility = View.GONE;
-						downloadSizeText.Visibility = View.GONE;
+						middleLayout.Visibility = ViewStates.Gone;
+						downloadSizeText.Visibility = ViewStates.Gone;
 					}
 
 					switch (downloadResource.DownloadState)
@@ -498,7 +504,7 @@ namespace Skobbler.SDKDemo.Activity
 
 					if (downloadResource.DownloadState == SKToolsDownloadItem.NOT_QUEUED || downloadResource.DownloadState == SKToolsDownloadItem.DOWNLOADING || downloadResource.DownloadState == SKToolsDownloadItem.PAUSED)
 					{
-						startPauseImage.Visibility = View.VISIBLE;
+						startPauseImage.Visibility = ViewStates.Visible;
 						if (downloadResource.DownloadState == SKToolsDownloadItem.DOWNLOADING)
 						{
 							startPauseImage.ImageResource = R.drawable.pause;
@@ -510,16 +516,16 @@ namespace Skobbler.SDKDemo.Activity
 					}
 					else
 					{
-						startPauseImage.Visibility = View.GONE;
+						startPauseImage.Visibility = ViewStates.Gone;
 					}
 
 					if (downloadResource.DownloadState == SKToolsDownloadItem.NOT_QUEUED || downloadResource.DownloadState == SKToolsDownloadItem.INSTALLING)
 					{
-						cancelImage.Visibility = View.GONE;
+						cancelImage.Visibility = ViewStates.Gone;
 					}
 					else
 					{
-						cancelImage.Visibility = View.VISIBLE;
+						cancelImage.Visibility = ViewStates.Visible;
 					}
 
 					if (downloadResource is MapDownloadResource)
@@ -531,11 +537,11 @@ namespace Skobbler.SDKDemo.Activity
 				else
 				{
 					// no download resource
-					downloadSizeText.Visibility = View.GONE;
-					middleLayout.Visibility = View.GONE;
-					progressBar.Visibility = View.GONE;
-					progressDetailsLayout.Visibility = View.GONE;
-					downloadSizeText.Visibility = View.GONE;
+					downloadSizeText.Visibility = ViewStates.Gone;
+					middleLayout.Visibility = ViewStates.Gone;
+					progressBar.Visibility = ViewStates.Gone;
+					progressDetailsLayout.Visibility = ViewStates.Gone;
+					downloadSizeText.Visibility = ViewStates.Gone;
 				}
 
 				view.OnClickListener = new OnClickListenerAnonymousInnerClassHelper(this, currentItem, view);
@@ -607,7 +613,7 @@ namespace Skobbler.SDKDemo.Activity
 							mapsDAO.updateMapResource((MapDownloadResource) currentItem.downloadResource);
 						}
 
-						outerInstance.notifyDataSetChanged();
+						outerInstance.NotifyDataSetChanged();
 
 						IList<SKToolsDownloadItem> downloadItems;
 						if (!outerInstance.outerInstance.downloadManager.DownloadProcessRunning)
@@ -659,7 +665,7 @@ namespace Skobbler.SDKDemo.Activity
 							mapsDAO.updateMapResource((MapDownloadResource) currentItem.downloadResource);
 							activeDownloads.Remove(currentItem.downloadResource);
 							outerInstance.outerInstance.appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);
-							outerInstance.notifyDataSetChanged();
+							outerInstance.NotifyDataSetChanged();
 						}
 					}
 					else
@@ -667,12 +673,12 @@ namespace Skobbler.SDKDemo.Activity
 						bool packageDeleted = SKPackageManager.Instance.deleteOfflinePackage(currentItem.downloadResource.Code);
 						if (packageDeleted)
 						{
-							Toast.makeText(outerInstance.outerInstance.appContext, ((MapDownloadResource) currentItem.downloadResource).Name + " was uninstalled", Toast.LENGTH_SHORT).show();
+							Toast.MakeText(outerInstance.outerInstance.appContext, ((MapDownloadResource) currentItem.downloadResource).Name + " was uninstalled", ToastLength.Short).Show();
 						}
 						currentItem.downloadResource.DownloadState = SKToolsDownloadItem.NOT_QUEUED;
 						currentItem.downloadResource.NoDownloadedBytes = 0;
 						mapsDAO.updateMapResource((MapDownloadResource) currentItem.downloadResource);
-						outerInstance.notifyDataSetChanged();
+						outerInstance.NotifyDataSetChanged();
 					}
 				}
 			}
@@ -725,8 +731,8 @@ namespace Skobbler.SDKDemo.Activity
 
 			public override void notifyDataSetChanged()
 			{
-				outerInstance.findViewById(R.id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? View.GONE : View.VISIBLE;
-				base.notifyDataSetChanged();
+				outerInstance.FindViewById(Resource.Id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
+				base.NotifyDataSetChanged();
 				outerInstance.listView.postInvalidate();
 			}
 
@@ -805,7 +811,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					outerInstance.notifyDataSetChanged();
+					outerInstance.NotifyDataSetChanged();
 				}
 			}
 
@@ -843,7 +849,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					outerInstance.notifyDataSetChanged();
+					outerInstance.NotifyDataSetChanged();
 				}
 			}
 
@@ -873,7 +879,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					outerInstance.notifyDataSetChanged();
+					outerInstance.NotifyDataSetChanged();
 				}
 			}
 
@@ -910,7 +916,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					outerInstance.notifyDataSetChanged();
+					outerInstance.NotifyDataSetChanged();
 				}
 			}
 
@@ -945,7 +951,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					outerInstance.notifyDataSetChanged();
+					outerInstance.NotifyDataSetChanged();
 				}
 			}
 
@@ -963,7 +969,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					Toast.makeText(outerInstance.outerInstance.appContext, ((MapDownloadResource) resource).Name + " was installed", Toast.LENGTH_SHORT).show();
+					Toast.MakeText(outerInstance.outerInstance.appContext, ((MapDownloadResource) resource).Name + " was installed", ToastLength.Short).Show();
 				}
 			}
 
@@ -995,7 +1001,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					outerInstance.notifyDataSetChanged();
+					outerInstance.NotifyDataSetChanged();
 				}
 			}
 
@@ -1021,7 +1027,7 @@ namespace Skobbler.SDKDemo.Activity
 
 				public override void run()
 				{
-					Toast.makeText(outerInstance.outerInstance.ApplicationContext, "Not enough memory on the storage", Toast.LENGTH_SHORT).show();
+					Toast.MakeText(outerInstance.outerInstance.ApplicationContext, "Not enough memory on the storage", ToastLength.Short).Show();
 				}
 			}
 		}
@@ -1032,7 +1038,7 @@ namespace Skobbler.SDKDemo.Activity
 			ListItem firstItem = currentListItems[0];
 			if (firstItem.parent.parent == null)
 			{
-				base.onBackPressed();
+				base.OnBackPressed();
 			}
 			else
 			{
@@ -1048,7 +1054,7 @@ namespace Skobbler.SDKDemo.Activity
 		private void updateListAndScrollToPosition(int position)
 		{
 			listView.Visibility = View.INVISIBLE;
-			adapter.notifyDataSetChanged();
+			adapter.NotifyDataSetChanged();
 			listView.post(new RunnableAnonymousInnerClassHelper(this, position));
 		}
 
@@ -1067,7 +1073,7 @@ namespace Skobbler.SDKDemo.Activity
 			public override void run()
 			{
 				outerInstance.listView.Selection = position;
-				outerInstance.listView.Visibility = View.VISIBLE;
+				outerInstance.listView.Visibility = ViewStates.Visible;
 			}
 		}
 
@@ -1160,7 +1166,7 @@ namespace Skobbler.SDKDemo.Activity
 		/// <param name="view"> </param>
 		public virtual void onClick(View view)
 		{
-			if (view.Id == R.id.cancel_all_button)
+			if (view.Id == Resource.Id.cancel_all_button)
 			{
 				bool cancelled = downloadManager.cancelAllDownloads();
 				if (!cancelled)
@@ -1173,7 +1179,7 @@ namespace Skobbler.SDKDemo.Activity
 					activeDownloads.Clear();
 					appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);
 					mapsDAO.clearResourcesInDownloadQueue();
-					adapter.notifyDataSetChanged();
+					adapter.NotifyDataSetChanged();
 				}
 			}
 		}

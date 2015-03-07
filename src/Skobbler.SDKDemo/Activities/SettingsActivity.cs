@@ -1,12 +1,17 @@
-﻿namespace Skobbler.SDKDemo.Activity
+﻿using Android.App;
+using Android.OS;
+using Android.Preferences;
+using Android.Util;
+namespace Skobbler.SDKDemo.Activities
 {
+    [Activity]
 	public class SettingsActivity : PreferenceActivity
 	{
 
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
-			base.onCreate(savedInstanceState);
+			base.OnCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.settings);
 			ListPreference listPreference = (ListPreference) findPreference(PreferenceTypes.K_ROUTE_TYPE);
 			listPreference.OnPreferenceChangeListener = new OnPreferenceChangeListenerAnonymousInnerClassHelper(this, listPreference);
@@ -231,7 +236,7 @@
 
 			public override bool onPreferenceChange(Preference preference, object newValue)
 			{
-				Log.d("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
+				Log.Debug("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
 				return true;
 			}
 		}
@@ -248,7 +253,7 @@
 
 			public override bool onPreferenceChange(Preference preference, object newValue)
 			{
-				Log.d("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
+				Log.Debug("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
 				return true;
 			}
 		}
@@ -265,7 +270,7 @@
 
 			public override bool onPreferenceChange(Preference preference, object newValue)
 			{
-				Log.d("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
+				Log.Debug("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
 				return true;
 			}
 		}
@@ -282,7 +287,7 @@
 
 			public override bool onPreferenceChange(Preference preference, object newValue)
 			{
-				Log.d("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
+				Log.Debug("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
 				return true;
 			}
 		}
@@ -299,7 +304,7 @@
 
 			public override bool onPreferenceChange(Preference preference, object newValue)
 			{
-				Log.d("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
+				Log.Debug("MyApp", "Pref " + preference.Key + " changed to " + newValue.ToString());
 				return true;
 			}
 		}

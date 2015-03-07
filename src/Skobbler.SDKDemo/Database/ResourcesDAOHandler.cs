@@ -1,4 +1,5 @@
-﻿namespace Skobbler.SDKDemo.Database
+﻿using Android.Content;
+namespace Skobbler.SDKDemo.Database
 {
 	/// <summary>
 	/// This class provides methods for accessing the database tables

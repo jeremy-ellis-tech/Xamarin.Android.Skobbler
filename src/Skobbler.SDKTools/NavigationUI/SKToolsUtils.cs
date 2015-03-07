@@ -157,7 +157,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         /// <summary>
         /// Generate a value suitable for use in setId
-        /// This value will not collide with ID values generated at build time by aapt for R.id. </summary>
+        /// This value will not collide with ID values generated at build time by aapt for Resource.Id. </summary>
         /// <returns> a generated ID value </returns>
         public static int generateViewId()
         {
@@ -325,7 +325,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     distanceValue /= YARDS_IN_MILE;
                     if (distanceValue >= 10)
                     {
-                        distanceValueText = (Math.Round(distanceValue) + " " + activity.Resources.GetString(R.@string.mi_label));
+                        distanceValueText = (Math.Round(distanceValue) + " " + activity.Resources.GetString(Resource.String.mi_label));
                     }
                     else
                     {

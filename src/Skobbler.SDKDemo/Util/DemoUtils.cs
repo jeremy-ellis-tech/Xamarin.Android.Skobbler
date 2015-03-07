@@ -138,7 +138,7 @@ namespace Skobbler.SDKDemo.Util
 		/// @return </param>
 		public static bool isInternetAvailable(Context currentContext)
 		{
-			ConnectivityManager conectivityManager = (ConnectivityManager) currentContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+			ConnectivityManager conectivityManager = (ConnectivityManager) currentContext.GetSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = conectivityManager.ActiveNetworkInfo;
 			if (networkInfo != null)
 			{
@@ -165,7 +165,7 @@ namespace Skobbler.SDKDemo.Util
 		/// <returns> true if the current device has GPS </returns>
 		public static bool hasGpsModule(Context context)
 		{
-			LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LOCATION_SERVICE);
 			foreach (String provider in locationManager.AllProviders)
 			{
 				if (provider.Equals(LocationManager.GPS_PROVIDER))
@@ -180,7 +180,7 @@ namespace Skobbler.SDKDemo.Util
 		/// <returns> true if the current device has NETWORK </returns>
 		public static bool hasNetworkModule(Context context)
 		{
-			LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LOCATION_SERVICE);
 			foreach (String provider in locationManager.AllProviders)
 			{
 				if (provider.Equals(LocationManager.NETWORK_PROVIDER))

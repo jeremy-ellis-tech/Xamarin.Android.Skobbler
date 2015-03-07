@@ -1,12 +1,26 @@
-﻿using System.Threading;
+﻿using Android.App;
+using Android.Content;
+using Android.OS;
+using Android.Util;
+using Android.Widget;
+using Java.IO;
+using Java.Lang;
+using Java.Lang.Reflect;
+using Skobbler.Ngx;
+using Skobbler.Ngx.Util;
+using Skobbler.Ngx.Versioning;
+using Skobbler.SDKDemo.Application;
+using Skobbler.SDKDemo.Util;
+using System.Threading;
 
-namespace Skobbler.SDKDemo.Activity
+namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
 	/// Activity that installs required resources (from assets/MapResources.zip) to
 	/// the device
 	/// </summary>
-	public class SplashActivity : Activity, SKPrepareMapTextureListener, SKMapUpdateListener
+    [Activity]
+	public class SplashActivity : Activity, ISKPrepareMapTextureListener, ISKMapUpdateListener
 	{
 
 		/// <summary>
@@ -16,12 +30,12 @@ namespace Skobbler.SDKDemo.Activity
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
-			base.onCreate(savedInstanceState);
-			ContentView = R.layout.activity_splash;
+			base.OnCreate(savedInstanceState);
+			SetContentView(Resource.Layout.activity_splash;
 
-			SKLogging.enableLogs(true);
+			SKLogging.EnableLogs(true);
 
-			string applicationPath = chooseStoragePath(this);
+			string applicationPath = ChooseStoragePath(this);
 
 			// determine path where map resources should be copied on the device
 			if (applicationPath != null)
@@ -48,12 +62,12 @@ namespace Skobbler.SDKDemo.Activity
 			else
 			{
 				// map resources have already been copied - start the map activity
-				Toast.makeText(SplashActivity.this, "Map resources copied in a previous run", Toast.LENGTH_SHORT).show();
+				Toast.MakeText(SplashActivity.this, "Map resources copied in a previous run", ToastLength.Short).Show();
 				prepareMapCreatorFile();
 				DemoUtils.initializeLibrary(this);
 				SKVersioningManager.Instance.MapUpdateListener = this;
-				finish();
-				startActivity(new Intent(this, typeof(MapActivity)));
+				Finish();
+				StartActivity(new Intent(this, typeof(MapActivity)));
 			}
 		}
 
@@ -61,9 +75,9 @@ namespace Skobbler.SDKDemo.Activity
 		{
 			DemoUtils.initializeLibrary(this);
 			SKVersioningManager.Instance.MapUpdateListener = this;
-			Toast.makeText(SplashActivity.this, "Map resources were copied", Toast.LENGTH_SHORT).show();
-			finish();
-			startActivity(new Intent(SplashActivity.this, typeof(MapActivity)));
+			Toast.MakeText(SplashActivity.this, "Map resources were copied", ToastLength.Short).Show();
+			Finish();
+			StartActivity(new Intent(SplashActivity.this, typeof(MapActivity)));
 		}
 
 		/// <summary>
@@ -91,9 +105,9 @@ namespace Skobbler.SDKDemo.Activity
 				{
 					string tracksPath = mapResourcesDirPath + "GPXTracks";
 					File tracksDir = new File(tracksPath);
-					if (!tracksDir.exists())
+					if (!tracksDir.Exists())
 					{
-						tracksDir.mkdirs();
+						tracksDir.Mkdirs();
 					}
 					DemoUtils.copyAssetsToFolder(Assets, "GPXTracks", mapResourcesDirPath + "GPXTracks");
 
@@ -178,7 +192,7 @@ namespace Skobbler.SDKDemo.Activity
 		public override void onNewVersionDetected(int newVersion)
 		{
 			// TODO Auto-generated method stub
-			Log.e("", "new version " + newVersion);
+			Log.Error("", "new version " + newVersion);
 		}
 
 		public override void onNoNewVersionDetected()
@@ -208,16 +222,16 @@ namespace Skobbler.SDKDemo.Activity
 			}
 			else
 			{
-				if ((context != null) && (context.getExternalFilesDir(null) != null))
+				if ((context != null) && (context.GetExternalFilesDir(null) != null))
 				{
-					if (getAvailableMemorySize(context.getExternalFilesDir(null).ToString()) >= 50 * MEGA)
+					if (getAvailableMemorySize(context.GetExternalFilesDir(null).ToString()) >= 50 * MEGA)
 					{
-						return context.getExternalFilesDir(null).ToString();
+						return context.GetExternalFilesDir(null).ToString();
 					}
 				}
 			}
 
-			SKLogging.writeLog(TAG, "There is not enough memory on any storage, but return internal memory", SKLogging.LOG_DEBUG);
+			SKLogging.WriteLog(TAG, "There is not enough memory on any storage, but return internal memory", SKLogging.LogDebug);
 
 			if (context != null && context.FilesDir != null)
 			{
@@ -225,9 +239,9 @@ namespace Skobbler.SDKDemo.Activity
 			}
 			else
 			{
-				if ((context != null) && (context.getExternalFilesDir(null) != null))
+				if ((context != null) && (context.GetExternalFilesDir(null) != null))
 				{
-					return context.getExternalFilesDir(null).ToString();
+					return context.GetExternalFilesDir(null).ToString();
 				}
 				else
 				{
@@ -251,7 +265,7 @@ namespace Skobbler.SDKDemo.Activity
 			}
 			catch (System.ArgumentException ex)
 			{
-				SKLogging.writeLog("SplashActivity", "Exception when creating StatF ; message = " + ex, SKLogging.LOG_DEBUG);
+				SKLogging.WriteLog("SplashActivity", "Exception when creating StatF ; message = " + ex, SKLogging.LogDebug);
 			}
 			if (statFs != null)
 			{
@@ -262,14 +276,14 @@ namespace Skobbler.SDKDemo.Activity
 				}
 				catch (NoSuchMethodException e)
 				{
-					SKLogging.writeLog(TAG, "Exception at getAvailableMemorySize method = " + e.Message, SKLogging.LOG_DEBUG);
+					SKLogging.WriteLog(TAG, "Exception at getAvailableMemorySize method = " + e.Message, SKLogging.LogDebug);
 				}
 
 				if (getAvailableBytesMethod != null)
 				{
 					try
 					{
-						SKLogging.writeLog(TAG, "Using new API for getAvailableMemorySize method !!!", SKLogging.LOG_DEBUG);
+						SKLogging.WriteLog(TAG, "Using new API for getAvailableMemorySize method !!!", SKLogging.LogDebug);
 						return (long?) getAvailableBytesMethod.invoke(statFs);
 					}
 					catch (IllegalAccessException)

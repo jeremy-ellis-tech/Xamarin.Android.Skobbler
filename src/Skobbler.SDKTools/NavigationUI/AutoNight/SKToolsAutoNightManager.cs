@@ -88,7 +88,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// <param name="startNow"> start now or after an hour </param>
         public virtual void setAlarmForHourlyNotificationAfterKitKat(Context context, bool startNow)
         {
-            if (hourlyAlarmManager == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            if (hourlyAlarmManager == null && Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
             {
                 //if it already an existing alarm for hourly notification, cancel it
                 cancelAlarmForForHourlyNotification();
@@ -167,13 +167,13 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 }
                 mapStyleChangeCalendar.set(DateTime.SECOND, 0);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                if (Build.VERSION.SdkInt >= Build.VERSION_CODES.KITKAT)
                 {
-                    alarmManagerForAutoNightForCalculatedSunriseSunsetHours.setExact(AlarmManager.RTC, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
+                    alarmManagerForAutoNightForCalculatedSunriseSunsetHours.SetExact(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
                 }
                 else
                 {
-                    alarmManagerForAutoNightForCalculatedSunriseSunsetHours.set(AlarmManager.RTC, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
+                    alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
                 }
 
             }

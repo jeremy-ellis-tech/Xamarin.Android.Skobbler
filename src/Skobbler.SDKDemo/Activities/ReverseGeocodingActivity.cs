@@ -1,8 +1,12 @@
-﻿namespace Skobbler.SDKDemo.Activity
+﻿using Android.App;
+using Android.OS;
+using Skobbler.SDKDemo.Application;
+namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
 	/// Activity where offline reverse geocoding is performed
 	/// </summary>
+    [Activity]
 	public class ReverseGeocodingActivity : Activity
 	{
 
@@ -10,8 +14,8 @@
 
 		protected internal override void onCreate(Bundle savedInstanceState)
 		{
-			base.onCreate(savedInstanceState);
-			ContentView = R.layout.activity_reverse_geocoding;
+			base.OnCreate(savedInstanceState);
+			SetContentView(Resource.Layout.activity_reverse_geocoding;
 			application = (DemoApplication) Application;
 		}
 
@@ -19,7 +23,7 @@
 		{
 			switch (v.Id)
 			{
-				case R.id.reverse_geocode_button:
+				case Resource.Id.reverse_geocode_button:
 					SKCoordinate position = Position;
 					if (position != null)
 					{
@@ -36,11 +40,11 @@
 							}
 						}
 
-						((TextView) findViewById(R.id.reverse_geocoding_result)).Text = text;
+						((TextView) FindViewById(Resource.Id.reverse_geocoding_result)).Text = text;
 					}
 					else
 					{
-						Toast.makeText(this, "Invalid latitude or longitude was provided", Toast.LENGTH_SHORT).show();
+						Toast.MakeText(this, "Invalid latitude or longitude was provided", ToastLength.Short).Show();
 					}
 					break;
 				default:
@@ -57,8 +61,8 @@
 			{
 				try
 				{
-					string latString = ((TextView) findViewById(R.id.latitude_field)).Text.ToString();
-					string longString = ((TextView) findViewById(R.id.longitude_field)).Text.ToString();
+					string latString = ((TextView) FindViewById(Resource.Id.latitude_field)).Text.ToString();
+					string longString = ((TextView) FindViewById(Resource.Id.longitude_field)).Text.ToString();
 					double latitude = double.Parse(latString);
 					double longitude = double.Parse(longString);
 					if (latitude > 90 || latitude < -90)

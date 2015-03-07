@@ -11,6 +11,8 @@ using Android.Widget;
 using JavaObject = Java.Lang.Object;
 using Android.Media;
 using Java.IO;
+using Skobbler.Ngx.Navigation;
+using Android.Util;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI
 {
@@ -78,7 +80,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         private SKToolsAdvicePlayer()
         {
             player = new MediaPlayer();
-            player.AudioStreamType = AudioManager.STREAM_MUSIC;
+            player.AudioStreamType = Stream.Music;
             player.OnCompletionListener = this;
             player.OnErrorListener = this;
         }
@@ -90,8 +92,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// @return </param>
         public static int getCurrentDeviceVolume(Activity activity)
         {
-            AudioManager audioManager = (AudioManager)activity.getSystemService(Context.AUDIO_SERVICE);
-            return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            AudioManager audioManager = (AudioManager)activity.GetSystemService(Context.AudioService);
+            return audioManager.GetStreamVolume(Stream.Music);
         }
 
         /// <summary>
@@ -101,8 +103,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// @return </param>
         public static int getMaximAudioLevel(Activity activity)
         {
-            AudioManager audioManager = (AudioManager)activity.getSystemService(Context.AUDIO_SERVICE);
-            return audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            AudioManager audioManager = (AudioManager)activity.GetSystemService(Context.AudioService);
+            return audioManager.GetStreamMaxVolume(Stream.Music);
         }
 
         public virtual void enableMute()
@@ -161,7 +163,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     @is.Read(tmp, 0, availableBytes);
                     if (stream != null)
                     {
-                        stream.write(tmp);
+                        stream.Write(tmp);
                     }
                     @is.Close();
                     validTokensFound = true;
@@ -185,18 +187,18 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 return;
             }
 
-            writeFile(stream.toByteArray(), tempAdviceFile);
+            writeFile(stream.ToByteArray(), tempAdviceFile);
             playFile(tempAdviceFile);
         }
 
         public virtual void reset()
         {
-            Log.w(TAG, "Entering reset");
+            Log.Warn(TAG, "Entering reset");
             if (player != null)
             {
                 try
                 {
-                    player.reset();
+                    player.Reset();
                     deleteTempFile();
                 }
                 catch (Exception ex)
@@ -214,9 +216,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         private void deleteTempFile()
         {
             File fc = new File(tempAdviceFile);
-            if (fc.exists())
+            if (fc.Exists())
             {
-                fc.delete();
+                fc.Delete();
             }
         }
 
@@ -226,7 +228,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         public virtual void stop()
         {
             isBusy = false;
-            player.stop();
+            player.Stop();
         }
 
         /// <summary>

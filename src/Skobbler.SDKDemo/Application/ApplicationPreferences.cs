@@ -43,7 +43,7 @@ namespace Skobbler.SDKDemo.Application
 
 		public virtual string getStringPreference(string key)
 		{
-			return prefs.getString(key, "");
+			return prefs.GetString(key, "");
 		}
 
 		public virtual void saveDownloadStepPreference(int downloadStepIndex)
