@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("Skobbler.SDKTools.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("Skobbler.Ngx.SDKTools.Resource", IsApplication=false)]
 
-namespace Skobbler.SDKTools
+namespace Skobbler.Ngx.SDKTools
 {
 	
 	

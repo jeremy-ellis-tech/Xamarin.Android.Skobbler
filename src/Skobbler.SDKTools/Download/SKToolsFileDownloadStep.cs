@@ -1,18 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-
 namespace Skobbler.SDKTools.Download
 {
-    class SKToolsFileDownloadStep
+    public class SKToolsFileDownloadStep
     {
+        public string DownloadURL { get; private set; }
+        public string DestinationPath { get; private set; }
+        public long DownloadItemSize { get; private set; }
+
+        public SKToolsFileDownloadStep(string downloadURL, string destinationPath, long downloadItemSize)
+        {
+            DownloadURL = downloadURL;
+            DestinationPath = destinationPath;
+            DownloadItemSize = downloadItemSize;
+        }
     }
 }
