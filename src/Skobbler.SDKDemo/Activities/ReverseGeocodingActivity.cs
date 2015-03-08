@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using System;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
@@ -8,6 +9,7 @@ using Skobbler.Ngx;
 using Skobbler.Ngx.ReverseGeocode;
 using Skobbler.Ngx.Search;
 using Skobbler.SDKDemo.Application;
+
 namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
@@ -16,17 +18,17 @@ namespace Skobbler.SDKDemo.Activities
     [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class ReverseGeocodingActivity : Activity
 	{
-		private DemoApplication application;
+		private DemoApplication _application;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_reverse_geocoding);
-            application = (DemoApplication)Application;
+            _application = (DemoApplication)Application;
         }
 
         [Export("OnClick")]
-		public virtual void onClick(View v)
+		public virtual void OnClick(View v)
 		{
 			switch (v.Id)
 			{
@@ -82,7 +84,7 @@ namespace Skobbler.SDKDemo.Activities
 					}
 					return new SKCoordinate(longitude, latitude);
 				}
-				catch (System.FormatException)
+				catch (FormatException)
 				{
 					return null;
 				}

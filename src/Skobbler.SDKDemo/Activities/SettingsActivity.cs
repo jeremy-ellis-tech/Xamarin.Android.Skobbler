@@ -4,6 +4,7 @@ using Android.OS;
 using Android.Preferences;
 using Android.Util;
 using Skobbler.SDKDemo.Util;
+
 namespace Skobbler.SDKDemo.Activities
 {
     [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
@@ -15,7 +16,7 @@ namespace Skobbler.SDKDemo.Activities
 
             AddPreferencesFromResource(Resource.Xml.settings);
 
-            ListPreference listPreference = (ListPreference)FindPreference(PreferenceTypes.K_ROUTE_TYPE);
+            ListPreference listPreference = (ListPreference)FindPreference(PreferenceTypes.KRouteType);
 
             listPreference.PreferenceChange += (s, e) =>
             {
@@ -39,7 +40,7 @@ namespace Skobbler.SDKDemo.Activities
                 e.Handled = false;
             };
 
-            ListPreference listDistanceFormat = (ListPreference)FindPreference(PreferenceTypes.K_DISTANCE_UNIT);
+            ListPreference listDistanceFormat = (ListPreference)FindPreference(PreferenceTypes.KDistanceUnit);
             if (listDistanceFormat.Value == null)
             {
                 listDistanceFormat.SetValueIndex(0);
@@ -73,7 +74,7 @@ namespace Skobbler.SDKDemo.Activities
                     e.Handled = false;
                 };
 
-            ListPreference listNavigationType = (ListPreference)FindPreference(PreferenceTypes.K_NAVIGATION_TYPE);
+            ListPreference listNavigationType = (ListPreference)FindPreference(PreferenceTypes.KNavigationType);
 
             if (listNavigationType.Value == null)
             {
@@ -90,7 +91,7 @@ namespace Skobbler.SDKDemo.Activities
                 e.Handled = false;
             };
 
-            ListPreference lswit = (ListPreference)FindPreference(PreferenceTypes.K_IN_TOWN_SPEED_WARNING);
+            ListPreference lswit = (ListPreference)FindPreference(PreferenceTypes.KInTownSpeedWarning);
 
             if (listDistanceFormat.Summary.Equals("Kilometers/Meters"))
             {
@@ -117,7 +118,7 @@ namespace Skobbler.SDKDemo.Activities
                 e.Handled = false;
             };
 
-            ListPreference lswot = (ListPreference)FindPreference(PreferenceTypes.K_OUT_TOWN_SPEED_WARNING);
+            ListPreference lswot = (ListPreference)FindPreference(PreferenceTypes.KOutTownSpeedWarning);
             if (listDistanceFormat.Summary.Equals("Kilometers/Meters"))
             {
                 lswot.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
@@ -143,35 +144,35 @@ namespace Skobbler.SDKDemo.Activities
                 e.Handled = false;
             };
 
-            CheckBoxPreference checkBoxDayNight = (CheckBoxPreference)FindPreference(PreferenceTypes.K_AUTO_DAY_NIGHT);
+            CheckBoxPreference checkBoxDayNight = (CheckBoxPreference)FindPreference(PreferenceTypes.KAutoDayNight);
             checkBoxDayNight.PreferenceChange += (s, e) =>
             {
                 Log.Debug("MyApp", "Pref " + e.Preference.Key + " changed to " + e.NewValue.ToString());
                 e.Handled = true;
             };
 
-            CheckBoxPreference checkBoxTollRoads = (CheckBoxPreference)FindPreference(PreferenceTypes.K_AVOID_TOLL_ROADS);
+            CheckBoxPreference checkBoxTollRoads = (CheckBoxPreference)FindPreference(PreferenceTypes.KAvoidTollRoads);
             checkBoxTollRoads.PreferenceChange += (s, e) =>
             {
                 Log.Debug("MyApp", "Pref " + e.Preference.Key + " changed to " + e.NewValue.ToString());
                 e.Handled = true;
             };
 
-            CheckBoxPreference checkBoxFerries = (CheckBoxPreference)FindPreference(PreferenceTypes.K_AVOID_FERRIES);
+            CheckBoxPreference checkBoxFerries = (CheckBoxPreference)FindPreference(PreferenceTypes.KAvoidFerries);
             checkBoxFerries.PreferenceChange += (s, e) =>
             {
                 Log.Debug("MyApp", "Pref " + e.Preference.Key + " changed to " + e.NewValue.ToString());
                 e.Handled = true;
             };
 
-            CheckBoxPreference checkBoxHighways = (CheckBoxPreference)FindPreference(PreferenceTypes.K_AVOID_HIGHWAYS);
+            CheckBoxPreference checkBoxHighways = (CheckBoxPreference)FindPreference(PreferenceTypes.KAvoidHighways);
             checkBoxHighways.PreferenceChange += (s, e) =>
             {
                 Log.Debug("MyApp", "Pref " + e.Preference.Key + " changed to " + e.NewValue.ToString());
                 e.Handled = true;
             };
 
-            CheckBoxPreference checkBoxFreeDrive = (CheckBoxPreference)FindPreference(PreferenceTypes.K_FREE_DRIVE);
+            CheckBoxPreference checkBoxFreeDrive = (CheckBoxPreference)FindPreference(PreferenceTypes.KFreeDrive);
             checkBoxFreeDrive.PreferenceChange += (s, e) =>
             {
                 Log.Debug("MyApp", "Pref " + e.Preference.Key + " changed to " + e.NewValue.ToString());

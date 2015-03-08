@@ -1,14 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 
 namespace Skobbler.Ngx.SDKTools.Download
 {
@@ -40,7 +31,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             _installOperationIsNeeded = installOperationIsNeeded;
         }
 
-        public virtual bool unzipIsNeeded()
+        public virtual bool UnzipIsNeeded()
         {
             return _unzipIsNeeded;
         }
@@ -93,7 +84,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// go to next download step
         /// </summary>
-        public virtual void goToNextDownloadStep()
+        public virtual void GoToNextDownloadStep()
         {
             _currentStepIndex++;
         }
@@ -155,7 +146,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// marks current item as NOT-QUEUED (e.g. if its download is cancelled from some reason)
         /// </summary>
-        public virtual void markAsNotQueued()
+        public virtual void MarkAsNotQueued()
         {
             // removes already downloaded bytes from current item
             for (int i = 0; i <= _currentStepIndex; i++)
@@ -165,7 +156,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     SKToolsFileDownloadStep currentStep = _downloadSteps[i];
                     if (currentStep != null)
                     {
-                        SKToolsDownloadUtils.removeCurrentLocationFromDisk(currentStep.DestinationPath);
+                        SKToolsDownloadUtils.RemoveCurrentLocationFromDisk(currentStep.DestinationPath);
                     }
                 }
             }
@@ -236,7 +227,7 @@ namespace Skobbler.Ngx.SDKTools.Download
 
         public override bool Equals(object obj)
         {
-            if (Object.ReferenceEquals(obj, this)) return true;
+            if (ReferenceEquals(obj, this)) return true;
 
             var other = obj as SKToolsDownloadItem;
 
@@ -244,7 +235,7 @@ namespace Skobbler.Ngx.SDKTools.Download
 
             return other.ItemCode != null
                     && ItemCode != null
-                    && Object.Equals(ItemCode, other.ItemCode);
+                    && Equals(ItemCode, other.ItemCode);
         }
 
         public override int GetHashCode()

@@ -1,10 +1,10 @@
-﻿using Android.App;
+﻿using System;
+using System.IO;
+using Android.App;
 using Android.Content;
-using Android.Content.PM;
 using Android.OS;
 using Android.Util;
 using Android.Widget;
-using Java.IO;
 using Java.Lang;
 using Java.Lang.Reflect;
 using Skobbler.Ngx;
@@ -12,9 +12,8 @@ using Skobbler.Ngx.Util;
 using Skobbler.Ngx.Versioning;
 using Skobbler.SDKDemo.Application;
 using Skobbler.SDKDemo.Util;
-using System.Threading;
-using Thread = Java.Lang.Thread;
-using Console = System.Console;
+using Environment = Android.OS.Environment;
+using IOException = Java.IO.IOException;
 
 namespace Skobbler.SDKDemo.Activities
 {
@@ -29,7 +28,7 @@ namespace Skobbler.SDKDemo.Activities
 		/// <summary>
 		/// Path to the MapResources directory
 		/// </summary>
-		public static string mapResourcesDirPath = "";
+		public static string MapResourcesDirPath = "";
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -40,36 +39,36 @@ namespace Skobbler.SDKDemo.Activities
 
             SKLogging.EnableLogs(true);
 
-            string applicationPath = chooseStoragePath(this);
+            string applicationPath = ChooseStoragePath(this);
 
             // determine path where map resources should be copied on the device
             if (applicationPath != null)
             {
-                mapResourcesDirPath = applicationPath + "/" + "SKMaps/";
+                MapResourcesDirPath = applicationPath + "/" + "SKMaps/";
             }
             else
             {
                 // show a dialog and then finish
             }
 
-            ((DemoApplication)Application).MapResourcesDirPath = mapResourcesDirPath;
+            ((DemoApplication)Application).MapResourcesDirPath = MapResourcesDirPath;
 
 
-            if (!System.IO.Directory.Exists(mapResourcesDirPath) || System.IO.File.Exists(mapResourcesDirPath))
+            if (!Directory.Exists(MapResourcesDirPath) || File.Exists(MapResourcesDirPath))
             {
                 // if map resources are not already present copy them to
                 // mapResourcesDirPath in the following thread
-                (new SKPrepareMapTextureThread(this, mapResourcesDirPath, "SKMaps.zip", this)).Start();
+                (new SKPrepareMapTextureThread(this, MapResourcesDirPath, "SKMaps.zip", this)).Start();
                 // copy some other resource needed
-                copyOtherResources();
-                prepareMapCreatorFile();
+                CopyOtherResources();
+                PrepareMapCreatorFile();
             }
             else
             {
                 // map resources have already been copied - start the map activity
                 Toast.MakeText(this, "Map resources copied in a previous run", ToastLength.Short).Show();
-                prepareMapCreatorFile();
-                DemoUtils.initializeLibrary(this);
+                PrepareMapCreatorFile();
+                DemoUtils.InitializeLibrary(this);
                 SKVersioningManager.Instance.SetMapUpdateListener(this);
                 Finish();
                 StartActivity(new Intent(this, typeof(MapActivity)));
@@ -78,7 +77,7 @@ namespace Skobbler.SDKDemo.Activities
 
 		public void OnMapTexturesPrepared(bool prepared)
 		{
-			DemoUtils.initializeLibrary(this);
+			DemoUtils.InitializeLibrary(this);
 			SKVersioningManager.Instance.SetMapUpdateListener(this);
 			Toast.MakeText(this, "Map resources were copied", ToastLength.Short).Show();
 			Finish();
@@ -88,27 +87,27 @@ namespace Skobbler.SDKDemo.Activities
 		/// <summary>
 		/// Copy some additional resources from assets
 		/// </summary>
-		private void copyOtherResources()
+		private void CopyOtherResources()
 		{
             new Thread(() =>
             {
                 try
                 {
-                    string tracksPath = mapResourcesDirPath + "GPXTracks";
-                    File tracksDir = new File(tracksPath);
+                    string tracksPath = MapResourcesDirPath + "GPXTracks";
+                    Java.IO.File tracksDir = new Java.IO.File(tracksPath);
                     if (!tracksDir.Exists())
                     {
                         tracksDir.Mkdirs();
                     }
-                    DemoUtils.copyAssetsToFolder(Assets, "GPXTracks", mapResourcesDirPath + "GPXTracks");
+                    DemoUtils.CopyAssetsToFolder(Assets, "GPXTracks", MapResourcesDirPath + "GPXTracks");
 
-                    string imagesPath = mapResourcesDirPath + "images";
-                    File imagesDir = new File(imagesPath);
+                    string imagesPath = MapResourcesDirPath + "images";
+                    Java.IO.File imagesDir = new Java.IO.File(imagesPath);
                     if (!imagesDir.Exists())
                     {
                         imagesDir.Mkdirs();
                     }
-                    DemoUtils.copyAssetsToFolder(Assets, "images", mapResourcesDirPath + "images");
+                    DemoUtils.CopyAssetsToFolder(Assets, "images", MapResourcesDirPath + "images");
                 }
                 catch (IOException e)
                 {
@@ -121,17 +120,17 @@ namespace Skobbler.SDKDemo.Activities
 		/// <summary>
 		/// Copies the map creator file and logFile from assets to a storage.
 		/// </summary>
-		private void prepareMapCreatorFile()
+		private void PrepareMapCreatorFile()
 		{
 			DemoApplication app = (DemoApplication) Application;
 
-            Thread prepareGPXFileThread = new Thread(() =>
+            Thread prepareGpxFileThread = new Thread(() =>
             {
                 try
                 {
                     //android.os.Process.ThreadPriority = android.os.Process.THREAD_PRIORITY_BACKGROUND;
-                    string mapCreatorFolderPath = mapResourcesDirPath + "MapCreator";
-                    File mapCreatorFolder = new File(mapCreatorFolderPath);
+                    string mapCreatorFolderPath = MapResourcesDirPath + "MapCreator";
+                    Java.IO.File mapCreatorFolder = new Java.IO.File(mapCreatorFolderPath);
                     // create the folder where you want to copy the json file
                     if (!mapCreatorFolder.Exists())
                     {
@@ -140,8 +139,8 @@ namespace Skobbler.SDKDemo.Activities
                     app.MapCreatorFilePath = mapCreatorFolderPath + "/mapcreatorFile.json";
                     DemoUtils.copyAsset(Assets, "MapCreator", mapCreatorFolderPath, "mapcreatorFile.json");
                     // Copies the log file from assets to a storage.
-                    string logFolderPath = mapResourcesDirPath + "logFile";
-                    File logFolder = new File(logFolderPath);
+                    string logFolderPath = MapResourcesDirPath + "logFile";
+                    Java.IO.File logFolder = new Java.IO.File(logFolderPath);
                     if (!logFolder.Exists())
                     {
                         logFolder.Mkdirs();
@@ -155,7 +154,7 @@ namespace Skobbler.SDKDemo.Activities
                 }
             });
 
-			prepareGPXFileThread.Start();
+			prepareGpxFileThread.Start();
 		}
 
 		public void OnMapVersionSet(int newVersion)
@@ -182,13 +181,13 @@ namespace Skobbler.SDKDemo.Activities
 
 		}
 
-		public const long KILO = 1024;
+		public const long Kilo = 1024;
 
-		public static readonly long MEGA = KILO * KILO;
+		public static readonly long Mega = Kilo * Kilo;
 
-		public static string chooseStoragePath(Context context)
+		public static string ChooseStoragePath(Context context)
 		{
-			if (getAvailableMemorySize(Environment.DataDirectory.Path) >= 50 * MEGA)
+			if (GetAvailableMemorySize(Environment.DataDirectory.Path) >= 50 * Mega)
 			{
 				if (context != null && context.FilesDir != null)
 				{
@@ -199,14 +198,14 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				if ((context != null) && (context.GetExternalFilesDir(null) != null))
 				{
-					if (getAvailableMemorySize(context.GetExternalFilesDir(null).ToString()) >= 50 * MEGA)
+					if (GetAvailableMemorySize(context.GetExternalFilesDir(null).ToString()) >= 50 * Mega)
 					{
 						return context.GetExternalFilesDir(null).ToString();
 					}
 				}
 			}
 
-			SKLogging.WriteLog(TAG, "There is not enough memory on any storage, but return internal memory", SKLogging.LogDebug);
+			SKLogging.WriteLog(Tag, "There is not enough memory on any storage, but return internal memory", SKLogging.LogDebug);
 
 			if (context != null && context.FilesDir != null)
 			{
@@ -225,20 +224,20 @@ namespace Skobbler.SDKDemo.Activities
 			}
 		}
 
-		private const string TAG = "SplashActivity";
+		private const string Tag = "SplashActivity";
 
 		/// <summary>
 		/// get the available internal memory size
 		/// </summary>
 		/// <returns> available memory size in bytes </returns>
-		public static long getAvailableMemorySize(string path)
+		public static long GetAvailableMemorySize(string path)
 		{
 			StatFs statFs = null;
 			try
 			{
 				statFs = new StatFs(path);
 			}
-			catch (System.ArgumentException ex)
+			catch (ArgumentException ex)
 			{
 				SKLogging.WriteLog("SplashActivity", "Exception when creating StatF ; message = " + ex, SKLogging.LogDebug);
 			}
@@ -251,14 +250,14 @@ namespace Skobbler.SDKDemo.Activities
 				}
 				catch (NoSuchMethodException e)
 				{
-					SKLogging.WriteLog(TAG, "Exception at getAvailableMemorySize method = " + e.Message, SKLogging.LogDebug);
+					SKLogging.WriteLog(Tag, "Exception at getAvailableMemorySize method = " + e.Message, SKLogging.LogDebug);
 				}
 
 				if (getAvailableBytesMethod != null)
 				{
 					try
 					{
-						SKLogging.WriteLog(TAG, "Using new API for getAvailableMemorySize method !!!", SKLogging.LogDebug);
+						SKLogging.WriteLog(Tag, "Using new API for getAvailableMemorySize method !!!", SKLogging.LogDebug);
 						return (long) getAvailableBytesMethod.Invoke(statFs);
 					}
 					catch (IllegalAccessException)

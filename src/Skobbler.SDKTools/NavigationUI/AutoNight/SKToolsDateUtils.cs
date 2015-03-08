@@ -1,15 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Java.Text;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 {
@@ -19,22 +8,22 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// <summary>
         /// the sunset hour (in 24h format) used for auto day / night mode option
         /// </summary>
-        protected internal static int AUTO_NIGHT_SUNSET_HOUR;
+        protected internal static int AutoNightSunsetHour;
 
         /// <summary>
         /// the sunrise minute (in 24h format) used for auto day / night mode option
         /// </summary>
-        protected internal static int AUTO_NIGHT_SUNRISE_MINUTE;
+        protected internal static int AutoNightSunriseMinute;
 
         /// <summary>
         /// the sunset minute (in 24h format) used for auto day / night mode option
         /// </summary>
-        protected internal static int AUTO_NIGHT_SUNSET_MINUTE;
+        protected internal static int AutoNightSunsetMinute;
 
         /// <summary>
         /// the sunrise hour (in 24h format) used for auto day / night mode option
         /// </summary>
-        protected internal static int AUTO_NIGHT_SUNRISE_HOUR;
+        protected internal static int AutoNightSunriseHour;
 
         /// <summary>
         /// Returns true if it is day time, false otherwise
@@ -61,8 +50,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
             get
             {
                 int currentMinutes = MinuteOfDay + HourOfDay * 60;
-                int lowerMinutes = AUTO_NIGHT_SUNRISE_HOUR * 60 + AUTO_NIGHT_SUNRISE_MINUTE;
-                int upperMinutes = AUTO_NIGHT_SUNSET_HOUR * 60 + AUTO_NIGHT_SUNSET_MINUTE;
+                int lowerMinutes = AutoNightSunriseHour * 60 + AutoNightSunriseMinute;
+                int upperMinutes = AutoNightSunsetHour * 60 + AutoNightSunsetMinute;
                 return currentMinutes >= lowerMinutes && currentMinutes < upperMinutes;
             }
         }

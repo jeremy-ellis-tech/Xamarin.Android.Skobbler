@@ -1,14 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.Util;
 using Skobbler.Ngx.SDKTools.Util;
 
@@ -17,48 +10,48 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
     public class SKToolsAutoNightManager
     {
 
-        private const string TAG = "SKToolsAutoNightManager";
+        private const string Tag = "SKToolsAutoNightManager";
 
         /// <summary>
         /// Singleton instance for current class
         /// </summary>
-        private static SKToolsAutoNightManager instance;
+        private static SKToolsAutoNightManager _instance;
 
         /// <summary>
         /// the alarm manager used to set the alarm manager for the hourly notification, when autonight is on
         /// </summary>
-        private AlarmManager hourlyAlarmManager;
+        private AlarmManager _hourlyAlarmManager;
 
         /// <summary>
         /// the pending alarm intent for the hourly alarm manager
         /// </summary>
-        private PendingIntent pendingHourlyAlarmIntent;
+        private PendingIntent _pendingHourlyAlarmIntent;
 
         /// <summary>
         /// true if the alarm for sunrise / sunset calculation was set, false otherwise
         /// </summary>
-        public static bool wasSetAlarmForSunriseSunsetCalculation;
+        public static bool WasSetAlarmForSunriseSunsetCalculation;
 
         /// <summary>
         /// the alarm manager used to set the alarm for the calculate sunrise / sunset hours
         /// </summary>
-        private AlarmManager alarmManagerForAutoNightForCalculatedSunriseSunsetHours;
+        private AlarmManager _alarmManagerForAutoNightForCalculatedSunriseSunsetHours;
 
         /// <summary>
         /// the pending alarm intent for the alarm manager used to recalculate the sunrise / sunset hours
         /// </summary>
-        private PendingIntent pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours;
+        private PendingIntent _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours;
 
 
         public static SKToolsAutoNightManager Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new SKToolsAutoNightManager();
+                    _instance = new SKToolsAutoNightManager();
                 }
-                return instance;
+                return _instance;
             }
         }
 
@@ -69,15 +62,15 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         {
             set
             {
-                if (hourlyAlarmManager == null)
+                if (_hourlyAlarmManager == null)
                 {
                     //if it already an existing alarm for hourly notification, cancel it
-                    cancelAlarmForForHourlyNotification();
-                    hourlyAlarmManager = (AlarmManager)value.GetSystemService(Context.AlarmService);
+                    CancelAlarmForForHourlyNotification();
+                    _hourlyAlarmManager = (AlarmManager)value.GetSystemService(Context.AlarmService);
                     Intent intent = new Intent(value, typeof(SKToolsCalculateSunriseSunsetTimeAutoReceiver));
-                    pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(value, 0, intent, 0);
+                    _pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(value, 0, intent, 0);
 
-                    hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeUtil.JavaTime(), SKToolsSunriseSunsetCalculator.NR_OF_MILLISECONDS_IN_A_HOUR, pendingHourlyAlarmIntent);
+                    _hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeUtil.JavaTime(), SKToolsSunriseSunsetCalculator.NrOfMillisecondsInAHour, _pendingHourlyAlarmIntent);
 
                 }
             }
@@ -87,22 +80,22 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// Sets the alarm and starts to listen for the times when an hour has passed, in the case when autonight is on. </summary>
         /// <param name="context"> </param>
         /// <param name="startNow"> start now or after an hour </param>
-        public virtual void setAlarmForHourlyNotificationAfterKitKat(Context context, bool startNow)
+        public virtual void SetAlarmForHourlyNotificationAfterKitKat(Context context, bool startNow)
         {
-            if (hourlyAlarmManager == null && Build.VERSION.SdkInt >= Build.VERSION_CODES.Kitkat)
+            if (_hourlyAlarmManager == null && Build.VERSION.SdkInt >= Build.VERSION_CODES.Kitkat)
             {
                 //if it already an existing alarm for hourly notification, cancel it
-                cancelAlarmForForHourlyNotification();
-                hourlyAlarmManager = (AlarmManager)context.GetSystemService(Context.AlarmService);
+                CancelAlarmForForHourlyNotification();
+                _hourlyAlarmManager = (AlarmManager)context.GetSystemService(Context.AlarmService);
                 Intent intent = new Intent(context, typeof(SKToolsCalculateSunriseSunsetTimeAutoReceiver));
-                pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(context, 0, intent, 0);
+                _pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(context, 0, intent, 0);
 
                 long timeToStart = DateTimeUtil.JavaTime();
                 if (!startNow)
                 {
-                    timeToStart += SKToolsSunriseSunsetCalculator.NR_OF_MILLISECONDS_IN_A_HOUR;
+                    timeToStart += SKToolsSunriseSunsetCalculator.NrOfMillisecondsInAHour;
                 }
-                hourlyAlarmManager.SetExact(AlarmType.Rtc, timeToStart, pendingHourlyAlarmIntent);
+                _hourlyAlarmManager.SetExact(AlarmType.Rtc, timeToStart, _pendingHourlyAlarmIntent);
             }
         }
 
@@ -110,12 +103,12 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// Cancels the alarm for hourly notification.
         /// </summary>
 
-        public virtual void cancelAlarmForForHourlyNotification()
+        public virtual void CancelAlarmForForHourlyNotification()
         {
-            if (hourlyAlarmManager != null && pendingHourlyAlarmIntent != null)
+            if (_hourlyAlarmManager != null && _pendingHourlyAlarmIntent != null)
             {
-                hourlyAlarmManager.Cancel(pendingHourlyAlarmIntent);
-                hourlyAlarmManager = null;
+                _hourlyAlarmManager.Cancel(_pendingHourlyAlarmIntent);
+                _hourlyAlarmManager = null;
             }
         }
 
@@ -124,9 +117,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// if the user position is null is set the alarm with fixed hours (8AM, 8PM),
         /// otherwise is set the alarm for calculation of sunrise / sunset hours. </summary>
         /// <param name="currentActivity"> </param>
-        public virtual void setAutoNightAlarmAccordingToUserPosition(double latitude, double longitude, Activity currentActivity)
+        public virtual void SetAutoNightAlarmAccordingToUserPosition(double latitude, double longitude, Activity currentActivity)
         {
-            SKToolsSunriseSunsetCalculator.calculateSunriseSunsetHours(latitude, longitude, SKToolsSunriseSunsetCalculator.OFFICIAL);
+            SKToolsSunriseSunsetCalculator.CalculateSunriseSunsetHours(latitude, longitude, SKToolsSunriseSunsetCalculator.Official);
             AlarmForDayNightModeWithSunriseSunset = currentActivity;
         }
 
@@ -138,63 +131,63 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         {
             set
             {
-                Log.Debug(TAG, "setAlarmForDayNightModeWithSunriseSunset");
+                Log.Debug(Tag, "setAlarmForDayNightModeWithSunriseSunset");
                 // if there is already an existing alarm then cancel it before starting
                 // a new one
-                cancelAlarmForDayNightModeWithSunriseSunset();
+                CancelAlarmForDayNightModeWithSunriseSunset();
 
-                pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours = PendingIntent.GetBroadcast(value, 0, new Intent(value, typeof(SKToolsChangeMapStyleAutoReceiver)), 0);
-                alarmManagerForAutoNightForCalculatedSunriseSunsetHours = (AlarmManager)value.GetSystemService(Context.AlarmService);
+                _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours = PendingIntent.GetBroadcast(value, 0, new Intent(value, typeof(SKToolsChangeMapStyleAutoReceiver)), 0);
+                _alarmManagerForAutoNightForCalculatedSunriseSunsetHours = (AlarmManager)value.GetSystemService(Context.AlarmService);
 
                 DateTime date = DateTime.Now; // initializes to now
                 DateTime mapStyleChangeCalendar = new DateTime(date.Ticks);
 
-                wasSetAlarmForSunriseSunsetCalculation = true;
+                WasSetAlarmForSunriseSunsetCalculation = true;
 
                 if (!SKToolsDateUtils.Daytime)
                 {
-                    if (shouldSetAlarmNextDay())
+                    if (ShouldSetAlarmNextDay())
                     {
                         mapStyleChangeCalendar.AddDays(1);
                     }
                     // set the hour for starting the day style
-                    mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month, mapStyleChangeCalendar.Day, SKToolsDateUtils.AUTO_NIGHT_SUNRISE_HOUR, SKToolsDateUtils.AUTO_NIGHT_SUNRISE_MINUTE, 0, 0);
+                    mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month, mapStyleChangeCalendar.Day, SKToolsDateUtils.AutoNightSunriseHour, SKToolsDateUtils.AutoNightSunriseMinute, 0, 0);
                 }
                 else
                 {
                     // set the hour for starting the night style
-                    mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month, mapStyleChangeCalendar.Day, SKToolsDateUtils.AUTO_NIGHT_SUNSET_HOUR, SKToolsDateUtils.AUTO_NIGHT_SUNSET_MINUTE, 0, 0);
+                    mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month, mapStyleChangeCalendar.Day, SKToolsDateUtils.AutoNightSunsetHour, SKToolsDateUtils.AutoNightSunsetMinute, 0, 0);
                 }
 
                 if (Build.VERSION.SdkInt >= Build.VERSION_CODES.Kitkat)
                 {
-                    alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
+                    _alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
                 }
                 else
                 {
-                    alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
+                    _alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
                 }
 
             }
         }
 
         /// <returns> true if the alarm for sunrise should be set next day, false otherwise </returns>
-        private bool shouldSetAlarmNextDay()
+        private bool ShouldSetAlarmNextDay()
         {
             int currentMinutes = SKToolsDateUtils.MinuteOfDay + SKToolsDateUtils.HourOfDay * 60;
-            int upperMinutes = SKToolsDateUtils.AUTO_NIGHT_SUNRISE_HOUR * 60 + SKToolsDateUtils.AUTO_NIGHT_SUNRISE_MINUTE;
+            int upperMinutes = SKToolsDateUtils.AutoNightSunriseHour * 60 + SKToolsDateUtils.AutoNightSunriseMinute;
             return currentMinutes > upperMinutes;
         }
 
         /// <summary>
         /// Cancels the alarm for day / night mode with sunrise / sunset calculation.
         /// </summary>
-        public virtual void cancelAlarmForDayNightModeWithSunriseSunset()
+        public virtual void CancelAlarmForDayNightModeWithSunriseSunset()
         {
-            if (alarmManagerForAutoNightForCalculatedSunriseSunsetHours != null && pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours != null)
+            if (_alarmManagerForAutoNightForCalculatedSunriseSunsetHours != null && _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours != null)
             {
-                alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Cancel(pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
-                wasSetAlarmForSunriseSunsetCalculation = false;
+                _alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Cancel(_pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
+                WasSetAlarmForSunriseSunsetCalculation = false;
             }
         }
 
@@ -202,11 +195,11 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// Calculates sunrise and sunset hours </summary>
         /// <param name="latitude"> </param>
         /// <param name="longitude"> </param>
-        public virtual void calculateSunriseSunsetHours(double latitude, double longitude)
+        public virtual void CalculateSunriseSunsetHours(double latitude, double longitude)
         {
-            if (SKToolsDateUtils.AUTO_NIGHT_SUNRISE_HOUR == 0 && SKToolsDateUtils.AUTO_NIGHT_SUNSET_HOUR == 0)
+            if (SKToolsDateUtils.AutoNightSunriseHour == 0 && SKToolsDateUtils.AutoNightSunsetHour == 0)
             {
-                SKToolsSunriseSunsetCalculator.calculateSunriseSunsetHours(latitude, longitude, SKToolsSunriseSunsetCalculator.OFFICIAL);
+                SKToolsSunriseSunsetCalculator.CalculateSunriseSunsetHours(latitude, longitude, SKToolsSunriseSunsetCalculator.Official);
             }
         }
 

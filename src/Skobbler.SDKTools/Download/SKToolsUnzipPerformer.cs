@@ -1,10 +1,9 @@
+using System;
+using System.Collections.Generic;
 using Java.IO;
 using Java.Lang;
 using Skobbler.Ngx.Packages;
 using Skobbler.Ngx.Util;
-using System;
-using System.Collections.Generic;
-using StringBuilder = Java.Lang.StringBuilder;
 
 namespace Skobbler.Ngx.SDKTools.Download
 {
@@ -14,27 +13,27 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// the tag associated with this class, used for debugging
         /// </summary>
-        private const string TAG = "SKToolsUnzipPerformer";
+        private const string Tag = "SKToolsUnzipPerformer";
 
         /// <summary>
         /// queued installing items
         /// </summary>
-        private LinkedList<SKToolsDownloadItem> queuedInstallingItems;
+        private LinkedList<SKToolsDownloadItem> _queuedInstallingItems;
 
         /// <summary>
         /// current installing item
         /// </summary>
-        private SKToolsDownloadItem currentInstallingItem;
+        private SKToolsDownloadItem _currentInstallingItem;
 
         /// <summary>
         /// download listener
         /// </summary>
-        private ISKToolsDownloadListener downloadListener;
+        private ISKToolsDownloadListener _downloadListener;
 
         /// <summary>
         /// tells that current install process is paused
         /// </summary>
-        private volatile bool isInstallProcessPaused;
+        private volatile bool _isInstallProcessPaused;
 
         /// <summary>
         /// creates an object of SKToolsUnzipPerformer type </summary>
@@ -43,17 +42,14 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             lock (typeof(SKToolsUnzipPerformer))
             {
-                this.queuedInstallingItems = new LinkedList<SKToolsDownloadItem>();
+                this._queuedInstallingItems = new LinkedList<SKToolsDownloadItem>();
             }
-            this.downloadListener = downloadListener;
+            this._downloadListener = downloadListener;
         }
 
-        public virtual ISKToolsDownloadListener DownloadListener
+        public virtual void SetDownloadListener(ISKToolsDownloadListener value)
         {
-            set
-            {
-                this.downloadListener = value;
-            }
+            this._downloadListener = value;
         }
 
         /// <summary>
@@ -63,12 +59,12 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             while (ExistsAnyRemainingInstall())
             {
-                if ((currentInstallingItem == null) || (queuedInstallingItems == null) || isInstallProcessPaused)
+                if ((_currentInstallingItem == null) || (_queuedInstallingItems == null) || _isInstallProcessPaused)
                 {
                     break;
                 }
-                string filePath = currentInstallingItem.CurrentStepDestinationPath;
-                SKLogging.WriteLog(TAG, "The path of the file that must be installed = " + filePath, SKLogging.LogDebug);
+                string filePath = _currentInstallingItem.CurrentStepDestinationPath;
+                SKLogging.WriteLog(Tag, "The path of the file that must be installed = " + filePath, SKLogging.LogDebug);
                 bool zipFileExists = false;
                 File zipFile = null;
                 string rootFilePath = null;
@@ -76,98 +72,98 @@ namespace Skobbler.Ngx.SDKTools.Download
                 {
                     zipFile = new File(filePath);
                     zipFileExists = zipFile.Exists();
-                    rootFilePath = filePath.Substring(0, filePath.IndexOf((new StringBuilder(currentInstallingItem.ItemCode)).Append(SKToolsDownloadManager.POINT_EXTENSION).ToString(), StringComparison.Ordinal));
+                    rootFilePath = filePath.Substring(0, filePath.IndexOf((new StringBuilder(_currentInstallingItem.ItemCode)).Append(SKToolsDownloadManager.PointExtension).ToString(), StringComparison.Ordinal));
                 }
                 if (zipFileExists)
                 {
                     // change the state for current download item
-                    currentInstallingItem.DownloadState = SKToolsDownloadItem.Installing;
+                    _currentInstallingItem.DownloadState = SKToolsDownloadItem.Installing;
 
                     // database and UI update
-                    if (downloadListener != null)
+                    if (_downloadListener != null)
                     {
-                        downloadListener.OnInstallStarted(currentInstallingItem);
+                        _downloadListener.OnInstallStarted(_currentInstallingItem);
                     }
 
-                    SKLogging.WriteLog(TAG, "Start unzipping file with path = " + filePath, SKLogging.LogDebug);
+                    SKLogging.WriteLog(Tag, "Start unzipping file with path = " + filePath, SKLogging.LogDebug);
                     SKMaps.Instance.UnzipFile(zipFile.AbsolutePath, rootFilePath);
-                    SKLogging.WriteLog(TAG, "Unzip finished. Start installing current resource (performed by NG library)", SKLogging.LogDebug);
+                    SKLogging.WriteLog(Tag, "Unzip finished. Start installing current resource (performed by NG library)", SKLogging.LogDebug);
 
-                    if (isInstallProcessPaused)
+                    if (_isInstallProcessPaused)
                     {
-                        SKLogging.WriteLog(TAG, "Install was not finalized, because install process was stopped by client", SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, "Install was not finalized, because install process was stopped by client", SKLogging.LogDebug);
                         break;
                     }
 
-                    if (currentInstallingItem.InstallOperationIsNeeded)
+                    if (_currentInstallingItem.InstallOperationIsNeeded)
                     {
-                        int result = SKPackageManager.Instance.AddOfflinePackage(rootFilePath, currentInstallingItem.ItemCode);
-                        SKLogging.WriteLog(TAG, "Current resource installing result code = " + result, SKLogging.LogDebug);
+                        int result = SKPackageManager.Instance.AddOfflinePackage(rootFilePath, _currentInstallingItem.ItemCode);
+                        SKLogging.WriteLog(Tag, "Current resource installing result code = " + result, SKLogging.LogDebug);
                         if ((result & SKPackageManager.AddPackageMissingSkmResult & SKPackageManager.AddPackageMissingNgiResult & SKPackageManager.AddPackageMissingNgiDatResult) == 0)
                         {
                             // current install was performed with success set current resource as already download
-                            currentInstallingItem.DownloadState = SKToolsDownloadItem.Installed;
-                            SKLogging.WriteLog(TAG, "The " + currentInstallingItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
+                            _currentInstallingItem.DownloadState = SKToolsDownloadItem.Installed;
+                            SKLogging.WriteLog(Tag, "The " + _currentInstallingItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                             // notify the UI that current resource was installed
-                            if (downloadListener != null)
+                            if (_downloadListener != null)
                             {
-                                downloadListener.OnInstallFinished(currentInstallingItem);
+                                _downloadListener.OnInstallFinished(_currentInstallingItem);
                             }
                         }
                         else
                         {
                             // current install was performed with error => set current resource as NOT_QUEUED, remove downloaded bytes etc
-                            currentInstallingItem.markAsNotQueued();
-                            SKLogging.WriteLog(TAG, "The " + currentInstallingItem.ItemCode + " resource couldn't be installed by our NG component,although it was downloaded.", SKLogging.LogDebug);
+                            _currentInstallingItem.MarkAsNotQueued();
+                            SKLogging.WriteLog(Tag, "The " + _currentInstallingItem.ItemCode + " resource couldn't be installed by our NG component,although it was downloaded.", SKLogging.LogDebug);
                             // notify the UI that current resource was not installed
-                            if (downloadListener != null)
+                            if (_downloadListener != null)
                             {
-                                downloadListener.OnDownloadProgress(currentInstallingItem);
+                                _downloadListener.OnDownloadProgress(_currentInstallingItem);
                             }
                         }
                     }
                     else
                     {
                         // current install was performed with success set current resource as already download
-                        currentInstallingItem.DownloadState = SKToolsDownloadItem.Installed;
-                        SKLogging.WriteLog(TAG, "The " + currentInstallingItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
+                        _currentInstallingItem.DownloadState = SKToolsDownloadItem.Installed;
+                        SKLogging.WriteLog(Tag, "The " + _currentInstallingItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                         // notify the UI that current resource was installed
-                        if (downloadListener != null)
+                        if (_downloadListener != null)
                         {
-                            downloadListener.OnInstallFinished(currentInstallingItem);
+                            _downloadListener.OnInstallFinished(_currentInstallingItem);
                         }
                     }
                     // remove current ZIP file from device
-                    SKToolsDownloadUtils.removeCurrentLocationFromDisk(filePath);
+                    SKToolsDownloadUtils.RemoveCurrentLocationFromDisk(filePath);
                 }
                 else
                 {
-                    SKLogging.WriteLog(TAG, "The zip file doesn't exist => download again the resource !!! " + filePath, SKLogging.LogDebug);
+                    SKLogging.WriteLog(Tag, "The zip file doesn't exist => download again the resource !!! " + filePath, SKLogging.LogDebug);
                     // prepare again current resource for download queue(change its state, remove all related downloaded bytes)
-                    currentInstallingItem.markAsNotQueued();
-                    currentInstallingItem.DownloadState = SKToolsDownloadItem.Queued;
+                    _currentInstallingItem.MarkAsNotQueued();
+                    _currentInstallingItem.DownloadState = SKToolsDownloadItem.Queued;
 
                     // notify the UI that current resource is again put in download queue
-                    if (downloadListener != null)
+                    if (_downloadListener != null)
                     {
-                        downloadListener.OnDownloadProgress(currentInstallingItem);
+                        _downloadListener.OnDownloadProgress(_currentInstallingItem);
                     }
 
                     // add again the resource in download queue
                     IList<SKToolsDownloadItem> downloadItems = new List<SKToolsDownloadItem>();
-                    downloadItems.Add(currentInstallingItem);
-                    SKToolsDownloadManager.getInstance(downloadListener).startDownload(downloadItems);
+                    downloadItems.Add(_currentInstallingItem);
+                    SKToolsDownloadManager.GetInstance(_downloadListener).StartDownload(downloadItems);
                 }
                 // remove current download from download queue
                 lock (typeof(SKToolsUnzipPerformer))
                 {
-                    if (queuedInstallingItems != null)
+                    if (_queuedInstallingItems != null)
                     {
-                        queuedInstallingItems.RemoveFirst();
+                        _queuedInstallingItems.RemoveFirst();
                     }
                 }
             }
-            SKLogging.WriteLog(TAG, "The install thread has stopped", SKLogging.LogDebug);
+            SKLogging.WriteLog(Tag, "The install thread has stopped", SKLogging.LogDebug);
         }
 
         /// <summary>
@@ -175,7 +171,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <param name="currentItem"> current item </param>
         public virtual void AddItemForInstall(SKToolsDownloadItem currentItem)
         {
-            this.queuedInstallingItems.AddLast(currentItem);
+            this._queuedInstallingItems.AddLast(currentItem);
         }
 
         /// <summary>
@@ -183,7 +179,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// </summary>
         public virtual void StopInstallProcess()
         {
-            isInstallProcessPaused = true;
+            _isInstallProcessPaused = true;
         }
 
         /// <summary>
@@ -193,10 +189,10 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             lock (typeof(SKToolsUnzipPerformer))
             {
-                if ((queuedInstallingItems != null) && queuedInstallingItems.Count > 0)
+                if ((_queuedInstallingItems != null) && _queuedInstallingItems.Count > 0)
                 {
-                    currentInstallingItem = queuedInstallingItems.First.Value;
-                    if (currentInstallingItem != null)
+                    _currentInstallingItem = _queuedInstallingItems.First.Value;
+                    if (_currentInstallingItem != null)
                     {
                         return true;
                     }

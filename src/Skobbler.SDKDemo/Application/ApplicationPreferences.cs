@@ -1,69 +1,69 @@
-﻿using Android.Content;
+﻿using System.Collections.Generic;
+using Android.Content;
 using Newtonsoft.Json;
 using Skobbler.SDKDemo.Database;
-using System.Collections.Generic;
 
 namespace Skobbler.SDKDemo.Application
 {
 	public class ApplicationPreferences
 	{
 
-		public const string DOWNLOAD_STEP_INDEX_PREF_KEY = "downloadStepIndex";
+		public const string DownloadStepIndexPrefKey = "downloadStepIndex";
 
-		public const string DOWNLOAD_QUEUE_PREF_KEY = "downloadQueue";
+		public const string DownloadQueuePrefKey = "downloadQueue";
 
 		/// <summary>
 		/// preference name
 		/// </summary>
-		public const string PREFS_NAME = "demoAppPrefs";
+		public const string PrefsName = "demoAppPrefs";
 
 		/// <summary>
 		/// used for modifying values in a SharedPreferences prefs
 		/// </summary>
-		private ISharedPreferencesEditor prefsEditor;
+		private ISharedPreferencesEditor _prefsEditor;
 
 		/// <summary>
 		/// reference to preference
 		/// </summary>
-		private ISharedPreferences prefs;
+		private ISharedPreferences _prefs;
 
 		/// <summary>
 		/// the context
 		/// </summary>
-		private Context context;
+		private Context _context;
 
 		public ApplicationPreferences(Context context)
 		{
-			this.context = context;
-			prefs = context.GetSharedPreferences(PREFS_NAME, FileCreationMode.Private);
-			prefsEditor = prefs.Edit();
+			this._context = context;
+			_prefs = context.GetSharedPreferences(PrefsName, FileCreationMode.Private);
+			_prefsEditor = _prefs.Edit();
 		}
 
-		public virtual int getIntPreference(string key)
+		public virtual int GetIntPreference(string key)
 		{
-			return prefs.GetInt(key, 0);
+			return _prefs.GetInt(key, 0);
 		}
 
-		public virtual string getStringPreference(string key)
+		public virtual string GetStringPreference(string key)
 		{
-			return prefs.GetString(key, "");
+			return _prefs.GetString(key, "");
 		}
 
-		public virtual void saveDownloadStepPreference(int downloadStepIndex)
+		public virtual void SaveDownloadStepPreference(int downloadStepIndex)
 		{
-			prefsEditor.PutInt(DOWNLOAD_STEP_INDEX_PREF_KEY, downloadStepIndex);
-			prefsEditor.Commit();
+			_prefsEditor.PutInt(DownloadStepIndexPrefKey, downloadStepIndex);
+			_prefsEditor.Commit();
 		}
 
-		public virtual void saveDownloadQueuePreference(IList<DownloadResource> downloads)
+		public virtual void SaveDownloadQueuePreference(IList<DownloadResource> downloads)
 		{
 			string[] resourceCodes = new string[downloads.Count];
 			for (int i = 0; i < downloads.Count; i++)
 			{
 				resourceCodes[i] = downloads[i].Code;
 			}
-            prefsEditor.PutString(DOWNLOAD_QUEUE_PREF_KEY, JsonConvert.SerializeObject(resourceCodes));
-			prefsEditor.Commit();
+            _prefsEditor.PutString(DownloadQueuePrefKey, JsonConvert.SerializeObject(resourceCodes));
+			_prefsEditor.Commit();
 		}
 	}
 

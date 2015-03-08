@@ -1,4 +1,5 @@
 ﻿using Skobbler.Ngx.SDKTools.Download;
+
 namespace Skobbler.SDKDemo.Database
 {
 	/// <summary>
@@ -20,12 +21,12 @@ namespace Skobbler.SDKDemo.Database
 		/// <summary>
 		/// resource state (e.g. NOT_QUEUED, QUEUED, DOWNLOADING, ZIPPED, INSTALLING, DOWNLOADED)
 		/// </summary>
-		private sbyte downloadState;
+		private sbyte _downloadState;
 
 		/// <summary>
 		/// total number of DOWNLOADED bytes
 		/// </summary>
-		private long noDownloadedBytes;
+		private long _noDownloadedBytes;
 
 		/// <returns> the resource code </returns>
 		public virtual string Code
@@ -60,11 +61,11 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return downloadState;
+				return _downloadState;
 			}
 			set
 			{
-				this.downloadState = value;
+				this._downloadState = value;
 			}
 		}
 
@@ -76,17 +77,17 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return noDownloadedBytes;
+				return _noDownloadedBytes;
 			}
 			set
 			{
-				this.noDownloadedBytes = value;
+				this._noDownloadedBytes = value;
 			}
 		}
 
 
 		/// <returns> a SKToolsDownloadItem from current object </returns>
-		public abstract SKToolsDownloadItem toDownloadItem();
+		public abstract SKToolsDownloadItem ToDownloadItem();
 	}
 
 }

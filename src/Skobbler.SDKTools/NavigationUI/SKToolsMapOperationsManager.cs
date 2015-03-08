@@ -1,19 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Skobbler.Ngx.Routing;
 using Android.Content.Res;
-using Skobbler.Ngx.SDKTools.NavigationUI.AutoNight;
 using Skobbler.Ngx.Map;
 using Skobbler.Ngx.Positioner;
+using Skobbler.Ngx.Routing;
+using Skobbler.Ngx.SDKTools.NavigationUI.AutoNight;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI
 {
@@ -27,46 +17,46 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// default value to set full screen mode on different devices
         /// </summary>
-        private const double FULL_SCREEN_MINIMAL_SCREENSIZE = 3.85;
+        private const double FullScreenMinimalScreensize = 3.85;
 
         /// <summary>
         /// Day style
         /// </summary>
-        public const sbyte DAY_STYLE = 0;
+        public const sbyte DayStyle = 0;
 
         /// <summary>
         /// Night style
         /// </summary>
-        public const sbyte NIGHT_STYLE = 1;
+        public const sbyte NightStyle = 1;
 
         /// <summary>
         /// Other style
         /// </summary>
-        public const sbyte OTHER_STYLE = 2;
+        public const sbyte OtherStyle = 2;
 
         /// <summary>
         /// Ids for annotations
         /// </summary>
-        public const sbyte GREEN_PIN_ICON_ID = 0;
+        public const sbyte GreenPinIconId = 0;
 
-        public const sbyte RED_PIN_ICON_ID = 1;
+        public const sbyte RedPinIconId = 1;
 
-        public const sbyte GREY_PIN_ICON_ID = 3;
+        public const sbyte GreyPinIconId = 3;
 
         /// <summary>
         /// Singleton instance of this class
         /// </summary>
-        private static SKToolsMapOperationsManager instance;
+        private static SKToolsMapOperationsManager _instance;
 
         /// <summary>
         /// the map surface view
         /// </summary>
-        private SKMapSurfaceView mapView;
+        private SKMapSurfaceView _mapView;
 
         /// <summary>
         /// Last zoom before going in panning mode / overviewmode
         /// </summary>
-        private float zoomBeforeSwitch;
+        private float _zoomBeforeSwitch;
 
         /// <summary>
         /// Gets the <seealso cref="SKToolsMapOperationsManager"/> object
@@ -76,11 +66,11 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new SKToolsMapOperationsManager();
+                    _instance = new SKToolsMapOperationsManager();
                 }
-                return instance;
+                return _instance;
             }
         }
 
@@ -91,7 +81,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             set
             {
-                this.mapView = value;
+                this._mapView = value;
             }
         }
 
@@ -99,44 +89,44 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// draw the grey pin </summary>
         /// <param name="longitude"> </param>
         /// <param name="latitude"> </param>
-        public virtual void drawGreyPinOnMap(double longitude, double latitude)
+        public virtual void DrawGreyPinOnMap(double longitude, double latitude)
         {
-            createAnnotation(GREY_PIN_ICON_ID, SKAnnotation.SkAnnotationTypePurple, longitude, latitude, SKAnimationSettings.AnimationPinDrop);
+            CreateAnnotation(GreyPinIconId, SKAnnotation.SkAnnotationTypePurple, longitude, latitude, SKAnimationSettings.AnimationPinDrop);
         }
 
         /// <summary>
         /// Draws the starting point. </summary>
         /// <param name="longitude"> </param>
         /// <param name="latitude"> </param>
-        public virtual void drawStartPoint(double longitude, double latitude)
+        public virtual void DrawStartPoint(double longitude, double latitude)
         {
-            createAnnotation(GREEN_PIN_ICON_ID, SKAnnotation.SkAnnotationTypeGreen, longitude, latitude, SKAnimationSettings.AnimationPinDrop);
+            CreateAnnotation(GreenPinIconId, SKAnnotation.SkAnnotationTypeGreen, longitude, latitude, SKAnimationSettings.AnimationPinDrop);
         }
 
         /// <summary>
         /// Draws the destination point. </summary>
         /// <param name="longitude"> </param>
         /// <param name="latitude"> </param>
-        public virtual void drawDestinationPoint(double longitude, double latitude)
+        public virtual void DrawDestinationPoint(double longitude, double latitude)
         {
-            createAnnotation(RED_PIN_ICON_ID, SKAnnotation.SkAnnotationTypeRed, longitude, latitude, SKAnimationSettings.AnimationPinDrop);
+            CreateAnnotation(RedPinIconId, SKAnnotation.SkAnnotationTypeRed, longitude, latitude, SKAnimationSettings.AnimationPinDrop);
         }
 
         /// <summary>
         /// Deletes the destination point.
         /// </summary>
-        public virtual void deleteDestinationPoint()
+        public virtual void DeleteDestinationPoint()
         {
-            mapView.DeleteAnnotation(RED_PIN_ICON_ID);
+            _mapView.DeleteAnnotation(RedPinIconId);
         }
 
         /// <summary>
         /// Draws the destiunation flag. </summary>
         /// <param name="longitude"> </param>
         /// <param name="latitude"> </param>
-        public virtual void drawDestinationNavigationFlag(double longitude, double latitude)
+        public virtual void DrawDestinationNavigationFlag(double longitude, double latitude)
         {
-            createAnnotation(RED_PIN_ICON_ID, SKAnnotation.SkAnnotationTypeDestinationFlag, longitude, latitude, SKAnimationSettings.AnimationNone);
+            CreateAnnotation(RedPinIconId, SKAnnotation.SkAnnotationTypeDestinationFlag, longitude, latitude, SKAnimationSettings.AnimationNone);
         }
 
         /// <summary>
@@ -146,70 +136,70 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="longitude"> </param>
         /// <param name="latitude"> </param>
         /// <param name="annotationAnimationType"> </param>
-        private void createAnnotation(int id, int type, double longitude, double latitude, SKAnimationSettings annotationAnimationType)
+        private void CreateAnnotation(int id, int type, double longitude, double latitude, SKAnimationSettings annotationAnimationType)
         {
             SKAnnotation annotation = new SKAnnotation(id);
             annotation.AnnotationType = type;
             annotation.Location = new SKCoordinate(longitude, latitude);
-            mapView.AddAnnotation(annotation, annotationAnimationType);
+            _mapView.AddAnnotation(annotation, annotationAnimationType);
         }
 
         /// <summary>
         /// Sets map in overview mode.
         /// </summary>
-        public virtual void switchToOverViewMode(Activity currentActivity, SKToolsNavigationConfiguration configuration)
+        public virtual void SwitchToOverViewMode(Activity currentActivity, SKToolsNavigationConfiguration configuration)
         {
-            zoomBeforeSwitch = mapView.ZoomLevel;
-            zoomToRoute(currentActivity);
-            SKMapSettings mapSettings = mapView.MapSettings;
+            _zoomBeforeSwitch = _mapView.ZoomLevel;
+            ZoomToRoute(currentActivity);
+            SKMapSettings mapSettings = _mapView.MapSettings;
             mapSettings.MapZoomingEnabled = true;
             mapSettings.MapRotationEnabled = false;
             mapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.NoneWithHeading;
             mapSettings.MapDisplayMode = SKMapSettings.SKMapDisplayMode.Mode2d;
-            mapView.RotateTheMapToNorth();
+            _mapView.RotateTheMapToNorth();
         }
 
         /// <summary>
         /// Sets map in panning mode.
         /// </summary>
-        public virtual void startPanningMode()
+        public virtual void StartPanningMode()
         {
 
-            zoomBeforeSwitch = mapView.ZoomLevel;
-            SKMapSettings mapSettings = mapView.MapSettings;
+            _zoomBeforeSwitch = _mapView.ZoomLevel;
+            SKMapSettings mapSettings = _mapView.MapSettings;
             mapSettings.InertiaPanningEnabled = true;
             mapSettings.MapZoomingEnabled = true;
             mapSettings.MapRotationEnabled = true;
-            mapView.MapSettings.CompassPosition = new SKScreenPoint(5, 5);
-            mapView.MapSettings.CompassShown = true;
-            mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.NoneWithHeading;
-            mapView.MapSettings.MapDisplayMode = SKMapSettings.SKMapDisplayMode.Mode2d;
+            _mapView.MapSettings.CompassPosition = new SKScreenPoint(5, 5);
+            _mapView.MapSettings.CompassShown = true;
+            _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.NoneWithHeading;
+            _mapView.MapSettings.MapDisplayMode = SKMapSettings.SKMapDisplayMode.Mode2d;
         }
 
 
         /// <summary>
         /// Sets the map in navigation mode
         /// </summary>
-        public virtual void setMapInNavigationMode()
+        public virtual void SetMapInNavigationMode()
         {
-            mapView.SetZoom(zoomBeforeSwitch);
-            mapView.MapSettings.MapZoomingEnabled = false;
+            _mapView.SetZoom(_zoomBeforeSwitch);
+            _mapView.MapSettings.MapZoomingEnabled = false;
 
-            mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.Navigation;
-            SKPosition naviPosition = mapView.GetCurrentGPSPosition(true);
+            _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.Navigation;
+            SKPosition naviPosition = _mapView.GetCurrentGPSPosition(true);
             if (naviPosition != null)
             {
-                mapView.RotateMapWithAngle((float)naviPosition.Heading);
+                _mapView.RotateMapWithAngle((float)naviPosition.Heading);
             }
         }
 
         /// <summary>
         /// Changes the map style from day -> night or night-> day
         /// </summary>
-        public virtual void switchDayNightStyle(SKToolsNavigationConfiguration configuration, int mapStyle)
+        public virtual void SwitchDayNightStyle(SKToolsNavigationConfiguration configuration, int mapStyle)
         {
             int fastSwitchStyleIndex;
-            if (mapStyle == DAY_STYLE)
+            if (mapStyle == DayStyle)
             {
                 fastSwitchStyleIndex = 0;
             }
@@ -217,18 +207,18 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 fastSwitchStyleIndex = 1;
             }
-            mapView.MapSettings.MapStyle = new SKMapViewStyle(SKToolsUtils.getMapStyleFilesFolderPath(configuration, mapStyle), SKToolsUtils.getStyleFileName(mapStyle));
+            _mapView.MapSettings.MapStyle = new SKMapViewStyle(SKToolsUtils.GetMapStyleFilesFolderPath(configuration, mapStyle), SKToolsUtils.GetStyleFileName(mapStyle));
 
-            mapView.SetFastSwitchStyle(fastSwitchStyleIndex);
+            _mapView.SetFastSwitchStyle(fastSwitchStyleIndex);
         }
 
 
         /// <summary>
         /// Changes the map display from 3d-> 2d and vice versa
         /// </summary>
-        public virtual void switchMapDisplayMode(SKMapSettings.SKMapDisplayMode displayMode)
+        public virtual void SwitchMapDisplayMode(SKMapSettings.SKMapDisplayMode displayMode)
         {
-            mapView.MapSettings.MapDisplayMode = displayMode;
+            _mapView.MapSettings.MapDisplayMode = displayMode;
         }
 
         /// <summary>
@@ -240,20 +230,20 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             get
             {
                 int mapStyle;
-                SKMapViewStyle currentMapStyle = mapView.MapSettings.MapStyle;
-                string dayStyleFileName = SKToolsUtils.getStyleFileName(SKToolsMapOperationsManager.DAY_STYLE);
-                string nightStyleFileName = SKToolsUtils.getStyleFileName(SKToolsMapOperationsManager.NIGHT_STYLE);
+                SKMapViewStyle currentMapStyle = _mapView.MapSettings.MapStyle;
+                string dayStyleFileName = SKToolsUtils.GetStyleFileName(DayStyle);
+                string nightStyleFileName = SKToolsUtils.GetStyleFileName(NightStyle);
                 if (currentMapStyle.StyleFileName.Equals(dayStyleFileName))
                 {
-                    mapStyle = SKToolsMapOperationsManager.DAY_STYLE;
+                    mapStyle = DayStyle;
                 }
                 else if (currentMapStyle.StyleFileName.Equals(nightStyleFileName))
                 {
-                    mapStyle = SKToolsMapOperationsManager.NIGHT_STYLE;
+                    mapStyle = NightStyle;
                 }
                 else
                 {
-                    mapStyle = SKToolsMapOperationsManager.OTHER_STYLE;
+                    mapStyle = OtherStyle;
                 }
                 return mapStyle;
             }
@@ -262,13 +252,13 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Gets the map style before starting drive mode depending on autonight settings
         /// </summary>
-        public virtual int getMapStyleBeforeStartDriveMode(bool autoNightIsOn)
+        public virtual int GetMapStyleBeforeStartDriveMode(bool autoNightIsOn)
         {
             int currentMapStyle = CurrentMapStyle;
 
             if (autoNightIsOn)
             {
-                int correctMapStyleWhenStartDriveMode = getCorrectMapStyleForDriveModeWhenAutoNightIsOn(autoNightIsOn);
+                int correctMapStyleWhenStartDriveMode = GetCorrectMapStyleForDriveModeWhenAutoNightIsOn(autoNightIsOn);
                 return correctMapStyleWhenStartDriveMode;
             }
             else
@@ -281,31 +271,31 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Gets the correct map style (day/night) when auto night is on. </summary>
         /// <param name="autoNightIsOn">
         /// @return </param>
-        private int getCorrectMapStyleForDriveModeWhenAutoNightIsOn(bool autoNightIsOn)
+        private int GetCorrectMapStyleForDriveModeWhenAutoNightIsOn(bool autoNightIsOn)
         {
             if (autoNightIsOn)
             {
-                if (SKToolsLogicManager.lastUserPosition != null)
+                if (SKToolsLogicManager.LastUserPosition != null)
                 {
-                    SKToolsAutoNightManager.Instance.calculateSunriseSunsetHours(SKToolsLogicManager.lastUserPosition.Latitude, SKToolsLogicManager.lastUserPosition.Longitude);
+                    SKToolsAutoNightManager.Instance.CalculateSunriseSunsetHours(SKToolsLogicManager.LastUserPosition.Latitude, SKToolsLogicManager.LastUserPosition.Longitude);
 
                     if (SKToolsAutoNightManager.Instance.CurrentTimeInSunriseSunsetLimit)
                     {
-                        return DAY_STYLE;
+                        return DayStyle;
                     }
                     else
                     {
-                        return NIGHT_STYLE;
+                        return NightStyle;
                     }
                 }
             }
-            return DAY_STYLE;
+            return DayStyle;
         }
 
         /// <summary>
         /// Zooms to route.
         /// </summary>
-        public virtual void zoomToRoute(Activity currentActivity)
+        public virtual void ZoomToRoute(Activity currentActivity)
         {
             int offsetPixelsTop = 100;
             if ((currentActivity.Resources.Configuration.ScreenLayout & ScreenLayout.SizeMask) == ScreenLayout.SizeLarge || (currentActivity.Resources.Configuration.ScreenLayout & ScreenLayout.SizeMask) == ScreenLayout.SizeXlarge)
@@ -313,14 +303,14 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 // large and xlarge
                 SKRouteManager.Instance.ZoomToRoute(1.3f, 1.5f, offsetPixelsTop, 10, 5, 5);
             }
-            else if (SKToolsUtils.getDisplaySizeInches(currentActivity) < FULL_SCREEN_MINIMAL_SCREENSIZE)
+            else if (SKToolsUtils.GetDisplaySizeInches(currentActivity) < FullScreenMinimalScreensize)
             {
                 // small
                 SKRouteManager.Instance.ZoomToRoute(1.3f, 2.5f, offsetPixelsTop, 10, 5, 5);
             }
             else
             {
-                if (currentActivity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait)
+                if (currentActivity.Resources.Configuration.Orientation == Orientation.Portrait)
                 {
                     SKRouteManager.Instance.ZoomToRoute(1.3f, 2.2f, offsetPixelsTop, 10, 5, 5);
                 }

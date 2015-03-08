@@ -1,6 +1,6 @@
+using System;
 using Android.Util;
 using Java.Util;
-using System;
 using TimeZone = Java.Util.TimeZone;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
@@ -8,28 +8,28 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
     internal class SKToolsSunriseSunsetCalculator
     {
 
-        private const string TAG = "SunriseSunsetCalculator";
+        private const string Tag = "SunriseSunsetCalculator";
 
         /// <summary>
         /// constants for Sun's zenith values for sunrise/sunset
         /// </summary>
-        public const double OFFICIAL = 90.5;
+        public const double Official = 90.5;
 
-        public const double CIVIL = 96.0;
+        public const double Civil = 96.0;
 
-        public const double NAUTICAL = 102.0;
+        public const double Nautical = 102.0;
 
-        public const double ASTRONOMICAL = 108.0;
+        public const double Astronomical = 108.0;
 
-        public const int NR_OF_MILLISECONDS_IN_A_HOUR = 3600000;
+        public const int NrOfMillisecondsInAHour = 3600000;
 
-        public static void calculateSunriseSunsetHours(double latitude, double longitude, double zenith)
+        public static void CalculateSunriseSunsetHours(double latitude, double longitude, double zenith)
         {
-            calculateTime(latitude, longitude, zenith, true);
-            calculateTime(latitude, longitude, zenith, false);
+            CalculateTime(latitude, longitude, zenith, true);
+            CalculateTime(latitude, longitude, zenith, false);
         }
 
-        private static void calculateTime(double latitude, double longitude, double zenith, bool calculateSunrise)
+        private static void CalculateTime(double latitude, double longitude, double zenith, bool calculateSunrise)
         {
 
             double approximateTime;
@@ -43,10 +43,10 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
             int currentDay = calendar.Day;
 
             // first calculate the day of the year
-            double N1 = Math.Floor(275.0 * currentMonth / 9.0);
-            double N2 = Math.Floor((currentMonth + 9.0) / 12.0);
-            double N3 = (1 + Math.Floor((currentYear - 4.0 * Math.Floor(currentYear / 4.0) + 2.0) / 3.0));
-            double dayOfYear = N1 - (N2 * N3) + currentDay - 30.0;
+            double n1 = Math.Floor(275.0 * currentMonth / 9.0);
+            double n2 = Math.Floor((currentMonth + 9.0) / 12.0);
+            double n3 = (1 + Math.Floor((currentYear - 4.0 * Math.Floor(currentYear / 4.0) + 2.0) / 3.0));
+            double dayOfYear = n1 - (n2 * n3) + currentDay - 30.0;
 
             // convert the longitude to hour value and calculate an approximate time
             double longHour = longitude / 15.0;
@@ -67,12 +67,12 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
             double sunLongitude = meanAnomaly + (1.916 * Math.Sin(meanAnomaly * Math.PI / 180.0)) + (0.020 * Math.Sin(2 * meanAnomaly * Math.PI / 180.0)) + 282.634;
 
-            sunLongitude = getNormalizedValue(sunLongitude, 360);
+            sunLongitude = GetNormalizedValue(sunLongitude, 360);
 
             // calculate the Sun's right ascension
 
             double sunRightAscension = Math.Atan(0.91764 * Math.Tan(sunLongitude * Math.PI / 180)) * 180.0 / Math.PI;
-            sunRightAscension = getNormalizedValue(sunRightAscension, 360);
+            sunRightAscension = GetNormalizedValue(sunRightAscension, 360);
             // right ascension value needs to be in the same quadrant as L
 
             double longitudeQuadrant = (Math.Floor(sunLongitude / 90.0)) * 90.0;
@@ -121,13 +121,13 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
             // adjust back to UTC
 
             universalTime = localMeanTime - longHour;
-            universalTime = getNormalizedValue(universalTime, 24);
+            universalTime = GetNormalizedValue(universalTime, 24);
 
             // convert UT value to local time zone of latitude/longitude
 
             int localOffset = CurrentTimezoneOffset;
 
-            double localTime = getNormalizedValue(universalTime + localOffset, 24);
+            double localTime = GetNormalizedValue(universalTime + localOffset, 24);
 
 
             int hour = (int)Math.Floor(localTime);
@@ -136,15 +136,15 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
             if (calculateSunrise)
             {
-                SKToolsDateUtils.AUTO_NIGHT_SUNRISE_HOUR = hour;
-                SKToolsDateUtils.AUTO_NIGHT_SUNRISE_MINUTE = minute;
-                Log.Debug(TAG, "Sunrise : " + SKToolsDateUtils.AUTO_NIGHT_SUNRISE_HOUR + ":" + SKToolsDateUtils.AUTO_NIGHT_SUNRISE_MINUTE);
+                SKToolsDateUtils.AutoNightSunriseHour = hour;
+                SKToolsDateUtils.AutoNightSunriseMinute = minute;
+                Log.Debug(Tag, "Sunrise : " + SKToolsDateUtils.AutoNightSunriseHour + ":" + SKToolsDateUtils.AutoNightSunriseMinute);
             }
             else
             {
-                SKToolsDateUtils.AUTO_NIGHT_SUNSET_HOUR = hour;
-                SKToolsDateUtils.AUTO_NIGHT_SUNSET_MINUTE = minute;
-                Log.Debug(TAG, "Sunset : " + SKToolsDateUtils.AUTO_NIGHT_SUNSET_HOUR + ":" + SKToolsDateUtils.AUTO_NIGHT_SUNSET_MINUTE);
+                SKToolsDateUtils.AutoNightSunsetHour = hour;
+                SKToolsDateUtils.AutoNightSunsetMinute = minute;
+                Log.Debug(Tag, "Sunset : " + SKToolsDateUtils.AutoNightSunsetHour + ":" + SKToolsDateUtils.AutoNightSunsetMinute);
             }
         }
 
@@ -153,7 +153,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// <param name="value"> </param>
         /// <param name="maxRange"> </param>
         /// <returns> normalize value </returns>
-        private static double getNormalizedValue(double value, double maxRange)
+        private static double GetNormalizedValue(double value, double maxRange)
         {
             while (value > maxRange)
             {
@@ -176,7 +176,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 TimeZone timezone = TimeZone.Default;
                 Calendar calendar = GregorianCalendar.GetInstance(timezone);
                 int offsetInMillis = timezone.GetOffset(calendar.TimeInMillis);
-                int offset = offsetInMillis / NR_OF_MILLISECONDS_IN_A_HOUR;
+                int offset = offsetInMillis / NrOfMillisecondsInAHour;
                 return offset;
             }
         }

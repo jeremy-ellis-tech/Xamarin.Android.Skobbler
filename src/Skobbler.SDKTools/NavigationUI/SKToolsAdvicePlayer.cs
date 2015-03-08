@@ -1,89 +1,86 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using JavaObject = Java.Lang.Object;
 using Android.Media;
-using Java.IO;
-using Console = System.Console;
-using Skobbler.Ngx.Navigation;
 using Android.Util;
+using Java.IO;
+using Skobbler.Ngx.Navigation;
+using Console = System.Console;
+using File = Java.IO.File;
+using IOException = Java.IO.IOException;
+using JavaObject = Java.Lang.Object;
+using Stream = Android.Media.Stream;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI
 {
     public class SKToolsAdvicePlayer : JavaObject, MediaPlayer.IOnCompletionListener, MediaPlayer.IOnErrorListener
     {
 
-        private const string TAG = "SKToolsAdvicePlayer";
+        private const string Tag = "SKToolsAdvicePlayer";
 
         // constants for advice priority - user requested advices have the highest,
         // speed warnings the lowest
-        public const int PRIORITY_USER = 0;
+        public const int PriorityUser = 0;
 
-        public const int PRIORITY_NAVIGATION = 1;
+        public const int PriorityNavigation = 1;
 
-        public const int PRIORITY_SPEED_WARNING = 2;
+        public const int PrioritySpeedWarning = 2;
 
         /// <summary>
         /// The singleton instance of the advice player.
         /// </summary>
-        private static SKToolsAdvicePlayer instance;
+        private static SKToolsAdvicePlayer _instance;
 
         /// <summary>
         /// The single player.
         /// </summary>
-        private MediaPlayer player;
+        private MediaPlayer _player;
 
         /// <summary>
         /// The temporary file for storing the current advice
         /// </summary>
-        private string tempAdviceFile = null;
+        private string _tempAdviceFile = null;
 
         /// <summary>
         /// Queued advice that will be played after the player finishes playing the
         /// current advice.
         /// </summary>
-        private string[] nextAdvice;
+        private string[] _nextAdvice;
 
         /// <summary>
         /// The priority of the queued advice.
         /// </summary>
-        private int nextAdvicePriority;
+        private int _nextAdvicePriority;
 
         /// <summary>
         /// Indicates if the user has chosen to mute the advices.
         /// </summary>
-        private bool isMuted;
+        private bool _isMuted;
 
         /// <summary>
         /// Indicates whether the player is busy playing an advice.
         /// </summary>
-        private bool isBusy;
+        private bool _isBusy;
 
         public static SKToolsAdvicePlayer Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new SKToolsAdvicePlayer();
+                    _instance = new SKToolsAdvicePlayer();
                 }
-                return instance;
+                return _instance;
             }
         }
 
         private SKToolsAdvicePlayer()
         {
-            player = new MediaPlayer();
-            player.SetAudioStreamType(Stream.Music);
-            player.SetOnCompletionListener(this);
-            player.SetOnErrorListener(this);
+            _player = new MediaPlayer();
+            _player.SetAudioStreamType(Stream.Music);
+            _player.SetOnCompletionListener(this);
+            _player.SetOnErrorListener(this);
         }
 
         /// <summary>
@@ -91,7 +88,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// manager with stream type STREAM_MUSIC </summary>
         /// <param name="activity">
         /// @return </param>
-        public static int getCurrentDeviceVolume(Activity activity)
+        public static int GetCurrentDeviceVolume(Activity activity)
         {
             AudioManager audioManager = (AudioManager)activity.GetSystemService(Context.AudioService);
             return audioManager.GetStreamVolume(Stream.Music);
@@ -102,27 +99,27 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// manager with the stream type STREAM_MUSIC </summary>
         /// <param name="activity"> - the current activity
         /// @return </param>
-        public static int getMaximAudioLevel(Activity activity)
+        public static int GetMaximAudioLevel(Activity activity)
         {
             AudioManager audioManager = (AudioManager)activity.GetSystemService(Context.AudioService);
             return audioManager.GetStreamMaxVolume(Stream.Music);
         }
 
-        public virtual void enableMute()
+        public virtual void EnableMute()
         {
-            isMuted = true;
+            _isMuted = true;
         }
 
-        public virtual void disableMute()
+        public virtual void DisableMute()
         {
-            isMuted = false;
+            _isMuted = false;
         }
 
         public virtual bool Muted
         {
             get
             {
-                return isMuted;
+                return _isMuted;
             }
         }
 
@@ -130,19 +127,19 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Plays an advice. The individual sound files to play are contained in an
         /// array list. </summary>
         /// <param name="adviceParts"> an array list of sound file names </param>
-        public virtual void playAdvice(string[] adviceParts, int priority)
+        public virtual void PlayAdvice(string[] adviceParts, int priority)
         {
-            if (isMuted || adviceParts == null)
+            if (_isMuted || adviceParts == null)
             {
                 return;
             }
 
-            if (isBusy)
+            if (_isBusy)
             {
-                if (nextAdvice == null || (priority <= nextAdvicePriority))
+                if (_nextAdvice == null || (priority <= _nextAdvicePriority))
                 {
-                    nextAdvice = adviceParts;
-                    nextAdvicePriority = priority;
+                    _nextAdvice = adviceParts;
+                    _nextAdvicePriority = priority;
                 }
                 return;
             }
@@ -150,7 +147,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             SKAdvisorSettings advisorSettings = SKMaps.Instance.MapInitSettings.AdvisorSettings;
             string soundFilesDirPath = advisorSettings.ResourcePath + advisorSettings.Language.Value + "/sound_files/";
 
-            tempAdviceFile = soundFilesDirPath + "temp.mp3";
+            _tempAdviceFile = soundFilesDirPath + "temp.mp3";
             bool validTokensFound = false;
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             for (int i = 0; i < adviceParts.Length; i++)
@@ -158,7 +155,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 string soundFilePath = soundFilesDirPath + adviceParts[i] + ".mp3";
                 try
                 {
-                    System.IO.Stream @is = new System.IO.FileStream(soundFilePath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                    System.IO.Stream @is = new FileStream(soundFilePath, FileMode.Open, FileAccess.Read);
                     int availableBytes = 0;// @is.Available();
                     byte[] tmp = new byte[availableBytes];
                     @is.Read(tmp, 0, availableBytes);
@@ -180,7 +177,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 // valid tokens were found - set busy state until finishing to play
                 // advice
-                isBusy = true;
+                _isBusy = true;
             }
             else
             {
@@ -188,19 +185,19 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 return;
             }
 
-            writeFile(stream.ToByteArray(), tempAdviceFile);
-            playFile(tempAdviceFile);
+            WriteFile(stream.ToByteArray(), _tempAdviceFile);
+            PlayFile(_tempAdviceFile);
         }
 
-        public virtual void reset()
+        public virtual void Reset()
         {
-            Log.Warn(TAG, "Entering reset");
-            if (player != null)
+            Log.Warn(Tag, "Entering reset");
+            if (_player != null)
             {
                 try
                 {
-                    player.Reset();
-                    deleteTempFile();
+                    _player.Reset();
+                    DeleteTempFile();
                 }
                 catch (Exception ex)
                 {
@@ -208,15 +205,15 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     Console.Write(ex.StackTrace);
                 }
             }
-            isBusy = false;
+            _isBusy = false;
         }
 
         /// <summary>
         /// Deletes the temporary file stored at "tempAdviceFile" path
         /// </summary>
-        private void deleteTempFile()
+        private void DeleteTempFile()
         {
-            File fc = new File(tempAdviceFile);
+            File fc = new File(_tempAdviceFile);
             if (fc.Exists())
             {
                 fc.Delete();
@@ -226,22 +223,22 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Stops playing the current advice
         /// </summary>
-        public virtual void stop()
+        public virtual void Stop()
         {
-            isBusy = false;
-            player.Stop();
+            _isBusy = false;
+            _player.Stop();
         }
 
         /// <summary>
         /// Writes "data" to the "filePath" path on the disk </summary>
         /// <param name="data"> </param>
         /// <param name="filePath"> </param>
-        private void writeFile(byte[] data, string filePath)
+        private void WriteFile(byte[] data, string filePath)
         {
             System.IO.Stream @out = null;
             try
             {
-                @out = new System.IO.FileStream(filePath, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                @out = new FileStream(filePath, FileMode.Create, FileAccess.Write);
                 @out.Write(data, 0, data.Length);
                 try
                 {
@@ -265,27 +262,27 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Plays an .mp3 file which should be found at filePath </summary>
         /// <param name="filePath"> </param>
-        private void playFile(string filePath)
+        private void PlayFile(string filePath)
         {
             try
             {
-                player.Reset();
+                _player.Reset();
                 File file = new File(filePath);
-                System.IO.FileStream fileInputStream = null;//new System.IO.FileStream(file, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                FileStream fileInputStream = null;//new System.IO.FileStream(file, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                 FileDescriptor fileDescriptor = null;// fileInputStream.FD;
                 try
                 {
-                    player.SetDataSource(fileDescriptor);
+                    _player.SetDataSource(fileDescriptor);
                 }
-                catch (System.InvalidOperationException)
+                catch (InvalidOperationException)
                 {
-                    player.Reset();
-                    player.SetDataSource(fileDescriptor);
+                    _player.Reset();
+                    _player.SetDataSource(fileDescriptor);
                 }
                 fileInputStream.Close();
 
-                player.Prepare();
-                player.Start();
+                _player.Prepare();
+                _player.Start();
             }
             catch (IOException ioe)
             {
@@ -296,12 +293,12 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         public void OnCompletion(MediaPlayer mp)
         {
-            reset();
-            if (nextAdvice != null)
+            Reset();
+            if (_nextAdvice != null)
             {
-                string[] adviceToPlay = nextAdvice;
-                nextAdvice = null;
-                playAdvice(adviceToPlay, nextAdvicePriority);
+                string[] adviceToPlay = _nextAdvice;
+                _nextAdvice = null;
+                PlayAdvice(adviceToPlay, _nextAdvicePriority);
                 return;
             }
         }

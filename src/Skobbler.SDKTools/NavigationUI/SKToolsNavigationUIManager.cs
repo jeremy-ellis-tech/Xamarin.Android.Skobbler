@@ -1,428 +1,427 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
+using System.Threading;
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Skobbler.Ngx.Routing;
 using Android.Content.Res;
-using Skobbler.Ngx.Navigation;
-using Java.Lang;
 using Android.Graphics;
-using Skobbler.Ngx.Map;
 using Android.Media;
+using Android.OS;
+using Android.Views;
 using Android.Views.Animations;
-using System.Threading;
-using Java.Util;
-using Math = System.Math;
+using Android.Widget;
+using Java.Lang;
 using Java.Text;
+using Java.Util;
+using Skobbler.Ngx.Map;
+using Skobbler.Ngx.Navigation;
+using Skobbler.Ngx.Routing;
+using Math = System.Math;
+using Orientation = Android.Content.Res.Orientation;
+using Thread = Java.Lang.Thread;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI
 {
-    internal class SKToolsNavigationUIManager
+    internal class SKToolsNavigationUiManager
     {
 
         /// <summary>
         /// Singleton instance for current class
         /// </summary>
-        private static volatile SKToolsNavigationUIManager instance = null;
+        private static volatile SKToolsNavigationUiManager _instance = null;
 
         /// <summary>
         /// OSM street types
         /// </summary>
-        private const int OSM_STREET_TYPE_MOTORWAY = 9;
+        private const int OsmStreetTypeMotorway = 9;
 
-        private const int OSM_STREET_TYPE_MOTORWAY_LINK = 10;
+        private const int OsmStreetTypeMotorwayLink = 10;
 
-        private const int OSM_STREET_TYPE_PRIMARY = 13;
+        private const int OsmStreetTypePrimary = 13;
 
-        private const int OSM_STREET_TYPE_PRIMARY_LINK = 14;
+        private const int OsmStreetTypePrimaryLink = 14;
 
-        private const int OSM_STREET_TYPE_TRUNK = 24;
+        private const int OsmStreetTypeTrunk = 24;
 
-        private const int OSM_STREET_TYPE_TRUNK_LINK = 25;
+        private const int OsmStreetTypeTrunkLink = 25;
 
         /// <summary>
         /// the list with the country codes for which the top panel has a different
         /// color
         /// </summary>
-        private static readonly string[] signPostsCountryExceptions = new string[] { "DE", "AT", "GB", "IE", "CH", "US" };
+        private static readonly string[] SignPostsCountryExceptions = new string[] { "DE", "AT", "GB", "IE", "CH", "US" };
 
 
         private enum NavigationMode
         {
 
-            SETTINGS,
+            Settings,
 
-            ROUTE_INFO,
+            RouteInfo,
 
-            ROUTE_OVERVIEW,
+            RouteOverview,
 
-            PANNING,
+            Panning,
 
-            ROADBLOCK,
+            Roadblock,
 
-            FOLLOWER,
+            Follower,
 
-            PRE_NAVIGATION,
+            PreNavigation,
 
-            POST_NAVIGATION
+            PostNavigation
 
         }
 
-        private NavigationMode currentNavigationMode;
+        private NavigationMode _currentNavigationMode;
 
         /// <summary>
         /// the current activity
         /// </summary>
-        private Activity currentActivity;
+        private Activity _currentActivity;
 
         /// <summary>
         /// the settings from navigations
         /// </summary>
-        private ViewGroup settingsPanel;
+        private ViewGroup _settingsPanel;
 
         /*
         the view for pre navigation
          */
-        private ViewGroup preNavigationPanel;
+        private ViewGroup _preNavigationPanel;
 
         /*
         the view for pre navigation increase decrease buttons
          */
-        private ViewGroup navigationSimulationPanel;
+        private ViewGroup _navigationSimulationPanel;
 
         /// <summary>
         /// the back button
         /// </summary>
-        private ViewGroup backButtonPanel;
+        private ViewGroup _backButtonPanel;
 
         /// <summary>
         /// route overview panel
         /// </summary>
-        private ViewGroup routeOverviewPanel;
+        private ViewGroup _routeOverviewPanel;
 
         /// <summary>
         /// the view for re routing
         /// </summary>
-        private ViewGroup reRoutingPanel;
+        private ViewGroup _reRoutingPanel;
 
         /// <summary>
         /// arriving navigation distance panel
         /// </summary>
-        private ViewGroup routeDistancePanel;
+        private ViewGroup _routeDistancePanel;
 
         /// <summary>
         /// the  position me button
         /// </summary>
-        private ViewGroup positionMeButtonPanel;
+        private ViewGroup _positionMeButtonPanel;
 
         /// <summary>
         /// top navigation panel
         /// </summary>
-        private ViewGroup topCurrentNavigationPanel;
+        private ViewGroup _topCurrentNavigationPanel;
 
         /// <summary>
         /// top navigation panel
         /// </summary>
-        private ViewGroup topNextNavigationPanel;
+        private ViewGroup _topNextNavigationPanel;
 
         /// <summary>
         /// the menu from tapping mode
         /// </summary>
-        private ViewGroup menuOptions;
+        private ViewGroup _menuOptions;
 
         /// <summary>
         /// root layout - to this will be added all views
         /// </summary>
-        private ViewGroup rootLayout;
+        private ViewGroup _rootLayout;
 
         /// <summary>
         /// road block screen
         /// </summary>
-        private ViewGroup roadBlockPanel;
+        private ViewGroup _roadBlockPanel;
 
         /// <summary>
         /// current street name panel from free drive mode
         /// </summary>
-        private ViewGroup freeDriveCurrentStreetPanel;
+        private ViewGroup _freeDriveCurrentStreetPanel;
 
         /// <summary>
         /// via point panel
         /// </summary>
-        private ViewGroup viaPointPanel;
+        private ViewGroup _viaPointPanel;
 
         /// <summary>
         /// top navigation panel
         /// </summary>
-        private ViewGroup speedPanel;
+        private ViewGroup _speedPanel;
 
         /// <summary>
         /// the view flipper for estimated and arriving time panels
         /// </summary>
-        private ViewGroup arrivingETATimeGroupPanels;
+        private ViewGroup _arrivingEtaTimeGroupPanels;
 
         /// <summary>
         /// bottom right panel with estimated time
         /// </summary>
-        private ViewGroup estimatedTimePanel;
+        private ViewGroup _estimatedTimePanel;
 
         /// <summary>
         /// bottom right panel with arriving time
         /// </summary>
-        private ViewGroup arrivingTimePanel;
+        private ViewGroup _arrivingTimePanel;
 
         /// <summary>
         /// navigation arriving time text
         /// </summary>
-        private TextView arrivingTimeText;
+        private TextView _arrivingTimeText;
 
         /// <summary>
         /// navigation estimated time text
         /// </summary>
-        private TextView estimatedTimeText;
+        private TextView _estimatedTimeText;
 
         /// <summary>
         /// true if the estimated time panel is visible, false if the arriving time
         /// panel is visible
         /// </summary>
-        private bool estimatedTimePanelVisible;
+        private bool _estimatedTimePanelVisible;
 
         /// <summary>
         /// top current navigation distance & street panel
         /// </summary>
-        private LinearLayout topCurrentNavigationDistanceStreetPanel;
+        private LinearLayout _topCurrentNavigationDistanceStreetPanel;
 
         /// <summary>
         /// the image for the visual advice
         /// </summary>
-        private ImageView nextAdviceImageView;
+        private ImageView _nextAdviceImageView;
 
         /// <summary>
         /// next advice image distance panel
         /// </summary>
-        private RelativeLayout nextAdviceImageDistancePanel;
+        private RelativeLayout _nextAdviceImageDistancePanel;
 
         /// <summary>
         /// next advice street name panel
         /// </summary>
-        private RelativeLayout nextAdviceStreetNamePanel;
+        private RelativeLayout _nextAdviceStreetNamePanel;
 
         /// <summary>
         /// next advice street name text
         /// </summary>
-        private TextView nextAdviceStreetNameTextView;
+        private TextView _nextAdviceStreetNameTextView;
 
         /// <summary>
         /// arriving navigation distance text
         /// </summary>
-        private TextView routeDistanceText;
+        private TextView _routeDistanceText;
 
         /// <summary>
         /// arriving navigation distance text value
         /// </summary>
-        private TextView routeDistanceTextValue;
+        private TextView _routeDistanceTextValue;
 
         /// <summary>
         /// the alternative routes buttons
         /// </summary>
-        private TextView[] altRoutesButtons;
+        private TextView[] _altRoutesButtons;
 
         /// <summary>
         /// true, if free drive selected
         /// </summary>
-        private bool isFreeDrive;
+        private bool _isFreeDrive;
 
         /// <summary>
         /// true if the country code for destination is US, false otherwise
         /// </summary>
-        private bool isUS;
+        private bool _isUs;
 
         /// <summary>
         /// true if the country code is different from US, false otherwise
         /// </summary>
-        private bool isDefaultSpeedSign;
+        private bool _isDefaultSpeedSign;
 
         /// <summary>
         /// flag that indicates if there is a speed limit on the current road
         /// </summary>
-        private bool speedLimitAvailable;
+        private bool _speedLimitAvailable;
 
         /// <summary>
         /// current street name from free drive mode
         /// </summary>
-        private string currentStreetNameFreeDriveString;
+        private string _currentStreetNameFreeDriveString;
 
         /// <summary>
         /// true if the background color for top panel is the default one, false
         /// otherwise
         /// </summary>
-        private bool isDefaultTopPanelBackgroundColor = true;
+        private bool _isDefaultTopPanelBackgroundColor = true;
 
         /// <summary>
         /// the drawable id for the current advice background
         /// </summary>
-        private int currentAdviceBackgroundDrawableId;
+        private int _currentAdviceBackgroundDrawableId;
 
         /// <summary>
         /// the drawable id for the next advice background
         /// </summary>
-        private int nextAdviceBackgroundDrawableId;
+        private int _nextAdviceBackgroundDrawableId;
 
         /// <summary>
         /// the thread for speed exceeded
         /// </summary>
-        private SpeedExceededThread speedExceededThread;
+        private SpeedExceededThread _speedExceededThread;
 
         /// <summary>
         /// current street type
         /// </summary>
-        protected internal int nextStreetType;
+        protected internal int NextStreetType;
 
         /// <summary>
         /// next street type
         /// </summary>
-        protected internal int secondNextStreetType;
+        protected internal int SecondNextStreetType;
 
         /// <summary>
         /// the current estimated total distance of the navigation trip
         /// </summary>
-        private long navigationTotalDistance;
+        private long _navigationTotalDistance;
 
         /// <summary>
         /// current speed limit
         /// </summary>
-        protected internal double currentSpeedLimit;
+        protected internal double CurrentSpeedLimit;
 
         /// <summary>
         /// true if the speed limit is exceeded, false otherwise
         /// </summary>
-        protected internal bool speedLimitExceeded;
+        protected internal bool SpeedLimitExceeded;
 
         /// <summary>
         /// false when we start a navigation, becomes true when first advice is
         /// received
         /// </summary>
-        protected internal bool firstAdviceReceived;
+        protected internal bool FirstAdviceReceived;
 
         /// <summary>
         /// true if next advice is visible, false otherwise
         /// </summary>
-        protected internal bool isNextAdviceVisible;
+        protected internal bool IsNextAdviceVisible;
 
         /// <summary>
         /// true when the application starts
         /// </summary>
-        private bool firstTimeNavigation = true;
+        private bool _firstTimeNavigation = true;
 
         /// <summary>
         /// the currently estimated duration of the route to the navi destination
         /// </summary>
-        protected internal int timeToDestination;
+        protected internal int TimeToDestination;
 
-        protected internal int initialTimeToDestination;
+        protected internal int InitialTimeToDestination;
 
         /// <summary>
         /// whether to display the navigation flag or not
         /// </summary>
-        public bool showDestinationReachedFlag;
+        public bool ShowDestinationReachedFlag;
 
         /// <summary>
         /// the distance estimated between the user current position and destination
         /// </summary>
-        public static int distanceEstimatedUntilDestination;
+        public static int DistanceEstimatedUntilDestination;
 
         /// <summary>
         /// current speed
         /// </summary>
-        private double currentSpeed;
+        private double _currentSpeed;
 
         /// <summary>
         /// route distance string
         /// </summary>
-        protected internal string routeDistanceString;
+        protected internal string RouteDistanceString;
 
         /// <summary>
         /// route distance value string
         /// </summary>
-        protected internal string routeDistanceValueString;
+        protected internal string RouteDistanceValueString;
 
         /// <summary>
         /// current street name
         /// </summary>
-        protected internal TextView currentAdviceName;
+        protected internal TextView CurrentAdviceName;
 
         /// <summary>
         /// current advice distance
         /// </summary>
-        protected internal TextView currentAdviceDistance;
+        protected internal TextView CurrentAdviceDistance;
 
         /// <summary>
         /// current advice street name string
         /// </summary>
-        protected internal string currentVisualAdviceStreetName;
+        protected internal string CurrentVisualAdviceStreetName;
 
         /// <summary>
         /// current advice distance string
         /// </summary>
-        protected internal int currentVisualAdviceDistance;
+        protected internal int CurrentVisualAdviceDistance;
 
         /// <summary>
         /// next advice street name
         /// </summary>
-        protected internal string nextVisualAdviceStreetName;
+        protected internal string NextVisualAdviceStreetName;
 
         /// <summary>
         /// current speed text from free drive mode
         /// </summary>
-        protected internal TextView currentSpeedText;
+        protected internal TextView CurrentSpeedText;
 
         /// <summary>
         /// current speed text from free drive mode
         /// </summary>
-        protected internal TextView currentSpeedTextValue;
+        protected internal TextView CurrentSpeedTextValue;
 
         /// <summary>
         /// current speed string
         /// </summary>
-        protected internal string currentSpeedString;
+        protected internal string CurrentSpeedString;
 
         /// <summary>
         /// next advice distance
         /// </summary>
-        protected internal int nextVisualAdviceDistance;
+        protected internal int NextVisualAdviceDistance;
 
         /// <summary>
         /// next advice distance text
         /// </summary>
-        protected internal TextView nextAdviceDistanceTextView;
+        protected internal TextView NextAdviceDistanceTextView;
 
         /// <summary>
         /// current speed unit for navigation mode
         /// </summary>
-        private SKMaps.SKDistanceUnitType distanceUnitType;
+        private SKMaps.SKDistanceUnitType _distanceUnitType;
 
         /// <summary>
         /// the image for the visual advice
         /// </summary>
-        protected internal ImageView currentAdviceImage;
+        protected internal ImageView CurrentAdviceImage;
 
         /// <summary>
         /// country code
         /// </summary>
-        protected internal string currentCountryCode;
+        protected internal string CurrentCountryCode;
 
         /// <summary>
         /// Click listener for settings menu views
         /// </summary>
         public void OnSettingsItemClick(object sender, EventArgs e)
         {
-            SKToolsLogicManager.Instance.handleSettingsItemsClick((View)sender);
+            SKToolsLogicManager.Instance.HandleSettingsItemsClick((View)sender);
         }
 
         /// <summary>
@@ -430,7 +429,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         public void OnItemClick(object sender, EventArgs e)
         {
-            SKToolsLogicManager.Instance.handleItemsClick((View)sender);
+            SKToolsLogicManager.Instance.HandleItemsClick((View)sender);
         }
 
         /// <summary>
@@ -438,29 +437,29 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         public void OnBockedRoadsListItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            SKToolsLogicManager.Instance.handleBlockRoadsItemsClick(e.Parent, e.Position);
+            SKToolsLogicManager.Instance.HandleBlockRoadsItemsClick(e.Parent, e.Position);
         }
 
         /// <summary>
-        /// Creates a single instance of <seealso cref="SKToolsNavigationUIManager"/>
+        /// Creates a single instance of <seealso cref="SKToolsNavigationUiManager"/>
         /// 
         /// @return
         /// </summary>
-        public static SKToolsNavigationUIManager Instance
+        public static SKToolsNavigationUiManager Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    lock (typeof(SKToolsNavigationUIManager))
+                    lock (typeof(SKToolsNavigationUiManager))
                     {
-                        if (instance == null)
+                        if (_instance == null)
                         {
-                            instance = new SKToolsNavigationUIManager();
+                            _instance = new SKToolsNavigationUiManager();
                         }
                     }
                 }
-                return instance;
+                return _instance;
             }
         }
 
@@ -469,10 +468,10 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         /// <param name="activity"> </param>
         /// <param name="rootId"> </param>
-        protected internal virtual void setActivity(Activity activity, int rootId)
+        protected internal virtual void SetActivity(Activity activity, int rootId)
         {
-            this.currentActivity = activity;
-            rootLayout = (ViewGroup)currentActivity.FindViewById(rootId);
+            this._currentActivity = activity;
+            _rootLayout = (ViewGroup)_currentActivity.FindViewById(rootId);
         }
 
 
@@ -480,219 +479,219 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Inflates navigation relates views.
         /// </summary>
         /// <param name="activity"> </param>
-        protected internal virtual void inflateNavigationViews(Activity activity)
+        protected internal virtual void InflateNavigationViews(Activity activity)
         {
             activity.RunOnUiThread(() =>
             {
-                LayoutInflater inflater = currentActivity.LayoutInflater;
+                LayoutInflater inflater = _currentActivity.LayoutInflater;
 
-                inflateSettingsMenu();
+                InflateSettingsMenu();
 
                 RelativeLayout.LayoutParams relativeLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
 
-                backButtonPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_back_button, null, false);
-                rootLayout.AddView(backButtonPanel, relativeLayoutParams);
-                backButtonPanel.Id = SKToolsUtils.generateViewId();
-                backButtonPanel.Visibility = ViewStates.Gone;
-                backButtonPanel.FindViewById(Resource.Id.navigation_top_back_button).Click += OnItemClick;
+                _backButtonPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_back_button, null, false);
+                _rootLayout.AddView(_backButtonPanel, relativeLayoutParams);
+                _backButtonPanel.Id = SKToolsUtils.GenerateViewId();
+                _backButtonPanel.Visibility = ViewStates.Gone;
+                _backButtonPanel.FindViewById(Resource.Id.navigation_top_back_button).Click += OnItemClick;
 
                 RelativeLayout.LayoutParams routeOverviewRelativeLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
-                routeOverviewRelativeLayoutParams.AddRule(LayoutRules.Below, backButtonPanel.Id);
+                routeOverviewRelativeLayoutParams.AddRule(LayoutRules.Below, _backButtonPanel.Id);
 
-                routeOverviewPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_route_overview_panel, null, false);
-                rootLayout.AddView(routeOverviewPanel, routeOverviewRelativeLayoutParams);
-                routeOverviewPanel.Visibility = ViewStates.Gone;
+                _routeOverviewPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_route_overview_panel, null, false);
+                _rootLayout.AddView(_routeOverviewPanel, routeOverviewRelativeLayoutParams);
+                _routeOverviewPanel.Visibility = ViewStates.Gone;
 
-                roadBlockPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_roadblocks_list, null, false);
-                rootLayout.AddView(roadBlockPanel, routeOverviewRelativeLayoutParams);
-                roadBlockPanel.Visibility = ViewStates.Gone;
+                _roadBlockPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_roadblocks_list, null, false);
+                _rootLayout.AddView(_roadBlockPanel, routeOverviewRelativeLayoutParams);
+                _roadBlockPanel.Visibility = ViewStates.Gone;
 
 
-                reRoutingPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_rerouting_panel, null, false);
+                _reRoutingPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_rerouting_panel, null, false);
                 RelativeLayout.LayoutParams reRoutingPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
                 reRoutingPanelParams.AddRule(LayoutRules.AlignParentTop);
-                rootLayout.AddView(reRoutingPanel, reRoutingPanelParams);
-                reRoutingPanel.Visibility = ViewStates.Gone;
+                _rootLayout.AddView(_reRoutingPanel, reRoutingPanelParams);
+                _reRoutingPanel.Visibility = ViewStates.Gone;
 
-                menuOptions = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_menu_options, null, false);
-                rootLayout.AddView(menuOptions, relativeLayoutParams);
-                menuOptions.Visibility = ViewStates.Gone;
+                _menuOptions = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_menu_options, null, false);
+                _rootLayout.AddView(_menuOptions, relativeLayoutParams);
+                _menuOptions.Visibility = ViewStates.Gone;
 
-                topCurrentNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_current_advice_panel, null, false);
+                _topCurrentNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_current_advice_panel, null, false);
                 RelativeLayout.LayoutParams topCurrentAdviceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
                 topCurrentAdviceParams.AddRule(LayoutRules.AlignParentTop);
-                rootLayout.AddView(topCurrentNavigationPanel, topCurrentAdviceParams);
-                topCurrentNavigationPanel.Id = SKToolsUtils.generateViewId();
-                topCurrentNavigationPanel.Measure(View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified), View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
-                topCurrentNavigationPanel.Visibility = ViewStates.Gone;
+                _rootLayout.AddView(_topCurrentNavigationPanel, topCurrentAdviceParams);
+                _topCurrentNavigationPanel.Id = SKToolsUtils.GenerateViewId();
+                _topCurrentNavigationPanel.Measure(View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified), View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
+                _topCurrentNavigationPanel.Visibility = ViewStates.Gone;
 
-                topCurrentNavigationDistanceStreetPanel = (LinearLayout)topCurrentNavigationPanel.FindViewById(Resource.Id.current_advice_text_holder);
-                topCurrentNavigationDistanceStreetPanel.Click += OnItemClick;
-                RelativeLayout topCurrentNavigationImagePanel = (RelativeLayout)topCurrentNavigationPanel.FindViewById(Resource.Id.current_advice_image_holder);
+                _topCurrentNavigationDistanceStreetPanel = (LinearLayout)_topCurrentNavigationPanel.FindViewById(Resource.Id.current_advice_text_holder);
+                _topCurrentNavigationDistanceStreetPanel.Click += OnItemClick;
+                RelativeLayout topCurrentNavigationImagePanel = (RelativeLayout)_topCurrentNavigationPanel.FindViewById(Resource.Id.current_advice_image_holder);
                 topCurrentNavigationImagePanel.Click += OnItemClick;
-                currentAdviceImage = (ImageView)topCurrentNavigationImagePanel.FindViewById(Resource.Id.current_advice_image_turn);
-                currentAdviceName = (TextView)topCurrentNavigationDistanceStreetPanel.FindViewById(Resource.Id.current_advice_street_text);
-                currentAdviceName.Selected = true;
-                currentAdviceDistance = (TextView)topCurrentNavigationDistanceStreetPanel.FindViewById(Resource.Id.current_advice_distance_text);
+                CurrentAdviceImage = (ImageView)topCurrentNavigationImagePanel.FindViewById(Resource.Id.current_advice_image_turn);
+                CurrentAdviceName = (TextView)_topCurrentNavigationDistanceStreetPanel.FindViewById(Resource.Id.current_advice_street_text);
+                CurrentAdviceName.Selected = true;
+                CurrentAdviceDistance = (TextView)_topCurrentNavigationDistanceStreetPanel.FindViewById(Resource.Id.current_advice_distance_text);
 
 
                 // next advice panel
-                topNextNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_next_advice_panel, null, false);
+                _topNextNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_next_advice_panel, null, false);
                 RelativeLayout.LayoutParams nextAdviceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
-                nextAdviceParams.AddRule(LayoutRules.Below, topCurrentNavigationPanel.Id);
-                rootLayout.AddView(topNextNavigationPanel, nextAdviceParams);
-                topNextNavigationPanel.Measure(View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified), View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
-                topNextNavigationPanel.Visibility = ViewStates.Gone;
+                nextAdviceParams.AddRule(LayoutRules.Below, _topCurrentNavigationPanel.Id);
+                _rootLayout.AddView(_topNextNavigationPanel, nextAdviceParams);
+                _topNextNavigationPanel.Measure(View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified), View.MeasureSpec.MakeMeasureSpec(0, MeasureSpecMode.Unspecified));
+                _topNextNavigationPanel.Visibility = ViewStates.Gone;
 
-                nextAdviceImageDistancePanel = (RelativeLayout)topNextNavigationPanel.FindViewById(Resource.Id.next_image_turn_advice_distance_layout);
-                nextAdviceImageView = (ImageView)nextAdviceImageDistancePanel.FindViewById(Resource.Id.next_image_turn_advice);
-                nextAdviceDistanceTextView = (TextView)nextAdviceImageDistancePanel.FindViewById(Resource.Id.next_advice_distance_text);
-                nextAdviceStreetNamePanel = (RelativeLayout)topNextNavigationPanel.FindViewById(Resource.Id.next_advice_street_name_text_layout);
-                nextAdviceStreetNameTextView = (TextView)nextAdviceStreetNamePanel.FindViewById(Resource.Id.next_advice_street_name_text);
-                nextAdviceStreetNameTextView.Selected = true;
+                _nextAdviceImageDistancePanel = (RelativeLayout)_topNextNavigationPanel.FindViewById(Resource.Id.next_image_turn_advice_distance_layout);
+                _nextAdviceImageView = (ImageView)_nextAdviceImageDistancePanel.FindViewById(Resource.Id.next_image_turn_advice);
+                NextAdviceDistanceTextView = (TextView)_nextAdviceImageDistancePanel.FindViewById(Resource.Id.next_advice_distance_text);
+                _nextAdviceStreetNamePanel = (RelativeLayout)_topNextNavigationPanel.FindViewById(Resource.Id.next_advice_street_name_text_layout);
+                _nextAdviceStreetNameTextView = (TextView)_nextAdviceStreetNamePanel.FindViewById(Resource.Id.next_advice_street_name_text);
+                _nextAdviceStreetNameTextView.Selected = true;
 
-                freeDriveCurrentStreetPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_free_drive_current_street_panel, null, false);
+                _freeDriveCurrentStreetPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_free_drive_current_street_panel, null, false);
                 RelativeLayout.LayoutParams freeDrivePanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
                 freeDrivePanelParams.AddRule(LayoutRules.AlignParentTop);
-                rootLayout.AddView(freeDriveCurrentStreetPanel, freeDrivePanelParams);
-                freeDriveCurrentStreetPanel.Visibility = ViewStates.Gone;
-                TextView freeDriveCurrentStreetText = (TextView)freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text);
+                _rootLayout.AddView(_freeDriveCurrentStreetPanel, freeDrivePanelParams);
+                _freeDriveCurrentStreetPanel.Visibility = ViewStates.Gone;
+                TextView freeDriveCurrentStreetText = (TextView)_freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text);
                 freeDriveCurrentStreetText.Text = "";
 
-                viaPointPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_via_point_panel, null, false);
-                rootLayout.AddView(viaPointPanel, freeDrivePanelParams);
-                viaPointPanel.Visibility = ViewStates.Gone;
-                TextView viaPointText = (TextView)viaPointPanel.FindViewById(Resource.Id.via_point_text_view);
+                _viaPointPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_via_point_panel, null, false);
+                _rootLayout.AddView(_viaPointPanel, freeDrivePanelParams);
+                _viaPointPanel.Visibility = ViewStates.Gone;
+                TextView viaPointText = (TextView)_viaPointPanel.FindViewById(Resource.Id.via_point_text_view);
                 viaPointText.Text = "";
 
-                inflateBottomPanels();
+                InflateBottomPanels();
             });
         }
 
         /// <summary>
         /// Inflates the bottom views (speed panels, eta, route distance).
         /// </summary>
-        private void inflateBottomPanels()
+        private void InflateBottomPanels()
         {
-            LayoutInflater inflater = currentActivity.LayoutInflater;
-            speedPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_speed_panel, null, false);
+            LayoutInflater inflater = _currentActivity.LayoutInflater;
+            _speedPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_speed_panel, null, false);
             RelativeLayout.LayoutParams currentSpeedParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WrapContent, RelativeLayout.LayoutParams.WrapContent);
             currentSpeedParams.AddRule(LayoutRules.AlignParentBottom);
             currentSpeedParams.AddRule(LayoutRules.AlignParentLeft);
-            rootLayout.AddView(speedPanel, currentSpeedParams);
-            speedPanel.Id = SKToolsUtils.generateViewId();
-            speedPanel.Visibility = ViewStates.Gone;
-            currentSpeedText = (TextView)speedPanel.FindViewById(Resource.Id.free_drive_current_speed_text);
-            currentSpeedTextValue = (TextView)speedPanel.FindViewById(Resource.Id.free_drive_current_speed_text_value);
-            speedPanel.SetOnClickListener(null);
+            _rootLayout.AddView(_speedPanel, currentSpeedParams);
+            _speedPanel.Id = SKToolsUtils.GenerateViewId();
+            _speedPanel.Visibility = ViewStates.Gone;
+            CurrentSpeedText = (TextView)_speedPanel.FindViewById(Resource.Id.free_drive_current_speed_text);
+            CurrentSpeedTextValue = (TextView)_speedPanel.FindViewById(Resource.Id.free_drive_current_speed_text_value);
+            _speedPanel.SetOnClickListener(null);
 
-            arrivingETATimeGroupPanels = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_eta_arriving_group_panels, null, false);
+            _arrivingEtaTimeGroupPanels = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_eta_arriving_group_panels, null, false);
             RelativeLayout.LayoutParams etaGroupPanelsParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WrapContent, RelativeLayout.LayoutParams.WrapContent);
             etaGroupPanelsParams.AddRule(LayoutRules.AlignParentBottom);
             etaGroupPanelsParams.AddRule(LayoutRules.AlignParentRight);
-            rootLayout.AddView(arrivingETATimeGroupPanels, etaGroupPanelsParams);
-            arrivingETATimeGroupPanels.Id = SKToolsUtils.generateViewId();
-            arrivingETATimeGroupPanels.Visibility = ViewStates.Gone;
-            estimatedTimePanel = (ViewGroup)arrivingETATimeGroupPanels.FindViewById(Resource.Id.navigation_bottom_right_estimated_panel);
-            estimatedTimePanel.Click += OnItemClick;
-            arrivingTimePanel = (ViewGroup)arrivingETATimeGroupPanels.FindViewById(Resource.Id.navigation_bottom_right_arriving_panel);
-            arrivingTimePanel.Click += OnItemClick;
-            estimatedTimeText = (TextView)estimatedTimePanel.FindViewById(Resource.Id.estimated_navigation_time_text);
-            arrivingTimeText = (TextView)arrivingTimePanel.FindViewById(Resource.Id.arriving_time_text);
+            _rootLayout.AddView(_arrivingEtaTimeGroupPanels, etaGroupPanelsParams);
+            _arrivingEtaTimeGroupPanels.Id = SKToolsUtils.GenerateViewId();
+            _arrivingEtaTimeGroupPanels.Visibility = ViewStates.Gone;
+            _estimatedTimePanel = (ViewGroup)_arrivingEtaTimeGroupPanels.FindViewById(Resource.Id.navigation_bottom_right_estimated_panel);
+            _estimatedTimePanel.Click += OnItemClick;
+            _arrivingTimePanel = (ViewGroup)_arrivingEtaTimeGroupPanels.FindViewById(Resource.Id.navigation_bottom_right_arriving_panel);
+            _arrivingTimePanel.Click += OnItemClick;
+            _estimatedTimeText = (TextView)_estimatedTimePanel.FindViewById(Resource.Id.estimated_navigation_time_text);
+            _arrivingTimeText = (TextView)_arrivingTimePanel.FindViewById(Resource.Id.arriving_time_text);
 
 
             RelativeLayout.LayoutParams routeDistanceParams;
-            if (currentActivity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait)
+            if (_currentActivity.Resources.Configuration.Orientation == Orientation.Portrait)
             {
                 routeDistanceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
                 routeDistanceParams.AddRule(LayoutRules.AlignParentBottom);
-                routeDistanceParams.AddRule(LayoutRules.LeftOf, arrivingETATimeGroupPanels.Id);
-                routeDistanceParams.AddRule(LayoutRules.RightOf, speedPanel.Id);
+                routeDistanceParams.AddRule(LayoutRules.LeftOf, _arrivingEtaTimeGroupPanels.Id);
+                routeDistanceParams.AddRule(LayoutRules.RightOf, _speedPanel.Id);
             }
             else
             {
                 routeDistanceParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WrapContent, RelativeLayout.LayoutParams.WrapContent);
                 routeDistanceParams.AddRule(LayoutRules.AlignParentRight);
-                routeDistanceParams.AddRule(LayoutRules.Above, arrivingETATimeGroupPanels.Id);
+                routeDistanceParams.AddRule(LayoutRules.Above, _arrivingEtaTimeGroupPanels.Id);
             }
 
-            routeDistancePanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_route_distance, null, false);
-            rootLayout.AddView(routeDistancePanel, routeDistanceParams);
-            routeDistancePanel.Visibility = ViewStates.Gone;
-            routeDistanceText = (TextView)routeDistancePanel.FindViewById(Resource.Id.arriving_distance_text);
-            routeDistanceTextValue = (TextView)routeDistancePanel.FindViewById(Resource.Id.arriving_distance_text_value);
+            _routeDistancePanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_route_distance, null, false);
+            _rootLayout.AddView(_routeDistancePanel, routeDistanceParams);
+            _routeDistancePanel.Visibility = ViewStates.Gone;
+            _routeDistanceText = (TextView)_routeDistancePanel.FindViewById(Resource.Id.arriving_distance_text);
+            _routeDistanceTextValue = (TextView)_routeDistancePanel.FindViewById(Resource.Id.arriving_distance_text_value);
             RelativeLayout.LayoutParams positionMeParams;
-            positionMeButtonPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_position_me_button, null, false);
+            _positionMeButtonPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_position_me_button, null, false);
             positionMeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
-            rootLayout.AddView(positionMeButtonPanel, positionMeParams);
-            positionMeButtonPanel.Visibility = ViewStates.Gone;
-            positionMeButtonPanel.FindViewById(Resource.Id.position_me_real_navigation_button).Click += OnItemClick;
+            _rootLayout.AddView(_positionMeButtonPanel, positionMeParams);
+            _positionMeButtonPanel.Visibility = ViewStates.Gone;
+            _positionMeButtonPanel.FindViewById(Resource.Id.position_me_real_navigation_button).Click += OnItemClick;
 
         }
 
         /// <summary>
         /// Inflates simulation navigation type buttons.
         /// </summary>
-        public virtual void inflateSimulationViews()
+        public virtual void InflateSimulationViews()
         {
-            LayoutInflater inflater = currentActivity.LayoutInflater;
-            navigationSimulationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_simulation_buttons, null, false);
+            LayoutInflater inflater = _currentActivity.LayoutInflater;
+            _navigationSimulationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_simulation_buttons, null, false);
             RelativeLayout.LayoutParams simulationPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WrapContent, RelativeLayout.LayoutParams.WrapContent);
-            navigationSimulationPanel.LayoutParameters = simulationPanelParams;
-            rootLayout.AddView(navigationSimulationPanel, simulationPanelParams);
-            navigationSimulationPanel.FindViewById(Resource.Id.menu_back_follower_mode_button).Click += OnItemClick;
-            navigationSimulationPanel.FindViewById(Resource.Id.navigation_increase_speed).Click += OnItemClick;
-            navigationSimulationPanel.FindViewById(Resource.Id.navigation_decrease_speed).Click += OnItemClick;
+            _navigationSimulationPanel.LayoutParameters = simulationPanelParams;
+            _rootLayout.AddView(_navigationSimulationPanel, simulationPanelParams);
+            _navigationSimulationPanel.FindViewById(Resource.Id.menu_back_follower_mode_button).Click += OnItemClick;
+            _navigationSimulationPanel.FindViewById(Resource.Id.navigation_increase_speed).Click += OnItemClick;
+            _navigationSimulationPanel.FindViewById(Resource.Id.navigation_decrease_speed).Click += OnItemClick;
         }
 
         /// <summary>
         /// Inflates simulation menu.
         /// </summary>
-        private void inflateSettingsMenu()
+        private void InflateSettingsMenu()
         {
-            LayoutInflater inflater = currentActivity.LayoutInflater;
+            LayoutInflater inflater = _currentActivity.LayoutInflater;
 
-            settingsPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_settings, null, false);
+            _settingsPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_navigation_settings, null, false);
             RelativeLayout.LayoutParams settingsPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.MatchParent);
-            rootLayout.AddView(settingsPanel, settingsPanelParams);
-            settingsPanel.Visibility = ViewStates.Gone;
+            _rootLayout.AddView(_settingsPanel, settingsPanelParams);
+            _settingsPanel.Visibility = ViewStates.Gone;
 
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_button).Click += OnSettingsItemClick;
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_day_night_mode_button).Click += OnSettingsItemClick;
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_overview_button).Click += OnSettingsItemClick;
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_route_info_button).Click += OnSettingsItemClick;
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).Click += OnSettingsItemClick;
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_panning_button).Click += OnSettingsItemClick;
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_view_mode_button).Click += OnSettingsItemClick;
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_quit_button).Click += OnSettingsItemClick;
-            settingsPanel.FindViewById(Resource.Id.navigation_settings_back_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_day_night_mode_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_overview_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_route_info_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_panning_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_view_mode_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_quit_button).Click += OnSettingsItemClick;
+            _settingsPanel.FindViewById(Resource.Id.navigation_settings_back_button).Click += OnSettingsItemClick;
         }
 
         /// <summary>
         /// Inflates the pre navigation views, that contain the panels with alternative routes.
         /// </summary>
-        private void inflatePreNavigationViews()
+        private void InflatePreNavigationViews()
         {
-            LayoutInflater inflater = currentActivity.LayoutInflater;
-            preNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_pre_navigation_buttons_panel, null, false);
+            LayoutInflater inflater = _currentActivity.LayoutInflater;
+            _preNavigationPanel = (ViewGroup)inflater.Inflate(Resource.Layout.element_pre_navigation_buttons_panel, null, false);
             RelativeLayout.LayoutParams preNavigationPanelParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
-            rootLayout.AddView(preNavigationPanel, preNavigationPanelParams);
-            preNavigationPanel.Visibility = ViewStates.Gone;
+            _rootLayout.AddView(_preNavigationPanel, preNavigationPanelParams);
+            _preNavigationPanel.Visibility = ViewStates.Gone;
 
-            preNavigationPanel.FindViewById(Resource.Id.first_route).Click += OnItemClick;
-            preNavigationPanel.FindViewById(Resource.Id.second_route).Click += OnItemClick;
-            preNavigationPanel.FindViewById(Resource.Id.third_route).Click += OnItemClick;
-            preNavigationPanel.FindViewById(Resource.Id.cancel_pre_navigation_button).Click += OnItemClick;
-            preNavigationPanel.FindViewById(Resource.Id.menu_back_prenavigation_button).Click += OnItemClick;
-            preNavigationPanel.FindViewById(Resource.Id.start_navigation_button).Click += OnItemClick;
+            _preNavigationPanel.FindViewById(Resource.Id.first_route).Click += OnItemClick;
+            _preNavigationPanel.FindViewById(Resource.Id.second_route).Click += OnItemClick;
+            _preNavigationPanel.FindViewById(Resource.Id.third_route).Click += OnItemClick;
+            _preNavigationPanel.FindViewById(Resource.Id.cancel_pre_navigation_button).Click += OnItemClick;
+            _preNavigationPanel.FindViewById(Resource.Id.menu_back_prenavigation_button).Click += OnItemClick;
+            _preNavigationPanel.FindViewById(Resource.Id.start_navigation_button).Click += OnItemClick;
         }
 
         /// <summary>
         /// Shows the start navigation button from pre navigation panel.
         /// </summary>
-        public virtual void showStartNavigationPanel()
+        public virtual void ShowStartNavigationPanel()
         {
-            preNavigationPanel.FindViewById(Resource.Id.start_navigation_button).Visibility = ViewStates.Visible;
+            _preNavigationPanel.FindViewById(Resource.Id.start_navigation_button).Visibility = ViewStates.Visible;
         }
 
         /// <summary>
@@ -701,34 +700,34 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="id"> </param>
         /// <param name="time"> </param>
         /// <param name="distance"> </param>
-        public virtual void sePreNavigationButtons(int id, string time, string distance)
+        public virtual void SePreNavigationButtons(int id, string time, string distance)
         {
-            if (preNavigationPanel != null)
+            if (_preNavigationPanel != null)
             {
-                TextView oneRoute = (TextView)preNavigationPanel.FindViewById(Resource.Id.first_route);
-                TextView twoRoutes = (TextView)preNavigationPanel.FindViewById(Resource.Id.second_route);
-                TextView threeRoutes = (TextView)preNavigationPanel.FindViewById(Resource.Id.third_route);
+                TextView oneRoute = (TextView)_preNavigationPanel.FindViewById(Resource.Id.first_route);
+                TextView twoRoutes = (TextView)_preNavigationPanel.FindViewById(Resource.Id.second_route);
+                TextView threeRoutes = (TextView)_preNavigationPanel.FindViewById(Resource.Id.third_route);
 
-                altRoutesButtons = new TextView[] { (TextView)preNavigationPanel.FindViewById(Resource.Id.first_route), (TextView)preNavigationPanel.FindViewById(Resource.Id.second_route), (TextView)preNavigationPanel.FindViewById(Resource.Id.third_route) };
-                currentActivity.RunOnUiThread(() =>
+                _altRoutesButtons = new TextView[] { (TextView)_preNavigationPanel.FindViewById(Resource.Id.first_route), (TextView)_preNavigationPanel.FindViewById(Resource.Id.second_route), (TextView)_preNavigationPanel.FindViewById(Resource.Id.third_route) };
+                _currentActivity.RunOnUiThread(() =>
                 {
                     if (id == 0)
                     {
                         oneRoute.Visibility = ViewStates.Visible;
                         twoRoutes.Visibility = ViewStates.Gone;
                         threeRoutes.Visibility = ViewStates.Gone;
-                        altRoutesButtons[0].Text = time + "\n" + distance;
+                        _altRoutesButtons[0].Text = time + "\n" + distance;
                     }
                     else if (id == 1)
                     {
                         twoRoutes.Visibility = ViewStates.Visible;
                         threeRoutes.Visibility = ViewStates.Gone;
-                        altRoutesButtons[1].Text = time + "\n" + distance;
+                        _altRoutesButtons[1].Text = time + "\n" + distance;
                     }
                     else if (id == 2)
                     {
                         threeRoutes.Visibility = ViewStates.Visible;
-                        altRoutesButtons[2].Text = time + "\n" + distance;
+                        _altRoutesButtons[2].Text = time + "\n" + distance;
                     }
                 });
             }
@@ -737,40 +736,40 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Shows the pre navigation screen.
         /// </summary>
-        public virtual void showPreNavigationScreen()
+        public virtual void ShowPreNavigationScreen()
         {
-            inflatePreNavigationViews();
-            showViewIfNotVisible(preNavigationPanel);
-            currentNavigationMode = NavigationMode.PRE_NAVIGATION;
+            InflatePreNavigationViews();
+            ShowViewIfNotVisible(_preNavigationPanel);
+            _currentNavigationMode = NavigationMode.PreNavigation;
         }
 
         /// <summary>
         /// Selects an alternative route button depending of the index.
         /// </summary>
         /// <param name="routeIndex"> </param>
-        public virtual void selectAlternativeRoute(int routeIndex)
+        public virtual void SelectAlternativeRoute(int routeIndex)
         {
-            if (altRoutesButtons == null)
+            if (_altRoutesButtons == null)
             {
                 return;
             }
-            foreach (TextView b in altRoutesButtons)
+            foreach (TextView b in _altRoutesButtons)
             {
                 b.Selected = false;
             }
-            altRoutesButtons[routeIndex].Selected = true;
+            _altRoutesButtons[routeIndex].Selected = true;
         }
 
         /// <summary>
         /// Handles back button in pre navigation and follower mode.
         /// </summary>
-        public virtual void handleNavigationBackButton()
+        public virtual void HandleNavigationBackButton()
         {
 
-            if (currentNavigationMode == NavigationMode.PRE_NAVIGATION)
+            if (_currentNavigationMode == NavigationMode.PreNavigation)
             {
-                Button backButton = (Button)currentActivity.FindViewById(Resource.Id.menu_back_prenavigation_button);
-                Button cancelButton = (Button)currentActivity.FindViewById(Resource.Id.cancel_pre_navigation_button);
+                Button backButton = (Button)_currentActivity.FindViewById(Resource.Id.menu_back_prenavigation_button);
+                Button cancelButton = (Button)_currentActivity.FindViewById(Resource.Id.cancel_pre_navigation_button);
                 if (backButton.Text.Equals(">"))
                 {
                     backButton.Text = "<";
@@ -782,10 +781,10 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     cancelButton.Visibility = ViewStates.Gone;
                 }
             }
-            else if (currentNavigationMode == NavigationMode.FOLLOWER)
+            else if (_currentNavigationMode == NavigationMode.Follower)
             {
-                Button backFollowerModeButton = (Button)currentActivity.FindViewById(Resource.Id.menu_back_follower_mode_button);
-                RelativeLayout increaseDecreaseLayout = (RelativeLayout)currentActivity.FindViewById(Resource.Id.increase_decrease_layout);
+                Button backFollowerModeButton = (Button)_currentActivity.FindViewById(Resource.Id.menu_back_follower_mode_button);
+                RelativeLayout increaseDecreaseLayout = (RelativeLayout)_currentActivity.FindViewById(Resource.Id.increase_decrease_layout);
                 if (backFollowerModeButton.Text.Equals(">"))
                 {
                     backFollowerModeButton.Text = "<";
@@ -809,16 +808,16 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 if (!value)
                 {
-                    currentActivity.FindViewById(Resource.Id.nav_settings_second_row).Visibility = ViewStates.Gone;
+                    _currentActivity.FindViewById(Resource.Id.nav_settings_second_row).Visibility = ViewStates.Gone;
 
-                    TextView routeInfo = (TextView)currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_text);
+                    TextView routeInfo = (TextView)_currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_text);
                     routeInfo.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_routeinfo, 0, 0);
-                    routeInfo.Text = currentActivity.Resources.GetString(Resource.String.navigate_settings_routeinfo);
+                    routeInfo.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_routeinfo);
                 }
                 else
                 {
-                    currentActivity.FindViewById(Resource.Id.navigation_settings_overview_button).Visibility = ViewStates.Gone;
-                    currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).Visibility = ViewStates.Gone;
+                    _currentActivity.FindViewById(Resource.Id.navigation_settings_overview_button).Visibility = ViewStates.Gone;
+                    _currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).Visibility = ViewStates.Gone;
                 }
 
             }
@@ -828,7 +827,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// hide view is visible
         /// </summary>
         /// <param name="target"> </param>
-        private void hideViewIfVisible(ViewGroup target)
+        private void HideViewIfVisible(ViewGroup target)
         {
             if (target != null && target.Visibility == ViewStates.Visible)
             {
@@ -840,7 +839,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// shows the view if not visible
         /// </summary>
         /// <param name="target"> </param>
-        private void showViewIfNotVisible(ViewGroup target)
+        private void ShowViewIfNotVisible(ViewGroup target)
         {
             if (target != null && target.Visibility == ViewStates.Gone)
             {
@@ -853,21 +852,21 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         /// <param name="distanceUnit"> </param>
         /// <param name="distanceToDestination"> </param>
-        public virtual void showRoadBlockMode(SKMaps.SKDistanceUnitType distanceUnit, long distanceToDestination)
+        public virtual void ShowRoadBlockMode(SKMaps.SKDistanceUnitType distanceUnit, long distanceToDestination)
         {
-            currentNavigationMode = NavigationMode.ROADBLOCK;
+            _currentNavigationMode = NavigationMode.Roadblock;
 
-            IList<string> items = getRoadBlocksOptionsList(distanceUnit, distanceToDestination);
+            IList<string> items = GetRoadBlocksOptionsList(distanceUnit, distanceToDestination);
 
-            ArrayAdapter<string> listAdapter = new ArrayAdapter<string>(currentActivity, Android.Resource.Layout.SimpleListItem1, items);
+            ArrayAdapter<string> listAdapter = new ArrayAdapter<string>(_currentActivity, Android.Resource.Layout.SimpleListItem1, items);
 
-            currentActivity.RunOnUiThread(() =>
+            _currentActivity.RunOnUiThread(() =>
             {
-                ListView listView = (ListView)roadBlockPanel.FindViewById(Resource.Id.roadblock_list);
+                ListView listView = (ListView)_roadBlockPanel.FindViewById(Resource.Id.roadblock_list);
                 listView.Adapter = listAdapter;
                 listView.ItemClick += OnBockedRoadsListItemClick;
-                roadBlockPanel.Visibility = ViewStates.Visible;
-                backButtonPanel.Visibility = ViewStates.Visible;
+                _roadBlockPanel.Visibility = ViewStates.Visible;
+                _backButtonPanel.Visibility = ViewStates.Visible;
             });
         }
 
@@ -877,7 +876,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="distanceUnit"> </param>
         /// <param name="distanceToDestination">
         /// @return </param>
-        private IList<string> getRoadBlocksOptionsList(SKMaps.SKDistanceUnitType distanceUnit, long distanceToDestination)
+        private IList<string> GetRoadBlocksOptionsList(SKMaps.SKDistanceUnitType distanceUnit, long distanceToDestination)
         {
             IList<string> sourceList = new List<string>();
             IList<string> roadBlocksList = new List<string>();
@@ -885,19 +884,19 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
             if(distanceUnit == SKMaps.SKDistanceUnitType.DistanceUnitKilometerMeters)
             {
-                list = currentActivity.Resources.GetStringArray(Resource.Array.road_blocks_in_meters);
+                list = _currentActivity.Resources.GetStringArray(Resource.Array.road_blocks_in_meters);
             }
             else if(distanceUnit == SKMaps.SKDistanceUnitType.DistanceUnitMilesFeet)
             {
-                list = currentActivity.Resources.GetStringArray(Resource.Array.road_blocks_in_feet);
+                list = _currentActivity.Resources.GetStringArray(Resource.Array.road_blocks_in_feet);
             }
             else if (distanceUnit == SKMaps.SKDistanceUnitType.DistanceUnitMilesYards)
             {
-                list = currentActivity.Resources.GetStringArray(Resource.Array.road_blocks_in_yards);
+                list = _currentActivity.Resources.GetStringArray(Resource.Array.road_blocks_in_yards);
             }
             else
             {
-                list = currentActivity.Resources.GetStringArray(Resource.Array.road_blocks_in_meters);
+                list = _currentActivity.Resources.GetStringArray(Resource.Array.road_blocks_in_meters);
             }
 
             foreach (var item in list)
@@ -969,7 +968,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             get
             {
-                return currentNavigationMode == NavigationMode.PRE_NAVIGATION;
+                return _currentNavigationMode == NavigationMode.PreNavigation;
             }
         }
 
@@ -982,47 +981,47 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             get
             {
-                return currentNavigationMode == NavigationMode.FOLLOWER;
+                return _currentNavigationMode == NavigationMode.Follower;
             }
         }
 
         /// <summary>
         /// Sets the navigation in follower mode.
         /// </summary>
-        public virtual void setFollowerMode()
+        public virtual void SetFollowerMode()
         {
-            currentNavigationMode = NavigationMode.FOLLOWER;
+            _currentNavigationMode = NavigationMode.Follower;
         }
 
         /// <summary>
         /// Shows the panel from the main navigation screen.
         /// </summary>
         /// <param name="isSimulationMode"> </param>
-        public virtual void showFollowerModePanels(bool isSimulationMode)
+        public virtual void ShowFollowerModePanels(bool isSimulationMode)
         {
 
-            hideViewIfVisible(positionMeButtonPanel);
-            hideViewIfVisible(settingsPanel);
-            hideViewIfVisible(roadBlockPanel);
-            hideViewIfVisible(backButtonPanel);
-            hideViewIfVisible(routeOverviewPanel);
+            HideViewIfVisible(_positionMeButtonPanel);
+            HideViewIfVisible(_settingsPanel);
+            HideViewIfVisible(_roadBlockPanel);
+            HideViewIfVisible(_backButtonPanel);
+            HideViewIfVisible(_routeOverviewPanel);
 
-            showViewIfNotVisible(speedPanel);
+            ShowViewIfNotVisible(_speedPanel);
 
-            if (!isFreeDrive)
+            if (!_isFreeDrive)
             {
-                showViewIfNotVisible(routeDistancePanel);
-                showViewIfNotVisible(topCurrentNavigationPanel);
-                showViewIfNotVisible(arrivingETATimeGroupPanels);
+                ShowViewIfNotVisible(_routeDistancePanel);
+                ShowViewIfNotVisible(_topCurrentNavigationPanel);
+                ShowViewIfNotVisible(_arrivingEtaTimeGroupPanels);
             }
             else
             {
-                showViewIfNotVisible(freeDriveCurrentStreetPanel);
+                ShowViewIfNotVisible(_freeDriveCurrentStreetPanel);
             }
 
             if (isSimulationMode)
             {
-                showViewIfNotVisible(navigationSimulationPanel);
+                ShowViewIfNotVisible(_navigationSimulationPanel);
             }
         }
 
@@ -1030,51 +1029,51 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Shows the panning mode screen.
         /// </summary>
         /// <param name="isNavigationTypeReal"> </param>
-        public virtual void showPanningMode(bool isNavigationTypeReal)
+        public virtual void ShowPanningMode(bool isNavigationTypeReal)
         {
-            currentNavigationMode = NavigationMode.PANNING;
+            _currentNavigationMode = NavigationMode.Panning;
             if (isNavigationTypeReal)
             {
-                showViewIfNotVisible(positionMeButtonPanel);
+                ShowViewIfNotVisible(_positionMeButtonPanel);
             }
-            showViewIfNotVisible(backButtonPanel);
-            cancelSpeedExceededThread();
+            ShowViewIfNotVisible(_backButtonPanel);
+            CancelSpeedExceededThread();
         }
 
         /// <summary>
         /// Shows the setting menu screen.
         /// </summary>
-        public virtual void showSettingsMode()
+        public virtual void ShowSettingsMode()
         {
-            currentNavigationMode = NavigationMode.SETTINGS;
-            hideViewIfVisible(navigationSimulationPanel);
-            initialiseVolumeSeekBar();
-            hideViewIfVisible(topNextNavigationPanel);
-            hideViewIfVisible(topCurrentNavigationPanel);
-            hideViewIfVisible(routeOverviewPanel);
-            hideViewIfVisible(reRoutingPanel);
-            hideViewIfVisible(freeDriveCurrentStreetPanel);
-            hideBottomAndLeftPanels();
-            showViewIfNotVisible(settingsPanel);
+            _currentNavigationMode = NavigationMode.Settings;
+            HideViewIfVisible(_navigationSimulationPanel);
+            InitialiseVolumeSeekBar();
+            HideViewIfVisible(_topNextNavigationPanel);
+            HideViewIfVisible(_topCurrentNavigationPanel);
+            HideViewIfVisible(_routeOverviewPanel);
+            HideViewIfVisible(_reRoutingPanel);
+            HideViewIfVisible(_freeDriveCurrentStreetPanel);
+            HideBottomAndLeftPanels();
+            ShowViewIfNotVisible(_settingsPanel);
         }
 
         /// <summary>
         /// Shows the overview screen.
         /// </summary>
         /// <param name="address"> </param>
-        public virtual void showOverviewMode(string address)
+        public virtual void ShowOverviewMode(string address)
         {
-            currentNavigationMode = NavigationMode.ROUTE_OVERVIEW;
+            _currentNavigationMode = NavigationMode.RouteOverview;
 
-            hideViewIfVisible(topNextNavigationPanel);
-            hideViewIfVisible(topCurrentNavigationPanel);
-            hideBottomAndLeftPanels();
+            HideViewIfVisible(_topNextNavigationPanel);
+            HideViewIfVisible(_topCurrentNavigationPanel);
+            HideBottomAndLeftPanels();
 
-            routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_starting_position_layout).Visibility = ViewStates.Gone;
+            _routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_starting_position_layout).Visibility = ViewStates.Gone;
 
-            ((TextView)routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_text)).Text = address;
-            routeOverviewPanel.Visibility = ViewStates.Visible;
-            backButtonPanel.Visibility = ViewStates.Visible;
+            ((TextView)_routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_text)).Text = address;
+            _routeOverviewPanel.Visibility = ViewStates.Visible;
+            _backButtonPanel.Visibility = ViewStates.Visible;
         }
 
         /// <summary>
@@ -1082,100 +1081,100 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         /// <param name="startAddress"> </param>
         /// <param name="destinationAddress"> </param>
-        public virtual void showRouteInfoScreen(string startAddress, string destinationAddress)
+        public virtual void ShowRouteInfoScreen(string startAddress, string destinationAddress)
         {
-            currentNavigationMode = NavigationMode.ROUTE_INFO;
+            _currentNavigationMode = NavigationMode.RouteInfo;
 
-            hideViewIfVisible(topNextNavigationPanel);
-            hideViewIfVisible(topCurrentNavigationPanel);
-            hideBottomAndLeftPanels();
+            HideViewIfVisible(_topNextNavigationPanel);
+            HideViewIfVisible(_topCurrentNavigationPanel);
+            HideBottomAndLeftPanels();
 
-            ((TextView)routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_current_position_text)).Text = startAddress;
-            ((TextView)routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_text)).Text = destinationAddress;
+            ((TextView)_routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_current_position_text)).Text = startAddress;
+            ((TextView)_routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_text)).Text = destinationAddress;
 
-            routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_starting_position_layout).Visibility = ViewStates.Visible;
-            routeOverviewPanel.Visibility = ViewStates.Visible;
-            backButtonPanel.Visibility = ViewStates.Visible;
+            _routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_starting_position_layout).Visibility = ViewStates.Visible;
+            _routeOverviewPanel.Visibility = ViewStates.Visible;
+            _backButtonPanel.Visibility = ViewStates.Visible;
         }
 
         /// <summary>
         /// Shows the route info screen from free drive mode.
         /// </summary>
-        public virtual void showRouteInfoFreeDriveScreen()
+        public virtual void ShowRouteInfoFreeDriveScreen()
         {
-            currentNavigationMode = NavigationMode.ROUTE_INFO;
+            _currentNavigationMode = NavigationMode.RouteInfo;
 
-            hideViewIfVisible(freeDriveCurrentStreetPanel);
-            hideBottomAndLeftPanels();
-            routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_starting_position_layout).Visibility = ViewStates.Gone;
+            HideViewIfVisible(_freeDriveCurrentStreetPanel);
+            HideBottomAndLeftPanels();
+            _routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_starting_position_layout).Visibility = ViewStates.Gone;
 
-            routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_layout).Visibility = ViewStates.Visible;
+            _routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_layout).Visibility = ViewStates.Visible;
 
-            ((TextView)routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_label)).Text = currentActivity.GetString(Resource.String.current_position);
-            ((TextView)routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_text)).Text = currentStreetNameFreeDriveString;
+            ((TextView)_routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_label)).Text = _currentActivity.GetString(Resource.String.current_position);
+            ((TextView)_routeOverviewPanel.FindViewById(Resource.Id.navigation_route_overview_destination_text)).Text = _currentStreetNameFreeDriveString;
 
-            routeOverviewPanel.Visibility = ViewStates.Visible;
-            backButtonPanel.Visibility = ViewStates.Visible;
+            _routeOverviewPanel.Visibility = ViewStates.Visible;
+            _backButtonPanel.Visibility = ViewStates.Visible;
         }
 
         /// <summary>
         /// removes the top panels
         /// </summary>
-        public virtual void hideTopPanels()
+        public virtual void HideTopPanels()
         {
-            hideViewIfVisible(reRoutingPanel);
-            hideViewIfVisible(topNextNavigationPanel);
-            hideViewIfVisible(topCurrentNavigationPanel);
-            hideViewIfVisible(freeDriveCurrentStreetPanel);
-            hideViewIfVisible(navigationSimulationPanel);
-            hideViewIfVisible(viaPointPanel);
+            HideViewIfVisible(_reRoutingPanel);
+            HideViewIfVisible(_topNextNavigationPanel);
+            HideViewIfVisible(_topCurrentNavigationPanel);
+            HideViewIfVisible(_freeDriveCurrentStreetPanel);
+            HideViewIfVisible(_navigationSimulationPanel);
+            HideViewIfVisible(_viaPointPanel);
         }
 
         /// <summary>
         /// removes the bottom and bottom left panels
         /// </summary>
-        public virtual void hideBottomAndLeftPanels()
+        public virtual void HideBottomAndLeftPanels()
         {
-            hideViewIfVisible(routeDistancePanel);
-            hideViewIfVisible(speedPanel);
-            hideViewIfVisible(arrivingETATimeGroupPanels);
+            HideViewIfVisible(_routeDistancePanel);
+            HideViewIfVisible(_speedPanel);
+            HideViewIfVisible(_arrivingEtaTimeGroupPanels);
         }
 
         /// <summary>
         /// Hide the settings menu screen.
         /// </summary>
-        public virtual void hideSettingsPanel()
+        public virtual void HideSettingsPanel()
         {
-            hideViewIfVisible(settingsPanel);
+            HideViewIfVisible(_settingsPanel);
         }
 
         /// <summary>
         /// Shows the rerouting panel.
         /// </summary>
-        public virtual void showReroutingPanel()
+        public virtual void ShowReroutingPanel()
         {
-            showViewIfNotVisible(reRoutingPanel);
+            ShowViewIfNotVisible(_reRoutingPanel);
         }
 
         /// <summary>
         /// Shows the exit navigation dialog.
         /// </summary>
-        public virtual void showExitNavigationDialog()
+        public virtual void ShowExitNavigationDialog()
         {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(currentActivity);
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(_currentActivity);
 
             alertDialog.SetTitle(Resource.String.exit_navigation_dialog_title);
-            alertDialog.SetMessage(currentActivity.Resources.GetString(Resource.String.exit_navigation_dialog_message));
+            alertDialog.SetMessage(_currentActivity.Resources.GetString(Resource.String.exit_navigation_dialog_message));
 
-            alertDialog.SetPositiveButton(currentActivity.Resources.GetString(Resource.String.ok_label), (s,e) =>
+            alertDialog.SetPositiveButton(_currentActivity.Resources.GetString(Resource.String.ok_label), (s,e) =>
                 {
                     //dialog.Cancel();
-                    isFreeDrive = false;
-                    currentNavigationMode = NavigationMode.POST_NAVIGATION;
+                    _isFreeDrive = false;
+                    _currentNavigationMode = NavigationMode.PostNavigation;
                     SKToolsLogicManager.Instance.StopNavigation();
                 });
 
-            alertDialog.SetNegativeButton(currentActivity.Resources.GetString(Resource.String.cancel_label), (s, e) =>
+            alertDialog.SetNegativeButton(_currentActivity.Resources.GetString(Resource.String.cancel_label), (s, e) =>
             {
                 //dialog.Cancel();
             });
@@ -1187,12 +1186,12 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Shows a dialog that notifies that the route calculation failed.
         /// </summary>
         /// <param name="statusCode"> </param>
-        public virtual void showRouteCalculationFailedDialog(SKRouteListenerSKRoutingErrorCode statusCode)
+        public virtual void ShowRouteCalculationFailedDialog(SKRouteListenerSKRoutingErrorCode statusCode)
         {
-            currentActivity.RunOnUiThread(() =>
+            _currentActivity.RunOnUiThread(() =>
             {
                 string dialogMessage;
-                Resources res = currentActivity.Resources;
+                Resources res = _currentActivity.Resources;
 
                 if(statusCode == SKRouteListenerSKRoutingErrorCode.SameStartAndDestination)
                 {
@@ -1215,7 +1214,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     dialogMessage = res.GetString(Resource.String.route_cannot_be_calculated);
                 }
 
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(currentActivity);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(_currentActivity);
                 alertDialog.SetTitle(Resource.String.routing_server_error);
                 alertDialog.SetMessage(dialogMessage);
 
@@ -1232,21 +1231,21 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Resets the values to a default value.
         /// </summary>
         /// <param name="distanceUnit"> </param>
-        public virtual void reset(SKMaps.SKDistanceUnitType distanceUnit)
+        public virtual void Reset(SKMaps.SKDistanceUnitType distanceUnit)
         {
-            distanceUnitType = distanceUnit;
-            nextVisualAdviceDistance = 0;
-            routeDistanceString = "";
-            nextVisualAdviceStreetName = "";
-            currentVisualAdviceDistance = 0;
-            currentVisualAdviceStreetName = "";
-            estimatedTimePanelVisible = true;
-            isNextAdviceVisible = false;
-            firstAdviceReceived = false;
-            timeToDestination = 0;
-            currentSpeedLimit = 0;
-            currentSpeed = 0;
-            initialTimeToDestination = 0;
+            _distanceUnitType = distanceUnit;
+            NextVisualAdviceDistance = 0;
+            RouteDistanceString = "";
+            NextVisualAdviceStreetName = "";
+            CurrentVisualAdviceDistance = 0;
+            CurrentVisualAdviceStreetName = "";
+            _estimatedTimePanelVisible = true;
+            IsNextAdviceVisible = false;
+            FirstAdviceReceived = false;
+            TimeToDestination = 0;
+            CurrentSpeedLimit = 0;
+            _currentSpeed = 0;
+            InitialTimeToDestination = 0;
         }
 
         /// <summary>
@@ -1254,32 +1253,32 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         /// <param name="skNavigationState"> </param>
         /// <param name="mapStyle"> </param>
-        public virtual void handleNavigationState(SKNavigationState skNavigationState, int mapStyle)
+        public virtual void HandleNavigationState(SKNavigationState skNavigationState, int mapStyle)
         {
 
-            if (currentNavigationMode == NavigationMode.FOLLOWER)
+            if (_currentNavigationMode == NavigationMode.Follower)
             {
 
-                currentActivity.RunOnUiThread(() =>
+                _currentActivity.RunOnUiThread(() =>
                     {
-                        hideViewIfVisible(reRoutingPanel);
-                        if (currentNavigationMode == NavigationMode.FOLLOWER)
+                        HideViewIfVisible(_reRoutingPanel);
+                        if (_currentNavigationMode == NavigationMode.Follower)
                         {
-                            showViewIfNotVisible(topCurrentNavigationPanel);
-                            showViewIfNotVisible(routeDistancePanel);
-                            showViewIfNotVisible(speedPanel);
+                            ShowViewIfNotVisible(_topCurrentNavigationPanel);
+                            ShowViewIfNotVisible(_routeDistancePanel);
+                            ShowViewIfNotVisible(_speedPanel);
                         }
 
-                        currentCountryCode = skNavigationState.CountryCode;
-                        distanceEstimatedUntilDestination = (int)Math.Round(skNavigationState.DistanceToDestination);
+                        CurrentCountryCode = skNavigationState.CountryCode;
+                        DistanceEstimatedUntilDestination = (int)Math.Round(skNavigationState.DistanceToDestination);
 
                         string currentVisualAdviceImage = skNavigationState.CurrentAdviceVisualAdviceFile;
 
-                        Bitmap decodedAdvice = SKToolsUtils.decodeFileToBitmap(currentVisualAdviceImage);
+                        Bitmap decodedAdvice = SKToolsUtils.DecodeFileToBitmap(currentVisualAdviceImage);
                         if (decodedAdvice != null)
                         {
-                            currentAdviceImage.SetImageBitmap(decodedAdvice);
-                            currentAdviceImage.Visibility = ViewStates.Visible;
+                            CurrentAdviceImage.SetImageBitmap(decodedAdvice);
+                            CurrentAdviceImage.Visibility = ViewStates.Visible;
                         }
 
                         string nextStreetName = skNavigationState.CurrentAdviceNextStreetName;
@@ -1301,187 +1300,187 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                             nextVisualAdviceFile = null;
                             skNavigationState.NextAdviceVisualAdviceFile = null;
                         }
-                        showDestinationReachedFlag = skNavigationState.LastAdvice;
+                        ShowDestinationReachedFlag = skNavigationState.LastAdvice;
 
-                        if (initialTimeToDestination == 0)
+                        if (InitialTimeToDestination == 0)
                         {
-                            initialTimeToDestination = skNavigationState.CurrentAdviceTimeToDestination;
+                            InitialTimeToDestination = skNavigationState.CurrentAdviceTimeToDestination;
                         }
 
-                        nextStreetType = skNavigationState.CurrentAdviceNextOsmStreetType.Value;
-                        secondNextStreetType = skNavigationState.NextAdviceNextOsmStreetType.Value;
+                        NextStreetType = skNavigationState.CurrentAdviceNextOsmStreetType.Value;
+                        SecondNextStreetType = skNavigationState.NextAdviceNextOsmStreetType.Value;
 
                         int currentDistanceToAdvice = skNavigationState.CurrentAdviceDistanceToAdvice;
                         int nextDistanceToAdvice = skNavigationState.NextAdviceDistanceToAdvice;
 
                         // speed values
-                        if (currentSpeed == 0 || currentSpeed != skNavigationState.CurrentSpeed)
+                        if (_currentSpeed == 0 || _currentSpeed != skNavigationState.CurrentSpeed)
                         {
-                            currentSpeed = skNavigationState.CurrentSpeed;
-                            currentSpeedString = Convert.ToString(SKToolsUtils.getSpeedByUnit(currentSpeed, distanceUnitType));
-                            currentSpeedText.Text = currentSpeedString;
-                            currentSpeedTextValue.Text = SKToolsUtils.getSpeedTextByUnit(currentActivity, distanceUnitType);
+                            _currentSpeed = skNavigationState.CurrentSpeed;
+                            CurrentSpeedString = Convert.ToString(SKToolsUtils.GetSpeedByUnit(_currentSpeed, _distanceUnitType));
+                            CurrentSpeedText.Text = CurrentSpeedString;
+                            CurrentSpeedTextValue.Text = SKToolsUtils.GetSpeedTextByUnit(_currentActivity, _distanceUnitType);
                         }
 
-                        if (currentSpeedLimit != skNavigationState.CurrentSpeedLimit)
+                        if (CurrentSpeedLimit != skNavigationState.CurrentSpeedLimit)
                         {
-                            currentSpeedLimit = skNavigationState.CurrentSpeedLimit;
-                            handleSpeedLimitAvailable(countryCode, distanceUnitType, mapStyle);
+                            CurrentSpeedLimit = skNavigationState.CurrentSpeedLimit;
+                            HandleSpeedLimitAvailable(countryCode, _distanceUnitType, mapStyle);
                         }
 
-                        if (navigationTotalDistance == 0)
+                        if (_navigationTotalDistance == 0)
                         {
-                            navigationTotalDistance = distanceEstimatedUntilDestination;
+                            _navigationTotalDistance = DistanceEstimatedUntilDestination;
                         }
 
                         // set next advice content & visibility
                         if (nextVisualAdviceFile != null)
                         {
-                            if (nextVisualAdviceDistance != nextDistanceToAdvice)
+                            if (NextVisualAdviceDistance != nextDistanceToAdvice)
                             {
-                                nextVisualAdviceDistance = nextDistanceToAdvice;
-                                nextAdviceDistanceTextView.Text = SKNavigationManager.Instance.FormatDistance(nextDistanceToAdvice);
+                                NextVisualAdviceDistance = nextDistanceToAdvice;
+                                NextAdviceDistanceTextView.Text = SKNavigationManager.Instance.FormatDistance(nextDistanceToAdvice);
                             }
-                            if (nextVisualAdviceStreetName != null && !nextVisualAdviceStreetName.Equals(nextAdviceNextStreetName))
+                            if (NextVisualAdviceStreetName != null && !NextVisualAdviceStreetName.Equals(nextAdviceNextStreetName))
                             {
-                                nextVisualAdviceStreetName = nextAdviceNextStreetName;
-                                nextAdviceStreetNameTextView.Text = nextAdviceNextStreetName;
+                                NextVisualAdviceStreetName = nextAdviceNextStreetName;
+                                _nextAdviceStreetNameTextView.Text = nextAdviceNextStreetName;
                             }
 
-                            Bitmap adviceFile = SKToolsUtils.decodeFileToBitmap(nextVisualAdviceFile);
+                            Bitmap adviceFile = SKToolsUtils.DecodeFileToBitmap(nextVisualAdviceFile);
                             if (adviceFile != null)
                             {
-                                nextAdviceImageView.SetImageBitmap(adviceFile);
-                                nextAdviceImageView.Visibility = ViewStates.Visible;
+                                _nextAdviceImageView.SetImageBitmap(adviceFile);
+                                _nextAdviceImageView.Visibility = ViewStates.Visible;
                             }
 
-                            setNextAdviceStreetNameVisibility();
+                            SetNextAdviceStreetNameVisibility();
                         }
 
-                        if (currentNavigationMode == NavigationMode.FOLLOWER && firstAdviceReceived)
+                        if (_currentNavigationMode == NavigationMode.Follower && FirstAdviceReceived)
                         {
 
-                            if (!isNextAdviceVisible)
+                            if (!IsNextAdviceVisible)
                             {
                                 if (nextVisualAdviceFile != null)
                                 {
-                                    isNextAdviceVisible = true;
-                                    showNextAdvice();
+                                    IsNextAdviceVisible = true;
+                                    ShowNextAdvice();
                                 }
                             }
                             else
                             {
                                 if (nextVisualAdviceFile == null)
                                 {
-                                    isNextAdviceVisible = false;
-                                    topNextNavigationPanel.Visibility = ViewStates.Gone;
+                                    IsNextAdviceVisible = false;
+                                    _topNextNavigationPanel.Visibility = ViewStates.Gone;
                                 }
                             }
                         }
 
                         // set current advice content
-                        if (currentAdviceDistance != null && currentVisualAdviceDistance != currentDistanceToAdvice)
+                        if (CurrentAdviceDistance != null && CurrentVisualAdviceDistance != currentDistanceToAdvice)
                         {
-                            currentVisualAdviceDistance = currentDistanceToAdvice;
-                            currentAdviceDistance.Text = SKNavigationManager.Instance.FormatDistance(currentDistanceToAdvice);
+                            CurrentVisualAdviceDistance = currentDistanceToAdvice;
+                            CurrentAdviceDistance.Text = SKNavigationManager.Instance.FormatDistance(currentDistanceToAdvice);
                         }
-                        if (currentAdviceName != null && !showDestinationReachedFlag)
+                        if (CurrentAdviceName != null && !ShowDestinationReachedFlag)
                         {
                             if (exitNumber != null && exitNumber.Length > 0)
                             {
-                                string currentAdvice = currentActivity.Resources.GetString(Resource.String.exit_highway_advice_label) + " " + exitNumber;
+                                string currentAdvice = _currentActivity.Resources.GetString(Resource.String.exit_highway_advice_label) + " " + exitNumber;
                                 if (nextStreetName != null && nextStreetName.Length > 0)
                                 {
                                     currentAdvice = currentAdvice + " " + nextStreetName;
                                 }
-                                currentAdviceName.Text = currentAdvice;
-                                currentVisualAdviceStreetName = currentAdvice;
+                                CurrentAdviceName.Text = currentAdvice;
+                                CurrentVisualAdviceStreetName = currentAdvice;
                             }
                             else
                             {
-                                if (currentVisualAdviceStreetName != null && !currentVisualAdviceStreetName.Equals(nextStreetName))
+                                if (CurrentVisualAdviceStreetName != null && !CurrentVisualAdviceStreetName.Equals(nextStreetName))
                                 {
-                                    currentVisualAdviceStreetName = nextStreetName;
-                                    currentAdviceName.Text = nextStreetName;
+                                    CurrentVisualAdviceStreetName = nextStreetName;
+                                    CurrentAdviceName.Text = nextStreetName;
                                 }
                             }
                         }
 
-                        if (showDestinationReachedFlag)
+                        if (ShowDestinationReachedFlag)
                         {
-                            if (currentAdviceImage != null)
+                            if (CurrentAdviceImage != null)
                             {
-                                currentAdviceImage.SetImageResource(Resource.Drawable.ic_destination_advise_black);
+                                CurrentAdviceImage.SetImageResource(Resource.Drawable.ic_destination_advise_black);
                             }
-                            if (currentAdviceName != null)
+                            if (CurrentAdviceName != null)
                             {
-                                currentVisualAdviceStreetName = currentActivity.Resources.GetString(Resource.String.destination_reached_info_text);
-                                currentAdviceName.Text = currentVisualAdviceStreetName;
+                                CurrentVisualAdviceStreetName = _currentActivity.Resources.GetString(Resource.String.destination_reached_info_text);
+                                CurrentAdviceName.Text = CurrentVisualAdviceStreetName;
                             }
-                            if (currentAdviceDistance != null)
+                            if (CurrentAdviceDistance != null)
                             {
-                                currentVisualAdviceDistance = 0;
-                                currentAdviceDistance.Visibility = ViewStates.Gone;
+                                CurrentVisualAdviceDistance = 0;
+                                CurrentAdviceDistance.Visibility = ViewStates.Gone;
                             }
-                            disableNextAdvice();
+                            DisableNextAdvice();
                         }
 
 
                         // set estimated/arriving time
-                        if ((timeToDestination < 120) || (timeToDestination - 60 >= skNavigationState.CurrentAdviceTimeToDestination) || (timeToDestination + 60 < skNavigationState.CurrentAdviceTimeToDestination))
+                        if ((TimeToDestination < 120) || (TimeToDestination - 60 >= skNavigationState.CurrentAdviceTimeToDestination) || (TimeToDestination + 60 < skNavigationState.CurrentAdviceTimeToDestination))
                         {
 
-                            timeToDestination = skNavigationState.CurrentAdviceTimeToDestination;
-                            if (estimatedTimePanelVisible)
+                            TimeToDestination = skNavigationState.CurrentAdviceTimeToDestination;
+                            if (_estimatedTimePanelVisible)
                             {
-                                showEstimatedTime();
+                                ShowEstimatedTime();
                             }
                             else
                             {
-                                showArrivingTime();
+                                ShowArrivingTime();
                             }
                         }
 
-                        string[] distanceToDestinationSplit = SKNavigationManager.Instance.FormatDistance(distanceEstimatedUntilDestination).Split(' ');
-                        if (!routeDistanceString.Equals(distanceToDestinationSplit[0]))
+                        string[] distanceToDestinationSplit = SKNavigationManager.Instance.FormatDistance(DistanceEstimatedUntilDestination).Split(' ');
+                        if (!RouteDistanceString.Equals(distanceToDestinationSplit[0]))
                         {
-                            routeDistanceString = distanceToDestinationSplit[0];
+                            RouteDistanceString = distanceToDestinationSplit[0];
                             if (distanceToDestinationSplit.Length > 1)
                             {
-                                routeDistanceValueString = distanceToDestinationSplit[1];
+                                RouteDistanceValueString = distanceToDestinationSplit[1];
                             }
-                            setRouteDistanceFields();
+                            SetRouteDistanceFields();
                         }
 
                         // when we receive the first advice we show the panels that were set accordingly
-                        if (!firstAdviceReceived)
+                        if (!FirstAdviceReceived)
                         {
-                            firstAdviceReceived = true;
+                            FirstAdviceReceived = true;
 
-                            if (currentNavigationMode == NavigationMode.FOLLOWER)
+                            if (_currentNavigationMode == NavigationMode.Follower)
                             {
-                                showViewIfNotVisible(topCurrentNavigationPanel);
+                                ShowViewIfNotVisible(_topCurrentNavigationPanel);
 
                                 if (nextVisualAdviceFile != null)
                                 {
-                                    isNextAdviceVisible = true;
-                                    showNextAdvice();
+                                    IsNextAdviceVisible = true;
+                                    ShowNextAdvice();
                                 }
                                 else
                                 {
-                                    isNextAdviceVisible = false;
+                                    IsNextAdviceVisible = false;
                                 }
-                                if (currentAdviceDistance != null && !showDestinationReachedFlag)
+                                if (CurrentAdviceDistance != null && !ShowDestinationReachedFlag)
                                 {
-                                    currentAdviceDistance.Visibility = ViewStates.Visible;
+                                    CurrentAdviceDistance.Visibility = ViewStates.Visible;
                                 }
-                                if (!firstTimeNavigation)
+                                if (!_firstTimeNavigation)
                                 {
-                                    topCurrentNavigationPanel.BringToFront();
+                                    _topCurrentNavigationPanel.BringToFront();
                                 }
 
-                                showViewIfNotVisible(routeDistancePanel);
-                                showViewIfNotVisible(arrivingETATimeGroupPanels);
+                                ShowViewIfNotVisible(_routeDistancePanel);
+                                ShowViewIfNotVisible(_arrivingEtaTimeGroupPanels);
                             }
                         }
                     });
@@ -1492,43 +1491,43 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// sets top panels background colour
         /// </summary>
-        public virtual void setTopPanelsBackgroundColour(int mapStyle, bool currentAdviceChanged, bool nextAdviceChanged)
+        public virtual void SetTopPanelsBackgroundColour(int mapStyle, bool currentAdviceChanged, bool nextAdviceChanged)
         {
-            if (signPostsCountryExceptions.Contains(currentCountryCode))
+            if (SignPostsCountryExceptions.Contains(CurrentCountryCode))
             {
-                isDefaultTopPanelBackgroundColor = false;
+                _isDefaultTopPanelBackgroundColor = false;
                 if (currentAdviceChanged || !nextAdviceChanged)
                 {
-                    verifyStreetType(mapStyle, nextStreetType, true);
+                    VerifyStreetType(mapStyle, NextStreetType, true);
                 }
-                if (nextStreetType == secondNextStreetType)
+                if (NextStreetType == SecondNextStreetType)
                 {
-                    if (nextAdviceChanged && isNextAdviceVisible || !currentAdviceChanged && !nextAdviceChanged)
+                    if (nextAdviceChanged && IsNextAdviceVisible || !currentAdviceChanged && !nextAdviceChanged)
                     {
-                        verifyStreetType(mapStyle, 0, false);
+                        VerifyStreetType(mapStyle, 0, false);
                     }
                 }
                 else
                 {
-                    if (nextAdviceChanged && isNextAdviceVisible || !currentAdviceChanged && !nextAdviceChanged)
+                    if (nextAdviceChanged && IsNextAdviceVisible || !currentAdviceChanged && !nextAdviceChanged)
                     {
-                        verifyStreetType(mapStyle, secondNextStreetType, false);
+                        VerifyStreetType(mapStyle, SecondNextStreetType, false);
                     }
                 }
             }
             else
             {
-                if (!isDefaultTopPanelBackgroundColor)
+                if (!_isDefaultTopPanelBackgroundColor)
                 {
-                    if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                    if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                     {
                         if (currentAdviceChanged || !nextAdviceChanged)
                         {
-                            setTopPanelsStyle(Resource.Color.white, Resource.Color.black, true);
+                            SetTopPanelsStyle(Resource.Color.white, Resource.Color.black, true);
                         }
-                        if (nextAdviceChanged && isNextAdviceVisible || !currentAdviceChanged && !nextAdviceChanged)
+                        if (nextAdviceChanged && IsNextAdviceVisible || !currentAdviceChanged && !nextAdviceChanged)
                         {
-                            setTopPanelsStyle(Resource.Color.white, Resource.Color.black, false);
+                            SetTopPanelsStyle(Resource.Color.white, Resource.Color.black, false);
                         }
 
                     }
@@ -1536,15 +1535,15 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     {
                         if (currentAdviceChanged || !nextAdviceChanged)
                         {
-                            setTopPanelsStyle(Resource.Color.navigation_style_night, Resource.Color.gray, true);
+                            SetTopPanelsStyle(Resource.Color.navigation_style_night, Resource.Color.gray, true);
                         }
-                        if (nextAdviceChanged && isNextAdviceVisible || !currentAdviceChanged && !nextAdviceChanged)
+                        if (nextAdviceChanged && IsNextAdviceVisible || !currentAdviceChanged && !nextAdviceChanged)
                         {
-                            setTopPanelsStyle(Resource.Color.navigation_style_night, Resource.Color.gray, false);
+                            SetTopPanelsStyle(Resource.Color.navigation_style_night, Resource.Color.gray, false);
                         }
                     }
                 }
-                isDefaultTopPanelBackgroundColor = true;
+                _isDefaultTopPanelBackgroundColor = true;
             }
         }
 
@@ -1555,103 +1554,103 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="mapStyle"> </param>
         /// <param name="streetType"> </param>
         /// <param name="forCurrent"> </param>
-        private void verifyStreetType(int mapStyle, int streetType, bool forCurrent)
+        private void VerifyStreetType(int mapStyle, int streetType, bool forCurrent)
         {
-            if (streetType == OSM_STREET_TYPE_MOTORWAY || streetType == OSM_STREET_TYPE_MOTORWAY_LINK)
+            if (streetType == OsmStreetTypeMotorway || streetType == OsmStreetTypeMotorwayLink)
             {
-                if ((currentCountryCode.Equals("CH")) || (currentCountryCode.Equals("US")))
+                if ((CurrentCountryCode.Equals("CH")) || (CurrentCountryCode.Equals("US")))
                 {
-                    if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                    if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                     {
-                        setTopPanelsStyle(Resource.Color.green_panel_day_background, Resource.Color.white, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.green_panel_day_background, Resource.Color.white, forCurrent);
                     }
                     else
                     {
-                        setTopPanelsStyle(Resource.Color.green_panel_night_background, Resource.Color.green_panel_night_text, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.green_panel_night_background, Resource.Color.green_panel_night_text, forCurrent);
                     }
                 }
                 else
                 {
-                    if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                    if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                     {
-                        setTopPanelsStyle(Resource.Color.blue_panel_day_background, Resource.Color.white, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.blue_panel_day_background, Resource.Color.white, forCurrent);
                     }
                     else
                     {
-                        setTopPanelsStyle(Resource.Color.blue_panel_night_background, Resource.Color.blue_panel_night_text, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.blue_panel_night_background, Resource.Color.blue_panel_night_text, forCurrent);
                     }
                 }
             }
-            else if (streetType == OSM_STREET_TYPE_PRIMARY || streetType == OSM_STREET_TYPE_PRIMARY_LINK)
+            else if (streetType == OsmStreetTypePrimary || streetType == OsmStreetTypePrimaryLink)
             {
-                if (currentCountryCode.Equals("CH"))
+                if (CurrentCountryCode.Equals("CH"))
                 {
-                    if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                    if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                     {
-                        setTopPanelsStyle(Resource.Color.blue_panel_day_background, Resource.Color.white, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.blue_panel_day_background, Resource.Color.white, forCurrent);
                     }
                     else
                     {
-                        setTopPanelsStyle(Resource.Color.blue_panel_night_background, Resource.Color.blue_panel_night_text, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.blue_panel_night_background, Resource.Color.blue_panel_night_text, forCurrent);
                     }
                 }
-                else if (currentCountryCode.Equals("US"))
+                else if (CurrentCountryCode.Equals("US"))
                 {
-                    if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                    if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                     {
-                        setTopPanelsStyle(Resource.Color.green_panel_day_background, Resource.Color.white, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.green_panel_day_background, Resource.Color.white, forCurrent);
                     }
                     else
                     {
-                        setTopPanelsStyle(Resource.Color.green_panel_night_background, Resource.Color.green_panel_night_text, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.green_panel_night_background, Resource.Color.green_panel_night_text, forCurrent);
                     }
                 }
                 else
                 {
-                    if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                    if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                     {
-                        setTopPanelsStyle(Resource.Color.yellow_panel_day_background, Resource.Color.black, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.yellow_panel_day_background, Resource.Color.black, forCurrent);
                     }
                     else
                     {
-                        setTopPanelsStyle(Resource.Color.yellow_panel_night_background, Resource.Color.yellow_panel_night_text, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.yellow_panel_night_background, Resource.Color.yellow_panel_night_text, forCurrent);
                     }
                 }
             }
-            else if (streetType == OSM_STREET_TYPE_TRUNK || streetType == OSM_STREET_TYPE_TRUNK_LINK)
+            else if (streetType == OsmStreetTypeTrunk || streetType == OsmStreetTypeTrunkLink)
             {
-                if ((currentCountryCode.Equals("GB")) || (currentCountryCode.Equals("US")))
+                if ((CurrentCountryCode.Equals("GB")) || (CurrentCountryCode.Equals("US")))
                 {
-                    if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                    if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                     {
-                        setTopPanelsStyle(Resource.Color.green_panel_day_background, Resource.Color.white, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.green_panel_day_background, Resource.Color.white, forCurrent);
                     }
                     else
                     {
-                        setTopPanelsStyle(Resource.Color.green_panel_night_background, Resource.Color.green_panel_night_text, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.green_panel_night_background, Resource.Color.green_panel_night_text, forCurrent);
                     }
                 }
                 else
                 {
-                    if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                    if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                     {
-                        setTopPanelsStyle(Resource.Color.white, Resource.Color.black, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.white, Resource.Color.black, forCurrent);
                     }
                     else
                     {
-                        setTopPanelsStyle(Resource.Color.navigation_style_night, Resource.Color.gray, forCurrent);
+                        SetTopPanelsStyle(Resource.Color.navigation_style_night, Resource.Color.gray, forCurrent);
                     }
                 }
             }
             else
             {
-                if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+                if (mapStyle == SKToolsMapOperationsManager.DayStyle)
                 {
-                    setTopPanelsStyle(Resource.Color.white, Resource.Color.black, forCurrent);
+                    SetTopPanelsStyle(Resource.Color.white, Resource.Color.black, forCurrent);
                 }
                 else
                 {
-                    setTopPanelsStyle(Resource.Color.navigation_style_night, Resource.Color.gray, forCurrent);
+                    SetTopPanelsStyle(Resource.Color.navigation_style_night, Resource.Color.gray, forCurrent);
                 }
             }
         }
@@ -1663,65 +1662,65 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="drawableId"> </param>
         /// <param name="textColor"> </param>
         /// <param name="forCurrentAdvice"> </param>
-        protected internal virtual void setTopPanelsStyle(int drawableId, int textColor, bool forCurrentAdvice)
+        protected internal virtual void SetTopPanelsStyle(int drawableId, int textColor, bool forCurrentAdvice)
         {
-            if (!isFreeDrive)
+            if (!_isFreeDrive)
             {
                 if (forCurrentAdvice)
                 {
-                    if (topCurrentNavigationDistanceStreetPanel != null)
+                    if (_topCurrentNavigationDistanceStreetPanel != null)
                     {
-                        topCurrentNavigationDistanceStreetPanel.SetBackgroundColor(currentActivity.Resources.GetColor(drawableId));
+                        _topCurrentNavigationDistanceStreetPanel.SetBackgroundColor(_currentActivity.Resources.GetColor(drawableId));
                     }
-                    if (topCurrentNavigationPanel != null)
+                    if (_topCurrentNavigationPanel != null)
                     {
-                        RelativeLayout topCurrentNavigationImagePanel = (RelativeLayout)topCurrentNavigationPanel.FindViewById(Resource.Id.current_advice_image_holder);
+                        RelativeLayout topCurrentNavigationImagePanel = (RelativeLayout)_topCurrentNavigationPanel.FindViewById(Resource.Id.current_advice_image_holder);
                         if (topCurrentNavigationImagePanel != null)
                         {
-                            topCurrentNavigationImagePanel.SetBackgroundColor(currentActivity.Resources.GetColor(drawableId));
+                            topCurrentNavigationImagePanel.SetBackgroundColor(_currentActivity.Resources.GetColor(drawableId));
                         }
                     }
-                    if (currentAdviceDistance != null)
+                    if (CurrentAdviceDistance != null)
                     {
-                        currentAdviceDistance.SetTextColor(currentActivity.Resources.GetColor(textColor));
+                        CurrentAdviceDistance.SetTextColor(_currentActivity.Resources.GetColor(textColor));
                     }
-                    if (currentAdviceName != null)
+                    if (CurrentAdviceName != null)
                     {
-                        currentAdviceName.SetTextColor(currentActivity.Resources.GetColor(textColor));
+                        CurrentAdviceName.SetTextColor(_currentActivity.Resources.GetColor(textColor));
                     }
-                    currentAdviceBackgroundDrawableId = drawableId;
+                    _currentAdviceBackgroundDrawableId = drawableId;
                 }
                 else
                 {
-                    if (nextAdviceImageDistancePanel != null)
+                    if (_nextAdviceImageDistancePanel != null)
                     {
-                        nextAdviceImageDistancePanel.SetBackgroundColor(currentActivity.Resources.GetColor(drawableId));
+                        _nextAdviceImageDistancePanel.SetBackgroundColor(_currentActivity.Resources.GetColor(drawableId));
                     }
-                    if (nextAdviceStreetNamePanel != null)
+                    if (_nextAdviceStreetNamePanel != null)
                     {
-                        nextAdviceStreetNamePanel.SetBackgroundColor(currentActivity.Resources.GetColor(drawableId));
+                        _nextAdviceStreetNamePanel.SetBackgroundColor(_currentActivity.Resources.GetColor(drawableId));
                     }
-                    if (nextAdviceDistanceTextView != null)
+                    if (NextAdviceDistanceTextView != null)
                     {
-                        nextAdviceDistanceTextView.SetTextColor(currentActivity.Resources.GetColor(textColor));
+                        NextAdviceDistanceTextView.SetTextColor(_currentActivity.Resources.GetColor(textColor));
                     }
-                    if (nextAdviceStreetNameTextView != null)
+                    if (_nextAdviceStreetNameTextView != null)
                     {
-                        nextAdviceStreetNameTextView.SetTextColor(currentActivity.Resources.GetColor(textColor));
+                        _nextAdviceStreetNameTextView.SetTextColor(_currentActivity.Resources.GetColor(textColor));
                     }
-                    nextAdviceBackgroundDrawableId = drawableId;
-                    setNextAdviceOverlayVisibility();
+                    _nextAdviceBackgroundDrawableId = drawableId;
+                    SetNextAdviceOverlayVisibility();
                 }
             }
             else
             {
-                TextView freeDriveCurrentStreetText = (TextView)freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text);
+                TextView freeDriveCurrentStreetText = (TextView)_freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text);
                 if (freeDriveCurrentStreetText != null)
                 {
-                    freeDriveCurrentStreetText.SetBackgroundColor(currentActivity.Resources.GetColor(drawableId));
-                    freeDriveCurrentStreetText.SetTextColor(currentActivity.Resources.GetColor(textColor));
+                    freeDriveCurrentStreetText.SetBackgroundColor(_currentActivity.Resources.GetColor(drawableId));
+                    freeDriveCurrentStreetText.SetTextColor(_currentActivity.Resources.GetColor(textColor));
                 }
-                currentAdviceBackgroundDrawableId = drawableId;
+                _currentAdviceBackgroundDrawableId = drawableId;
             }
         }
 
@@ -1729,79 +1728,79 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// sets the advice overlay semi transparent visibility
         /// </summary>
-        public virtual void setNextAdviceOverlayVisibility()
+        public virtual void SetNextAdviceOverlayVisibility()
         {
-            if (currentAdviceBackgroundDrawableId == nextAdviceBackgroundDrawableId)
+            if (_currentAdviceBackgroundDrawableId == _nextAdviceBackgroundDrawableId)
             {
-                topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_image_distance_overlay_background).Visibility = ViewStates.Visible;
-                if (nextVisualAdviceStreetName != null)
+                _topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_image_distance_overlay_background).Visibility = ViewStates.Visible;
+                if (NextVisualAdviceStreetName != null)
                 {
-                    topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_street_overlay_background).Visibility = ViewStates.Visible;
+                    _topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_street_overlay_background).Visibility = ViewStates.Visible;
                 }
                 else
                 {
-                    topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_street_overlay_background).Visibility = ViewStates.Gone;
+                    _topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_street_overlay_background).Visibility = ViewStates.Gone;
                 }
             }
             else
             {
-                topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_image_distance_overlay_background).Visibility = ViewStates.Gone;
-                topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_street_overlay_background).Visibility = ViewStates.Gone;
+                _topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_image_distance_overlay_background).Visibility = ViewStates.Gone;
+                _topNextNavigationPanel.FindViewById(Resource.Id.navigation_next_advice_street_overlay_background).Visibility = ViewStates.Gone;
             }
         }
 
         /// <summary>
         /// switch from estimated time to the arrived time
         /// </summary>
-        public virtual void switchEstimatedTime()
+        public virtual void SwitchEstimatedTime()
         {
-            currentActivity.RunOnUiThread(() =>
+            _currentActivity.RunOnUiThread(() =>
             {
-                if (estimatedTimePanelVisible)
+                if (_estimatedTimePanelVisible)
                 {
-                    showArrivingTime();
+                    ShowArrivingTime();
                 }
                 else
                 {
-                    showEstimatedTime();
+                    ShowEstimatedTime();
                 }
-                estimatedTimePanelVisible = !estimatedTimePanelVisible;
+                _estimatedTimePanelVisible = !_estimatedTimePanelVisible;
             });
         }
 
         /// <summary>
         /// shows estimated time
         /// </summary>
-        public virtual void showEstimatedTime()
+        public virtual void ShowEstimatedTime()
         {
-            hideViewIfVisible(arrivingTimePanel);
-            if (estimatedTimeText != null)
+            HideViewIfVisible(_arrivingTimePanel);
+            if (_estimatedTimeText != null)
             {
-                estimatedTimeText.Text = SKToolsUtils.formatTime(timeToDestination);
+                _estimatedTimeText.Text = SKToolsUtils.FormatTime(TimeToDestination);
             }
-            showViewIfNotVisible(estimatedTimePanel);
+            ShowViewIfNotVisible(_estimatedTimePanel);
         }
 
         /// <summary>
         /// calculates and shows the arriving time
         /// </summary>
-        public virtual void showArrivingTime()
+        public virtual void ShowArrivingTime()
         {
             DateTime currentTime = new DateTime();
             DateTime arrivingTime = currentTime;
-            int hours = timeToDestination / 3600;
-            int minutes = (timeToDestination % 3600) / 60;
+            int hours = TimeToDestination / 3600;
+            int minutes = (TimeToDestination % 3600) / 60;
             arrivingTime.AddMinutes(minutes);
-            TextView arrivingTimeAMPM = (TextView)arrivingTimePanel.FindViewById(Resource.Id.arriving_time_text_ampm);
-            if (arrivingTimeText != null)
+            TextView arrivingTimeAmpm = (TextView)_arrivingTimePanel.FindViewById(Resource.Id.arriving_time_text_ampm);
+            if (_arrivingTimeText != null)
             {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 arrivingTime.Add(TimeSpan.FromHours(hours));
-                arrivingTimeAMPM.Text = "";
-                arrivingTimeText.Text = simpleDateFormat.Format(new Date(arrivingTime.Year, arrivingTime.Month, arrivingTime.Day));
+                arrivingTimeAmpm.Text = "";
+                _arrivingTimeText.Text = simpleDateFormat.Format(new Date(arrivingTime.Year, arrivingTime.Month, arrivingTime.Day));
             }
-            hideViewIfVisible(estimatedTimePanel);
-            showViewIfNotVisible(arrivingTimePanel);
+            HideViewIfVisible(_estimatedTimePanel);
+            ShowViewIfNotVisible(_arrivingTimePanel);
         }
 
         /// <summary>
@@ -1813,24 +1812,24 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             get
             {
-                return isFreeDrive;
+                return _isFreeDrive;
             }
         }
 
         /// <summary>
         /// Sets the free drive mode.
         /// </summary>
-        public virtual void setFreeDriveMode()
+        public virtual void SetFreeDriveMode()
         {
-            firstAdviceReceived = false;
-            isFreeDrive = true;
+            FirstAdviceReceived = false;
+            _isFreeDrive = true;
 
-            hideViewIfVisible(routeDistancePanel);
-            hideViewIfVisible(arrivingETATimeGroupPanels);
+            HideViewIfVisible(_routeDistancePanel);
+            HideViewIfVisible(_arrivingEtaTimeGroupPanels);
 
-            bool isLandscape = currentActivity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Landscape;
+            bool isLandscape = _currentActivity.Resources.Configuration.Orientation == Orientation.Landscape;
             SettingsMenuForFreeDrive = isLandscape;
-            cancelSpeedExceededThread();
+            CancelSpeedExceededThread();
         }
 
         /// <summary>
@@ -1838,24 +1837,24 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         /// <param name="countryCode"> </param>
         /// <param name="distanceUnitType"> </param>
-        public virtual void handleSpeedLimitAvailable(string countryCode, SKMaps.SKDistanceUnitType distanceUnitType, int mapStyle)
+        public virtual void HandleSpeedLimitAvailable(string countryCode, SKMaps.SKDistanceUnitType distanceUnitType, int mapStyle)
         {
 
-            if (speedPanel == null)
+            if (_speedPanel == null)
             {
                 return;
             }
 
-            TextView speedLimitText = (TextView)speedPanel.FindViewById(Resource.Id.speed_limit_value);
-            ImageView speedLimitImage = (ImageView)speedPanel.FindViewById(Resource.Id.navigation_speed_sign_image);
+            TextView speedLimitText = (TextView)_speedPanel.FindViewById(Resource.Id.speed_limit_value);
+            ImageView speedLimitImage = (ImageView)_speedPanel.FindViewById(Resource.Id.navigation_speed_sign_image);
 
             if (countryCode != null)
             {
-                isUS = countryCode.Equals("US");
-                if (isUS)
+                _isUs = countryCode.Equals("US");
+                if (_isUs)
                 {
-                    isDefaultSpeedSign = false;
-                    if (speedExceededThread == null)
+                    _isDefaultSpeedSign = false;
+                    if (_speedExceededThread == null)
                     {
                         if (speedLimitImage != null)
                         {
@@ -1865,57 +1864,57 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 }
                 else
                 {
-                    if (!isDefaultSpeedSign)
+                    if (!_isDefaultSpeedSign)
                     {
                         if (speedLimitImage != null)
                         {
                             speedLimitImage.SetImageResource(Resource.Drawable.background_speed_sign);
                         }
                     }
-                    isDefaultSpeedSign = true;
+                    _isDefaultSpeedSign = true;
                 }
             }
 
             // speed limit visibility
-            if (currentNavigationMode == NavigationMode.FOLLOWER)
+            if (_currentNavigationMode == NavigationMode.Follower)
             {
-                if (currentSpeedLimit != 0) //&& gpsIsWorking) {
+                if (CurrentSpeedLimit != 0) //&& gpsIsWorking) {
                 {
-                    if (!speedLimitAvailable)
+                    if (!_speedLimitAvailable)
                     {
-                        currentActivity.FindViewById(Resource.Id.navigation_free_drive_speed_limit_panel).Visibility = ViewStates.Visible;
+                        _currentActivity.FindViewById(Resource.Id.navigation_free_drive_speed_limit_panel).Visibility = ViewStates.Visible;
                     }
                 }
             }
 
             // set speed limit
-            if (currentSpeedLimit != 0)
+            if (CurrentSpeedLimit != 0)
             {
                 if (speedLimitText != null)
                 {
-                    speedLimitText.Text = Convert.ToString(SKToolsUtils.getSpeedByUnit(currentSpeedLimit, distanceUnitType));
-                    if (!speedLimitExceeded)
+                    speedLimitText.Text = Convert.ToString(SKToolsUtils.GetSpeedByUnit(CurrentSpeedLimit, distanceUnitType));
+                    if (!SpeedLimitExceeded)
                     {
                         speedLimitText.Visibility = ViewStates.Visible;
                         speedLimitImage.Visibility = ViewStates.Visible;
                     }
                 }
-                if (!speedLimitAvailable)
+                if (!_speedLimitAvailable)
                 {
                     CurrentSpeedPanelBackgroundAndTextColour = mapStyle;
                 }
-                speedLimitAvailable = true;
+                _speedLimitAvailable = true;
             }
             else
             {
-                if (speedLimitAvailable)
+                if (_speedLimitAvailable)
                 {
-                    currentActivity.FindViewById(Resource.Id.navigation_free_drive_speed_limit_panel).Visibility = ViewStates.Gone;
+                    _currentActivity.FindViewById(Resource.Id.navigation_free_drive_speed_limit_panel).Visibility = ViewStates.Gone;
 
                     CurrentSpeedPanelBackgroundAndTextColour = mapStyle;
 
                 }
-                speedLimitAvailable = false;
+                _speedLimitAvailable = false;
             }
 
         }
@@ -1923,11 +1922,11 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// cancels the thread that deals with the speed exceeded flow
         /// </summary>
-        private void cancelSpeedExceededThread()
+        private void CancelSpeedExceededThread()
         {
-            if (speedExceededThread != null && speedExceededThread.IsAlive)
+            if (_speedExceededThread != null && _speedExceededThread.IsAlive)
             {
-                speedExceededThread.cancel();
+                _speedExceededThread.Cancel();
             }
         }
 
@@ -1939,37 +1938,37 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             set
             {
-                RelativeLayout currentSpeedPanel = (RelativeLayout)currentActivity.FindViewById(Resource.Id.navigation_free_drive_speed_limit_panel);
-                if (value == SKToolsMapOperationsManager.DAY_STYLE)
+                RelativeLayout currentSpeedPanel = (RelativeLayout)_currentActivity.FindViewById(Resource.Id.navigation_free_drive_speed_limit_panel);
+                if (value == SKToolsMapOperationsManager.DayStyle)
                 {
                     if (currentSpeedPanel != null)
                     {
-                        currentSpeedPanel.SetBackgroundColor(currentActivity.Resources.GetColor(Resource.Color.gray));
+                        currentSpeedPanel.SetBackgroundColor(_currentActivity.Resources.GetColor(Resource.Color.gray));
                     }
-                    currentActivity.FindViewById(Resource.Id.free_drive_current_speed_linear_layout).SetBackgroundColor(currentActivity.Resources.GetColor(Resource.Color.gray));
-                    if (currentSpeedText != null)
+                    _currentActivity.FindViewById(Resource.Id.free_drive_current_speed_linear_layout).SetBackgroundColor(_currentActivity.Resources.GetColor(Resource.Color.gray));
+                    if (CurrentSpeedText != null)
                     {
-                        currentSpeedText.SetTextColor(currentActivity.Resources.GetColor(Resource.Color.black));
+                        CurrentSpeedText.SetTextColor(_currentActivity.Resources.GetColor(Resource.Color.black));
                     }
-                    if (currentSpeedTextValue != null)
+                    if (CurrentSpeedTextValue != null)
                     {
-                        currentSpeedTextValue.SetTextColor(currentActivity.Resources.GetColor(Resource.Color.black));
+                        CurrentSpeedTextValue.SetTextColor(_currentActivity.Resources.GetColor(Resource.Color.black));
                     }
                 }
-                else if (value == SKToolsMapOperationsManager.NIGHT_STYLE)
+                else if (value == SKToolsMapOperationsManager.NightStyle)
                 {
                     if (currentSpeedPanel != null)
                     {
-                        currentSpeedPanel.SetBackgroundColor(currentActivity.Resources.GetColor(Resource.Color.speed_panel_night_background));
+                        currentSpeedPanel.SetBackgroundColor(_currentActivity.Resources.GetColor(Resource.Color.speed_panel_night_background));
                     }
-                    currentActivity.FindViewById(Resource.Id.free_drive_current_speed_linear_layout).SetBackgroundColor(currentActivity.Resources.GetColor(Resource.Color.speed_panel_night_background));
-                    if (currentSpeedText != null)
+                    _currentActivity.FindViewById(Resource.Id.free_drive_current_speed_linear_layout).SetBackgroundColor(_currentActivity.Resources.GetColor(Resource.Color.speed_panel_night_background));
+                    if (CurrentSpeedText != null)
                     {
-                        currentSpeedText.SetTextColor(currentActivity.Resources.GetColor(Resource.Color.gray));
+                        CurrentSpeedText.SetTextColor(_currentActivity.Resources.GetColor(Resource.Color.gray));
                     }
-                    if (currentSpeedTextValue != null)
+                    if (CurrentSpeedTextValue != null)
                     {
-                        currentSpeedTextValue.SetTextColor(currentActivity.Resources.GetColor(Resource.Color.gray));
+                        CurrentSpeedTextValue.SetTextColor(_currentActivity.Resources.GetColor(Resource.Color.gray));
                     }
                 }
             }
@@ -1984,42 +1983,42 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="speedLimit"> </param>
         /// <param name="distanceUnitType"> </param>
         /// <param name="mapStyle"> </param>
-        public virtual void handleFreeDriveUpdated(string countryCode, string streetName, double currentFreeDriveSpeed, double speedLimit, SKMaps.SKDistanceUnitType distanceUnitType, int mapStyle)
+        public virtual void HandleFreeDriveUpdated(string countryCode, string streetName, double currentFreeDriveSpeed, double speedLimit, SKMaps.SKDistanceUnitType distanceUnitType, int mapStyle)
         {
-            currentActivity.RunOnUiThread(() =>
+            _currentActivity.RunOnUiThread(() =>
             {
-                if (isFreeDrive)
+                if (_isFreeDrive)
                 {
 
-                    if (currentSpeed == 0 || currentSpeed != currentFreeDriveSpeed)
+                    if (_currentSpeed == 0 || _currentSpeed != currentFreeDriveSpeed)
                     {
-                        currentSpeed = currentFreeDriveSpeed;
-                        currentSpeedString = Convert.ToString(SKToolsUtils.getSpeedByUnit(currentSpeed, distanceUnitType));
-                        currentSpeedText.Text = currentSpeedString;
-                        currentSpeedTextValue.Text = SKToolsUtils.getSpeedTextByUnit(currentActivity, distanceUnitType);
+                        _currentSpeed = currentFreeDriveSpeed;
+                        CurrentSpeedString = Convert.ToString(SKToolsUtils.GetSpeedByUnit(_currentSpeed, distanceUnitType));
+                        CurrentSpeedText.Text = CurrentSpeedString;
+                        CurrentSpeedTextValue.Text = SKToolsUtils.GetSpeedTextByUnit(_currentActivity, distanceUnitType);
                     }
 
-                    if (currentSpeedLimit != speedLimit)
+                    if (CurrentSpeedLimit != speedLimit)
                     {
-                        currentSpeedLimit = speedLimit;
-                        handleSpeedLimitAvailable(countryCode, distanceUnitType, mapStyle);
+                        CurrentSpeedLimit = speedLimit;
+                        HandleSpeedLimitAvailable(countryCode, distanceUnitType, mapStyle);
                     }
 
-                    setTopPanelsBackgroundColour(mapStyle, false, false);
+                    SetTopPanelsBackgroundColour(mapStyle, false, false);
 
                     if (streetName != null && !streetName.Equals(""))
                     {
-                        currentStreetNameFreeDriveString = streetName;
-                        ((TextView)freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text)).Text = streetName;
+                        _currentStreetNameFreeDriveString = streetName;
+                        ((TextView)_freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text)).Text = streetName;
                     }
                     else
                     {
-                        currentStreetNameFreeDriveString = null;
+                        _currentStreetNameFreeDriveString = null;
                     }
-                    if (currentNavigationMode == NavigationMode.FOLLOWER && currentStreetNameFreeDriveString != null)
+                    if (_currentNavigationMode == NavigationMode.Follower && _currentStreetNameFreeDriveString != null)
                     {
-                        freeDriveCurrentStreetPanel.Visibility = ViewStates.Visible;
-                        showViewIfNotVisible(speedPanel);
+                        _freeDriveCurrentStreetPanel.Visibility = ViewStates.Visible;
+                        ShowViewIfNotVisible(_speedPanel);
                     }
                 }
             });
@@ -2030,47 +2029,47 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         /// <param name="mapStyle"> </param>
         /// <param name="displayMode"> </param>
-        public virtual void handleOrientationChanged(int mapStyle, SKMapSettings.SKMapDisplayMode displayMode)
+        public virtual void HandleOrientationChanged(int mapStyle, SKMapSettings.SKMapDisplayMode displayMode)
         {
-            if (currentNavigationMode != NavigationMode.PRE_NAVIGATION || currentNavigationMode != NavigationMode.POST_NAVIGATION)
+            if (_currentNavigationMode != NavigationMode.PreNavigation || _currentNavigationMode != NavigationMode.PostNavigation)
             {
-                currentActivity.RunOnUiThread(() =>
+                _currentActivity.RunOnUiThread(() =>
                 {
-                    if (settingsPanel != null)
+                    if (_settingsPanel != null)
                     {
-                        rootLayout.RemoveView(settingsPanel);
+                        _rootLayout.RemoveView(_settingsPanel);
                     }
-                    rootLayout.RemoveView(speedPanel);
-                    rootLayout.RemoveView(routeDistancePanel);
-                    rootLayout.RemoveView(arrivingETATimeGroupPanels);
+                    _rootLayout.RemoveView(_speedPanel);
+                    _rootLayout.RemoveView(_routeDistancePanel);
+                    _rootLayout.RemoveView(_arrivingEtaTimeGroupPanels);
 
-                    inflateSettingsMenu();
-                    initialiseVolumeSeekBar();
-                    inflateBottomPanels();
+                    InflateSettingsMenu();
+                    InitialiseVolumeSeekBar();
+                    InflateBottomPanels();
 
-                    setAudioViewsFromSettings();
-                    switchMapMode(displayMode);
-                    switchDayNightStyle(mapStyle);
+                    SetAudioViewsFromSettings();
+                    SwitchMapMode(displayMode);
+                    SwitchDayNightStyle(mapStyle);
 
-                    bool isLandscape = currentActivity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Landscape;
-                    if (isFreeDrive)
+                    bool isLandscape = _currentActivity.Resources.Configuration.Orientation == Orientation.Landscape;
+                    if (_isFreeDrive)
                     {
                         SettingsMenuForFreeDrive = isLandscape;
                     }
 
-                    if (currentNavigationMode == NavigationMode.SETTINGS)
+                    if (_currentNavigationMode == NavigationMode.Settings)
                     {
-                        showViewIfNotVisible(settingsPanel);
+                        ShowViewIfNotVisible(_settingsPanel);
                     }
-                    else if (currentNavigationMode == NavigationMode.FOLLOWER)
+                    else if (_currentNavigationMode == NavigationMode.Follower)
                     {
-                        showViewIfNotVisible(speedPanel);
-                        showViewIfNotVisible(routeDistancePanel);
-                        showViewIfNotVisible(arrivingETATimeGroupPanels);
+                        ShowViewIfNotVisible(_speedPanel);
+                        ShowViewIfNotVisible(_routeDistancePanel);
+                        ShowViewIfNotVisible(_arrivingEtaTimeGroupPanels);
                     }
 
-                    setAdvicesFields();
-                    changePanelsBackgroundAndTextViewsColour(mapStyle);
+                    SetAdvicesFields();
+                    ChangePanelsBackgroundAndTextViewsColour(mapStyle);
                 });
             }
         }
@@ -2079,12 +2078,12 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Handles the speed exceeded.
         /// </summary>
         /// <param name="speedExceeded"> </param>
-        public virtual void handleSpeedExceeded(bool speedExceeded)
+        public virtual void HandleSpeedExceeded(bool speedExceeded)
         {
-            speedLimitExceeded = speedExceeded;
-            if (currentNavigationMode == NavigationMode.FOLLOWER)
+            SpeedLimitExceeded = speedExceeded;
+            if (_currentNavigationMode == NavigationMode.Follower)
             {
-                changeSpeedSigns();
+                ChangeSpeedSigns();
             }
         }
 
@@ -2092,63 +2091,63 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// sets the current and next advice panels dimensions
         /// </summary>
-        private void setAdvicesFields()
+        private void SetAdvicesFields()
         {
-            if (!isFreeDrive)
+            if (!_isFreeDrive)
             {
-                setRouteDistanceFields();
-                setETAFields();
+                SetRouteDistanceFields();
+                SetEtaFields();
             }
             else
             {
-                TextView freeDriveCurrentStreetText = (TextView)freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text);
+                TextView freeDriveCurrentStreetText = (TextView)_freeDriveCurrentStreetPanel.FindViewById(Resource.Id.free_drive_current_street_text);
                 if (freeDriveCurrentStreetText != null)
                 {
-                    freeDriveCurrentStreetText.Text = currentStreetNameFreeDriveString;
+                    freeDriveCurrentStreetText.Text = _currentStreetNameFreeDriveString;
                 }
             }
-            setCurrentSpeedFields();
-            setSpeedLimitFields();
+            SetCurrentSpeedFields();
+            SetSpeedLimitFields();
         }
 
         /// <summary>
         /// set speed limit fields
         /// </summary>
-        private void setSpeedLimitFields()
+        private void SetSpeedLimitFields()
         {
-            TextView speedLimitText = (TextView)speedPanel.FindViewById(Resource.Id.speed_limit_value);
-            if (speedLimitAvailable && speedLimitText != null && currentSpeedLimit != 0)
+            TextView speedLimitText = (TextView)_speedPanel.FindViewById(Resource.Id.speed_limit_value);
+            if (_speedLimitAvailable && speedLimitText != null && CurrentSpeedLimit != 0)
             {
-                speedLimitText.Text = Convert.ToString(Convert.ToString(SKToolsUtils.getSpeedByUnit(currentSpeedLimit, distanceUnitType)));
-                changeSpeedSigns();
+                speedLimitText.Text = Convert.ToString(Convert.ToString(SKToolsUtils.GetSpeedByUnit(CurrentSpeedLimit, _distanceUnitType)));
+                ChangeSpeedSigns();
 
-                currentActivity.FindViewById(Resource.Id.navigation_free_drive_speed_limit_panel).Visibility = ViewStates.Visible;
+                _currentActivity.FindViewById(Resource.Id.navigation_free_drive_speed_limit_panel).Visibility = ViewStates.Visible;
             }
         }
 
         /// <summary>
         /// changes the speed exceeded sign
         /// </summary>
-        private void changeSpeedSigns()
+        private void ChangeSpeedSigns()
         {
-            TextView speedLimitText = (TextView)speedPanel.FindViewById(Resource.Id.speed_limit_value);
-            ImageView speedLimitImage = (ImageView)speedPanel.FindViewById(Resource.Id.navigation_speed_sign_image);
+            TextView speedLimitText = (TextView)_speedPanel.FindViewById(Resource.Id.speed_limit_value);
+            ImageView speedLimitImage = (ImageView)_speedPanel.FindViewById(Resource.Id.navigation_speed_sign_image);
 
-            if (speedLimitExceeded)
+            if (SpeedLimitExceeded)
             {
-                if (speedExceededThread == null || !speedExceededThread.IsAlive)
+                if (_speedExceededThread == null || !_speedExceededThread.IsAlive)
                 {
-                    speedExceededThread = new SpeedExceededThread(this, true);
-                    speedExceededThread.Start();
+                    _speedExceededThread = new SpeedExceededThread(this, true);
+                    _speedExceededThread.Start();
                 }
             }
             else
             {
-                if (speedExceededThread != null)
+                if (_speedExceededThread != null)
                 {
                     if (speedLimitImage != null)
                     {
-                        if (isUS)
+                        if (_isUs)
                         {
                             speedLimitImage.SetImageResource(Resource.Drawable.background_speed_sign_us);
                         }
@@ -2161,8 +2160,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     {
                         speedLimitText.Visibility = ViewStates.Visible;
                     }
-                    speedExceededThread.cancel();
-                    speedExceededThread = null;
+                    _speedExceededThread.Cancel();
+                    _speedExceededThread = null;
                 }
             }
         }
@@ -2170,30 +2169,30 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// set current speed fields
         /// </summary>
-        private void setCurrentSpeedFields()
+        private void SetCurrentSpeedFields()
         {
-            if (currentSpeedText != null)
+            if (CurrentSpeedText != null)
             {
-                currentSpeedText.Text = currentSpeedString;
+                CurrentSpeedText.Text = CurrentSpeedString;
             }
-            if (currentSpeedTextValue != null)
+            if (CurrentSpeedTextValue != null)
             {
-                currentSpeedTextValue.Text = SKToolsUtils.getSpeedTextByUnit(currentActivity, distanceUnitType);
+                CurrentSpeedTextValue.Text = SKToolsUtils.GetSpeedTextByUnit(_currentActivity, _distanceUnitType);
             }
         }
 
         /// <summary>
         /// set eta fields
         /// </summary>
-        private void setETAFields()
+        private void SetEtaFields()
         {
-            if (estimatedTimePanelVisible)
+            if (_estimatedTimePanelVisible)
             {
-                showEstimatedTime();
+                ShowEstimatedTime();
             }
             else
             {
-                showArrivingTime();
+                ShowArrivingTime();
             }
         }
 
@@ -2201,32 +2200,32 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// sets route distance fields.
         /// </summary>
-        protected internal virtual void setRouteDistanceFields()
+        protected internal virtual void SetRouteDistanceFields()
         {
-            if (routeDistanceText != null)
+            if (_routeDistanceText != null)
             {
-                routeDistanceText.Text = routeDistanceString;
+                _routeDistanceText.Text = RouteDistanceString;
             }
-            if (routeDistanceTextValue != null)
+            if (_routeDistanceTextValue != null)
             {
-                routeDistanceTextValue.Text = routeDistanceValueString;
+                _routeDistanceTextValue.Text = RouteDistanceValueString;
             }
         }
 
         /// <summary>
         /// sets next advice street name visibility
         /// </summary>
-        private void setNextAdviceStreetNameVisibility()
+        private void SetNextAdviceStreetNameVisibility()
         {
-            if (topNextNavigationPanel != null && nextAdviceStreetNameTextView != null && nextAdviceStreetNamePanel != null)
+            if (_topNextNavigationPanel != null && _nextAdviceStreetNameTextView != null && _nextAdviceStreetNamePanel != null)
             {
-                if (nextVisualAdviceStreetName != null)
+                if (NextVisualAdviceStreetName != null)
                 {
-                    nextAdviceStreetNamePanel.Visibility = ViewStates.Visible;
+                    _nextAdviceStreetNamePanel.Visibility = ViewStates.Visible;
                 }
                 else
                 {
-                    nextAdviceStreetNamePanel.Visibility = ViewStates.Gone;
+                    _nextAdviceStreetNamePanel.Visibility = ViewStates.Gone;
                 }
             }
         }
@@ -2234,55 +2233,55 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Shows the next advice.
         /// </summary>
-        private void showNextAdvice()
+        private void ShowNextAdvice()
         {
-            topNextNavigationPanel.Visibility = ViewStates.Visible;
-            topNextNavigationPanel.BringToFront();
+            _topNextNavigationPanel.Visibility = ViewStates.Visible;
+            _topNextNavigationPanel.BringToFront();
         }
 
         /// <summary>
         /// removes the next advice
         /// </summary>
-        private void disableNextAdvice()
+        private void DisableNextAdvice()
         {
-            isNextAdviceVisible = false;
-            if (topNextNavigationPanel != null)
+            IsNextAdviceVisible = false;
+            if (_topNextNavigationPanel != null)
             {
-                topNextNavigationPanel.Visibility = ViewStates.Gone;
+                _topNextNavigationPanel.Visibility = ViewStates.Gone;
             }
         }
 
         /// <summary>
         /// Shows the via point panel for 2 seconds.
         /// </summary>
-        public virtual void showViaPointPanel()
+        public virtual void ShowViaPointPanel()
         {
-            hideViewIfVisible(topCurrentNavigationPanel);
-            hideViewIfVisible(topNextNavigationPanel);
-            showViewIfNotVisible(viaPointPanel);
+            HideViewIfVisible(_topCurrentNavigationPanel);
+            HideViewIfVisible(_topNextNavigationPanel);
+            ShowViewIfNotVisible(_viaPointPanel);
 
-            TextView viaPointText = (TextView)viaPointPanel.FindViewById(Resource.Id.via_point_text_view);
-            viaPointText.Text = currentActivity.Resources.GetString(Resource.String.via_point_reached);
+            TextView viaPointText = (TextView)_viaPointPanel.FindViewById(Resource.Id.via_point_text_view);
+            viaPointText.Text = _currentActivity.Resources.GetString(Resource.String.via_point_reached);
 
             Handler handler = new Handler();
-            handler.PostDelayed(() => { hideViewIfVisible(viaPointPanel); }, 2000);
+            handler.PostDelayed(() => { HideViewIfVisible(_viaPointPanel); }, 2000);
 
         }
 
         /// <summary>
         /// Initialises the volume bar.
         /// </summary>
-        public virtual void initialiseVolumeSeekBar()
+        public virtual void InitialiseVolumeSeekBar()
         {
-            int currentVolume = SKToolsAdvicePlayer.getCurrentDeviceVolume(currentActivity);
-            int maxVolume = SKToolsAdvicePlayer.getMaximAudioLevel(currentActivity);
-            SeekBar volumeBar = (SeekBar)settingsPanel.FindViewById(Resource.Id.navigation_settings_volume);
+            int currentVolume = SKToolsAdvicePlayer.GetCurrentDeviceVolume(_currentActivity);
+            int maxVolume = SKToolsAdvicePlayer.GetMaximAudioLevel(_currentActivity);
+            SeekBar volumeBar = (SeekBar)_settingsPanel.FindViewById(Resource.Id.navigation_settings_volume);
             volumeBar.Max = maxVolume;
             volumeBar.Progress = currentVolume;
 
             volumeBar.ProgressChanged += (s, e) =>
             {
-                AudioManager audioManager = (AudioManager)currentActivity.GetSystemService(Context.AudioService);
+                AudioManager audioManager = (AudioManager)_currentActivity.GetSystemService(Context.AudioService);
                 audioManager.SetStreamVolume(Stream.Music, e.Progress, VolumeNotificationFlags.ShowUi);
             };
         }
@@ -2290,25 +2289,25 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Changes audio settings menu item panels.
         /// </summary>
-        public virtual void loadAudioSettings()
+        public virtual void LoadAudioSettings()
         {
-            TextView audioText = ((TextView)settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_text));
+            TextView audioText = ((TextView)_settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_text));
             int? audioImageTag = (int?)audioText.Tag;
             audioImageTag = audioImageTag == null ? 0 : audioImageTag;
 
-            Resources res = currentActivity.Resources;
+            Resources res = _currentActivity.Resources;
             if (audioImageTag == Resource.Drawable.ic_audio_on)
             {
-                SKToolsAdvicePlayer.Instance.disableMute();
-                SKToolsLogicManager.Instance.playLastAdvice();
+                SKToolsAdvicePlayer.Instance.DisableMute();
+                SKToolsLogicManager.Instance.PlayLastAdvice();
                 audioText.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_audio_off, 0, 0);
                 audioText.Tag = Resource.Drawable.ic_audio_off;
                 audioText.Text = res.GetString(Resource.String.navigate_settings_audio_off);
             }
             else if (audioImageTag == 0 || audioImageTag == Resource.Drawable.ic_audio_off)
             {
-                SKToolsAdvicePlayer.Instance.stop();
-                SKToolsAdvicePlayer.Instance.enableMute();
+                SKToolsAdvicePlayer.Instance.Stop();
+                SKToolsAdvicePlayer.Instance.EnableMute();
                 audioText.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_audio_on, 0, 0);
                 audioText.Tag = Resource.Drawable.ic_audio_on;
                 audioText.Text = res.GetString(Resource.String.navigate_settings_audio_on);
@@ -2320,23 +2319,23 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// screen, depending on the progress value of the volume bar (set
         /// previously) and the current device volume.
         /// </summary>
-        protected internal virtual void setAudioViewsFromSettings()
+        protected internal virtual void SetAudioViewsFromSettings()
         {
-            if (settingsPanel != null)
+            if (_settingsPanel != null)
             {
                 if (SKToolsAdvicePlayer.Instance.Muted)
                 {
-                    TextView audioText = ((TextView)settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_text));
+                    TextView audioText = ((TextView)_settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_text));
                     audioText.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_audio_on, 0, 0);
                     audioText.Tag = Resource.Drawable.ic_audio_on;
-                    audioText.Text = currentActivity.Resources.GetString(Resource.String.navigate_settings_audio_on);
+                    audioText.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_audio_on);
                 }
                 else
                 {
-                    TextView audioText = ((TextView)settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_text));
+                    TextView audioText = ((TextView)_settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_text));
                     audioText.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_audio_off, 0, 0);
                     audioText.Tag = Resource.Drawable.ic_audio_off;
-                    audioText.Text = currentActivity.Resources.GetString(Resource.String.navigate_settings_audio_off);
+                    audioText.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_audio_off);
                 }
             }
         }
@@ -2345,41 +2344,41 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Changes settings menu item, map style panels.
         /// </summary>
         /// <param name="mapStyle"> </param>
-        public virtual void switchDayNightStyle(int mapStyle)
+        public virtual void SwitchDayNightStyle(int mapStyle)
         {
-            TextView dayNightText = ((TextView)settingsPanel.FindViewById(Resource.Id.navigation_settings_day_night_mode_text));
-            if (mapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+            TextView dayNightText = ((TextView)_settingsPanel.FindViewById(Resource.Id.navigation_settings_day_night_mode_text));
+            if (mapStyle == SKToolsMapOperationsManager.DayStyle)
             {
                 dayNightText.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_nightmode, 0, 0);
-                dayNightText.Text = currentActivity.Resources.GetString(Resource.String.navigate_settings_nightmode);
+                dayNightText.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_nightmode);
             }
             else
             {
                 dayNightText.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_daymode, 0, 0);
-                dayNightText.Text = currentActivity.Resources.GetString(Resource.String.navigate_settings_daymode);
+                dayNightText.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_daymode);
             }
 
-            isDefaultTopPanelBackgroundColor = false;
-            changePanelsBackgroundAndTextViewsColour(mapStyle);
-            setTopPanelsBackgroundColour(mapStyle, false, false);
+            _isDefaultTopPanelBackgroundColor = false;
+            ChangePanelsBackgroundAndTextViewsColour(mapStyle);
+            SetTopPanelsBackgroundColour(mapStyle, false, false);
         }
 
         /// <summary>
         /// Changes settings menu item, map mode panels.
         /// </summary>
         /// <param name="displayMode"> </param>
-        public virtual void switchMapMode(SKMapSettings.SKMapDisplayMode displayMode)
+        public virtual void SwitchMapMode(SKMapSettings.SKMapDisplayMode displayMode)
         {
-            TextView dayNightText = ((TextView)settingsPanel.FindViewById(Resource.Id.navigation_settings_view_mode_text));
+            TextView dayNightText = ((TextView)_settingsPanel.FindViewById(Resource.Id.navigation_settings_view_mode_text));
             if (displayMode == SKMapSettings.SKMapDisplayMode.Mode3d)
             {
                 dayNightText.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_2d, 0, 0);
-                dayNightText.Text = currentActivity.Resources.GetString(Resource.String.navigate_settings_2d_view);
+                dayNightText.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_2d_view);
             }
             else
             {
                 dayNightText.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_3d, 0, 0);
-                dayNightText.Text = currentActivity.Resources.GetString(Resource.String.navigate_settings_3d_view);
+                dayNightText.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_3d_view);
             }
         }
 
@@ -2387,39 +2386,39 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// sets the background drawable for all views
         /// </summary>
         /// <param name="currentMapStyle"> </param>
-        public virtual void changePanelsBackgroundAndTextViewsColour(int currentMapStyle)
+        public virtual void ChangePanelsBackgroundAndTextViewsColour(int currentMapStyle)
         {
 
-            if (currentNavigationMode == NavigationMode.PRE_NAVIGATION)
+            if (_currentNavigationMode == NavigationMode.PreNavigation)
             {
-                setPanelBackgroundAndTextColour(preNavigationPanel.FindViewById(Resource.Id.alternative_routes_layout), null, currentMapStyle);
-                setPanelBackgroundAndTextColour(preNavigationPanel.FindViewById(Resource.Id.start_navigation_button), null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_preNavigationPanel.FindViewById(Resource.Id.alternative_routes_layout), null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_preNavigationPanel.FindViewById(Resource.Id.start_navigation_button), null, currentMapStyle);
             }
             else
             {
 
-                if (!isFreeDrive)
+                if (!_isFreeDrive)
                 {
                     EtaTimeGroupPanelsBackgroundAndTextViewColour = currentMapStyle;
 
-                    setPanelBackgroundAndTextColour(routeDistancePanel.FindViewById(Resource.Id.route_distance_linear_layout), routeDistanceText, currentMapStyle);
-                    setPanelBackgroundAndTextColour(null, routeDistanceTextValue, currentMapStyle);
+                    SetPanelBackgroundAndTextColour(_routeDistancePanel.FindViewById(Resource.Id.route_distance_linear_layout), _routeDistanceText, currentMapStyle);
+                    SetPanelBackgroundAndTextColour(null, _routeDistanceTextValue, currentMapStyle);
                 }
                 else
                 {
-                    setPanelBackgroundAndTextColour(freeDriveCurrentStreetPanel, null, currentMapStyle);
+                    SetPanelBackgroundAndTextColour(_freeDriveCurrentStreetPanel, null, currentMapStyle);
                 }
 
-                setPanelBackgroundAndTextColour(speedPanel, null, currentMapStyle);
-                setPanelBackgroundAndTextColour(topCurrentNavigationPanel, null, currentMapStyle);
-                setPanelBackgroundAndTextColour(nextAdviceStreetNamePanel, null, currentMapStyle);
-                setPanelBackgroundAndTextColour(nextAdviceImageDistancePanel, null, currentMapStyle);
-                setPanelBackgroundAndTextColour(backButtonPanel.FindViewById(Resource.Id.navigation_top_back_button), null, currentMapStyle);
-                setPanelBackgroundAndTextColour(roadBlockPanel.FindViewById(Resource.Id.road_block_relative_layout), null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_speedPanel, null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_topCurrentNavigationPanel, null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_nextAdviceStreetNamePanel, null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_nextAdviceImageDistancePanel, null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_backButtonPanel.FindViewById(Resource.Id.navigation_top_back_button), null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_roadBlockPanel.FindViewById(Resource.Id.road_block_relative_layout), null, currentMapStyle);
 
-                ViewGroup routeOverviewPanel = (ViewGroup)currentActivity.FindViewById(Resource.Id.navigation_route_overview_linear_layout);
-                setPanelBackgroundAndTextColour(routeOverviewPanel, null, currentMapStyle);
-                setPanelBackgroundAndTextColour(viaPointPanel, null, currentMapStyle);
+                ViewGroup routeOverviewPanel = (ViewGroup)_currentActivity.FindViewById(Resource.Id.navigation_route_overview_linear_layout);
+                SetPanelBackgroundAndTextColour(routeOverviewPanel, null, currentMapStyle);
+                SetPanelBackgroundAndTextColour(_viaPointPanel, null, currentMapStyle);
 
                 CurrentSpeedPanelBackgroundAndTextColour = currentMapStyle;
                 SettingsPanelBackground = currentMapStyle;
@@ -2434,16 +2433,16 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             set
             {
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_day_night_mode_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_overview_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_route_info_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_roadblock_info_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_panning_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_view_mode_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_quit_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_back_button), null, value);
-                setPanelBackgroundAndTextColour(settingsPanel.FindViewById(Resource.Id.navigation_settings_seek_bar_layout), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_audio_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_day_night_mode_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_overview_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_route_info_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_roadblock_info_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_panning_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_view_mode_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_quit_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_back_button), null, value);
+                SetPanelBackgroundAndTextColour(_settingsPanel.FindViewById(Resource.Id.navigation_settings_seek_bar_layout), null, value);
             }
         }
 
@@ -2456,15 +2455,15 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             set
             {
-                TextView arrivingTimeAmPm = ((TextView)arrivingTimePanel.FindViewById(Resource.Id.arriving_time_text_ampm));
-                TextView estimatedTimeTextValue = ((TextView)estimatedTimePanel.FindViewById(Resource.Id.estimated_navigation_time_text_value));
+                TextView arrivingTimeAmPm = ((TextView)_arrivingTimePanel.FindViewById(Resource.Id.arriving_time_text_ampm));
+                TextView estimatedTimeTextValue = ((TextView)_estimatedTimePanel.FindViewById(Resource.Id.estimated_navigation_time_text_value));
 
-                setPanelBackgroundAndTextColour(arrivingTimePanel, arrivingTimeText, value);
-                setPanelBackgroundAndTextColour(null, arrivingTimeAmPm, value);
+                SetPanelBackgroundAndTextColour(_arrivingTimePanel, _arrivingTimeText, value);
+                SetPanelBackgroundAndTextColour(null, arrivingTimeAmPm, value);
                 arrivingTimeAmPm.SetCompoundDrawablesWithIntrinsicBounds(Resource.Drawable.bullet_gray, 0, Resource.Drawable.bullet_green, 0);
 
-                setPanelBackgroundAndTextColour(estimatedTimePanel, estimatedTimeText, value);
-                setPanelBackgroundAndTextColour(null, estimatedTimeTextValue, value);
+                SetPanelBackgroundAndTextColour(_estimatedTimePanel, _estimatedTimeText, value);
+                SetPanelBackgroundAndTextColour(null, estimatedTimeTextValue, value);
                 estimatedTimeTextValue.SetCompoundDrawablesWithIntrinsicBounds(Resource.Drawable.bullet_green, 0, Resource.Drawable.bullet_gray, 0);
             }
         }
@@ -2472,29 +2471,29 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// sets the background for top panel and the text color for the texts inside it
         /// </summary>
-        private void setPanelBackgroundAndTextColour(View panel, TextView textView, int currentMapStyle)
+        private void SetPanelBackgroundAndTextColour(View panel, TextView textView, int currentMapStyle)
         { // View view,
 
-            if (currentMapStyle == SKToolsMapOperationsManager.DAY_STYLE)
+            if (currentMapStyle == SKToolsMapOperationsManager.DayStyle)
             {
                 if (panel != null)
                 {
-                    panel.SetBackgroundColor(currentActivity.Resources.GetColor(Resource.Color.navigation_style_day));
+                    panel.SetBackgroundColor(_currentActivity.Resources.GetColor(Resource.Color.navigation_style_day));
                 }
                 if (textView != null)
                 {
-                    textView.SetTextColor(currentActivity.Resources.GetColor(Resource.Color.white));
+                    textView.SetTextColor(_currentActivity.Resources.GetColor(Resource.Color.white));
                 }
             }
-            else if (currentMapStyle == SKToolsMapOperationsManager.NIGHT_STYLE)
+            else if (currentMapStyle == SKToolsMapOperationsManager.NightStyle)
             {
                 if (panel != null)
                 {
-                    panel.SetBackgroundColor(currentActivity.Resources.GetColor(Resource.Color.navigation_style_night));
+                    panel.SetBackgroundColor(_currentActivity.Resources.GetColor(Resource.Color.navigation_style_night));
                 }
                 if (textView != null)
                 {
-                    textView.SetTextColor(currentActivity.Resources.GetColor(Resource.Color.gray));
+                    textView.SetTextColor(_currentActivity.Resources.GetColor(Resource.Color.gray));
                 }
             }
 
@@ -2504,91 +2503,91 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// removes views for pre navigation
         /// </summary>
-        protected internal virtual void removePreNavigationViews()
+        protected internal virtual void RemovePreNavigationViews()
         {
-            if (preNavigationPanel != null)
+            if (_preNavigationPanel != null)
             {
-                rootLayout.RemoveView(preNavigationPanel);
-                preNavigationPanel = null;
+                _rootLayout.RemoveView(_preNavigationPanel);
+                _preNavigationPanel = null;
             }
         }
 
         /// <summary>
         /// remove views with different UI for portrait and landscape
         /// </summary>
-        protected internal virtual void removeNavigationViews()
+        protected internal virtual void RemoveNavigationViews()
         {
-            cancelSpeedExceededThread();
+            CancelSpeedExceededThread();
 
-            if (topCurrentNavigationPanel != null)
+            if (_topCurrentNavigationPanel != null)
             {
-                rootLayout.RemoveView(topCurrentNavigationPanel);
-                topCurrentNavigationPanel = null;
+                _rootLayout.RemoveView(_topCurrentNavigationPanel);
+                _topCurrentNavigationPanel = null;
             }
-            if (topNextNavigationPanel != null)
+            if (_topNextNavigationPanel != null)
             {
-                rootLayout.RemoveView(topNextNavigationPanel);
-                topNextNavigationPanel = null;
+                _rootLayout.RemoveView(_topNextNavigationPanel);
+                _topNextNavigationPanel = null;
             }
-            if (menuOptions != null)
+            if (_menuOptions != null)
             {
-                rootLayout.RemoveView(menuOptions);
-                menuOptions = null;
+                _rootLayout.RemoveView(_menuOptions);
+                _menuOptions = null;
             }
-            if (routeDistancePanel != null)
+            if (_routeDistancePanel != null)
             {
-                rootLayout.RemoveView(routeDistancePanel);
-                routeDistancePanel = null;
+                _rootLayout.RemoveView(_routeDistancePanel);
+                _routeDistancePanel = null;
             }
-            if (speedPanel != null)
+            if (_speedPanel != null)
             {
-                rootLayout.RemoveView(speedPanel);
-                speedPanel = null;
+                _rootLayout.RemoveView(_speedPanel);
+                _speedPanel = null;
             }
-            if (arrivingETATimeGroupPanels != null)
+            if (_arrivingEtaTimeGroupPanels != null)
             {
-                rootLayout.RemoveView(arrivingETATimeGroupPanels);
-                arrivingETATimeGroupPanels = null;
+                _rootLayout.RemoveView(_arrivingEtaTimeGroupPanels);
+                _arrivingEtaTimeGroupPanels = null;
             }
-            if (reRoutingPanel != null)
+            if (_reRoutingPanel != null)
             {
-                rootLayout.RemoveView(reRoutingPanel);
-                reRoutingPanel = null;
+                _rootLayout.RemoveView(_reRoutingPanel);
+                _reRoutingPanel = null;
             }
-            if (freeDriveCurrentStreetPanel != null)
+            if (_freeDriveCurrentStreetPanel != null)
             {
-                rootLayout.RemoveView(freeDriveCurrentStreetPanel);
-                freeDriveCurrentStreetPanel = null;
+                _rootLayout.RemoveView(_freeDriveCurrentStreetPanel);
+                _freeDriveCurrentStreetPanel = null;
             }
-            if (settingsPanel != null)
+            if (_settingsPanel != null)
             {
-                rootLayout.RemoveView(settingsPanel);
-                settingsPanel = null;
+                _rootLayout.RemoveView(_settingsPanel);
+                _settingsPanel = null;
             }
-            if (navigationSimulationPanel != null)
+            if (_navigationSimulationPanel != null)
             {
-                rootLayout.RemoveView(navigationSimulationPanel);
-                navigationSimulationPanel = null;
+                _rootLayout.RemoveView(_navigationSimulationPanel);
+                _navigationSimulationPanel = null;
             }
-            if (viaPointPanel != null)
+            if (_viaPointPanel != null)
             {
-                rootLayout.RemoveView(viaPointPanel);
-                viaPointPanel = null;
+                _rootLayout.RemoveView(_viaPointPanel);
+                _viaPointPanel = null;
             }
-            if (routeOverviewPanel != null)
+            if (_routeOverviewPanel != null)
             {
-                rootLayout.RemoveView(routeOverviewPanel);
-                routeOverviewPanel = null;
+                _rootLayout.RemoveView(_routeOverviewPanel);
+                _routeOverviewPanel = null;
             }
-            if (roadBlockPanel != null)
+            if (_roadBlockPanel != null)
             {
-                rootLayout.RemoveView(roadBlockPanel);
-                roadBlockPanel = null;
+                _rootLayout.RemoveView(_roadBlockPanel);
+                _roadBlockPanel = null;
             }
-            if (backButtonPanel != null)
+            if (_backButtonPanel != null)
             {
-                rootLayout.RemoveView(backButtonPanel);
-                backButtonPanel = null;
+                _rootLayout.RemoveView(_backButtonPanel);
+                _backButtonPanel = null;
             }
         }
 
@@ -2596,28 +2595,28 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// speed exceeded thread
         /// </summary>
-        private class SpeedExceededThread : Java.Lang.Thread
+        private class SpeedExceededThread : Thread
         {
-            private readonly SKToolsNavigationUIManager outerInstance;
+            private readonly SKToolsNavigationUiManager _outerInstance;
 
 
-            internal bool speedExceeded;
+            internal bool SpeedExceeded;
 
-            public SpeedExceededThread(SKToolsNavigationUIManager outerInstance, bool speedExceeded)
+            public SpeedExceededThread(SKToolsNavigationUiManager outerInstance, bool speedExceeded)
             {
-                this.outerInstance = outerInstance;
-                this.speedExceeded = speedExceeded;
+                this._outerInstance = outerInstance;
+                this.SpeedExceeded = speedExceeded;
             }
 
             public virtual void run()
             {
-                ImageView speedLimitImage = (ImageView)outerInstance.speedPanel.FindViewById(Resource.Id.navigation_speed_sign_image);
-                ImageView speedAlertImage = (ImageView)outerInstance.speedPanel.FindViewById(Resource.Id.navigation_alert_sign_image);
-                TextView speedLimitText = (TextView)outerInstance.speedPanel.FindViewById(Resource.Id.speed_limit_value);
+                ImageView speedLimitImage = (ImageView)_outerInstance._speedPanel.FindViewById(Resource.Id.navigation_speed_sign_image);
+                ImageView speedAlertImage = (ImageView)_outerInstance._speedPanel.FindViewById(Resource.Id.navigation_alert_sign_image);
+                TextView speedLimitText = (TextView)_outerInstance._speedPanel.FindViewById(Resource.Id.speed_limit_value);
 
-                while (speedExceeded)
+                while (SpeedExceeded)
                 {
-                    outerInstance.currentActivity.RunOnUiThread(() =>
+                    _outerInstance._currentActivity.RunOnUiThread(() =>
                     {
                         if (speedLimitText != null)
                         {
@@ -2629,7 +2628,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                         }
                         if (speedLimitImage != null)
                         {
-                            if (outerInstance.isUS)
+                            if (_outerInstance._isUs)
                             {
                                 speedLimitImage.SetImageResource(Resource.Drawable.background_alert_sign_us);
                             }
@@ -2660,11 +2659,11 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                             Console.Write(e.StackTrace);
                         }
                     }
-                    outerInstance.currentActivity.RunOnUiThread(() =>
+                    _outerInstance._currentActivity.RunOnUiThread(() =>
                     {
                         if (speedLimitImage != null)
                         {
-                            if (outerInstance.isUS)
+                            if (_outerInstance._isUs)
                             {
                                 speedLimitImage.SetImageResource(Resource.Drawable.background_speed_sign_us);
                             }
@@ -2705,9 +2704,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             /// <summary>
             /// cancels the thread
             /// </summary>
-            public virtual void cancel()
+            public virtual void Cancel()
             {
-                this.speedExceeded = false;
+                this.SpeedExceeded = false;
             }
         }
 

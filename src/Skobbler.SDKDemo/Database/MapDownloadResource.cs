@@ -1,9 +1,9 @@
-﻿using Java.Util;
-using Skobbler.Ngx.Packages;
-using Skobbler.Ngx.SDKTools.Download;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Java.Util;
+using Skobbler.Ngx.Packages;
+using Skobbler.Ngx.SDKTools.Download;
 
 namespace Skobbler.SDKDemo.Database
 {
@@ -16,84 +16,84 @@ namespace Skobbler.SDKDemo.Database
 		/// <summary>
 		/// resource parent code
 		/// </summary>
-		private string parentCode;
+		private string _parentCode;
 
 		/// <summary>
 		/// resource name in different languages
 		/// </summary>
-		private IDictionary<string, string> names;
+		private IDictionary<string, string> _names;
 
 		/// <summary>
 		/// resource sub-type (e.g. continent, country, city, state for map resource)
 		/// </summary>
-		private string subType;
+		private string _subType;
 
 		/// <summary>
 		/// SKM file size
 		/// </summary>
-		private long skmFileSize;
+		private long _skmFileSize;
 
 		/// <summary>
 		/// SKM + ZIP file size
 		/// </summary>
-		private long skmAndZipFilesSize;
+		private long _skmAndZipFilesSize;
 
 		/// <summary>
 		/// txg file size
 		/// </summary>
-		private long txgFileSize;
+		private long _txgFileSize;
 
 		/// <summary>
 		/// UNZIPPED file size for zip file
 		/// </summary>
-		private long unzippedFileSize;
+		private long _unzippedFileSize;
 
 		/// <summary>
 		/// .SKM file path
 		/// </summary>
-		private string skmFilePath;
+		private string _skmFilePath;
 
 		/// <summary>
 		/// .ZIP file path
 		/// </summary>
-		private string zipFilePath;
+		private string _zipFilePath;
 
 		/// <summary>
 		/// .TXG file path
 		/// </summary>
-		private string txgFilePath;
+		private string _txgFilePath;
 
 		/// <summary>
 		/// bounding box minimum longitude
 		/// </summary>
-		private double bbLongMin;
+		private double _bbLongMin;
 
 		/// <summary>
 		/// bounding box maximum longitude
 		/// </summary>
-		private double bbLongMax;
+		private double _bbLongMax;
 
 		/// <summary>
 		/// bounding box minimum latitude
 		/// </summary>
-		private double bbLatMin;
+		private double _bbLatMin;
 
 		/// <summary>
 		/// bounding box maximum latitude
 		/// </summary>
-		private double bbLatMax;
+		private double _bbLatMax;
 
 		/// <summary>
 		/// flag resource id
 		/// </summary>
-		private int flagID;
+		private int _flagId;
 
 		/// <summary>
 		/// constructs an object of SKDownloadResource type
 		/// </summary>
 		public MapDownloadResource()
 		{
-			names = new Dictionary<string, string>();
+			_names = new Dictionary<string, string>();
 		}
 
 		/// <returns> the resource parent code </returns>
@@ -101,11 +101,11 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return parentCode;
+				return _parentCode;
 			}
 			set
 			{
-				this.parentCode = value;
+				this._parentCode = value;
 			}
 		}
 
@@ -116,19 +116,19 @@ namespace Skobbler.SDKDemo.Database
 			get
 			{
 				string localLanguage = Locale.Default.Language;
-				if (localLanguage.StartsWith(MapsDAO.ENGLISH_LANGUAGE_CODE, StringComparison.Ordinal))
+				if (localLanguage.StartsWith(MapsDao.EnglishLanguageCode, StringComparison.Ordinal))
 				{
-					localLanguage = MapsDAO.ENGLISH_LANGUAGE_CODE;
+					localLanguage = MapsDao.EnglishLanguageCode;
 				}
-				if (names != null)
+				if (_names != null)
 				{
-					if (names[localLanguage] == null)
+					if (_names[localLanguage] == null)
 					{
-						return names[Locale.English.Language];
+						return _names[Locale.English.Language];
 					}
 					else
 					{
-						return names[localLanguage];
+						return _names[localLanguage];
 					}
 				}
 				else
@@ -141,27 +141,27 @@ namespace Skobbler.SDKDemo.Database
 		/// <summary>
 		/// sets the name in all languages </summary>
 		/// <param name="newNames"> resource names in all languages </param>
-		public virtual void setNames(string newNames)
+		public virtual void SetNames(string newNames)
 		{
-			this.names = new Dictionary<string, string>();
+			this._names = new Dictionary<string, string>();
 			string[] keyValuePairs = newNames.Split(';');
 			foreach (String keyValue in keyValuePairs)
 			{
 				string[] newName = keyValue.Split('=');
-				this.names[newName[0]] = newName[1];
+				this._names[newName[0]] = newName[1];
 			}
 		}
 
 		/// <param name="name"> the resource name for a certain language </param>
-		public virtual void setName(string name, string language)
+		public virtual void SetName(string name, string language)
 		{
-			names[language] = name;
+			_names[language] = name;
 		}
 
 		/// <returns> names in all languages for current resource </returns>
-		public virtual IDictionary<string, string> getNames()
+		public virtual IDictionary<string, string> GetNames()
 		{
-			return names;
+			return _names;
 		}
 
 		/// <returns> the resource sub-type </returns>
@@ -169,11 +169,11 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return subType;
+				return _subType;
 			}
 			set
 			{
-				this.subType = value;
+				this._subType = value;
 			}
 		}
 
@@ -183,11 +183,11 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return skmFileSize;
+				return _skmFileSize;
 			}
 			set
 			{
-				this.skmFileSize = value;
+				this._skmFileSize = value;
 			}
 		}
 
@@ -197,25 +197,25 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return skmAndZipFilesSize;
+				return _skmAndZipFilesSize;
 			}
 			set
 			{
-				this.skmAndZipFilesSize = value;
+				this._skmAndZipFilesSize = value;
 			}
 		}
 
 
 		/// <returns> the TXG file size </returns>
-		public virtual long TXGFileSize
+		public virtual long TxgFileSize
 		{
 			get
 			{
-				return txgFileSize;
+				return _txgFileSize;
 			}
 			set
 			{
-				this.txgFileSize = value;
+				this._txgFileSize = value;
 			}
 		}
 
@@ -225,11 +225,11 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return unzippedFileSize;
+				return _unzippedFileSize;
 			}
 			set
 			{
-				this.unzippedFileSize = value;
+				this._unzippedFileSize = value;
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return skmFilePath;
+				return _skmFilePath;
 			}
 		}
 
@@ -248,7 +248,7 @@ namespace Skobbler.SDKDemo.Database
 		{
 			set
 			{
-				this.skmFilePath = value;
+				this._skmFilePath = value;
 			}
 		}
 
@@ -257,25 +257,25 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return zipFilePath;
+				return _zipFilePath;
 			}
 			set
 			{
-				this.zipFilePath = value;
+				this._zipFilePath = value;
 			}
 		}
 
 
 		/// <returns> the TXG file path </returns>
-		public virtual string TXGFilePath
+		public virtual string TxgFilePath
 		{
 			get
 			{
-				return txgFilePath;
+				return _txgFilePath;
 			}
 			set
 			{
-				this.txgFilePath = value;
+				this._txgFilePath = value;
 			}
 		}
 
@@ -285,11 +285,11 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return bbLongMin;
+				return _bbLongMin;
 			}
 			set
 			{
-				this.bbLongMin = value;
+				this._bbLongMin = value;
 			}
 		}
 
@@ -299,11 +299,11 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return bbLongMax;
+				return _bbLongMax;
 			}
 			set
 			{
-				this.bbLongMax = value;
+				this._bbLongMax = value;
 			}
 		}
 
@@ -313,11 +313,11 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return bbLatMin;
+				return _bbLatMin;
 			}
 			set
 			{
-				this.bbLatMin = value;
+				this._bbLatMin = value;
 			}
 		}
 
@@ -327,25 +327,25 @@ namespace Skobbler.SDKDemo.Database
 		{
 			get
 			{
-				return bbLatMax;
+				return _bbLatMax;
 			}
 			set
 			{
-				this.bbLatMax = value;
+				this._bbLatMax = value;
 			}
 		}
 
 
 		/// <returns> the flag ID for current resource </returns>
-		public virtual int FlagID
+		public virtual int FlagId
 		{
 			get
 			{
-				return flagID;
+				return _flagId;
 			}
 			set
 			{
-				this.flagID = value;
+				this._flagId = value;
 			}
 		}
 
@@ -388,20 +388,20 @@ namespace Skobbler.SDKDemo.Database
 			}
 		}
 
-		public override SKToolsDownloadItem toDownloadItem()
+		public override SKToolsDownloadItem ToDownloadItem()
 		{
 			SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(code);
 			IList<SKToolsFileDownloadStep> downloadSteps = new List<SKToolsFileDownloadStep>();
-			downloadSteps.Add(new SKToolsFileDownloadStep(info.MapURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.SKM_FILE_EXTENSION).ToString(), skmFileSize));
-			if (txgFileSize != 0)
+			downloadSteps.Add(new SKToolsFileDownloadStep(info.MapURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.SkmFileExtension).ToString(), _skmFileSize));
+			if (_txgFileSize != 0)
 			{
-				downloadSteps.Add(new SKToolsFileDownloadStep(info.TexturesURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.TXG_FILE_EXTENSION).ToString(), txgFileSize));
+				downloadSteps.Add(new SKToolsFileDownloadStep(info.TexturesURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.TxgFileExtension).ToString(), _txgFileSize));
 			}
-			if (unzippedFileSize != 0)
+			if (_unzippedFileSize != 0)
 			{
-				downloadSteps.Add(new SKToolsFileDownloadStep(info.NameBrowserFilesURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.ZIP_FILE_EXTENSION).ToString(), (skmAndZipFilesSize - skmFileSize)));
+				downloadSteps.Add(new SKToolsFileDownloadStep(info.NameBrowserFilesURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.ZipFileExtension).ToString(), (_skmAndZipFilesSize - _skmFileSize)));
 			}
-			SKToolsDownloadItem currentItem = new SKToolsDownloadItem(code, downloadSteps, DownloadState, (unzippedFileSize != 0), true);
+			SKToolsDownloadItem currentItem = new SKToolsDownloadItem(code, downloadSteps, DownloadState, (_unzippedFileSize != 0), true);
 			currentItem.NoDownloadedBytes = NoDownloadedBytes;
 			return currentItem;
 		}

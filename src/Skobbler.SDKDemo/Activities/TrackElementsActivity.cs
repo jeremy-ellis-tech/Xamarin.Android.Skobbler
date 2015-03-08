@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using System.Collections.Generic;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
@@ -6,7 +7,6 @@ using Android.Views;
 using Android.Widget;
 using Skobbler.Ngx.Tracks;
 using Skobbler.SDKDemo.Application;
-using System.Collections.Generic;
 
 namespace Skobbler.SDKDemo.Activities
 {
@@ -14,34 +14,34 @@ namespace Skobbler.SDKDemo.Activities
     public class TrackElementsActivity : Activity
     {
 
-        private SKTracksFile loadedFile;
+        private SKTracksFile _loadedFile;
 
-        public static SKTrackElement selectedTrackElement;
+        public static SKTrackElement SelectedTrackElement;
 
-        private ListView listView;
+        private ListView _listView;
 
-        private TrackElementsListAdapter adapter;
+        private TrackElementsListAdapter _adapter;
 
-        private IDictionary<int?, IList<object>> elementsPerLevel = new Dictionary<int?, IList<object>>();
+        private IDictionary<int?, IList<object>> _elementsPerLevel = new Dictionary<int?, IList<object>>();
 
-        private DemoApplication app;
+        private DemoApplication _app;
 
-        private int currentLevel;
+        private int _currentLevel;
 
         protected internal virtual void onCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_list);
             FindViewById(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
-            listView = (ListView)FindViewById(Resource.Id.list_view);
-            app = (DemoApplication)Application;
+            _listView = (ListView)FindViewById(Resource.Id.list_view);
+            _app = (DemoApplication)Application;
 
             string gpxName = Intent.Extras.GetString(Intent.ExtraText);
-            loadedFile = SKTracksFile.LoadAtPath(app.MapResourcesDirPath + "GPXTracks/" + gpxName);
-            initialize();
+            _loadedFile = SKTracksFile.LoadAtPath(_app.MapResourcesDirPath + "GPXTracks/" + gpxName);
+            Initialize();
         }
 
-        private IList<object> getChildrenForCollectionElement(SKTrackElement parent)
+        private IList<object> GetChildrenForCollectionElement(SKTrackElement parent)
         {
             IList<object> children = new List<object>();
             foreach (SKTrackElement childElement in parent.ChildElements)
@@ -60,57 +60,57 @@ namespace Skobbler.SDKDemo.Activities
             return children;
         }
 
-        private void changeLevel(int newLevel, SKTrackElement parent)
+        private void ChangeLevel(int newLevel, SKTrackElement parent)
         {
-            if (newLevel > currentLevel)
+            if (newLevel > _currentLevel)
             {
-                elementsPerLevel[newLevel] = getChildrenForCollectionElement(parent);
+                _elementsPerLevel[newLevel] = GetChildrenForCollectionElement(parent);
             }
-            currentLevel = newLevel;
-            adapter.NotifyDataSetChanged();
-            listView.SetSelection(0);
+            _currentLevel = newLevel;
+            _adapter.NotifyDataSetChanged();
+            _listView.SetSelection(0);
         }
 
-        private void initialize()
+        private void Initialize()
         {
-            elementsPerLevel[currentLevel] = getChildrenForCollectionElement(loadedFile.RootTrackElement);
-            adapter = new TrackElementsListAdapter(this);
-            listView.Adapter = adapter;
-            listView.ItemClick += (s, e) =>
+            _elementsPerLevel[_currentLevel] = GetChildrenForCollectionElement(_loadedFile.RootTrackElement);
+            _adapter = new TrackElementsListAdapter(this);
+            _listView.Adapter = _adapter;
+            _listView.ItemClick += (s, e) =>
             {
-                if (elementsPerLevel[currentLevel][e.Position] is SKTrackElement)
+                if (_elementsPerLevel[_currentLevel][e.Position] is SKTrackElement)
                 {
-                    changeLevel(currentLevel + 1, (SKTrackElement)elementsPerLevel[currentLevel][e.Position]);
+                    ChangeLevel(_currentLevel + 1, (SKTrackElement)_elementsPerLevel[_currentLevel][e.Position]);
                 }
             };
         }
 
         public override void OnBackPressed()
         {
-            if (currentLevel == 0)
+            if (_currentLevel == 0)
             {
                 base.OnBackPressed();
             }
             else
             {
-                changeLevel(currentLevel - 1, null);
+                ChangeLevel(_currentLevel - 1, null);
             }
         }
 
         private class TrackElementsListAdapter : BaseAdapter<object>
         {
-            private readonly TrackElementsActivity outerInstance;
+            private readonly TrackElementsActivity _outerInstance;
 
             public TrackElementsListAdapter(TrackElementsActivity outerInstance)
             {
-                this.outerInstance = outerInstance;
+                this._outerInstance = outerInstance;
             }
 
             public override int Count
             {
                 get
                 {
-                    return outerInstance.elementsPerLevel[outerInstance.currentLevel].Count;
+                    return _outerInstance._elementsPerLevel[_outerInstance._currentLevel].Count;
                 }
             }
 
@@ -124,7 +124,7 @@ namespace Skobbler.SDKDemo.Activities
                 View view = null;
                 if (convertView == null)
                 {
-                    LayoutInflater inflater = (LayoutInflater)outerInstance.GetSystemService(Context.LayoutInflaterService);
+                    LayoutInflater inflater = (LayoutInflater)_outerInstance.GetSystemService(LayoutInflaterService);
                     view = inflater.Inflate(Resource.Layout.layout_track_element_list_item, null);
                 }
                 else
@@ -133,7 +133,7 @@ namespace Skobbler.SDKDemo.Activities
                 }
                 Button drawButton = (Button)view.FindViewById(Resource.Id.draw_button);
                 TextView text = (TextView)view.FindViewById(Resource.Id.label_list_item);
-                object item = outerInstance.elementsPerLevel[outerInstance.currentLevel][position];
+                object item = _outerInstance._elementsPerLevel[_outerInstance._currentLevel][position];
                 if (item is SKTracksPoint)
                 {
                     drawButton.Visibility = ViewStates.Gone;
@@ -158,9 +158,9 @@ namespace Skobbler.SDKDemo.Activities
 
                     drawButton.Click += (s, e) =>
                     {
-                        selectedTrackElement = trackElement;
-                        outerInstance.SetResult(Result.Ok);
-                        outerInstance.Finish();
+                        SelectedTrackElement = trackElement;
+                        _outerInstance.SetResult(Result.Ok);
+                        _outerInstance.Finish();
                     };
                 }
                 return view;
@@ -168,7 +168,7 @@ namespace Skobbler.SDKDemo.Activities
 
             public override object this[int position]
             {
-                get { return outerInstance.elementsPerLevel[outerInstance.currentLevel][position]; }
+                get { return _outerInstance._elementsPerLevel[_outerInstance._currentLevel][position]; }
             }
         }
 

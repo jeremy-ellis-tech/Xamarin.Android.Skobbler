@@ -4,6 +4,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Java.Interop;
+
 namespace Skobbler.SDKDemo.Activities
 {
     [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
@@ -23,7 +24,7 @@ namespace Skobbler.SDKDemo.Activities
         }
 
         [Export("OnMenuOptionClick")]
-		public virtual void onMenuOptionClick(View v)
+		public virtual void OnMenuOptionClick(View v)
 		{
 			Intent intent = new Intent(this, typeof(TrackElementsActivity));
 			switch (v.Id)
@@ -46,7 +47,7 @@ namespace Skobbler.SDKDemo.Activities
 				default:
 					break;
 			}
-			StartActivityForResult(intent, MapActivity.TRACKS);
+			StartActivityForResult(intent, MapActivity.Tracks);
 		}
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
@@ -57,7 +58,7 @@ namespace Skobbler.SDKDemo.Activities
             {
                 switch (requestCode)
                 {
-                    case MapActivity.TRACKS:
+                    case MapActivity.Tracks:
                         SetResult(Result.Ok);
                         this.Finish();
                         break;

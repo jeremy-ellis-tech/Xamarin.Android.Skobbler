@@ -1,26 +1,28 @@
-﻿using Android.Content;
+﻿using System.IO;
+using System.Linq;
+using System.Text;
+using Android.Content;
 using Android.Content.Res;
 using Android.Locations;
 using Android.Net;
-using Java.IO;
 using Skobbler.Ngx;
 using Skobbler.Ngx.Map;
 using Skobbler.Ngx.Navigation;
 using Skobbler.SDKDemo.Application;
-using System.Text;
+using File = Java.IO.File;
 
 namespace Skobbler.SDKDemo.Util
 {
 	public class DemoUtils
 	{
 
-		private const string API_KEY = "API_KEY_HERE";
+		private const string ApiKey = "API_KEY_HERE";
 
 		/// <summary>
 		/// Gets formatted time from a given number of seconds </summary>
 		/// <param name="timeInSec">
 		/// @return </param>
-		public static string formatTime(int timeInSec)
+		public static string FormatTime(int timeInSec)
 		{
 			StringBuilder builder = new StringBuilder();
 			int hours = timeInSec / 3600;
@@ -42,7 +44,7 @@ namespace Skobbler.SDKDemo.Util
 		/// Formats a given distance value (given in meters) </summary>
 		/// <param name="distInMeters">
 		/// @return </param>
-		public static string formatDistance(int distInMeters)
+		public static string FormatDistance(int distInMeters)
 		{
 			if (distInMeters < 1000)
 			{
@@ -59,8 +61,8 @@ namespace Skobbler.SDKDemo.Util
 		/// <param name="assetManager"> </param>
 		/// <param name="sourceFolder"> </param>
 		/// <param name="destination"> </param>
-		/// <exception cref="IOException"> </exception>
-		public static void copyAssetsToFolder(AssetManager assetManager, string sourceFolder, string destinationFolder)
+		/// <exception cref="Java.IO.IOException"> </exception>
+		public static void CopyAssetsToFolder(AssetManager assetManager, string sourceFolder, string destinationFolder)
 		{
 			string[] assets = assetManager.List(sourceFolder);
 			File destFolderFile = new File(destinationFolder);
@@ -76,18 +78,18 @@ namespace Skobbler.SDKDemo.Util
 		/// <param name="assetManager"> </param>
 		/// <param name="sourceFolder"> </param>
 		/// <param name="assetsNames"> </param>
-		/// <exception cref="IOException"> </exception>
+		/// <exception cref="Java.IO.IOException"> </exception>
 		public static void copyAsset(AssetManager assetManager, string sourceFolder, string destinationFolder, params string[] assetsNames)
 		{
 
 			foreach (string assetName in assetsNames)
 			{
-				System.IO.Stream destinationStream = new System.IO.FileStream(destinationFolder + "/" + assetName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+				Stream destinationStream = new FileStream(destinationFolder + "/" + assetName, FileMode.Create, FileAccess.Write);
 				string[] files = assetManager.List(sourceFolder + "/" + assetName);
 				if (files == null || files.Length == 0)
 				{
 
-					System.IO.Stream asset = assetManager.Open(sourceFolder + "/" + assetName);
+					Stream asset = assetManager.Open(sourceFolder + "/" + assetName);
 					try
 					{
 						//ByteStreams.copy(asset, destinationStream);
@@ -107,12 +109,12 @@ namespace Skobbler.SDKDemo.Util
 		/// <param name="assetName"> the asset that needs to be copied </param>
 		/// <param name="destinationFolder"> path to folder where you want to store the asset
 		/// archive </param>
-		/// <exception cref="IOException"> </exception>
+		/// <exception cref="Java.IO.IOException"> </exception>
 		public static void copyAsset(AssetManager assetManager, string assetName, string destinationFolder)
 		{
 
-			System.IO.Stream destinationStream = new System.IO.FileStream(destinationFolder + "/" + assetName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
-			System.IO.Stream asset = assetManager.Open(assetName);
+			Stream destinationStream = new FileStream(destinationFolder + "/" + assetName, FileMode.Create, FileAccess.Write);
+			Stream asset = assetManager.Open(assetName);
 			try
 			{
 				//ByteStreams.copy(asset, destinationStream);
@@ -128,7 +130,7 @@ namespace Skobbler.SDKDemo.Util
 		/// Tells if internet is currently available on the device </summary>
 		/// <param name="currentContext">
 		/// @return </param>
-		public static bool isInternetAvailable(Context currentContext)
+		public static bool IsInternetAvailable(Context currentContext)
 		{
 			ConnectivityManager conectivityManager = (ConnectivityManager) currentContext.GetSystemService(Context.ConnectivityService);
 			NetworkInfo networkInfo = conectivityManager.ActiveNetworkInfo;
@@ -155,7 +157,7 @@ namespace Skobbler.SDKDemo.Util
 		/// <summary>
 		/// Checks if the current device has a GPS module (hardware) </summary>
 		/// <returns> true if the current device has GPS </returns>
-		public static bool hasGpsModule(Context context)
+		public static bool HasGpsModule(Context context)
 		{
 			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
 			foreach (string provider in locationManager.AllProviders)
@@ -170,24 +172,17 @@ namespace Skobbler.SDKDemo.Util
 		/// <summary>
 		/// Checks if the current device has a  NETWORK module (hardware) </summary>
 		/// <returns> true if the current device has NETWORK </returns>
-		public static bool hasNetworkModule(Context context)
+		public static bool HasNetworkModule(Context context)
 		{
 			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
-            foreach (string provider in locationManager.AllProviders)
-			{
-				if (provider.Equals(LocationManager.NetworkProvider))
-				{
-					return true;
-				}
-			}
-			return false;
+		    return locationManager.AllProviders.Any(provider => provider.Equals(LocationManager.NetworkProvider));
 		}
 
 
 		/// <summary>
 		/// Initializes the SKMaps framework
 		/// </summary>
-		public static void initializeLibrary(Context context)
+		public static void InitializeLibrary(Context context)
 		{
 			DemoApplication app = (DemoApplication)context.ApplicationContext;
 			// get object holding map initialization settings
@@ -211,7 +206,7 @@ namespace Skobbler.SDKDemo.Util
 			 initMapSettings.MapDetailLevel = SKMapsInitSettings.SkMapDetailLight;
 			// initialize map using the settings object
 
-			SKMaps.Instance.InitializeSKMaps(context, initMapSettings, API_KEY);
+			SKMaps.Instance.InitializeSKMaps(context, initMapSettings, ApiKey);
 		}
 
 	}

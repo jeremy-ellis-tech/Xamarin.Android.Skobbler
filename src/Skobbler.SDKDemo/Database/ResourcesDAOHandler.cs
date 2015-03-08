@@ -1,53 +1,54 @@
 ﻿using Android.Content;
+
 namespace Skobbler.SDKDemo.Database
 {
 	/// <summary>
 	/// This class provides methods for accessing the database tables
 	/// </summary>
-	public class ResourcesDAOHandler
+	public class ResourcesDaoHandler
 	{
 
 		/// <summary>
 		/// Singleton instance for current class
 		/// </summary>
-		private static ResourcesDAOHandler instance;
+		private static ResourcesDaoHandler _instance;
 
 		/// <summary>
 		/// the database object for maps table
 		/// </summary>
-		private MapsDAO mapsDAO;
+		private MapsDao _mapsDao;
 
 		/// <summary>
 		/// constructs a ResourcesDAOHandler object </summary>
 		/// <param name="context"> application context </param>
-		private ResourcesDAOHandler(Context context)
+		private ResourcesDaoHandler(Context context)
 		{
-			ResourcesDAO resourcesDAO = ResourcesDAO.getInstance(context);
-			resourcesDAO.openDatabase();
-			mapsDAO = new MapsDAO(resourcesDAO);
+			ResourcesDao resourcesDao = ResourcesDao.GetInstance(context);
+			resourcesDao.OpenDatabase();
+			_mapsDao = new MapsDao(resourcesDao);
 		}
 
 		/// <summary>
 		/// gets an instance of ResourcesDAOHandler object </summary>
 		/// <param name="context"> application context </param>
 		/// <returns> an instance of ResourcesDAOHandler object </returns>
-		public static ResourcesDAOHandler getInstance(Context context)
+		public static ResourcesDaoHandler GetInstance(Context context)
 		{
-			if (instance == null)
+			if (_instance == null)
 			{
-				instance = new ResourcesDAOHandler(context);
+				_instance = new ResourcesDaoHandler(context);
 			}
-			return instance;
+			return _instance;
 		}
 
 		/// <summary>
 		/// gets the maps DAO object </summary>
 		/// <returns> maps DAO object </returns>
-		public virtual MapsDAO MapsDAO
+		public virtual MapsDao MapsDao
 		{
 			get
 			{
-				return mapsDAO;
+				return _mapsDao;
 			}
 		}
 	}

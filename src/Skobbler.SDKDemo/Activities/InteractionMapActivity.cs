@@ -5,15 +5,16 @@ using Android.Views;
 using Android.Widget;
 using Skobbler.Ngx;
 using Skobbler.Ngx.Map;
+
 namespace Skobbler.SDKDemo.Activities
 {
     [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
     public class InteractionMapActivity : Activity, ISKMapSurfaceListener
     {
 
-        private SKMapSurfaceView mapView;
+        private SKMapSurfaceView _mapView;
 
-        private bool mapSurfaceCreated;
+        private bool _mapSurfaceCreated;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -22,26 +23,26 @@ namespace Skobbler.SDKDemo.Activities
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_new_map);
             SKMapViewHolder mapViewGroup = (SKMapViewHolder)FindViewById(Resource.Id.view_group_map);
-            mapView = mapViewGroup.MapSurfaceView;
-            mapView.MapSurfaceListener = this;
+            _mapView = mapViewGroup.MapSurfaceView;
+            _mapView.MapSurfaceListener = this;
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            mapView.OnResume();
+            _mapView.OnResume();
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            mapView.OnPause();
+            _mapView.OnPause();
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            mapView = null;
+            _mapView = null;
         }
 
         public void OnActionPan()
@@ -55,14 +56,14 @@ namespace Skobbler.SDKDemo.Activities
         public void OnSurfaceCreated()
         {
             // a chess background is displayed until the map becomes available
-            if (!mapSurfaceCreated)
+            if (!_mapSurfaceCreated)
             {
-                mapSurfaceCreated = true;
+                _mapSurfaceCreated = true;
                 // hiding the chess background when map is available
                 RelativeLayout chessBackground = (RelativeLayout)FindViewById(Resource.Id.chess_table_background);
                 chessBackground.Visibility = ViewStates.Gone;
 
-                mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
+                _mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
             }
         }
 
@@ -102,7 +103,7 @@ namespace Skobbler.SDKDemo.Activities
         {
         }
 
-        public void OnMapPOISelected(SKMapPOI mapPOI)
+        public void OnMapPOISelected(SKMapPOI skMapPoi)
         {
         }
 
@@ -118,7 +119,7 @@ namespace Skobbler.SDKDemo.Activities
         {
         }
 
-        public void OnCustomPOISelected(SKMapCustomPOI customPoi)
+        public void OnCustomPOISelected(SKMapCustomPOI skMapCustomPoi)
         {
         }
 

@@ -1,4 +1,6 @@
-﻿using Android.App;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
@@ -7,8 +9,6 @@ using Android.Widget;
 using Skobbler.Ngx;
 using Skobbler.Ngx.Packages;
 using Skobbler.Ngx.Search;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Skobbler.SDKDemo.Activities
 {
@@ -22,74 +22,74 @@ namespace Skobbler.SDKDemo.Activities
         /// <summary>
         /// The current list level (see)
         /// </summary>
-        private short currentListLevel;
+        private short _currentListLevel;
 
         /// <summary>
         /// Top level packages available offline (countries and US states)
         /// </summary>
-        private IList<SKPackage> packages;
+        private IList<SKPackage> _packages;
 
-        private ListView listView;
+        private ListView _listView;
 
-        private TextView operationInProgressLabel;
+        private TextView _operationInProgressLabel;
 
-        private ResultsListAdapter adapter;
+        private ResultsListAdapter _adapter;
 
         /// <summary>
         /// Offline address search results grouped by level
         /// </summary>
-        private IDictionary<short?, IList<SKSearchResult>> resultsPerLevel = new Dictionary<short?, IList<SKSearchResult>>();
+        private IDictionary<short?, IList<SKSearchResult>> _resultsPerLevel = new Dictionary<short?, IList<SKSearchResult>>();
 
         /// <summary>
         /// Current top level package code
         /// </summary>
-        private string currentCountryCode;
+        private string _currentCountryCode;
 
         /// <summary>
         /// Search manager object
         /// </summary>
-        private SKSearchManager searchManager;
+        private SKSearchManager _searchManager;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_list);
 
-            operationInProgressLabel = (TextView)FindViewById(Resource.Id.label_operation_in_progress);
-            listView = (ListView)FindViewById(Resource.Id.list_view);
-            operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
+            _operationInProgressLabel = (TextView)FindViewById(Resource.Id.label_operation_in_progress);
+            _listView = (ListView)FindViewById(Resource.Id.list_view);
+            _operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
 
-            packages = SKPackageManager.Instance.GetInstalledPackages().ToList();
-            searchManager = new SKSearchManager(this);
+            _packages = SKPackageManager.Instance.GetInstalledPackages().ToList();
+            _searchManager = new SKSearchManager(this);
 
-            if (packages.Count == 0)
+            if (_packages.Count == 0)
             {
                 Toast.MakeText(this, "No offline map packages are available", ToastLength.Short).Show();
             }
 
-            initializeList();
+            InitializeList();
         }
 
         /// <summary>
         /// Initializes list with top level packages
         /// </summary>
-        private void initializeList()
+        private void InitializeList()
         {
-            adapter = new ResultsListAdapter(this);
-            listView.Adapter = adapter;
-            operationInProgressLabel.Visibility = ViewStates.Gone;
-            listView.Visibility = ViewStates.Visible;
+            _adapter = new ResultsListAdapter(this);
+            _listView.Adapter = _adapter;
+            _operationInProgressLabel.Visibility = ViewStates.Gone;
+            _listView.Visibility = ViewStates.Visible;
 
-            listView.ItemClick += (s, e) =>
+            _listView.ItemClick += (s, e) =>
             {
-                if (currentListLevel == 0)
+                if (_currentListLevel == 0)
                 {
-                    currentCountryCode = packages[e.Position].Name;
-                    changeLevel((short)(currentListLevel + 1), -1, currentCountryCode);
+                    _currentCountryCode = _packages[e.Position].Name;
+                    ChangeLevel((short)(_currentListLevel + 1), -1, _currentCountryCode);
                 }
-                else if (currentListLevel < 3)
+                else if (_currentListLevel < 3)
                 {
-                    changeLevel((short)(currentListLevel + 1), resultsPerLevel[currentListLevel][e.Position].Id, currentCountryCode);
+                    ChangeLevel((short)(_currentListLevel + 1), _resultsPerLevel[_currentListLevel][e.Position].Id, _currentCountryCode);
                 }
             };
         }
@@ -101,29 +101,29 @@ namespace Skobbler.SDKDemo.Activities
         /// <param name="newLevel">    the new level </param>
         /// <param name="parentId">    the parent id for which to execute offline address search </param>
         /// <param name="countryCode"> the current code to use in offline address search </param>
-        private void changeLevel(short newLevel, long parentId, string countryCode)
+        private void ChangeLevel(short newLevel, long parentId, string countryCode)
         {
-            if (newLevel == 0 || newLevel < currentListLevel)
+            if (newLevel == 0 || newLevel < _currentListLevel)
             {
                 // for new list level 0 or smaller than previous one just change the
                 // level and update the adapter
-                operationInProgressLabel.Visibility = ViewStates.Gone;
-                listView.Visibility = ViewStates.Visible;
-                currentListLevel = newLevel;
-                adapter.NotifyDataSetChanged();
+                _operationInProgressLabel.Visibility = ViewStates.Gone;
+                _listView.Visibility = ViewStates.Visible;
+                _currentListLevel = newLevel;
+                _adapter.NotifyDataSetChanged();
             }
-            else if (newLevel > currentListLevel && newLevel > 0)
+            else if (newLevel > _currentListLevel && newLevel > 0)
             {
                 // for new list level greater than previous one execute an offline
                 // address search
-                operationInProgressLabel.Visibility = ViewStates.Visible;
-                listView.Visibility = ViewStates.Gone;
+                _operationInProgressLabel.Visibility = ViewStates.Visible;
+                _listView.Visibility = ViewStates.Gone;
                 // get a search object
                 SKMultiStepSearchSettings searchObject = new SKMultiStepSearchSettings();
                 // set the maximum number of results to be returned
                 searchObject.MaxSearchResultsNumber = 25;
                 // set the country code
-                searchObject.OfflinePackageCode = currentCountryCode;
+                searchObject.OfflinePackageCode = _currentCountryCode;
                 // set the search term
                 searchObject.SearchTerm = "";
                 // set the id of the parent node in which to search
@@ -131,34 +131,34 @@ namespace Skobbler.SDKDemo.Activities
                 // set the list level
                 searchObject.ListLevel = SKSearchManager.SKListLevel.ForInt(newLevel + 1);
                 // change the list level to the new one
-                currentListLevel = newLevel;
+                _currentListLevel = newLevel;
                 // initiate the search
-                searchManager.MultistepSearch(searchObject);
+                _searchManager.MultistepSearch(searchObject);
             }
         }
 
         public void OnReceivedSearchResults(IList<SKSearchResult> results)
         {
             // put in the map at the corresponding level the received results
-            resultsPerLevel[currentListLevel] = results;
-            operationInProgressLabel.Visibility = ViewStates.Gone;
-            listView.Visibility = ViewStates.Visible;
+            _resultsPerLevel[_currentListLevel] = results;
+            _operationInProgressLabel.Visibility = ViewStates.Gone;
+            _listView.Visibility = ViewStates.Visible;
             if (results.Count > 0)
             {
                 // received results - update adapter to show the results
-                adapter.NotifyDataSetChanged();
+                _adapter.NotifyDataSetChanged();
             }
             else
             {
                 // zero results - no change
-                currentListLevel--;
-                adapter.NotifyDataSetChanged();
+                _currentListLevel--;
+                _adapter.NotifyDataSetChanged();
             }
         }
 
         public override void OnBackPressed()
         {
-            if (currentListLevel == 0)
+            if (_currentListLevel == 0)
             {
                 base.OnBackPressed();
             }
@@ -166,17 +166,17 @@ namespace Skobbler.SDKDemo.Activities
             {
                 // if not top level - decrement the current list level and show
                 // results for the new level
-                changeLevel((short)(currentListLevel - 1), -1, currentCountryCode);
+                ChangeLevel((short)(_currentListLevel - 1), -1, _currentCountryCode);
             }
         }
 
         private class ResultsListAdapter : BaseAdapter<SKPackage>
         {
-            private readonly OfflineAddressSearchActivity outerInstance;
+            private readonly OfflineAddressSearchActivity _outerInstance;
 
             public ResultsListAdapter(OfflineAddressSearchActivity outerInstance)
             {
-                this.outerInstance = outerInstance;
+                this._outerInstance = outerInstance;
             }
 
 
@@ -184,13 +184,13 @@ namespace Skobbler.SDKDemo.Activities
             {
                 get
                 {
-                    if (outerInstance.currentListLevel > 0)
+                    if (_outerInstance._currentListLevel > 0)
                     {
-                        return outerInstance.resultsPerLevel[outerInstance.currentListLevel].Count;
+                        return _outerInstance._resultsPerLevel[_outerInstance._currentListLevel].Count;
                     }
                     else
                     {
-                        return outerInstance.packages.Count;
+                        return _outerInstance._packages.Count;
                     }
                 }
             }
@@ -205,25 +205,25 @@ namespace Skobbler.SDKDemo.Activities
                 View view = null;
                 if (convertView == null)
                 {
-                    LayoutInflater inflater = (LayoutInflater)outerInstance.GetSystemService(Context.LayoutInflaterService);
+                    LayoutInflater inflater = (LayoutInflater)_outerInstance.GetSystemService(LayoutInflaterService);
                     view = inflater.Inflate(Resource.Layout.layout_search_list_item, null);
                 }
                 else
                 {
                     view = convertView;
                 }
-                if (outerInstance.currentListLevel > 0)
+                if (_outerInstance._currentListLevel > 0)
                 {
                     // for offline address search results show the result name and
                     // position
-                    ((TextView)view.FindViewById(Resource.Id.title)).Text = outerInstance.resultsPerLevel[outerInstance.currentListLevel][position].Name;
-                    SKCoordinate location = outerInstance.resultsPerLevel[outerInstance.currentListLevel][position].Location;
+                    ((TextView)view.FindViewById(Resource.Id.title)).Text = _outerInstance._resultsPerLevel[_outerInstance._currentListLevel][position].Name;
+                    SKCoordinate location = _outerInstance._resultsPerLevel[_outerInstance._currentListLevel][position].Location;
                     ((TextView)view.FindViewById(Resource.Id.subtitle)).Visibility = ViewStates.Visible;
                     ((TextView)view.FindViewById(Resource.Id.subtitle)).Text = "location: (" + location.Latitude + ", " + location.Longitude + ")";
                 }
                 else
                 {
-                    ((TextView)view.FindViewById(Resource.Id.title)).Text = outerInstance.packages[position].Name;
+                    ((TextView)view.FindViewById(Resource.Id.title)).Text = _outerInstance._packages[position].Name;
                     ((TextView)view.FindViewById(Resource.Id.subtitle)).Visibility = ViewStates.Gone;
                 }
                 return view;
@@ -233,14 +233,14 @@ namespace Skobbler.SDKDemo.Activities
             {
                 get
                 {
-                    if (outerInstance.currentListLevel > 0)
+                    if (_outerInstance._currentListLevel > 0)
                     {
                         //TODO;
-                        return outerInstance.packages[position];
+                        return _outerInstance._packages[position];
                     }
                     else
                     {
-                        return outerInstance.packages[position];
+                        return _outerInstance._packages[position];
                     }
                 }
             }

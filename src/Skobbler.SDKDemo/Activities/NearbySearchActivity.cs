@@ -1,10 +1,12 @@
-﻿using Android.App;
+﻿using System;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
 using Android.Widget;
 using Java.Interop;
+
 namespace Skobbler.SDKDemo.Activities
 {
 	/// <summary>
@@ -21,12 +23,12 @@ namespace Skobbler.SDKDemo.Activities
         }
 
         [Export("OnClick")]
-		public virtual void onClick(View v)
+		public virtual void OnClick(View v)
 		{
 			switch (v.Id)
 			{
 				case Resource.Id.search_button:
-					if (validateCoordinates())
+					if (ValidateCoordinates())
 					{
 						int radius = int.Parse(((TextView) FindViewById(Resource.Id.radius_field)).Text.ToString());
 						Intent intent = new Intent(this, typeof(NearbySearchResultsActivity));
@@ -46,7 +48,7 @@ namespace Skobbler.SDKDemo.Activities
 			}
 		}
 
-		private bool validateCoordinates()
+		private bool ValidateCoordinates()
 		{
 			try
 			{
@@ -64,7 +66,7 @@ namespace Skobbler.SDKDemo.Activities
 				}
 				return true;
 			}
-			catch (System.FormatException)
+			catch (FormatException)
 			{
 				return false;
 			}

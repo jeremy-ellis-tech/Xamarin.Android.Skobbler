@@ -1,11 +1,10 @@
-﻿using Java.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using Java.IO;
 using Org.Json;
 using Skobbler.Ngx.Util;
 using Skobbler.SDKDemo.Util;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Console = System.Console;
 using StringWriter = Java.IO.StringWriter;
 
@@ -21,71 +20,71 @@ namespace Skobbler.SDKDemo.Database
 		/// <summary>
 		/// names for maps items tags
 		/// </summary>
-		private const string REGIONS_ID = "regions";
+		private const string RegionsId = "regions";
 
-		private const string REGION_CODE_ID = "regionCode";
+		private const string RegionCodeId = "regionCode";
 
-		private const string SUB_REGIONS_ID = "subRegions";
+		private const string SubRegionsId = "subRegions";
 
-		private const string SUB_REGION_CODE_ID = "subRegionCode";
+		private const string SubRegionCodeId = "subRegionCode";
 
-		private const string PACKAGES_ID = "packages";
+		private const string PackagesId = "packages";
 
-		private const string PACKAGE_CODE_ID = "packageCode";
+		private const string PackageCodeId = "packageCode";
 
-		private const string FILE_ID = "file";
+		private const string FileId = "file";
 
-		private const string SIZE_ID = "size";
+		private const string SizeId = "size";
 
-		private const string UNZIP_SIZE_ID = "unzipsize";
+		private const string UnzipSizeId = "unzipsize";
 
-		private const string TYPE_ID = "type";
+		private const string TypeId = "type";
 
-		private const string LANGUAGES_ID = "languages";
+		private const string LanguagesId = "languages";
 
-		private const string TL_NAME_ID = "tlName";
+		private const string TlNameId = "tlName";
 
-		private const string LNG_CODE_ID = "lngCode";
+		private const string LngCodeId = "lngCode";
 
-		private const string BBOX_ID = "bbox";
+		private const string BboxId = "bbox";
 
-		private const string LAT_MIN_ID = "latMin";
+		private const string LatMinId = "latMin";
 
-		private const string LAT_MAX_ID = "latMax";
+		private const string LatMaxId = "latMax";
 
-		private const string LONG_MIN_ID = "longMin";
+		private const string LongMinId = "longMin";
 
-		private const string LONG_MAX_ID = "longMax";
+		private const string LongMaxId = "longMax";
 
-		private const string SKM_SIZE_ID = "skmsize";
+		private const string SkmSizeId = "skmsize";
 
-		private const string NB_ZIP_ID = "nbzip";
+		private const string NbZipId = "nbzip";
 
-		private const string TEXTURE_ID = "texture";
+		private const string TextureId = "texture";
 
-		private const string TEXTURES_BIG_FILE_ID = "texturesbigfile";
+		private const string TexturesBigFileId = "texturesbigfile";
 
-		private const string SIZE_BIG_FILE_ID = "sizebigfile";
+		private const string SizeBigFileId = "sizebigfile";
 
-		private const string WORLD_ID = "world";
+		private const string WorldId = "world";
 
-		private const string CONTINENTS_ID = "continents";
+		private const string ContinentsId = "continents";
 
-		private const string COUNTRIES_ID = "countries";
+		private const string CountriesId = "countries";
 
-		private const string CONTINENT_CODE_ID = "continentCode";
+		private const string ContinentCodeId = "continentCode";
 
-		private const string COUNTRY_CODE_ID = "countryCode";
+		private const string CountryCodeId = "countryCode";
 
-		private const string CITY_CODES_ID = "cityCodes";
+		private const string CityCodesId = "cityCodes";
 
-		private const string CITY_CODE_ID = "cityCode";
+		private const string CityCodeId = "cityCode";
 
-		private const string STATE_CODES_ID = "stateCodes";
+		private const string StateCodesId = "stateCodes";
 
-		private const string STATE_CODE_ID = "stateCode";
+		private const string StateCodeId = "stateCode";
 
-		private const string TAG = "SKToolsMapDataParser";
+		private const string Tag = "SKToolsMapDataParser";
 
 		/// <summary>
 		/// parses maps JSON data </summary>
@@ -94,28 +93,28 @@ namespace Skobbler.SDKDemo.Database
 		/// <param name="regionItemsCodes"> a map representing the regions hierarchy defined in JSON file </param>
 		/// <param name="inputStream"> input stream from JSON file </param>
 		/// <exception cref="java.io.IOException"> </exception>
-		public virtual void parseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, System.IO.Stream inputStream)
+		public virtual void ParseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, Stream inputStream)
 		{
 			Console.WriteLine("Catalin ; start parsing !!!");
 			long startTime = DateTimeUtil.JavaTime();
-			JSONObject reader = new JSONObject(convertJSONFileContentToAString(inputStream));
-			JSONArray regionsArray = reader.GetJSONArray(REGIONS_ID);
+			JSONObject reader = new JSONObject(ConvertJsonFileContentToAString(inputStream));
+			JSONArray regionsArray = reader.GetJSONArray(RegionsId);
 			if (regionsArray != null)
 			{
-				readUSRegionsHierarchy(regionItemsCodes, regionsArray);
+				ReadUsRegionsHierarchy(regionItemsCodes, regionsArray);
 			}
-			JSONArray packagesArray = reader.GetJSONArray(PACKAGES_ID);
+			JSONArray packagesArray = reader.GetJSONArray(PackagesId);
 			if (packagesArray != null)
 			{
-				readMapsPackages(maps, packagesArray);
+				ReadMapsPackages(maps, packagesArray);
 			}
-			JSONObject worldObject = reader.GetJSONObject(WORLD_ID);
+			JSONObject worldObject = reader.GetJSONObject(WorldId);
 			if (worldObject != null)
 			{
-				JSONArray continentsArray = worldObject.GetJSONArray(CONTINENTS_ID);
+				JSONArray continentsArray = worldObject.GetJSONArray(ContinentsId);
 				if (continentsArray != null)
 				{
-					readWorldHierarchy(mapsItemsCodes, continentsArray);
+					ReadWorldHierarchy(mapsItemsCodes, continentsArray);
 				}
 			}
 			/*-for (Map.Entry<String, String> currentEntry : mapsItemsCodes.entrySet()) {
@@ -128,7 +127,7 @@ namespace Skobbler.SDKDemo.Database
 		/// read the JSON file and converts it to String using StringWriter </summary>
 		/// <param name="inputStream"> JSON file stream </param>
 		/// <exception cref="java.io.IOException"> </exception>
-		private string convertJSONFileContentToAString(System.IO.Stream inputStream)
+		private string ConvertJsonFileContentToAString(Stream inputStream)
 		{
 			char[] buffer = new char[1024];
 			Writer stringWriter = new StringWriter();
@@ -152,7 +151,7 @@ namespace Skobbler.SDKDemo.Database
 		/// read maps packages list </summary>
 		/// <param name="maps"> a list of maps objects that will be read from JSON file </param>
 		/// <param name="packagesArray"> packages array </param>
-		private void readMapsPackages(IList<MapDownloadResource> maps, JSONArray packagesArray)
+		private void ReadMapsPackages(IList<MapDownloadResource> maps, JSONArray packagesArray)
 		{
 			for (int i = 0; i < packagesArray.Length(); i++)
 			{
@@ -163,30 +162,30 @@ namespace Skobbler.SDKDemo.Database
 				}
 				catch (JSONException ex)
 				{
-					SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+					SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 				}
 				if (currentPackageObject != null)
 				{
 					MapDownloadResource currentMap = new MapDownloadResource();
 					try
 					{
-						currentMap.Code = currentPackageObject.GetString(PACKAGE_CODE_ID);
+						currentMap.Code = currentPackageObject.GetString(PackageCodeId);
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						currentMap.SubType = getMapType(currentPackageObject.GetInt(TYPE_ID));
+						currentMap.SubType = GetMapType(currentPackageObject.GetInt(TypeId));
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						JSONArray currentMapNames = currentPackageObject.GetJSONArray(LANGUAGES_ID);
+						JSONArray currentMapNames = currentPackageObject.GetJSONArray(LanguagesId);
 						if (currentMapNames != null)
 						{
 							for (int j = 0; j < currentMapNames.Length(); j++)
@@ -194,10 +193,10 @@ namespace Skobbler.SDKDemo.Database
 								JSONObject currentMapNameObject = currentMapNames.GetJSONObject(j);
 								if (currentMapNameObject != null)
 								{
-									string currentMapName = currentMapNameObject.GetString(TL_NAME_ID);
+									string currentMapName = currentMapNameObject.GetString(TlNameId);
 									if (currentMapName != null)
 									{
-										currentMap.setName(currentMapName, currentMapNameObject.GetString(LNG_CODE_ID));
+										currentMap.SetName(currentMapName, currentMapNameObject.GetString(LngCodeId));
 									}
 								}
 							}
@@ -205,79 +204,79 @@ namespace Skobbler.SDKDemo.Database
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						JSONObject currentMapBoundingBox = currentPackageObject.GetJSONObject(BBOX_ID);
+						JSONObject currentMapBoundingBox = currentPackageObject.GetJSONObject(BboxId);
 						if (currentMapBoundingBox != null)
 						{
-							currentMap.BbLatMax = currentMapBoundingBox.GetDouble(LAT_MAX_ID);
-							currentMap.BbLatMin = currentMapBoundingBox.GetDouble(LAT_MIN_ID);
-							currentMap.BbLongMax = currentMapBoundingBox.GetDouble(LONG_MAX_ID);
-							currentMap.BbLongMin = currentMapBoundingBox.GetDouble(LONG_MIN_ID);
+							currentMap.BbLatMax = currentMapBoundingBox.GetDouble(LatMaxId);
+							currentMap.BbLatMin = currentMapBoundingBox.GetDouble(LatMinId);
+							currentMap.BbLongMax = currentMapBoundingBox.GetDouble(LongMaxId);
+							currentMap.BbLongMin = currentMapBoundingBox.GetDouble(LongMinId);
 						}
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						currentMap.SkmFileSize = currentPackageObject.GetLong(SKM_SIZE_ID);
+						currentMap.SkmFileSize = currentPackageObject.GetLong(SkmSizeId);
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						currentMap.SkmFilePath = currentPackageObject.GetString(FILE_ID);
+						currentMap.SkmFilePath = currentPackageObject.GetString(FileId);
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						currentMap.ZipFilePath = currentPackageObject.GetString(NB_ZIP_ID);
+						currentMap.ZipFilePath = currentPackageObject.GetString(NbZipId);
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						currentMap.UnzippedFileSize = currentPackageObject.GetLong(UNZIP_SIZE_ID);
+						currentMap.UnzippedFileSize = currentPackageObject.GetLong(UnzipSizeId);
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						JSONObject currentMapTXGDetails = currentPackageObject.GetJSONObject(TEXTURE_ID);
-						if (currentMapTXGDetails != null)
+						JSONObject currentMapTxgDetails = currentPackageObject.GetJSONObject(TextureId);
+						if (currentMapTxgDetails != null)
 						{
-							currentMap.TXGFilePath = currentMapTXGDetails.GetString(TEXTURES_BIG_FILE_ID);
-							currentMap.TXGFileSize = currentMapTXGDetails.GetLong(SIZE_BIG_FILE_ID);
+							currentMap.TxgFilePath = currentMapTxgDetails.GetString(TexturesBigFileId);
+							currentMap.TxgFileSize = currentMapTxgDetails.GetLong(SizeBigFileId);
 						}
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					try
 					{
-						currentMap.SkmAndZipFilesSize = currentPackageObject.GetLong(SIZE_ID);
+						currentMap.SkmAndZipFilesSize = currentPackageObject.GetLong(SizeId);
 					}
 					catch (JSONException ex)
 					{
-                        SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                        SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 					}
 					if ((currentMap.Code != null) && (currentMap.SubType != null))
 					{
-						removeNullValuesIfExist(currentMap);
+						RemoveNullValuesIfExist(currentMap);
 						maps.Add(currentMap);
 					}
 				}
@@ -289,17 +288,17 @@ namespace Skobbler.SDKDemo.Database
 		/// <param name="regionItemsCodes"> a map representing the regions hierarchy defined in JSON file </param>
 		/// <param name="regionsArray"> regions array </param>
 		/// <exception cref="org.json.JSONException"> </exception>
-		private void readUSRegionsHierarchy(IDictionary<string, string> regionItemsCodes, JSONArray regionsArray)
+		private void ReadUsRegionsHierarchy(IDictionary<string, string> regionItemsCodes, JSONArray regionsArray)
 		{
 			for (int i = 0; i < regionsArray.Length(); i++)
 			{
 				JSONObject currentRegionObject = regionsArray.GetJSONObject(i);
 				if (currentRegionObject != null)
 				{
-					string currentRegionCode = currentRegionObject.GetString(REGION_CODE_ID);
+					string currentRegionCode = currentRegionObject.GetString(RegionCodeId);
 					if (currentRegionCode != null)
 					{
-						JSONArray subRegions = currentRegionObject.GetJSONArray(SUB_REGIONS_ID);
+						JSONArray subRegions = currentRegionObject.GetJSONArray(SubRegionsId);
 						if (subRegions != null)
 						{
 							for (int j = 0; j < subRegions.Length(); j++)
@@ -307,7 +306,7 @@ namespace Skobbler.SDKDemo.Database
 								JSONObject currentSubRegionObject = subRegions.GetJSONObject(j);
 								if (currentSubRegionObject != null)
 								{
-									string subRegionCode = currentSubRegionObject.GetString(SUB_REGION_CODE_ID);
+									string subRegionCode = currentSubRegionObject.GetString(SubRegionCodeId);
 									if (subRegionCode != null)
 									{
 										regionItemsCodes[subRegionCode] = currentRegionCode;
@@ -324,7 +323,7 @@ namespace Skobbler.SDKDemo.Database
 		/// read world hierarchy for maps items </summary>
 		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
 		/// <param name="continentsArray"> continents array </param>
-		private void readWorldHierarchy(IDictionary<string, string> mapsItemsCodes, JSONArray continentsArray)
+		private void ReadWorldHierarchy(IDictionary<string, string> mapsItemsCodes, JSONArray continentsArray)
 		{
 			for (int i = 0; i < continentsArray.Length(); i++)
 			{
@@ -335,34 +334,34 @@ namespace Skobbler.SDKDemo.Database
 					{
 						try
 						{
-							string currentContinentCode = currentContinentObject.GetString(CONTINENT_CODE_ID);
+							string currentContinentCode = currentContinentObject.GetString(ContinentCodeId);
 							if (currentContinentCode != null)
 							{
 								mapsItemsCodes[currentContinentCode] = "";
 								JSONArray countriesArray = null;
 								try
 								{
-									countriesArray = currentContinentObject.GetJSONArray(COUNTRIES_ID);
+									countriesArray = currentContinentObject.GetJSONArray(CountriesId);
 								}
 								catch (JSONException ex)
 								{
-                                    SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                                    SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 								}
 								if (countriesArray != null)
 								{
-									readCountriesHierarchy(mapsItemsCodes, currentContinentCode, countriesArray);
+									ReadCountriesHierarchy(mapsItemsCodes, currentContinentCode, countriesArray);
 								}
 							}
 						}
 						catch (JSONException ex)
 						{
-                            SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                            SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 						}
 					}
 				}
 				catch (JSONException ex)
 				{
-                    SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                    SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 				}
 			}
 		}
@@ -372,7 +371,7 @@ namespace Skobbler.SDKDemo.Database
 		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
 		/// <param name="currentContinentCode"> current continent code </param>
 		/// <param name="countriesArray"> countries array </param>
-		private void readCountriesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentContinentCode, JSONArray countriesArray)
+		private void ReadCountriesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentContinentCode, JSONArray countriesArray)
 		{
 			for (int i = 0; i < countriesArray.Length(); i++)
 			{
@@ -383,45 +382,45 @@ namespace Skobbler.SDKDemo.Database
 					{
 						try
 						{
-							string currentCountryCode = currentCountryObject.GetString(COUNTRY_CODE_ID);
+							string currentCountryCode = currentCountryObject.GetString(CountryCodeId);
 							if ((currentContinentCode != null) && (currentCountryCode != null))
 							{
 								mapsItemsCodes[currentCountryCode] = currentContinentCode;
 								try
 								{
-									JSONArray citiesArray = currentCountryObject.GetJSONArray(CITY_CODES_ID);
+									JSONArray citiesArray = currentCountryObject.GetJSONArray(CityCodesId);
 									if (citiesArray != null)
 									{
-										readCitiesHierarchy(mapsItemsCodes, currentCountryCode, citiesArray);
+										ReadCitiesHierarchy(mapsItemsCodes, currentCountryCode, citiesArray);
 									}
 								}
 								catch (JSONException ex)
 								{
-                                    SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                                    SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 								}
 								try
 								{
-									JSONArray statesArray = currentCountryObject.GetJSONArray(STATE_CODES_ID);
+									JSONArray statesArray = currentCountryObject.GetJSONArray(StateCodesId);
 									if (statesArray != null)
 									{
-										readStatesHierarchy(mapsItemsCodes, currentCountryCode, statesArray);
+										ReadStatesHierarchy(mapsItemsCodes, currentCountryCode, statesArray);
 									}
 								}
 								catch (JSONException ex)
 								{
-                                    SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                                    SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 								}
 							}
 						}
 						catch (JSONException ex)
 						{
-                            SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                            SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 						}
 					}
 				}
 				catch (JSONException ex)
 				{
-                    SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                    SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 				}
 			}
 		}
@@ -431,7 +430,7 @@ namespace Skobbler.SDKDemo.Database
 		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
 		/// <param name="currentCountryCode"> current country code </param>
 		/// <param name="statesArray"> states array </param>
-		private void readStatesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentCountryCode, JSONArray statesArray)
+		private void ReadStatesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentCountryCode, JSONArray statesArray)
 		{
 			for (int i = 0; i < statesArray.Length(); i++)
 			{
@@ -442,33 +441,33 @@ namespace Skobbler.SDKDemo.Database
 					{
 						try
 						{
-							string currentStateCode = currentStateObject.GetString(STATE_CODE_ID);
+							string currentStateCode = currentStateObject.GetString(StateCodeId);
 							if ((currentStateCode != null) && (currentCountryCode != null))
 							{
 								mapsItemsCodes[currentStateCode] = currentCountryCode;
 								try
 								{
-									JSONArray citiesArray = currentStateObject.GetJSONArray(CITY_CODES_ID);
+									JSONArray citiesArray = currentStateObject.GetJSONArray(CityCodesId);
 									if (citiesArray != null)
 									{
-										readCitiesHierarchy(mapsItemsCodes, currentStateCode, citiesArray);
+										ReadCitiesHierarchy(mapsItemsCodes, currentStateCode, citiesArray);
 									}
 								}
 								catch (JSONException ex)
 								{
-                                    SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                                    SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 								}
 							}
 						}
 						catch (JSONException ex)
 						{
-                            SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                            SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 						}
 					}
 				}
 				catch (JSONException ex)
 				{
-                    SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                    SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 				}
 			}
 		}
@@ -478,7 +477,7 @@ namespace Skobbler.SDKDemo.Database
 		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
 		/// <param name="currentParentCode"> current parent code </param>
 		/// <param name="citiesArray"> cities array </param>
-		private void readCitiesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentParentCode, JSONArray citiesArray)
+		private void ReadCitiesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentParentCode, JSONArray citiesArray)
 		{
 			for (int i = 0; i < citiesArray.Length(); i++)
 			{
@@ -489,7 +488,7 @@ namespace Skobbler.SDKDemo.Database
 					{
 						try
 						{
-							string currentCityCode = currentCityObject.GetString(CITY_CODE_ID);
+							string currentCityCode = currentCityObject.GetString(CityCodeId);
 							if ((currentCityCode != null) && (currentParentCode != null))
 							{
 								mapsItemsCodes[currentCityCode] = currentParentCode;
@@ -497,33 +496,33 @@ namespace Skobbler.SDKDemo.Database
 						}
 						catch (JSONException ex)
 						{
-                            SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                            SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 						}
 					}
 				}
 				catch (JSONException ex)
 				{
-                    SKLogging.WriteLog(TAG, ex.Message, SKLogging.LogDebug);
+                    SKLogging.WriteLog(Tag, ex.Message, SKLogging.LogDebug);
 				}
 			}
 		}
 
 		/// <param name="mapTypeInt"> an integer associated with map type </param>
 		/// <returns> the String associated with map type </returns>
-		private string getMapType(int mapTypeInt)
+		private string GetMapType(int mapTypeInt)
 		{
 			switch (mapTypeInt)
 			{
 				case 0:
-					return MapsDAO.COUNTRY_TYPE;
+					return MapsDao.CountryType;
 				case 1:
-					return MapsDAO.CITY_TYPE;
+					return MapsDao.CityType;
 				case 2:
-					return MapsDAO.CONTINENT_TYPE;
+					return MapsDao.ContinentType;
 				case 3:
-					return MapsDAO.REGION_TYPE;
+					return MapsDao.RegionType;
 				case 4:
-					return MapsDAO.STATE_TYPE;
+					return MapsDao.StateType;
 				default:
 					return "";
 			}
@@ -532,7 +531,7 @@ namespace Skobbler.SDKDemo.Database
 		/// <summary>
 		/// removes null attributes for current map </summary>
 		/// <param name="currentMap"> current map that is parsed </param>
-		private void removeNullValuesIfExist(MapDownloadResource currentMap)
+		private void RemoveNullValuesIfExist(MapDownloadResource currentMap)
 		{
 			if (currentMap.ParentCode == null)
 			{
@@ -550,9 +549,9 @@ namespace Skobbler.SDKDemo.Database
 			{
 				currentMap.ZipFilePath = "";
 			}
-			if (currentMap.TXGFilePath == null)
+			if (currentMap.TxgFilePath == null)
 			{
-				currentMap.TXGFilePath = "";
+				currentMap.TxgFilePath = "";
 			}
 		}
 	}
