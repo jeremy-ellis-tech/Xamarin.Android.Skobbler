@@ -137,13 +137,13 @@ namespace Skobbler.Ngx.SDKTools.Download
                             {
                                 sbyte currentItemState = currentItem.DownloadState;
                                 // if the download is already running (cannot cancel an already downloaded, installing or installed map)
-                                if ((currentItemState == SKToolsDownloadItem.PAUSED) || (currentItemState == SKToolsDownloadItem.DOWNLOADING))
+                                if ((currentItemState == SKToolsDownloadItem.Paused) || (currentItemState == SKToolsDownloadItem.Downloading))
                                 {
                                     // mark that current download is cancelled, if download thread is running
                                     downloadThread.setCurrentDownloadAsCancelled();
                                     return true;
                                 }
-                                else if (currentItemState == SKToolsDownloadItem.QUEUED)
+                                else if (currentItemState == SKToolsDownloadItem.Queued)
                                 {
                                     removedItem = currentItem;
                                     break;
@@ -227,7 +227,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             int downloadingItemIndex = 0;
             foreach (SKToolsDownloadItem currentItem in downloadItems)
             {
-                if ((currentItem.DownloadState == SKToolsDownloadItem.DOWNLOADING) || (currentItem.DownloadState == SKToolsDownloadItem.PAUSED))
+                if ((currentItem.DownloadState == SKToolsDownloadItem.Downloading) || (currentItem.DownloadState == SKToolsDownloadItem.Paused))
                 {
                     downloadingItem = currentItem;
                     break;

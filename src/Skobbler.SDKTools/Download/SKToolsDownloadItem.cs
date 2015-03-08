@@ -14,49 +14,35 @@ namespace Skobbler.Ngx.SDKTools.Download
 {
     public class SKToolsDownloadItem
     {
-        public const sbyte NOT_QUEUED = 0;
+        public const sbyte NotQueued = 0;
+        public const sbyte Queued = 1;
+        public const sbyte Downloading = 2;
+        public const sbyte Paused = 3;
+        public const sbyte Downloaded = 4;
+        public const sbyte Installing = 5;
+        public const sbyte Installed = 6;
 
-        public const sbyte QUEUED = 1;
-
-        public const sbyte DOWNLOADING = 2;
-
-        public const sbyte PAUSED = 3;
-
-        public const sbyte DOWNLOADED = 4;
-
-        public const sbyte INSTALLING = 5;
-
-        public const sbyte INSTALLED = 6;
-
-        private string itemCode;
-
-
-        private sbyte downloadState;
-
-        private IList<SKToolsFileDownloadStep> downloadSteps;
-
-        private sbyte currentStepIndex;
-
-        private long noDownloadedBytes;
-
-        private long noDownloadedBytesInThisConnection;
-
-        private bool unzipIsNeeded_Renamed;
-
-        private bool installOperationIsNeeded;
+        private string _itemCode;
+        private sbyte _downloadState;
+        private IList<SKToolsFileDownloadStep> _downloadSteps;
+        private sbyte _currentStepIndex;
+        private long _noDownloadedBytes;
+        private long _noDownloadedBytesInThisConnection;
+        private bool _unzipIsNeeded;
+        private bool _installOperationIsNeeded;
 
         public SKToolsDownloadItem(string itemCode, IList<SKToolsFileDownloadStep> downloadSteps, sbyte downloadState, bool unzipIsNeeded, bool installOperationIsNeeded)
         {
-            this.itemCode = itemCode;
-            this.downloadSteps = downloadSteps;
-            this.downloadState = downloadState;
-            this.unzipIsNeeded_Renamed = unzipIsNeeded;
-            this.installOperationIsNeeded = installOperationIsNeeded;
+            _itemCode = itemCode;
+            _downloadSteps = downloadSteps;
+            _downloadState = downloadState;
+            _unzipIsNeeded = unzipIsNeeded;
+            _installOperationIsNeeded = installOperationIsNeeded;
         }
 
         public virtual bool unzipIsNeeded()
         {
-            return unzipIsNeeded_Renamed;
+            return _unzipIsNeeded;
         }
 
         /// <summary>
@@ -66,11 +52,11 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             set
             {
-                this.currentStepIndex = value;
+                this._currentStepIndex = value;
             }
             get
             {
-                return this.currentStepIndex;
+                return this._currentStepIndex;
             }
         }
 
@@ -82,14 +68,14 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                if (downloadSteps != null)
+                if (_downloadSteps != null && _downloadSteps.Count > _currentStepIndex)
                 {
-                    if (downloadSteps.Count > currentStepIndex)
-                    {
-                        return downloadSteps[currentStepIndex];
-                    }
+                    return _downloadSteps[_currentStepIndex];
                 }
-                return null;
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -100,14 +86,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                if (downloadSteps != null)
-                {
-                    if (downloadSteps.Count <= currentStepIndex)
-                    {
-                        return true;
-                    }
-                }
-                return false;
+                return _downloadSteps != null && _downloadSteps.Count <= _currentStepIndex;
             }
         }
 
@@ -116,7 +95,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// </summary>
         public virtual void goToNextDownloadStep()
         {
-            currentStepIndex++;
+            _currentStepIndex++;
         }
 
         /// <summary>
@@ -126,11 +105,11 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             set
             {
-                this.downloadState = value;
+                this._downloadState = value;
             }
             get
             {
-                return this.downloadState;
+                return this._downloadState;
             }
         }
 
@@ -142,19 +121,19 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                return noDownloadedBytes;
+                return _noDownloadedBytes;
             }
             set
             {
-                this.noDownloadedBytes = value;
-                for (int i = 0; i < currentStepIndex; i++)
+                this._noDownloadedBytes = value;
+                for (int i = 0; i < _currentStepIndex; i++)
                 {
-                    if ((downloadSteps != null) && (i < downloadSteps.Count))
+                    if ((_downloadSteps != null) && (i < _downloadSteps.Count))
                     {
-                        SKToolsFileDownloadStep currentStep = downloadSteps[i];
+                        SKToolsFileDownloadStep currentStep = _downloadSteps[i];
                         if (currentStep != null)
                         {
-                            this.noDownloadedBytes += currentStep.DownloadItemSize;
+                            this._noDownloadedBytes += currentStep.DownloadItemSize;
                         }
                     }
                 }
@@ -169,7 +148,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                return itemCode;
+                return _itemCode;
             }
         }
 
@@ -179,11 +158,11 @@ namespace Skobbler.Ngx.SDKTools.Download
         public virtual void markAsNotQueued()
         {
             // removes already downloaded bytes from current item
-            for (int i = 0; i <= currentStepIndex; i++)
+            for (int i = 0; i <= _currentStepIndex; i++)
             {
-                if ((downloadSteps != null) && (i < downloadSteps.Count))
+                if ((_downloadSteps != null) && (i < _downloadSteps.Count))
                 {
-                    SKToolsFileDownloadStep currentStep = downloadSteps[i];
+                    SKToolsFileDownloadStep currentStep = _downloadSteps[i];
                     if (currentStep != null)
                     {
                         SKToolsDownloadUtils.removeCurrentLocationFromDisk(currentStep.DestinationPath);
@@ -191,10 +170,10 @@ namespace Skobbler.Ngx.SDKTools.Download
                 }
             }
             // revert current item state
-            noDownloadedBytes = 0;
-            noDownloadedBytesInThisConnection = 0;
-            downloadState = NOT_QUEUED;
-            currentStepIndex = 0;
+            _noDownloadedBytes = 0;
+            _noDownloadedBytesInThisConnection = 0;
+            _downloadState = NotQueued;
+            _currentStepIndex = 0;
         }
 
         /// <summary>
@@ -204,7 +183,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             set
             {
-                this.noDownloadedBytesInThisConnection = value;
+                this._noDownloadedBytesInThisConnection = value;
             }
         }
 
@@ -215,9 +194,9 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                if ((downloadSteps != null) && (currentStepIndex < downloadSteps.Count))
+                if ((_downloadSteps != null) && (_currentStepIndex < _downloadSteps.Count))
                 {
-                    return downloadSteps[currentStepIndex].DestinationPath;
+                    return _downloadSteps[_currentStepIndex].DestinationPath;
                 }
                 return null;
             }
@@ -230,7 +209,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                return installOperationIsNeeded;
+                return _installOperationIsNeeded;
             }
         }
 
@@ -240,11 +219,11 @@ namespace Skobbler.Ngx.SDKTools.Download
             get
             {
                 long remainingSize = 0;
-                if (downloadSteps != null)
+                if (_downloadSteps != null)
                 {
-                    for (int i = currentStepIndex; i < downloadSteps.Count; i++)
+                    for (int i = _currentStepIndex; i < _downloadSteps.Count; i++)
                     {
-                        SKToolsFileDownloadStep currentStep = downloadSteps[i];
+                        SKToolsFileDownloadStep currentStep = _downloadSteps[i];
                         if (currentStep != null)
                         {
                             remainingSize += currentStep.DownloadItemSize;
@@ -255,25 +234,22 @@ namespace Skobbler.Ngx.SDKTools.Download
             }
         }
 
-        public override bool Equals(object another)
+        public override bool Equals(object obj)
         {
-            if (another == null)
-            {
-                return false;
-            }
-            else if (!(another is SKToolsDownloadItem))
-            {
-                return false;
-            }
-            else
-            {
-                SKToolsDownloadItem anotherItem = (SKToolsDownloadItem)another;
-                if ((itemCode == null) || (anotherItem.ItemCode == null))
-                {
-                    return false;
-                }
-                return itemCode.Equals(anotherItem.ItemCode);
-            }
+            if (Object.ReferenceEquals(obj, this)) return true;
+
+            var other = obj as SKToolsDownloadItem;
+
+            if (other == null) return false;
+
+            return other.ItemCode != null
+                    && ItemCode != null
+                    && Object.Equals(ItemCode, other.ItemCode);
+        }
+
+        public override int GetHashCode()
+        {
+            return ItemCode.GetHashCode();
         }
     }
 }

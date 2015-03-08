@@ -362,12 +362,12 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void clearResourcesInDownloadQueue()
 		{
 			ContentValues values = new ContentValues();
-			values.Put(STATE, SKToolsDownloadItem.NOT_QUEUED);
+			values.Put(STATE, SKToolsDownloadItem.NotQueued);
 			values.Put(NO_DOWNLOADED_BYTES, 0);
 			try
 			{
 				resourcesDAO.Database.BeginTransaction();
-				resourcesDAO.Database.Update(MAPS_TABLE, values, STATE + "=? OR " + STATE + "=? OR " + STATE + "=?", new string[]{Convert.ToString(SKToolsDownloadItem.DOWNLOADING), Convert.ToString(SKToolsDownloadItem.PAUSED), Convert.ToString(SKToolsDownloadItem.QUEUED)});
+				resourcesDAO.Database.Update(MAPS_TABLE, values, STATE + "=? OR " + STATE + "=? OR " + STATE + "=?", new string[]{Convert.ToString(SKToolsDownloadItem.Downloading), Convert.ToString(SKToolsDownloadItem.Paused), Convert.ToString(SKToolsDownloadItem.Queued)});
 				resourcesDAO.Database.SetTransactionSuccessful();
 			}
 			catch (SQLException e)

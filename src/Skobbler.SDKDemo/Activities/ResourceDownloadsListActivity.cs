@@ -163,7 +163,7 @@ namespace Skobbler.SDKDemo.Activities
                 FindViewById(Resource.Id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
                 downloadManager = SKToolsDownloadManager.getInstance(adapter);
 
-                if (activeDownloads.Count > 0 && activeDownloads[0].DownloadState == SKToolsDownloadItem.DOWNLOADING)
+                if (activeDownloads.Count > 0 && activeDownloads[0].DownloadState == SKToolsDownloadItem.Downloading)
                 {
                     startPeriodicUpdates();
                 }
@@ -236,10 +236,10 @@ namespace Skobbler.SDKDemo.Activities
 					}
 				}
 				activeDownloads = ActiveMapDownloads;
-				if (activeDownloads.Count > 0 && activeDownloads[0].DownloadState == SKToolsDownloadItem.DOWNLOADING)
+				if (activeDownloads.Count > 0 && activeDownloads[0].DownloadState == SKToolsDownloadItem.Downloading)
 				{
 					// pausing first download in queue, if it's in downloading state
-					activeDownloads[0].DownloadState = SKToolsDownloadItem.PAUSED;
+					activeDownloads[0].DownloadState = SKToolsDownloadItem.Paused;
 					mapsDAO.updateMapResource((MapDownloadResource) activeDownloads[0]);
 				}
 			}
@@ -397,14 +397,14 @@ namespace Skobbler.SDKDemo.Activities
 
 					DownloadResource downloadResource = currentItem.downloadResource;
 
-					bool progressShown = downloadResource.DownloadState == SKToolsDownloadItem.DOWNLOADING || downloadResource.DownloadState == SKToolsDownloadItem.PAUSED;
+					bool progressShown = downloadResource.DownloadState == SKToolsDownloadItem.Downloading || downloadResource.DownloadState == SKToolsDownloadItem.Paused;
 					if (progressShown)
 					{
 						progressBar.Visibility = ViewStates.Visible;
 						progressDetailsLayout.Visibility = ViewStates.Visible;
 						progressBar.Progress = getPercentage(downloadResource);
 						percentageText.Text = getPercentage(downloadResource) + "%";
-						if (downloadResource.DownloadState == SKToolsDownloadItem.PAUSED)
+						if (downloadResource.DownloadState == SKToolsDownloadItem.Paused)
 						{
 							timeLeftText.Text = "-";
 							speedText.Text = "-";
@@ -444,35 +444,35 @@ namespace Skobbler.SDKDemo.Activities
 
 					switch (downloadResource.DownloadState)
 					{
-						case SKToolsDownloadItem.NOT_QUEUED:
+						case SKToolsDownloadItem.NotQueued:
 							stateText.Text = "NOT QUEUED";
 							break;
-						case SKToolsDownloadItem.QUEUED:
+						case SKToolsDownloadItem.Queued:
 							stateText.Text = "QUEUED";
 							break;
-						case SKToolsDownloadItem.DOWNLOADING:
+						case SKToolsDownloadItem.Downloading:
 							stateText.Text = "DOWNLOADING";
 							break;
-						case SKToolsDownloadItem.DOWNLOADED:
+						case SKToolsDownloadItem.Downloaded:
 							stateText.Text = "DOWNLOADED";
 							break;
-						case SKToolsDownloadItem.PAUSED:
+						case SKToolsDownloadItem.Paused:
 							stateText.Text = "PAUSED";
 							break;
-						case SKToolsDownloadItem.INSTALLING:
+						case SKToolsDownloadItem.Installing:
 							stateText.Text = "INSTALLING";
 							break;
-						case SKToolsDownloadItem.INSTALLED:
+						case SKToolsDownloadItem.Installed:
 							stateText.Text = "INSTALLED";
 							break;
 						default:
 					break;
 					}
 
-					if (downloadResource.DownloadState == SKToolsDownloadItem.NOT_QUEUED || downloadResource.DownloadState == SKToolsDownloadItem.DOWNLOADING || downloadResource.DownloadState == SKToolsDownloadItem.PAUSED)
+					if (downloadResource.DownloadState == SKToolsDownloadItem.NotQueued || downloadResource.DownloadState == SKToolsDownloadItem.Downloading || downloadResource.DownloadState == SKToolsDownloadItem.Paused)
 					{
 						startPauseImage.Visibility = ViewStates.Visible;
-						if (downloadResource.DownloadState == SKToolsDownloadItem.DOWNLOADING)
+						if (downloadResource.DownloadState == SKToolsDownloadItem.Downloading)
 						{
 							startPauseImage.SetImageResource(Resource.Drawable.pause);
 						}
@@ -486,7 +486,7 @@ namespace Skobbler.SDKDemo.Activities
 						startPauseImage.Visibility = ViewStates.Gone;
 					}
 
-					if (downloadResource.DownloadState == SKToolsDownloadItem.NOT_QUEUED || downloadResource.DownloadState == SKToolsDownloadItem.INSTALLING)
+					if (downloadResource.DownloadState == SKToolsDownloadItem.NotQueued || downloadResource.DownloadState == SKToolsDownloadItem.Installing)
 					{
 						cancelImage.Visibility = ViewStates.Gone;
 					}
@@ -526,12 +526,12 @@ namespace Skobbler.SDKDemo.Activities
 
                 startPauseImage.Click += (s, e) =>
                 {
-                    if (currentItem.downloadResource.DownloadState != SKToolsDownloadItem.DOWNLOADING)
+                    if (currentItem.downloadResource.DownloadState != SKToolsDownloadItem.Downloading)
                     {
-                        if (currentItem.downloadResource.DownloadState != SKToolsDownloadItem.PAUSED)
+                        if (currentItem.downloadResource.DownloadState != SKToolsDownloadItem.Paused)
                         {
                             activeDownloads.Add(currentItem.downloadResource);
-                            currentItem.downloadResource.DownloadState = SKToolsDownloadItem.QUEUED;
+                            currentItem.downloadResource.DownloadState = SKToolsDownloadItem.Queued;
                             outerInstance.appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);
                             string destinationPath = outerInstance.appContext.MapResourcesDirPath + "downloads/";
                             File destinationFile = new File(destinationPath);
@@ -570,12 +570,12 @@ namespace Skobbler.SDKDemo.Activities
 
                 cancelImage.Click += (s,e) =>
                 {
-                    if (currentItem.downloadResource.DownloadState != SKToolsDownloadItem.INSTALLED)
+                    if (currentItem.downloadResource.DownloadState != SKToolsDownloadItem.Installed)
                     {
                         bool downloadCancelled = outerInstance.downloadManager.cancelDownload(currentItem.downloadResource.Code);
                         if (!downloadCancelled)
                         {
-                            currentItem.downloadResource.DownloadState = SKToolsDownloadItem.NOT_QUEUED;
+                            currentItem.downloadResource.DownloadState = SKToolsDownloadItem.NotQueued;
                             currentItem.downloadResource.NoDownloadedBytes = 0;
                             mapsDAO.updateMapResource((MapDownloadResource)currentItem.downloadResource);
                             activeDownloads.Remove(currentItem.downloadResource);
@@ -590,7 +590,7 @@ namespace Skobbler.SDKDemo.Activities
                         {
                             Toast.MakeText(outerInstance.appContext, ((MapDownloadResource)currentItem.downloadResource).Name + " was uninstalled", ToastLength.Short).Show();
                         }
-                        currentItem.downloadResource.DownloadState = SKToolsDownloadItem.NOT_QUEUED;
+                        currentItem.downloadResource.DownloadState = SKToolsDownloadItem.NotQueued;
                         currentItem.downloadResource.NoDownloadedBytes = 0;
                         mapsDAO.updateMapResource((MapDownloadResource)currentItem.downloadResource);
                         NotifyDataSetChanged();
@@ -692,12 +692,12 @@ namespace Skobbler.SDKDemo.Activities
 					resource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
 					resource.DownloadState = currentDownloadItem.DownloadState;
 				}
-				if (resource.DownloadState == SKToolsDownloadItem.DOWNLOADED)
+				if (resource.DownloadState == SKToolsDownloadItem.Downloaded)
 				{
 					activeDownloads.Remove(resource);
 					outerInstance.appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);
 				}
-				else if (resource.DownloadState == SKToolsDownloadItem.DOWNLOADING)
+				else if (resource.DownloadState == SKToolsDownloadItem.Downloading)
 				{
 					outerInstance.downloadChunksMap[DateTimeUtil.JavaTime()] = bytesDownloadedSinceLastUpdate;
 					if (stateChanged)
@@ -705,7 +705,7 @@ namespace Skobbler.SDKDemo.Activities
 						outerInstance.startPeriodicUpdates();
 					}
 				}
-				if (resource.DownloadState != SKToolsDownloadItem.DOWNLOADING)
+				if (resource.DownloadState != SKToolsDownloadItem.Downloading)
 				{
 					outerInstance.stopPeriodicUpdates();
 				}
@@ -724,7 +724,7 @@ namespace Skobbler.SDKDemo.Activities
 				if (affectedListItem != null)
 				{
 					affectedListItem.downloadResource.NoDownloadedBytes = 0;
-					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.NOT_QUEUED;
+					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.NotQueued;
 					activeDownloads.Remove(affectedListItem.downloadResource);
 					mapsDAO.updateMapResource((MapDownloadResource) affectedListItem.downloadResource);
                     outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
@@ -733,7 +733,7 @@ namespace Skobbler.SDKDemo.Activities
 				{
 					DownloadResource downloadResource = allMapResources[currentDownloadItemCode];
 					downloadResource.NoDownloadedBytes = 0;
-					downloadResource.DownloadState = SKToolsDownloadItem.NOT_QUEUED;
+					downloadResource.DownloadState = SKToolsDownloadItem.NotQueued;
 					activeDownloads.Remove(downloadResource);
 					mapsDAO.updateMapResource((MapDownloadResource) downloadResource);
 				}
@@ -746,7 +746,7 @@ namespace Skobbler.SDKDemo.Activities
 				outerInstance.appContext.AppPrefs.saveDownloadStepPreference(0);
 				foreach (DownloadResource downloadResource in activeDownloads)
 				{
-					downloadResource.DownloadState = SKToolsDownloadItem.NOT_QUEUED;
+					downloadResource.DownloadState = SKToolsDownloadItem.NotQueued;
 					downloadResource.NoDownloadedBytes = 0;
 				}
 				mapsDAO.clearResourcesInDownloadQueue();
@@ -783,7 +783,7 @@ namespace Skobbler.SDKDemo.Activities
 				DownloadResource resource;
 				if (affectedListItem != null)
 				{
-					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.INSTALLED;
+					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.Installed;
 					resource = affectedListItem.downloadResource;
 					mapsDAO.updateMapResource((MapDownloadResource) affectedListItem.downloadResource);
                     outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
@@ -791,7 +791,7 @@ namespace Skobbler.SDKDemo.Activities
 				else
 				{
 					resource = allMapResources[currentInstallingItem.ItemCode];
-					resource.DownloadState = SKToolsDownloadItem.INSTALLED;
+					resource.DownloadState = SKToolsDownloadItem.Installed;
 					mapsDAO.updateMapResource((MapDownloadResource) resource);
 				}
                 outerInstance.RunOnUiThread(() => { Toast.MakeText(outerInstance.appContext, ((MapDownloadResource)resource).Name + " was installed", ToastLength.Short).Show(); });
@@ -802,14 +802,14 @@ namespace Skobbler.SDKDemo.Activities
 				ListItem affectedListItem = outerInstance.codesMap[currentInstallingItem.ItemCode];
 				if (affectedListItem != null)
 				{
-					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.INSTALLING;
+					affectedListItem.downloadResource.DownloadState = SKToolsDownloadItem.Installing;
 					mapsDAO.updateMapResource((MapDownloadResource) affectedListItem.downloadResource);
                     outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
 				}
 				else
 				{
 					DownloadResource downloadResource = allMapResources[currentInstallingItem.ItemCode];
-					downloadResource.DownloadState = SKToolsDownloadItem.INSTALLING;
+					downloadResource.DownloadState = SKToolsDownloadItem.Installing;
 					mapsDAO.updateMapResource((MapDownloadResource) downloadResource);
 				}
 			}
@@ -931,11 +931,11 @@ namespace Skobbler.SDKDemo.Activities
 			foreach (DownloadResource currentDownloadResource in downloadResources)
 			{
 				SKToolsDownloadItem currentItem = currentDownloadResource.toDownloadItem();
-				if (currentDownloadResource.DownloadState == SKToolsDownloadItem.QUEUED)
+				if (currentDownloadResource.DownloadState == SKToolsDownloadItem.Queued)
 				{
 					currentItem.CurrentStepIndex = (sbyte) 0;
 				}
-				else if ((currentDownloadResource.DownloadState == SKToolsDownloadItem.PAUSED) || (currentDownloadResource.DownloadState == SKToolsDownloadItem.DOWNLOADING))
+				else if ((currentDownloadResource.DownloadState == SKToolsDownloadItem.Paused) || (currentDownloadResource.DownloadState == SKToolsDownloadItem.Downloading))
 				{
 					int downloadStepIndex = appContext.AppPrefs.getIntPreference(ApplicationPreferences.DOWNLOAD_STEP_INDEX_PREF_KEY);
 					currentItem.CurrentStepIndex = (sbyte) downloadStepIndex;
@@ -959,7 +959,7 @@ namespace Skobbler.SDKDemo.Activities
 					foreach (DownloadResource resource in activeDownloads)
 					{
 						resource.NoDownloadedBytes = 0;
-						resource.DownloadState = SKToolsDownloadItem.NOT_QUEUED;
+						resource.DownloadState = SKToolsDownloadItem.NotQueued;
 					}
 					activeDownloads.Clear();
 					appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);

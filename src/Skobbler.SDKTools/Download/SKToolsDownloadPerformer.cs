@@ -196,9 +196,9 @@ namespace Skobbler.Ngx.SDKTools.Download
                 }
 
                 // change the state for current download item
-                if (currentDownloadItem.DownloadState != SKToolsDownloadItem.DOWNLOADING)
+                if (currentDownloadItem.DownloadState != SKToolsDownloadItem.Downloading)
                 {
-                    currentDownloadItem.DownloadState = SKToolsDownloadItem.DOWNLOADING;
+                    currentDownloadItem.DownloadState = SKToolsDownloadItem.Downloading;
                 }
 
                 // check if current item is already downloaded (could be the case when download is performed very slow and the user exists the download thread without finishing the
@@ -502,9 +502,9 @@ namespace Skobbler.Ngx.SDKTools.Download
                     currentDownloadItem = queuedDownloads.First.Value;
                     while (currentDownloadItem != null)
                     {
-                        if ((currentDownloadItem.DownloadState == SKToolsDownloadItem.INSTALLING) || (currentDownloadItem.DownloadState == SKToolsDownloadItem.NOT_QUEUED) || (currentDownloadItem.DownloadState == SKToolsDownloadItem.INSTALLED))
+                        if ((currentDownloadItem.DownloadState == SKToolsDownloadItem.Installing) || (currentDownloadItem.DownloadState == SKToolsDownloadItem.NotQueued) || (currentDownloadItem.DownloadState == SKToolsDownloadItem.Installed))
                         {
-                            if (currentDownloadItem.DownloadState == SKToolsDownloadItem.INSTALLING)
+                            if (currentDownloadItem.DownloadState == SKToolsDownloadItem.Installing)
                             {
                                 SKLogging.WriteLog(TAG, "Current download item = " + currentDownloadItem.ItemCode + " is in INSTALLING state => add it to install queue", SKLogging.LogDebug);
                                 // add current resource to install queue
@@ -840,7 +840,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     currentDownloadItem.goToNextDownloadStep();
                     if (currentDownloadItem.DownloadFinished)
                     {
-                        currentDownloadItem.DownloadState = SKToolsDownloadItem.DOWNLOADED;
+                        currentDownloadItem.DownloadState = SKToolsDownloadItem.Downloaded;
                         // remove current download from download queue
                         lock (typeof(SKToolsDownloadPerformer))
                         {
@@ -894,7 +894,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                                 if ((result & SKPackageManager.AddPackageMissingSkmResult & SKPackageManager.AddPackageMissingNgiResult & SKPackageManager.AddPackageMissingNgiDatResult) == 0)
                                 {
                                     // current install was performed with success set current resource as already download
-                                    currentDownloadItem.DownloadState = SKToolsDownloadItem.INSTALLED;
+                                    currentDownloadItem.DownloadState = SKToolsDownloadItem.Installed;
                                     SKLogging.WriteLog(TAG, "The " + currentDownloadItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                                     // notify the UI that current resource was installed
                                     if (downloadListener != null)
@@ -952,7 +952,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             // pause current resource
             if (currentDownloadItem != null)
             {
-                currentDownloadItem.DownloadState = SKToolsDownloadItem.PAUSED;
+                currentDownloadItem.DownloadState = SKToolsDownloadItem.Paused;
             }
             // automatically stop the download thread
             lock (typeof(SKToolsDownloadPerformer))

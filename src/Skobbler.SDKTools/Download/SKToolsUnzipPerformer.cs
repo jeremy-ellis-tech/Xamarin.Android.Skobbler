@@ -81,7 +81,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 if (zipFileExists)
                 {
                     // change the state for current download item
-                    currentInstallingItem.DownloadState = SKToolsDownloadItem.INSTALLING;
+                    currentInstallingItem.DownloadState = SKToolsDownloadItem.Installing;
 
                     // database and UI update
                     if (downloadListener != null)
@@ -106,7 +106,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                         if ((result & SKPackageManager.AddPackageMissingSkmResult & SKPackageManager.AddPackageMissingNgiResult & SKPackageManager.AddPackageMissingNgiDatResult) == 0)
                         {
                             // current install was performed with success set current resource as already download
-                            currentInstallingItem.DownloadState = SKToolsDownloadItem.INSTALLED;
+                            currentInstallingItem.DownloadState = SKToolsDownloadItem.Installed;
                             SKLogging.WriteLog(TAG, "The " + currentInstallingItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                             // notify the UI that current resource was installed
                             if (downloadListener != null)
@@ -129,7 +129,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     else
                     {
                         // current install was performed with success set current resource as already download
-                        currentInstallingItem.DownloadState = SKToolsDownloadItem.INSTALLED;
+                        currentInstallingItem.DownloadState = SKToolsDownloadItem.Installed;
                         SKLogging.WriteLog(TAG, "The " + currentInstallingItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                         // notify the UI that current resource was installed
                         if (downloadListener != null)
@@ -145,7 +145,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     SKLogging.WriteLog(TAG, "The zip file doesn't exist => download again the resource !!! " + filePath, SKLogging.LogDebug);
                     // prepare again current resource for download queue(change its state, remove all related downloaded bytes)
                     currentInstallingItem.markAsNotQueued();
-                    currentInstallingItem.DownloadState = SKToolsDownloadItem.QUEUED;
+                    currentInstallingItem.DownloadState = SKToolsDownloadItem.Queued;
 
                     // notify the UI that current resource is again put in download queue
                     if (downloadListener != null)
