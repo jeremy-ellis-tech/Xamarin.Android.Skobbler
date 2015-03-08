@@ -95,6 +95,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additions\SKMetaDataListener.cs" />
+    <Compile Include="Additions\SKSearchListener.cs" />
+    <Compile Include="Additions\SKSearchManager.cs" />
+    <Compile Include="Additions\SKSearchStatusException.cs" />
+    <Compile Include="Additions\SKVersioningManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU'">
@@ -477,9 +482,7 @@
     <None Include="Jars\docs\META-INF\MANIFEST.MF" />
     <None Include="Jars\docs\package-list" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Additions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
