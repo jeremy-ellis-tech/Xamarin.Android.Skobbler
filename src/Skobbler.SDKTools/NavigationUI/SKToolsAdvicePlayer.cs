@@ -267,9 +267,10 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             try
             {
                 _player.Reset();
-                File file = new File(filePath);
-                FileStream fileInputStream = null;//new System.IO.FileStream(file, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-                FileDescriptor fileDescriptor = null;// fileInputStream.FD;
+
+                FileInputStream fileInputStream = new FileInputStream(filePath);
+                FileDescriptor fileDescriptor = fileInputStream.FD;
+
                 try
                 {
                     _player.SetDataSource(fileDescriptor);
@@ -279,6 +280,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     _player.Reset();
                     _player.SetDataSource(fileDescriptor);
                 }
+
                 fileInputStream.Close();
 
                 _player.Prepare();
