@@ -1674,9 +1674,9 @@ namespace Skobbler.SDKDemo.Activities
                 {
                     continue;
                 }
-                if (_drawnTrackablePoIs[detectedPoiId] == null)
+                if (!_drawnTrackablePoIs.ContainsKey(detectedPoiId))
                 {
-                    _drawnTrackablePoIs[detectedPoiId] = _trackablePoIs[detectedPoiId];
+                    _drawnTrackablePoIs.Add(detectedPoiId, _trackablePoIs[detectedPoiId]);
                     DrawDetectedPoi(detectedPoiId);
                 }
             }
