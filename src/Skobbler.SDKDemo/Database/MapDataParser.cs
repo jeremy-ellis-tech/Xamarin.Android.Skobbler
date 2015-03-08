@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Runtime.InteropServices;
+using Android.Media;
 using Android.Util;
+using Java.IO;
+using Java.Nio.Charset;
+using Stream = System.IO.Stream;
 
 namespace Skobbler.SDKDemo.Database
 {
@@ -90,7 +94,7 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		public virtual void ParseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, Stream inputStream)
 		{
-            JsonReader reader = null;// new JsonReader(new System.IO.StreamReader(inputStream, Encoding.UTF8));
+            JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
 			reader.BeginObject();
 			while (reader.HasNext)
 			{

@@ -142,7 +142,7 @@ namespace Skobbler.SDKDemo.Database
 			foreach (String keyValue in keyValuePairs)
 			{
 				string[] newName = keyValue.Split('=');
-				_names[newName[0]] = newName[1];
+                _names.Add(newName[0], newName[1]);
 			}
 		}
 
@@ -362,19 +362,21 @@ namespace Skobbler.SDKDemo.Database
 		    return 0;
 		}
 
-		public override bool Equals(object another)
+		public override bool Equals(object obj)
 		{
-		    if (another == null)
-			{
-				return false;
-			}
-		    if (!(another is MapDownloadResource))
-		    {
-		        return false;
-		    }
-		    MapDownloadResource anotherResource = (MapDownloadResource) another;
-		    return Code.Equals(anotherResource.Code);
+		    if (Object.ReferenceEquals(obj, this)) return true;
+
+		    var other = obj as MapDownloadResource;
+
+		    if (other == null) return false;
+
+		    return Object.Equals(other.Code, Code);
 		}
+
+	    public override int GetHashCode()
+	    {
+	        return Code.GetHashCode();
+	    }
 
 	    public override SKToolsDownloadItem ToDownloadItem()
 		{

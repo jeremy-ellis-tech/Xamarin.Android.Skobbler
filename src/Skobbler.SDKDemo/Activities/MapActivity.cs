@@ -346,10 +346,10 @@ namespace Skobbler.SDKDemo.Activities
             _mapView.MapSettings.InertiaPanningEnabled = true;
         }
 
-        private void InitializeTrackablePoIs()
         /// <summary>
         /// Populate the collection of trackable POIs
         /// </summary>
+        private void InitializeTrackablePoIs()
         {
 
             _trackablePoIs = new Dictionary<int?, SKTrackablePOI>();
