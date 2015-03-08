@@ -497,7 +497,7 @@ namespace Skobbler.SDKDemo.Activities
         }
 
         [Export("OnClick")]
-        public virtual void onClick(View v)
+        public void OnClick(View v)
         {
 
             switch (v.Id)
@@ -908,7 +908,7 @@ namespace Skobbler.SDKDemo.Activities
         }
 
         [Export("OnMenuOptionClick")]
-        public virtual void onMenuOptionClick(View v)
+        public void OnMenuOptionClick(View v)
         {
             clearMap();
             switch (v.Id)

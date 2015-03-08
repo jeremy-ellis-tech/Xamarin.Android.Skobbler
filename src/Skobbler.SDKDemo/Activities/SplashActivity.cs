@@ -22,7 +22,7 @@ namespace Skobbler.SDKDemo.Activities
 	/// Activity that installs required resources (from assets/MapResources.zip) to
 	/// the device
 	/// </summary>
-    [Activity(ConfigurationChanges = ConfigChanges.Orientation, MainLauncher = true)]
+    [Activity(MainLauncher = true)]
 	public class SplashActivity : Activity, ISKPrepareMapTextureListener, ISKMapUpdateListener
 	{
 
