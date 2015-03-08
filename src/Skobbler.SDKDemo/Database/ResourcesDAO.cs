@@ -57,15 +57,15 @@ namespace Skobbler.SDKDemo.Database
 			return databaseInstance;
 		}
 
-		public override void onCreate(SQLiteDatabase db)
-		{
-			SKLogging.WriteLog(TAG, "On create resources database !!!", SKLogging.LogDebug);
-			string createMapResourcesTable = (new StringBuilder("CREATE TABLE IF NOT EXISTS ")).Append(MapsDAO.MAPS_TABLE).Append(" (").Append(MapsDAO.KEY).Append(" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + "").Append(MapsDAO.CODE).Append(" TEXT UNIQUE, ").Append(MapsDAO.PARENT_CODE).Append(" TEXT, ").Append(MapsDAO.REGION).Append(" TEXT, ").Append(MapsDAO.NAMES).Append(" TEXT, " + "").Append(MapsDAO.SKM_FILE_PATH).Append(" TEXT, ").Append(MapsDAO.ZIP_FILE_PATH).Append(" TEXT, ").Append(MapsDAO.TXG_FILE_PATH).Append(" TEXT, ").Append(MapsDAO.TXG_FILE_SIZE).Append(" INTEGER, " + "").Append(MapsDAO.SKM_AND_ZIP_FILES_SIZE).Append(" INTEGER, ").Append(MapsDAO.SKM_FILE_SIZE).Append(" INTEGER, " + "").Append(MapsDAO.UNZIPPED_FILE_SIZE).Append(" INTEGER, ").Append(MapsDAO.BOUNDING_BOX_LATITUDE_MAX).Append(" DOUBLE, ").Append(MapsDAO.BOUNDING_BOX_LATITUDE_MIN).Append(" DOUBLE, ").Append(MapsDAO.BOUNDING_BOX_LONGITUDE_MAX).Append(" DOUBLE, ").Append(MapsDAO.BOUNDING_BOX_LONGITUDE_MIN).Append(" DOUBLE, " + "").Append(MapsDAO.SUBTYPE).Append(" TEXT, ").Append(MapsDAO.STATE).Append(" INTEGER, ").Append(MapsDAO.NO_DOWNLOADED_BYTES).Append(" INTEGER, ").Append(MapsDAO.FLAG_ID).Append(" INTEGER, ").Append(MapsDAO.DOWNLOAD_PATH).Append(" TEXT)").ToString();
-			db.BeginTransaction();
-			db.ExecSQL(createMapResourcesTable);
-			db.SetTransactionSuccessful();
-			db.EndTransaction();
-		}
+        public override void OnCreate(SQLiteDatabase db)
+        {
+            SKLogging.WriteLog(TAG, "On create resources database !!!", SKLogging.LogDebug);
+            string createMapResourcesTable = (new StringBuilder("CREATE TABLE IF NOT EXISTS ")).Append(MapsDAO.MAPS_TABLE).Append(" (").Append(MapsDAO.KEY).Append(" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " + "").Append(MapsDAO.CODE).Append(" TEXT UNIQUE, ").Append(MapsDAO.PARENT_CODE).Append(" TEXT, ").Append(MapsDAO.REGION).Append(" TEXT, ").Append(MapsDAO.NAMES).Append(" TEXT, " + "").Append(MapsDAO.SKM_FILE_PATH).Append(" TEXT, ").Append(MapsDAO.ZIP_FILE_PATH).Append(" TEXT, ").Append(MapsDAO.TXG_FILE_PATH).Append(" TEXT, ").Append(MapsDAO.TXG_FILE_SIZE).Append(" INTEGER, " + "").Append(MapsDAO.SKM_AND_ZIP_FILES_SIZE).Append(" INTEGER, ").Append(MapsDAO.SKM_FILE_SIZE).Append(" INTEGER, " + "").Append(MapsDAO.UNZIPPED_FILE_SIZE).Append(" INTEGER, ").Append(MapsDAO.BOUNDING_BOX_LATITUDE_MAX).Append(" DOUBLE, ").Append(MapsDAO.BOUNDING_BOX_LATITUDE_MIN).Append(" DOUBLE, ").Append(MapsDAO.BOUNDING_BOX_LONGITUDE_MAX).Append(" DOUBLE, ").Append(MapsDAO.BOUNDING_BOX_LONGITUDE_MIN).Append(" DOUBLE, " + "").Append(MapsDAO.SUBTYPE).Append(" TEXT, ").Append(MapsDAO.STATE).Append(" INTEGER, ").Append(MapsDAO.NO_DOWNLOADED_BYTES).Append(" INTEGER, ").Append(MapsDAO.FLAG_ID).Append(" INTEGER, ").Append(MapsDAO.DOWNLOAD_PATH).Append(" TEXT)").ToString();
+            db.BeginTransaction();
+            db.ExecSQL(createMapResourcesTable);
+            db.SetTransactionSuccessful();
+            db.EndTransaction();
+        }
 
 		/// <summary>
 		/// Returns the {@code database} </summary>
@@ -97,8 +97,9 @@ namespace Skobbler.SDKDemo.Database
 			}
 		}
 
-		public override void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-		{
-		}
+        public override void OnUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+        {
+            
+        }
 	}
 }

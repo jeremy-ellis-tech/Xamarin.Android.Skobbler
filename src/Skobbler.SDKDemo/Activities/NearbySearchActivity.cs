@@ -14,11 +14,11 @@ namespace Skobbler.SDKDemo.Activities
 	public class NearbySearchActivity : Activity
 	{
 
-		protected internal override void onCreate(Bundle savedInstanceState)
-		{
-			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_nearby_search);
-		}
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.activity_nearby_search);
+        }
 
         [Export("OnClick")]
 		public virtual void onClick(View v)

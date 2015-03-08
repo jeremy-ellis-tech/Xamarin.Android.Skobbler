@@ -33,32 +33,32 @@ namespace Skobbler.SDKDemo.Activities
 		/// </summary>
         private IList<Tuple<string, string>> items = new List<Tuple<string, string>>();
 
-		protected internal override void onCreate(Bundle savedInstanceState)
-		{
-			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_list);
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.activity_list);
 
-			((TextView) FindViewById(Resource.Id.label_operation_in_progress)).Text = Resources.GetString(Resource.String.searching);
-			listView = (ListView) FindViewById(Resource.Id.list_view);
+            ((TextView)FindViewById(Resource.Id.label_operation_in_progress)).Text = Resources.GetString(Resource.String.searching);
+            listView = (ListView)FindViewById(Resource.Id.list_view);
 
-			// get the search manager and set the search result listener
-			searchManager = new SKSearchManager(this);
-			// get a nearby search object
-			SKNearbySearchSettings nearbySearchObject = new SKNearbySearchSettings();
-			// set the position around which to do the search and the search radius
-			nearbySearchObject.Location = new SKCoordinate(Intent.GetDoubleExtra("longitude", 0), Intent.GetDoubleExtra("latitude", 0));
-			nearbySearchObject.Radius = Intent.GetIntExtra("radius", 0);
-			// set the search topic
-			nearbySearchObject.SearchTerm = Intent.GetStringExtra("searchTopic");
-			// initiate the nearby search
-			SKSearchStatus status = searchManager.NearbySearch(nearbySearchObject);
-			if (status != SKSearchStatus.SkSearchNoError)
-			{
-				Toast.MakeText(this, "An error occurred", ToastLength.Short).Show();
-			}
-		}
+            // get the search manager and set the search result listener
+            searchManager = new SKSearchManager(this);
+            // get a nearby search object
+            SKNearbySearchSettings nearbySearchObject = new SKNearbySearchSettings();
+            // set the position around which to do the search and the search radius
+            nearbySearchObject.Location = new SKCoordinate(Intent.GetDoubleExtra("longitude", 0), Intent.GetDoubleExtra("latitude", 0));
+            nearbySearchObject.Radius = Intent.GetIntExtra("radius", 0);
+            // set the search topic
+            nearbySearchObject.SearchTerm = Intent.GetStringExtra("searchTopic");
+            // initiate the nearby search
+            SKSearchStatus status = searchManager.NearbySearch(nearbySearchObject);
+            if (status != SKSearchStatus.SkSearchNoError)
+            {
+                Toast.MakeText(this, "An error occurred", ToastLength.Short).Show();
+            }
+        }
 
-		public override void onReceivedSearchResults(IList<SKSearchResult> results)
+		public void OnReceivedSearchResults(IList<SKSearchResult> results)
 		{
 			FindViewById(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
 			listView.Visibility = ViewStates.Visible;
@@ -81,7 +81,7 @@ namespace Skobbler.SDKDemo.Activities
 			listView.Adapter = adapter;
 		}
 
-		private class ResultsListAdapter : BaseAdapter
+		private class ResultsListAdapter : BaseAdapter<Tuple<string,string>>
 		{
 			private readonly NearbySearchResultsActivity outerInstance;
 
@@ -99,17 +99,12 @@ namespace Skobbler.SDKDemo.Activities
 				}
 			}
 
-			public override object getItem(int position)
-			{
-				return outerInstance.items[position];
-			}
-
-			public override long getItemId(int position)
+			public override long GetItemId(int position)
 			{
 				return 0;
 			}
 
-			public override View getView(int position, View convertView, ViewGroup parent)
+			public override View GetView(int position, View convertView, ViewGroup parent)
 			{
 				View view = null;
 				if (convertView == null)
@@ -126,7 +121,12 @@ namespace Skobbler.SDKDemo.Activities
 				return view;
 			}
 
-		}
+
+            public override Tuple<string, string> this[int position]
+            {
+                get { return outerInstance.items[position]; }
+            }
+        }
 	}
 
 }

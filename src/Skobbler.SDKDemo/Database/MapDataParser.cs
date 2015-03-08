@@ -90,7 +90,7 @@ namespace Skobbler.SDKDemo.Database
 		/// <exception cref="java.io.IOException"> </exception>
 		public virtual void parseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, System.IO.Stream inputStream)
 		{
-			JsonReader reader = new JsonReader(new System.IO.StreamReader(inputStream, Encoding.UTF8));
+            JsonReader reader = null;// new JsonReader(new System.IO.StreamReader(inputStream, Encoding.UTF8));
 			reader.BeginObject();
 			while (reader.HasNext)
 			{

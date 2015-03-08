@@ -22,7 +22,7 @@ namespace Skobbler.SDKDemo.Activities
 	/// Activity that installs required resources (from assets/MapResources.zip) to
 	/// the device
 	/// </summary>
-    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
+    [Activity(ConfigurationChanges = ConfigChanges.Orientation, MainLauncher = true)]
 	public class SplashActivity : Activity, ISKPrepareMapTextureListener, ISKMapUpdateListener
 	{
 
@@ -76,7 +76,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-		public override void onMapTexturesPrepared(bool prepared)
+		public void OnMapTexturesPrepared(bool prepared)
 		{
 			DemoUtils.initializeLibrary(this);
 			SKVersioningManager.Instance.SetMapUpdateListener(this);
@@ -158,25 +158,25 @@ namespace Skobbler.SDKDemo.Activities
 			prepareGPXFileThread.Start();
 		}
 
-		public override void onMapVersionSet(int newVersion)
+		public void OnMapVersionSet(int newVersion)
 		{
 			// TODO Auto-generated method stub
 
 		}
 
-		public override void onNewVersionDetected(int newVersion)
+		public void OnNewVersionDetected(int newVersion)
 		{
 			// TODO Auto-generated method stub
 			Log.Error("", "new version " + newVersion);
 		}
 
-		public override void onNoNewVersionDetected()
+		public void OnNoNewVersionDetected()
 		{
 			// TODO Auto-generated method stub
 
 		}
 
-		public override void onVersionFileDownloadTimeout()
+		public void OnVersionFileDownloadTimeout()
 		{
 			// TODO Auto-generated method stub
 
@@ -247,7 +247,7 @@ namespace Skobbler.SDKDemo.Activities
 				Method getAvailableBytesMethod = null;
 				try
 				{
-					getAvailableBytesMethod = statFs.GetType().GetMethod("getAvailableBytes");
+					getAvailableBytesMethod = statFs.Class.GetMethod("getAvailableBytes");
 				}
 				catch (NoSuchMethodException e)
 				{

@@ -23,11 +23,11 @@ namespace Skobbler.SDKDemo.Application
 		/// </summary>
 		private ApplicationPreferences appPrefs;
 
-		public override void onCreate()
-		{
-			base.OnCreate();
-			appPrefs = new ApplicationPreferences(this);
-		}
+        public override void OnCreate()
+        {
+            base.OnCreate();
+            appPrefs = new ApplicationPreferences(this);
+        }
 
 		public virtual string MapResourcesDirPath
 		{

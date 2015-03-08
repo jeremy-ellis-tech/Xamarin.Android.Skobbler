@@ -472,7 +472,6 @@
     <Content Include="Jars\docs\resources\titlebar_end.gif" />
     <Content Include="Jars\docs\serialized-form.html" />
     <Content Include="Jars\docs\stylesheet.css" />
-    <EmbeddedReferenceJar Include="Jars\gson-2.2.4.jar" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Jars\docs\META-INF\MANIFEST.MF" />

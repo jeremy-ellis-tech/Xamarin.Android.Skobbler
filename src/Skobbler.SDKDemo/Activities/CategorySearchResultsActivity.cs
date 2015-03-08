@@ -38,17 +38,17 @@ namespace Skobbler.SDKDemo.Activities
 		/// </summary>
 		private IDictionary<SKCategories.SKPOIMainCategory, IList<SKSearchResult>> results = new Dictionary<SKCategories.SKPOIMainCategory, IList<SKSearchResult>>();
 
-		protected internal override void onCreate(Bundle savedInstanceState)
-		{
-			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_list);
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.activity_list);
 
-			operationInProgressLabel = (TextView) FindViewById(Resource.Id.label_operation_in_progress);
-			listView = (ListView) FindViewById(Resource.Id.list_view);
-			operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
+            operationInProgressLabel = (TextView)FindViewById(Resource.Id.label_operation_in_progress);
+            listView = (ListView)FindViewById(Resource.Id.list_view);
+            operationInProgressLabel.Text = Resources.GetString(Resource.String.searching);
 
-			startSearch();
-		}
+            startSearch();
+        }
 
 		/// <summary>
 		/// Initiates a nearby search with the specified categories
@@ -92,7 +92,7 @@ namespace Skobbler.SDKDemo.Activities
 			}
 		}
 
-		public override void onReceivedSearchResults(IList<SKSearchResult> results)
+		public void OnReceivedSearchResults(IList<SKSearchResult> results)
 		{
 			buildResultsMap(results);
 			operationInProgressLabel.Visibility = ViewStates.Gone;
@@ -110,20 +110,20 @@ namespace Skobbler.SDKDemo.Activities
             };
 		}
 
-		public override void onBackPressed()
-		{
-			if (selectedMainCategory == null)
-			{
-				base.OnBackPressed();
-			}
-			else
-			{
-				selectedMainCategory = null;
-				adapter.NotifyDataSetChanged();
-			}
-		}
+        public override void OnBackPressed()
+        {
+            if (selectedMainCategory == null)
+            {
+                base.OnBackPressed();
+            }
+            else
+            {
+                selectedMainCategory = null;
+                adapter.NotifyDataSetChanged();
+            }
+        }
 
-		private class ResultsListAdapter : BaseAdapter
+		private class ResultsListAdapter : BaseAdapter<SKSearchResult>
 		{
 			private readonly CategorySearchResultsActivity outerInstance;
 
@@ -148,24 +148,12 @@ namespace Skobbler.SDKDemo.Activities
 				}
 			}
 
-			public override object getItem(int position)
-			{
-				if (outerInstance.selectedMainCategory == null)
-				{
-                    return outerInstance.results[SKCategories.SKPOIMainCategory.ForInt(mainCategories[position])];
-				}
-				else
-				{
-					return outerInstance.results[outerInstance.selectedMainCategory][position];
-				}
-			}
+            public override long GetItemId(int position)
+            {
+                return 0;
+            }
 
-			public override long getItemId(int position)
-			{
-				return 0;
-			}
-
-			public override View getView(int position, View convertView, ViewGroup parent)
+			public override View GetView(int position, View convertView, ViewGroup parent)
 			{
 				View view = null;
 				if (convertView == null)
@@ -190,7 +178,22 @@ namespace Skobbler.SDKDemo.Activities
 				}
 				return view;
 			}
-		}
+
+            public override SKSearchResult this[int position]
+            {
+                get
+                {
+                    if (outerInstance.selectedMainCategory == null)
+                    {
+                        return null; // return outerInstance.results[mainCategories[0]][position];
+                    }
+                    else
+                    {
+                        return outerInstance.results[outerInstance.selectedMainCategory][position];
+                    }
+                }
+            }
+        }
 	}
 
 }

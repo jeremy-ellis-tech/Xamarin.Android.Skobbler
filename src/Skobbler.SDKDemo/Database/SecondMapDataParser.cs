@@ -1,6 +1,7 @@
 ﻿using Java.IO;
 using Org.Json;
 using Skobbler.Ngx.Util;
+using Skobbler.SDKDemo.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -120,7 +121,7 @@ namespace Skobbler.SDKDemo.Database
 			/*-for (Map.Entry<String, String> currentEntry : mapsItemsCodes.entrySet()) {
 			    System.out.println("Catalin ; key = " + currentEntry.getKey() + " ; value = " + currentEntry.getValue());
 			}*/
-			Console.WriteLine("Catalin ; total loading time = " + (DateTimeUtil.CurrentUnixTimeMillis() - startTime) + " ; maps size = " + maps.Count);
+			Console.WriteLine("Catalin ; total loading time = " + (DateTimeUtil.JavaTime() - startTime) + " ; maps size = " + maps.Count);
 		}
 
 		/// <summary>
@@ -135,10 +136,10 @@ namespace Skobbler.SDKDemo.Database
 			{
 				var bufferedReader = new StreamReader(inputStream, Encoding.UTF8);
 				int n;
-				while ((n = bufferedReader.Read(buffer)) != -1)
-				{
-					stringWriter.Write(buffer, 0, n);
-				}
+                //while ((n = bufferedReader.Read(buffer)) != -1)
+                //{
+                //    stringWriter.Write(buffer, 0, n);
+                //}
 			}
 			finally
 			{

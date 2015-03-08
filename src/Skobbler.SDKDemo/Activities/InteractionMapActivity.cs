@@ -8,151 +8,153 @@ using Skobbler.Ngx.Map;
 namespace Skobbler.SDKDemo.Activities
 {
     [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
-	public class InteractionMapActivity : Activity, ISKMapSurfaceListener
-	{
+    public class InteractionMapActivity : Activity, ISKMapSurfaceListener
+    {
 
-		private SKMapSurfaceView mapView;
+        private SKMapSurfaceView mapView;
 
-		private bool mapSurfaceCreated;
+        private bool mapSurfaceCreated;
 
-		protected internal override void onCreate(Bundle savedInstanceState)
-		{
-			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_new_map);
-			SKMapViewHolder mapViewGroup = (SKMapViewHolder) FindViewById(Resource.Id.view_group_map);
-			mapView = mapViewGroup.MapSurfaceView;
-			mapView.MapSurfaceListener = this;
-		}
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
 
-		public override void onResume()
-		{
-			base.OnResume();
-			mapView.OnResume();
-		}
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.activity_new_map);
+            SKMapViewHolder mapViewGroup = (SKMapViewHolder)FindViewById(Resource.Id.view_group_map);
+            mapView = mapViewGroup.MapSurfaceView;
+            mapView.MapSurfaceListener = this;
+        }
 
-		public override void onPause()
-		{
-			base.OnPause();
-			mapView.OnPause();
-		}
+        protected override void OnResume()
+        {
+            base.OnResume();
+            mapView.OnResume();
+        }
 
-		protected internal override void onDestroy()
-		{
-			base.OnDestroy();
-			mapView = null;
-		}
+        protected override void OnPause()
+        {
+            base.OnPause();
+            mapView.OnPause();
+        }
 
-		public override void onActionPan()
-		{
-		}
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            mapView = null;
+        }
 
-		public override void onActionZoom()
-		{
-		}
+        public void OnActionPan()
+        {
+        }
 
-		public override void onSurfaceCreated()
-		{
-			// a chess background is displayed until the map becomes available
-			if (!mapSurfaceCreated)
-			{
-				mapSurfaceCreated = true;
-				// hiding the chess background when map is available
-				RelativeLayout chessBackground = (RelativeLayout) FindViewById(Resource.Id.chess_table_background);
-				chessBackground.Visibility = ViewStates.Gone;
+        public void OnActionZoom()
+        {
+        }
 
-				mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
-			}
-		}
+        public void OnSurfaceCreated()
+        {
+            // a chess background is displayed until the map becomes available
+            if (!mapSurfaceCreated)
+            {
+                mapSurfaceCreated = true;
+                // hiding the chess background when map is available
+                RelativeLayout chessBackground = (RelativeLayout)FindViewById(Resource.Id.chess_table_background);
+                chessBackground.Visibility = ViewStates.Gone;
 
-		public override void onScreenOrientationChanged()
-		{
-		}
+                mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
+            }
+        }
 
-		public override void onMapRegionChanged(SKCoordinateRegion region)
-		{
-		}
+        public void OnScreenOrientationChanged()
+        {
+        }
 
-		public override void onDoubleTap(SKScreenPoint point)
-		{
-		}
+        public void OnMapRegionChanged(SKCoordinateRegion region)
+        {
+        }
 
-		public override void onSingleTap(SKScreenPoint point)
-		{
-		}
+        public void OnDoubleTap(SKScreenPoint point)
+        {
+        }
 
-		public override void onRotateMap()
-		{
-		}
+        public void OnSingleTap(SKScreenPoint point)
+        {
+        }
 
-		public override void onLongPress(SKScreenPoint point)
-		{
-		}
+        public void OnRotateMap()
+        {
+        }
 
-		public override void onInternetConnectionNeeded()
-		{
-		}
+        public void OnLongPress(SKScreenPoint point)
+        {
+        }
 
-		public override void onMapActionDown(SKScreenPoint point)
-		{
-		}
+        public void OnInternetConnectionNeeded()
+        {
+        }
 
-		public override void onMapActionUp(SKScreenPoint point)
-		{
-		}
+        public void OnMapActionDown(SKScreenPoint point)
+        {
+        }
 
-		public override void onMapPOISelected(SKMapPOI mapPOI)
-		{
-		}
+        public void OnMapActionUp(SKScreenPoint point)
+        {
+        }
 
-		public override void onAnnotationSelected(SKAnnotation annotation)
-		{
-		}
+        public void OnMapPOISelected(SKMapPOI mapPOI)
+        {
+        }
 
-		public override void onCompassSelected()
-		{
-		}
+        public void OnAnnotationSelected(SKAnnotation annotation)
+        {
+        }
 
-		public override void onInternationalisationCalled(int result)
-		{
-		}
+        public void OnCompassSelected()
+        {
+        }
 
-		public override void onCustomPOISelected(SKMapCustomPOI customPoi)
-		{
-		}
+        public void OnInternationalisationCalled(int result)
+        {
+        }
 
-		public override void onPOIClusterSelected(SKPOICluster arg0)
-		{
-		}
+        public void OnCustomPOISelected(SKMapCustomPOI customPoi)
+        {
+        }
 
-		public override void onMapRegionChangeEnded(SKCoordinateRegion arg0)
-		{
-		}
+        public void OnPOIClusterSelected(SKPOICluster arg0)
+        {
+        }
 
-		public override void onMapRegionChangeStarted(SKCoordinateRegion arg0)
-		{
-		}
+        public void OnMapRegionChangeEnded(SKCoordinateRegion arg0)
+        {
+        }
 
-
-		public override void onCurrentPositionSelected()
-		{
-		}
-
-		public override void onObjectSelected(int arg0)
-		{
-		}
+        public void OnMapRegionChangeStarted(SKCoordinateRegion arg0)
+        {
+        }
 
 
+        public void OnCurrentPositionSelected()
+        {
+        }
 
-		public override void onBoundingBoxImageRendered(int i)
-		{
+        public void OnObjectSelected(int arg0)
+        {
+        }
 
-		}
 
-		public override void onGLInitializationError(string messsage)
-		{
 
-		}
+        public void OnBoundingBoxImageRendered(int i)
+        {
 
-	}
+        }
+
+        public void OnGLInitializationError(string messsage)
+        {
+
+        }
+
+    }
 
 }

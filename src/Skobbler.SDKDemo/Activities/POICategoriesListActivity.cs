@@ -64,7 +64,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        protected internal override void onCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_list);
@@ -125,7 +125,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        private class POICategoryListAdapter : BaseAdapter
+        private class POICategoryListAdapter : BaseAdapter<POICategoryListItem>
         {
             private readonly POICategoriesListActivity outerInstance;
 
@@ -143,17 +143,12 @@ namespace Skobbler.SDKDemo.Activities
                 }
             }
 
-            public override object getItem(int position)
-            {
-                return outerInstance.listItems[position];
-            }
-
-            public override long getItemId(int position)
+            public override long GetItemId(int position)
             {
                 return 0;
             }
 
-            public override View getView(int position, View convertView, ViewGroup parent)
+            public override View GetView(int position, View convertView, ViewGroup parent)
             {
                 TextView view = null;
                 if (convertView == null)
@@ -186,6 +181,11 @@ namespace Skobbler.SDKDemo.Activities
                     }
                 }
                 return view;
+            }
+
+            public override POICategoryListItem this[int position]
+            {
+                get { return outerInstance.listItems[position]; }
             }
         }
     }

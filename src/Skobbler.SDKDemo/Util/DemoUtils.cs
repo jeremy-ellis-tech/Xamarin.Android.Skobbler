@@ -90,7 +90,7 @@ namespace Skobbler.SDKDemo.Util
 					System.IO.Stream asset = assetManager.Open(sourceFolder + "/" + assetName);
 					try
 					{
-						ByteStreams.copy(asset, destinationStream);
+						//ByteStreams.copy(asset, destinationStream);
 					}
 					finally
 					{
@@ -115,7 +115,7 @@ namespace Skobbler.SDKDemo.Util
 			System.IO.Stream asset = assetManager.Open(assetName);
 			try
 			{
-				ByteStreams.copy(asset, destinationStream);
+				//ByteStreams.copy(asset, destinationStream);
 			}
 			finally
 			{

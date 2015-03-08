@@ -90,56 +90,56 @@ namespace Skobbler.SDKDemo.Activities
                 e.Handled = false;
             };
 
-            ListPreference listSpeedWarningsInTown = (ListPreference)FindPreference(PreferenceTypes.K_IN_TOWN_SPEED_WARNING);
+            ListPreference lswit = (ListPreference)FindPreference(PreferenceTypes.K_IN_TOWN_SPEED_WARNING);
 
             if (listDistanceFormat.Summary.Equals("Kilometers/Meters"))
             {
-                listSpeedWarningsInTown.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
-                listSpeedWarningsInTown.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                lswit.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
+                lswit.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
             }
             else
             {
-                listSpeedWarningsInTown.SetEntries(new string[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
-                listSpeedWarningsInTown.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                lswit.SetEntries(new string[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
+                lswit.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
             }
 
-            if (listSpeedWarningsInTown.Value == null)
+            if (lswit.Value == null)
             {
-                listSpeedWarningsInTown.SetValueIndex(3);
+                lswit.SetValueIndex(3);
             }
 
-            listSpeedWarningsInTown.PreferenceChange += (s, e) =>
+            lswit.PreferenceChange += (s, e) =>
             {
                 // Set the value as the new value
-                listSpeedWarningsInTown.Value = e.NewValue.ToString();
+                lswit.Value = e.NewValue.ToString();
                 // Get the entry which corresponds to the current value and set as summary
-                e.Preference.Summary = listSpeedWarningsInTown.Entry;
+                e.Preference.Summary = lswit.Entry;
                 e.Handled = false;
             };
 
-            ListPreference listSpeedWarningsOutTown = (ListPreference)FindPreference(PreferenceTypes.K_OUT_TOWN_SPEED_WARNING);
+            ListPreference lswot = (ListPreference)FindPreference(PreferenceTypes.K_OUT_TOWN_SPEED_WARNING);
             if (listDistanceFormat.Summary.Equals("Kilometers/Meters"))
             {
-                listSpeedWarningsOutTown.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
-                listSpeedWarningsOutTown.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                lswot.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
+                lswot.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
             }
             else
             {
-                listSpeedWarningsOutTown.SetEntries(new string[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
-                listSpeedWarningsOutTown.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                lswot.SetEntries(new string[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
+                lswot.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
             }
 
-            if (listSpeedWarningsOutTown.Value == null)
+            if (lswot.Value == null)
             {
-                listSpeedWarningsOutTown.SetValueIndex(3);
+                lswot.SetValueIndex(3);
             }
 
-            listSpeedWarningsOutTown.PreferenceChange += (s, e) =>
+            lswot.PreferenceChange += (s, e) =>
             {
                 // Set the value as the new value
-                listSpeedWarningsOutTown.Value = e.NewValue.ToString();
+                lswot.Value = e.NewValue.ToString();
                 // Get the entry which corresponds to the current value and set as summary
-                e.Preference.Summary = listSpeedWarningsOutTown.Entry;
+                e.Preference.Summary = lswot.Entry;
                 e.Handled = false;
             };
 

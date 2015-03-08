@@ -257,7 +257,7 @@ namespace Skobbler.SDKDemo.Activities
 
         private SKToolsNavigationManager navigationManager;
 
-        protected internal override void onCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             DemoUtils.initializeLibrary(this);
@@ -374,7 +374,7 @@ namespace Skobbler.SDKDemo.Activities
             drawnTrackablePOIs = new Dictionary<int?, SKTrackablePOI>();
         }
 
-        protected internal override void onResume()
+        protected override void OnResume()
         {
             base.OnResume();
             mapView.OnResume();
@@ -405,7 +405,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        protected internal override void onPause()
+        protected override void OnPause()
         {
             base.OnPause();
             mapView.OnPause();
@@ -415,7 +415,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        protected internal override void onDestroy()
+        protected override void OnDestroy()
         {
             base.OnDestroy();
             currentPositionProvider.StopLocationUpdates();
@@ -428,21 +428,20 @@ namespace Skobbler.SDKDemo.Activities
             Process.KillProcess(Process.MyPid());
         }
 
-        public override void onSurfaceCreated()
+        public void OnSurfaceCreated()
         {
             View chessBackground = FindViewById(Resource.Id.chess_board_background);
             chessBackground.Visibility = ViewStates.Gone;
             mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.None;
-
         }
 
-        public override void onBoundingBoxImageRendered(int i)
+        public void OnBoundingBoxImageRendered(int i)
         {
 
         }
 
 
-        public override void onGLInitializationError(string messsage)
+        public void OnGLInitializationError(string messsage)
         {
 
         }
@@ -1638,7 +1637,7 @@ namespace Skobbler.SDKDemo.Activities
         }
 
         // route computation callbacks ...
-        public override void onAllRoutesCompleted()
+        public void OnAllRoutesCompleted()
         {
 
             SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
@@ -1654,7 +1653,7 @@ namespace Skobbler.SDKDemo.Activities
         }
 
 
-        public override void onReceivedPOIs(SKTrackablePOIType type, IList<SKDetectedPOI> detectedPois)
+        public void OnReceivedPOIs(SKTrackablePOIType type, IList<SKDetectedPOI> detectedPois)
         {
             updateMapWithLatestDetectedPOIs(detectedPois);
         }
@@ -1708,16 +1707,16 @@ namespace Skobbler.SDKDemo.Activities
             mapView.AddAnnotation(annotation, SKAnimationSettings.AnimationNone);
         }
 
-        public override void onUpdatePOIsInRadius(double latitude, double longitude, int radius)
+        public void OnUpdatePOIsInRadius(double latitude, double longitude, int radius)
         {
 
             // set the POIs to be tracked by the POI tracker
             poiTrackingManager.SetTrackedPOIs(SKTrackablePOIType.Speedcam, new List<SKTrackablePOI>(trackablePOIs.Values));
         }
 
-        public override void onSensorChanged(SensorEvent t)
+        public void OnSensorChanged(SensorEvent e)
         {
-            mapView.ReportNewHeading(t.Values[0]);
+            mapView.ReportNewHeading(e.Values[0]);
         }
 
         /// <summary>
@@ -1762,20 +1761,20 @@ namespace Skobbler.SDKDemo.Activities
             sensorManager.UnregisterListener(this);
         }
 
-        public override void onCurrentPositionUpdate(SKPosition currentPosition)
+        public void OnCurrentPositionUpdate(SKPosition currentPosition)
         {
             this.currentPosition = currentPosition;
             mapView.ReportNewGPSPosition(this.currentPosition);
         }
 
-        public override void onOnlineRouteComputationHanging(int status)
+        public void OnOnlineRouteComputationHanging(int status)
         {
 
         }
 
 
         // map interaction callbacks ...
-        public override void onActionPan()
+        public void OnActionPan()
         {
             if (headingOn)
             {
@@ -1783,13 +1782,12 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        public override void onActionZoom()
+        public void OnActionZoom()
         {
 
         }
 
-
-        public override void onConfigurationChanged(Configuration newConfig)
+        public override void OnConfigurationChanged(Configuration newConfig)
         {
             base.OnConfigurationChanged(newConfig);
 
@@ -1799,7 +1797,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        public override void onAnnotationSelected(SKAnnotation annotation)
+        public void OnAnnotationSelected(SKAnnotation annotation)
         {
             DisplayMetrics metrics = new DisplayMetrics();
             float density = Resources.DisplayMetrics.Density;
@@ -1874,24 +1872,24 @@ namespace Skobbler.SDKDemo.Activities
 
         }
 
-        public override void onCustomPOISelected(SKMapCustomPOI customPoi)
+        public void OnCustomPOISelected(SKMapCustomPOI customPoi)
         {
 
         }
 
 
-        public override void onDoubleTap(SKScreenPoint point)
+        public void OnDoubleTap(SKScreenPoint point)
         {
             // zoom in on a position when double tapping
             mapView.ZoomInAt(point);
         }
 
-        public override void onInternetConnectionNeeded()
+        public void OnInternetConnectionNeeded()
         {
 
         }
 
-        public override void onLongPress(SKScreenPoint point)
+        public void OnLongPress(SKScreenPoint point)
         {
             SKCoordinate poiCoordinates = mapView.PointToCoordinate(point);
             SKSearchResult place = SKReverseGeocoderManager.Instance.ReverseGeocodePosition(poiCoordinates);
@@ -1927,52 +1925,52 @@ namespace Skobbler.SDKDemo.Activities
 
         }
 
-        public override void onMapActionDown(SKScreenPoint point)
+        public void OnMapActionDown(SKScreenPoint point)
         {
 
         }
 
-        public override void onMapActionUp(SKScreenPoint point)
+        public void OnMapActionUp(SKScreenPoint point)
         {
 
         }
 
-        public override void onMapPOISelected(SKMapPOI mapPOI)
+        public void OnMapPOISelected(SKMapPOI mapPOI)
         {
 
         }
 
-        public override void onMapRegionChanged(SKCoordinateRegion mapRegion)
+        public void OnMapRegionChanged(SKCoordinateRegion mapRegion)
         {
         }
 
-        public override void onRotateMap()
-        {
-
-        }
-
-        public override void onScreenOrientationChanged()
+        public void OnRotateMap()
         {
 
         }
 
-        public override void onSingleTap(SKScreenPoint point)
+        public void OnScreenOrientationChanged()
+        {
+
+        }
+
+        public void OnSingleTap(SKScreenPoint point)
         {
             mapPopup.Visibility = ViewStates.Gone;
         }
 
 
-        public override void onCompassSelected()
+        public void OnCompassSelected()
         {
 
         }
 
-        public override void onInternationalisationCalled(int result)
+        public void OnInternationalisationCalled(int result)
         {
 
         }
 
-        public override void onDestinationReached()
+        public void OnDestinationReached()
         {
             Toast.MakeText(this, "Destination reached", ToastLength.Short).Show();
             // clear the map when reaching destination
@@ -1980,31 +1978,31 @@ namespace Skobbler.SDKDemo.Activities
         }
 
 
-        public override void onFreeDriveUpdated(string countryCode, string streetName, SKNavigationState.SKStreetType streetType, double currentSpeed, double speedLimit)
+        public void OnFreeDriveUpdated(string countryCode, string streetName, SKNavigationState.SKStreetType streetType, double currentSpeed, double speedLimit)
         {
 
         }
 
-        public override void onReRoutingStarted()
+        public void OnReRoutingStarted()
         {
 
         }
 
-        public override void onSpeedExceededWithAudioFiles(string[] adviceList, bool speedExceeded)
+        public void OnSpeedExceededWithAudioFiles(string[] adviceList, bool speedExceeded)
         {
 
         }
 
-        public override void onUpdateNavigationState(SKNavigationState navigationState)
+        public void OnUpdateNavigationState(SKNavigationState navigationState)
         {
         }
 
 
-        public override void onVisualAdviceChanged(bool firstVisualAdviceChanged, bool secondVisualAdviceChanged, SKNavigationState navigationState)
+        public void OnVisualAdviceChanged(bool firstVisualAdviceChanged, bool secondVisualAdviceChanged, SKNavigationState navigationState)
         {
         }
 
-        public override void onRealReachCalculationCompleted(SKBoundingBox bbox)
+        public void OnRealReachCalculationCompleted(SKBoundingBox bbox)
         {
             // fit the reachable area on the screen when real reach calculataion
             // ends
@@ -2012,43 +2010,43 @@ namespace Skobbler.SDKDemo.Activities
         }
 
 
-        public override void onPOIClusterSelected(SKPOICluster poiCluster)
+        public void OnPOIClusterSelected(SKPOICluster poiCluster)
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onAccuracyChanged(Sensor sensor, int accuracy)
+        public void OnAccuracyChanged(Sensor sensor, SensorStatus accuracy)
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onTunnelEvent(bool tunnelEntered)
+        public void OnTunnelEvent(bool tunnelEntered)
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onMapRegionChangeEnded(SKCoordinateRegion mapRegion)
+        public void OnMapRegionChangeEnded(SKCoordinateRegion mapRegion)
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onMapRegionChangeStarted(SKCoordinateRegion mapRegion)
+        public void OnMapRegionChangeStarted(SKCoordinateRegion mapRegion)
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onMapVersionSet(int newVersion)
+        public void OnMapVersionSet(int newVersion)
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onNewVersionDetected(int newVersion)
+        public void OnNewVersionDetected(int newVersion)
         {
             AlertDialog alertDialog = new AlertDialog.Builder(this).Create();
             alertDialog.SetMessage("New map version available");
@@ -2076,29 +2074,28 @@ namespace Skobbler.SDKDemo.Activities
             alertDialog.Show();
         }
 
-        public override void onNoNewVersionDetected()
+        public void OnNoNewVersionDetected()
         {
             Toast.MakeText(this, "No new versions were detected", ToastLength.Short).Show();
         }
 
-        public override void onVersionFileDownloadTimeout()
+        public void OnVersionFileDownloadTimeout()
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onCurrentPositionSelected()
+        public void OnCurrentPositionSelected()
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onObjectSelected(int id)
+        public void OnObjectSelected(int id)
         {
         }
 
-
-        public override void onBackPressed()
+        public override void OnBackPressed()
         {
             // TODO Auto-generated method stub
             if (menu.Visibility == ViewStates.Visible)
@@ -2155,72 +2152,44 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        public override void onRouteCalculationCompleted(SKRouteInfo routeInfo)
+        public void OnRouteCalculationCompleted()
         {
-            if (currentMapOption == MapOption.ALTERNATIVE_ROUTES)
-            {
-                int routeIndex = routeIds.Count;
-                routeIds.Add(routeInfo.RouteID);
-                altRoutesButtons[routeIndex].Text = DemoUtils.formatDistance(routeInfo.Distance) + "\n" + DemoUtils.formatTime(routeInfo.EstimatedTime);
-                if (routeIndex == 0)
-                {
-                    // select 1st alternative by default
-                    selectAlternativeRoute(0);
-                }
-            }
-            else if (currentMapOption == MapOption.ROUTING_AND_NAVIGATION || currentMapOption == MapOption.POI_TRACKING || currentMapOption == MapOption.NAVI_UI)
-            {
-                // select the current route (on which navigation will run)
-                SKRouteManager.Instance.SetCurrentRouteByUniqueId(routeInfo.RouteID);
-                // zoom to the current route
-                SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
-
-                if (currentMapOption == MapOption.ROUTING_AND_NAVIGATION)
-                {
-                    bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
-                }
-            }
-            else if (currentMapOption == MapOption.TRACKS)
-            {
-                SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
-                bottomButton.Visibility = ViewStates.Visible;
-                bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
-            }
+            
         }
 
-        public void onRouteCalculationFailed(SKRouteListenerSKRoutingErrorCode arg0)
+        public void OnRouteCalculationFailed(SKRouteListenerSKRoutingErrorCode arg0)
         {
             Toast.MakeText(this, Resources.GetString(Resource.String.route_calculation_failed), ToastLength.Short).Show();
         }
 
-        public void onSignalNewAdviceWithAudioFiles(string[] audioFiles, bool specialSoundFile)
+        public void OnSignalNewAdviceWithAudioFiles(string[] audioFiles, bool specialSoundFile)
         {
             // a new navigation advice was received
             SKLogging.WriteLog(TAG, " onSignalNewAdviceWithAudioFiles " + audioFiles, SKLogging.LogDebug);
             SKToolsAdvicePlayer.Instance.playAdvice(audioFiles, SKToolsAdvicePlayer.PRIORITY_NAVIGATION);
         }
 
-        public override void onSignalNewAdviceWithInstruction(string instruction)
+        public void OnSignalNewAdviceWithInstruction(string instruction)
         {
             SKLogging.WriteLog(TAG, " onSignalNewAdviceWithInstruction " + instruction, SKLogging.LogDebug);
             textToSpeechEngine.Speak(instruction, QueueMode.Add, null);
         }
 
-        public override void onSpeedExceededWithInstruction(string instruction, bool speedExceeded)
+        public void OnSpeedExceededWithInstruction(string instruction, bool speedExceeded)
         {
         }
 
-        public override void onServerLikeRouteCalculationCompleted(SKRouteJsonAnswer arg0)
+        public void OnServerLikeRouteCalculationCompleted(SKRouteJsonAnswer arg0)
         {
             // TODO Auto-generated method stub
 
         }
 
-        public override void onViaPointReached(int index)
+        public void OnViaPointReached(int index)
         {
         }
 
-        public override void onNavigationStarted()
+        public void OnNavigationStarted()
         {
             skToolsNavigationInProgress = true;
             if (navigationUI.Visibility == ViewStates.Visible)
@@ -2229,14 +2198,14 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        public override void onNavigationEnded()
+        public void OnNavigationEnded()
         {
             skToolsRouteCalculated = false;
             skToolsNavigationInProgress = false;
             initializeNavigationUI(false);
         }
 
-        public void onRouteCalculationStarted()
+        public void OnRouteCalculationStarted()
         {
             skToolsRouteCalculated = true;
         }
@@ -2247,7 +2216,7 @@ namespace Skobbler.SDKDemo.Activities
         }
 
 
-        public override void onRouteCalculationCanceled()
+        public void OnRouteCalculationCanceled()
         {
             skToolsRouteCalculated = false;
             skToolsNavigationInProgress = false;
@@ -2297,6 +2266,40 @@ namespace Skobbler.SDKDemo.Activities
         public void OnInstallFinished(SKToolsDownloadItem currentInstallingItem)
         {
             throw new NotImplementedException();
+        }
+
+
+        public void OnRouteCalculationCompleted(SKRouteInfo routeInfo)
+        {
+            if (currentMapOption == MapOption.ALTERNATIVE_ROUTES)
+            {
+                int routeIndex = routeIds.Count;
+                routeIds.Add(routeInfo.RouteID);
+                altRoutesButtons[routeIndex].Text = DemoUtils.formatDistance(routeInfo.Distance) + "\n" + DemoUtils.formatTime(routeInfo.EstimatedTime);
+                if (routeIndex == 0)
+                {
+                    // select 1st alternative by default
+                    selectAlternativeRoute(0);
+                }
+            }
+            else if (currentMapOption == MapOption.ROUTING_AND_NAVIGATION || currentMapOption == MapOption.POI_TRACKING || currentMapOption == MapOption.NAVI_UI)
+            {
+                // select the current route (on which navigation will run)
+                SKRouteManager.Instance.SetCurrentRouteByUniqueId(routeInfo.RouteID);
+                // zoom to the current route
+                SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
+
+                if (currentMapOption == MapOption.ROUTING_AND_NAVIGATION)
+                {
+                    bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
+                }
+            }
+            else if (currentMapOption == MapOption.TRACKS)
+            {
+                SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
+                bottomButton.Visibility = ViewStates.Visible;
+                bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
+            }
         }
     }
 }

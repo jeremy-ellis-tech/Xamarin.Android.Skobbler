@@ -6,6 +6,7 @@ using Skobbler.Ngx.Util;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Skobbler.SDKDemo.Database
 {
@@ -218,7 +219,7 @@ namespace Skobbler.SDKDemo.Database
 
 						if (nameInAllSpecifiedLanguages.Length > 1)
 						{
-							insertStatement.BindString(columnIndex++, nameInAllSpecifiedLanguages.Substring(0, nameInAllSpecifiedLanguages.Length - 1));
+							//insertStatement.BindString(columnIndex++, nameInAllSpecifiedLanguages.Substring(0, nameInAllSpecifiedLanguages.Length - 1));
 						}
 						else
 						{

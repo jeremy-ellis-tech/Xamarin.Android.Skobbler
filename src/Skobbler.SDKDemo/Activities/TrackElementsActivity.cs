@@ -85,7 +85,7 @@ namespace Skobbler.SDKDemo.Activities
             };
         }
 
-        public override void onBackPressed()
+        public override void OnBackPressed()
         {
             if (currentLevel == 0)
             {
@@ -97,7 +97,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        private class TrackElementsListAdapter : BaseAdapter
+        private class TrackElementsListAdapter : BaseAdapter<object>
         {
             private readonly TrackElementsActivity outerInstance;
 
@@ -114,17 +114,12 @@ namespace Skobbler.SDKDemo.Activities
                 }
             }
 
-            public override object getItem(int position)
-            {
-                return outerInstance.elementsPerLevel[outerInstance.currentLevel][position];
-            }
-
-            public override long getItemId(int position)
+            public override long GetItemId(int position)
             {
                 return 0;
             }
 
-            public override View getView(int position, View convertView, ViewGroup parent)
+            public override View GetView(int position, View convertView, ViewGroup parent)
             {
                 View view = null;
                 if (convertView == null)
@@ -169,6 +164,11 @@ namespace Skobbler.SDKDemo.Activities
                     };
                 }
                 return view;
+            }
+
+            public override object this[int position]
+            {
+                get { return outerInstance.elementsPerLevel[outerInstance.currentLevel][position]; }
             }
         }
 

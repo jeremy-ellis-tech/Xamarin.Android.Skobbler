@@ -50,7 +50,7 @@ namespace Skobbler.SDKDemo.Activities
         /// </summary>
         private SKSearchManager searchManager;
 
-        protected internal override void onCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_list);
@@ -137,7 +137,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        public override void onReceivedSearchResults(IList<SKSearchResult> results)
+        public void OnReceivedSearchResults(IList<SKSearchResult> results)
         {
             // put in the map at the corresponding level the received results
             resultsPerLevel[currentListLevel] = results;
@@ -156,7 +156,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        public override void onBackPressed()
+        public override void OnBackPressed()
         {
             if (currentListLevel == 0)
             {
@@ -170,7 +170,7 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        private class ResultsListAdapter : BaseAdapter
+        private class ResultsListAdapter : BaseAdapter<SKPackage>
         {
             private readonly OfflineAddressSearchActivity outerInstance;
 
@@ -195,24 +195,12 @@ namespace Skobbler.SDKDemo.Activities
                 }
             }
 
-            public override object getItem(int position)
-            {
-                if (outerInstance.currentListLevel > 0)
-                {
-                    return outerInstance.resultsPerLevel[outerInstance.currentListLevel][position];
-                }
-                else
-                {
-                    return outerInstance.packages[position];
-                }
-            }
-
-            public override long getItemId(int position)
+            public override long GetItemId(int position)
             {
                 return 0;
             }
 
-            public override View getView(int position, View convertView, ViewGroup parent)
+            public override View GetView(int position, View convertView, ViewGroup parent)
             {
                 View view = null;
                 if (convertView == null)
@@ -239,6 +227,22 @@ namespace Skobbler.SDKDemo.Activities
                     ((TextView)view.FindViewById(Resource.Id.subtitle)).Visibility = ViewStates.Gone;
                 }
                 return view;
+            }
+
+            public override SKPackage this[int position]
+            {
+                get
+                {
+                    if (outerInstance.currentListLevel > 0)
+                    {
+                        //TODO;
+                        return outerInstance.packages[position];
+                    }
+                    else
+                    {
+                        return outerInstance.packages[position];
+                    }
+                }
             }
         }
     }

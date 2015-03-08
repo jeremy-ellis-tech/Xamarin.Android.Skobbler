@@ -9,10 +9,12 @@ using Java.IO;
 using Java.Lang;
 using Java.Net;
 using Java.Text;
+using Newtonsoft.Json;
 using Skobbler.Ngx.Packages;
 using Skobbler.Ngx.SDKTools.Download;
 using Skobbler.SDKDemo.Application;
 using Skobbler.SDKDemo.Database;
+using Skobbler.SDKDemo.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -255,7 +257,7 @@ namespace Skobbler.SDKDemo.Activities
 			get
 			{
 				IList<DownloadResource> activeMapDownloads = new List<DownloadResource>();
-				string[] mapCodesArray = (new Gson()).fromJson(appContext.AppPrefs.getStringPreference(ApplicationPreferences.DOWNLOAD_QUEUE_PREF_KEY), typeof(string[]));
+                string[] mapCodesArray = JsonConvert.DeserializeObject<string[]>(appContext.AppPrefs.getStringPreference(ApplicationPreferences.DOWNLOAD_QUEUE_PREF_KEY));
 				if (mapCodesArray == null)
 				{
 					return activeMapDownloads;
@@ -329,7 +331,7 @@ namespace Skobbler.SDKDemo.Activities
 		/// <summary>
 		/// Represents the adapter associated with maps list
 		/// </summary>
-		private class DownloadsAdapter : BaseAdapter, ISKToolsDownloadListener
+		private class DownloadsAdapter : BaseAdapter<ListItem>, ISKToolsDownloadListener
 		{
 			private readonly ResourceDownloadsListActivity outerInstance;
 
@@ -347,19 +349,14 @@ namespace Skobbler.SDKDemo.Activities
 				}
 			}
 
-			public override ListItem getItem(int i)
-			{
-				return outerInstance.currentListItems[i];
-			}
-
-			public override long getItemId(int i)
+			public override long GetItemId(int i)
 			{
 				return 0;
 			}
 
-			public override View getView(int position, View convertView, ViewGroup viewGroup)
+			public override View GetView(int position, View convertView, ViewGroup viewGroup)
 			{
-				ListItem currentItem = getItem(position);
+                ListItem currentItem = null;// GetItem(position);
 				View view = null;
 				if (convertView == null)
 				{
@@ -624,7 +621,7 @@ namespace Skobbler.SDKDemo.Activities
 					long bytesDownloaded = entry.Value.Value;
 					if (currentTimestamp - timestamp > referencePeriod)
 					{
-						iterator.Remove();
+						//iterator.Remove();
 					}
 					else
 					{
@@ -649,7 +646,7 @@ namespace Skobbler.SDKDemo.Activities
 				return new Tuple<string, string>(convertBytesToStringRepresentation(bytesPerSecond) + "/s", formattedTimeLeft);
 			}
 
-			public override void notifyDataSetChanged()
+			public override void NotifyDataSetChanged()
 			{
 				outerInstance.FindViewById(Resource.Id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
 				base.NotifyDataSetChanged();
@@ -672,7 +669,7 @@ namespace Skobbler.SDKDemo.Activities
 				return percentage;
 			}
 
-			public override void onDownloadProgress(SKToolsDownloadItem currentDownloadItem)
+			public void OnDownloadProgress(SKToolsDownloadItem currentDownloadItem)
 			{
 				ListItem affectedListItem = outerInstance.codesMap[currentDownloadItem.ItemCode];
 				DownloadResource resource;
@@ -720,7 +717,7 @@ namespace Skobbler.SDKDemo.Activities
 				outerInstance.appContext.AppPrefs.saveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
 			}
 
-			public override void onDownloadCancelled(string currentDownloadItemCode)
+			public void OnDownloadCancelled(string currentDownloadItemCode)
 			{
 				outerInstance.stopPeriodicUpdates();
 				ListItem affectedListItem = outerInstance.codesMap[currentDownloadItemCode];
@@ -743,7 +740,7 @@ namespace Skobbler.SDKDemo.Activities
 				outerInstance.appContext.AppPrefs.saveDownloadQueuePreference(activeDownloads);
 			}
 
-			public override void onAllDownloadsCancelled()
+			public void OnAllDownloadsCancelled()
 			{
 				outerInstance.stopPeriodicUpdates();
 				outerInstance.appContext.AppPrefs.saveDownloadStepPreference(0);
@@ -758,7 +755,7 @@ namespace Skobbler.SDKDemo.Activities
                 outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
 			}
 
-			public override void onDownloadPaused(SKToolsDownloadItem currentDownloadItem)
+			public void OnDownloadPaused(SKToolsDownloadItem currentDownloadItem)
 			{
 				outerInstance.stopPeriodicUpdates();
 				ListItem affectedListItem = outerInstance.codesMap[currentDownloadItem.ItemCode];
@@ -780,7 +777,7 @@ namespace Skobbler.SDKDemo.Activities
 				outerInstance.appContext.AppPrefs.saveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
 			}
 
-			public override void onInstallFinished(SKToolsDownloadItem currentInstallingItem)
+			public void OnInstallFinished(SKToolsDownloadItem currentInstallingItem)
 			{
 				ListItem affectedListItem = outerInstance.codesMap[currentInstallingItem.ItemCode];
 				DownloadResource resource;
@@ -800,7 +797,7 @@ namespace Skobbler.SDKDemo.Activities
                 outerInstance.RunOnUiThread(() => { Toast.MakeText(outerInstance.appContext, ((MapDownloadResource)resource).Name + " was installed", ToastLength.Short).Show(); });
 			}
 
-			public override void onInstallStarted(SKToolsDownloadItem currentInstallingItem)
+			public void OnInstallStarted(SKToolsDownloadItem currentInstallingItem)
 			{
 				ListItem affectedListItem = outerInstance.codesMap[currentInstallingItem.ItemCode];
 				if (affectedListItem != null)
@@ -817,19 +814,24 @@ namespace Skobbler.SDKDemo.Activities
 				}
 			}
 
-			public override void onInternetConnectionFailed(SKToolsDownloadItem currentDownloadItem, bool responseReceivedFromServer)
+			public void OnInternetConnectionFailed(SKToolsDownloadItem currentDownloadItem, bool responseReceivedFromServer)
 			{
 				outerInstance.stopPeriodicUpdates();
 				outerInstance.appContext.AppPrefs.saveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
 			}
 
-			public override void onNotEnoughMemoryOnCurrentStorage(SKToolsDownloadItem currentDownloadItem)
+			public void OnNotEnoughMemoryOnCurrentStorage(SKToolsDownloadItem currentDownloadItem)
 			{
                 outerInstance.RunOnUiThread(() => { Toast.MakeText(outerInstance.ApplicationContext, "Not enough memory on the storage", ToastLength.Short).Show(); });
 			}
-		}
 
-		public override void onBackPressed()
+            public override ListItem this[int position]
+            {
+                get { return outerInstance.currentListItems[position]; }
+            }
+        }
+
+		public override void OnBackPressed()
 		{
 
 			ListItem firstItem = currentListItems[0];

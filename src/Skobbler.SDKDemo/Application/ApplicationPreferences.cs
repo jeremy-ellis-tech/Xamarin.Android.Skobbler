@@ -1,4 +1,5 @@
 ﻿using Android.Content;
+using Newtonsoft.Json;
 using Skobbler.SDKDemo.Database;
 using System.Collections.Generic;
 
@@ -61,7 +62,7 @@ namespace Skobbler.SDKDemo.Application
 			{
 				resourceCodes[i] = downloads[i].Code;
 			}
-			prefsEditor.PutString(DOWNLOAD_QUEUE_PREF_KEY, (new Gson()).toJson(resourceCodes));
+            prefsEditor.PutString(DOWNLOAD_QUEUE_PREF_KEY, JsonConvert.SerializeObject(resourceCodes));
 			prefsEditor.Commit();
 		}
 	}

@@ -16,15 +16,14 @@ namespace Skobbler.SDKDemo.Activities
     [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
 	public class ReverseGeocodingActivity : Activity
 	{
-
 		private DemoApplication application;
 
-		protected internal override void onCreate(Bundle savedInstanceState)
-		{
-			base.OnCreate(savedInstanceState);
-			SetContentView(Resource.Layout.activity_reverse_geocoding);
-			application = (DemoApplication) Application;
-		}
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.activity_reverse_geocoding);
+            application = (DemoApplication)Application;
+        }
 
         [Export("OnClick")]
 		public virtual void onClick(View v)
