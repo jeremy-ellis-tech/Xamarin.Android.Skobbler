@@ -279,7 +279,7 @@ namespace Skobbler.SDKDemo.Activities
 
             SKMapViewHolder mapViewGroup = (SKMapViewHolder)FindViewById(Resource.Id.view_group_map);
             _mapView = mapViewGroup.MapSurfaceView;
-            _mapView.MapSurfaceListener = this;
+            _mapView.SetMapSurfaceListener(this);
             LayoutInflater inflater = (LayoutInflater)GetSystemService(LayoutInflaterService);
             _mapPopup = mapViewGroup.CalloutView;
             View view = inflater.Inflate(Resource.Layout.layout_popup, null);

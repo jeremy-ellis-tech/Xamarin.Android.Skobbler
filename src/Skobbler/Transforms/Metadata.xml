@@ -12,6 +12,18 @@
 
   <!--Change event name to stop hiding of inherited glSurfaceView member-->
   <attr path="/api/package[@name='com.skobbler.ngx.map']/interface[@name='SKMapSurfaceListener']/method[@name='onSurfaceCreated' and count(parameter)=0]" name="eventName">MapSurfaceCreated</attr>
+  
+    <!--More descriptive event names-->
+  <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapSurfaceView']/method[@name='setRealReachListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.map.realreach.SKRealReachListener']]" name="eventName">RealReachChanged</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.positioner']/class[@name='SKCurrentPositionProvider']/method[@name='setCurrentPositionListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.positioner.SKCurrentPositionListener']]" name="eventName">CurrentPositionUpdated</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.map']/interface[@name='SKMapSurfaceListener']/method[@name='onRotateMap' and count(parameter)=0]" name="eventName">MapRotated</attr>
+
+  <!--Remove events in favour of async methods-->
+  <attr path="/api/package[@name='com.skobbler.ngx.search']/class[@name='SKSearchManager']/method[@name='setSearchListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.search.SKSearchListener']]" name="eventName" />
+  <attr path="/api/package[@name='com.skobbler.ngx.versioning']/class[@name='SKVersioningManager']/method[@name='setMetaDataListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.versioning.SKMetaDataListener']]" name="eventName" />
+  
+  <!-- Remove listener property setter, use method setter as per convention -->
+  <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapSurfaceView']/method[@name='setMapSurfaceListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.map.SKMapSurfaceListener']]" name="propertyName"/>
 
   <!--.NET friendly namespace names-->
   <attr path="/api/package[@name='com.skobbler.ngx']" name="managedName">Skobbler.Ngx</attr>

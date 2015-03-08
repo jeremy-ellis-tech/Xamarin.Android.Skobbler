@@ -24,7 +24,7 @@ namespace Skobbler.SDKDemo.Activities
             SetContentView(Resource.Layout.activity_new_map);
             SKMapViewHolder mapViewGroup = (SKMapViewHolder)FindViewById(Resource.Id.view_group_map);
             _mapView = mapViewGroup.MapSurfaceView;
-            _mapView.MapSurfaceListener = this;
+            _mapView.SetMapSurfaceListener(this);
         }
 
         protected override void OnResume()

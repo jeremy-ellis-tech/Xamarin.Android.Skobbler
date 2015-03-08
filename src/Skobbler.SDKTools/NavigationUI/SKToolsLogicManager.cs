@@ -256,7 +256,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             _mapView.MapSettings.SetStreetNamePopupsShown(true);
             _mapView.MapSettings.MapZoomingEnabled = false;
             _previousMapSurfaceListener = _mapView.MapSurfaceListener;
-            _mapView.MapSurfaceListener = this;
+            _mapView.SetMapSurfaceListener(this);
             SKToolsMapOperationsManager.Instance.MapView = _mapView;
 
             SKNavigationSettings navigationSettings = new SKNavigationSettings();
@@ -324,7 +324,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             SKRouteManager.Instance.ClearCurrentRoute();
             _naviManager.StopNavigation();
             _currentPositionProvider.StopLocationUpdates();
-            _mapView.MapSurfaceListener = _previousMapSurfaceListener;
+            _mapView.SetMapSurfaceListener(_previousMapSurfaceListener);
             _mapView.RotateTheMapToNorth();
             _navigationStopped = true;
 
