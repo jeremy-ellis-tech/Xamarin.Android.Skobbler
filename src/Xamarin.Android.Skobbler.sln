@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler", "src\Skobbler\Skobbler.csproj", "{C399B111-040E-485C-85F0-40AE7BB88AF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler", "Skobbler\Skobbler.csproj", "{C399B111-040E-485C-85F0-40AE7BB88AF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SDKDemo", "src\Skobbler.SDKDemo\Skobbler.SDKDemo.csproj", "{795B9ED9-17BA-4319-9646-B938FCBAEE7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SDKDemo", "Skobbler.SDKDemo\Skobbler.SDKDemo.csproj", "{795B9ED9-17BA-4319-9646-B938FCBAEE7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SDKTools", "src\Skobbler.SDKTools\Skobbler.SDKTools.csproj", "{328179FC-C649-40A9-A7FF-5D4F00F4137B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SDKTools", "Skobbler.SDKTools\Skobbler.SDKTools.csproj", "{328179FC-C649-40A9-A7FF-5D4F00F4137B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
