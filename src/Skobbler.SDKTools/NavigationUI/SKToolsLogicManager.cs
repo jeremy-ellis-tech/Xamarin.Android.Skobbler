@@ -153,7 +153,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         /// <param name="activity"> </param>
         /// <param name="rootId"> </param>
-        protected internal virtual void setActivity(Activity activity, int rootId)
+        protected internal virtual void SetActivity(Activity activity, int rootId)
         {
             this.currentActivity = activity;
             currentPositionProvider = new SKCurrentPositionProvider(currentActivity);
@@ -188,7 +188,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         /// <param name="configuration"> </param>
         /// <param name="mapView"> </param>
-        protected internal virtual void calculateRoute(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
+        protected internal virtual void CalculateRoute(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
         {
             this.mapView = mapView;
             this.configuration = configuration;
@@ -254,7 +254,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="configuration"> </param>
         /// <param name="mapSurfaceView"> </param>
         /// <param name="isFreeDrive"> </param>
-        protected internal virtual void startNavigation(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapSurfaceView, bool isFreeDrive)
+        protected internal virtual void StartNavigation(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapSurfaceView, bool isFreeDrive)
         {
 
             reRoutingInProgress = false;
@@ -326,7 +326,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Stops the navigation.
         /// </summary>
-        protected internal virtual void stopNavigation()
+        protected internal virtual void StopNavigation()
         {
             SKToolsMapOperationsManager.Instance.startPanningMode();
             mapView.MapSettings.MapStyle = currentMapStyle;
@@ -395,7 +395,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Handles orientation changed.
         /// </summary>
-        public virtual void notifyOrientationChanged()
+        public virtual void NotifyOrientationChanged()
         {
             int mapStyle = SKToolsMapOperationsManager.Instance.CurrentMapStyle;
             SKMapSettings.SKMapDisplayMode displayMode = mapView.MapSettings.MapDisplayMode;
@@ -494,7 +494,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 SKToolsNavigationUIManager.Instance.removePreNavigationViews();
                 SKRouteManager.Instance.ClearRouteAlternatives();
                 skRouteInfoList.Clear();
-                startNavigation(configuration, mapView, false);
+                StartNavigation(configuration, mapView, false);
             }
             else if (id == Resource.Id.navigation_top_back_button)
             {
@@ -510,7 +510,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             else if (id == Resource.Id.cancel_pre_navigation_button)
             {
-                removeRouteCalculationScreen();
+                RemoveRouteCalculationScreen();
             }
             else if (id == Resource.Id.menu_back_prenavigation_button)
             {
@@ -553,7 +553,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Removes the pre navigation screen.
         /// </summary>
-        protected internal virtual void removeRouteCalculationScreen()
+        protected internal virtual void RemoveRouteCalculationScreen()
         {
             SKToolsNavigationUIManager.Instance.removePreNavigationViews();
             SKRouteManager.Instance.ClearCurrentRoute();
@@ -873,7 +873,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             else
             {
-                stopNavigation();
+                StopNavigation();
             }
         }
 

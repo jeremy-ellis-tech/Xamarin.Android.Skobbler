@@ -61,7 +61,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// </summary>
         public override void Run()
         {
-            while (existsAnyRemainingInstall())
+            while (ExistsAnyRemainingInstall())
             {
                 if ((currentInstallingItem == null) || (queuedInstallingItems == null) || isInstallProcessPaused)
                 {
@@ -173,7 +173,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// adds downloaded item for install (in the install queue) </summary>
         /// <param name="currentItem"> current item </param>
-        public virtual void addItemForInstall(SKToolsDownloadItem currentItem)
+        public virtual void AddItemForInstall(SKToolsDownloadItem currentItem)
         {
             this.queuedInstallingItems.AddLast(currentItem);
         }
@@ -181,7 +181,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// stops the install process
         /// </summary>
-        public virtual void stopInstallProcess()
+        public virtual void StopInstallProcess()
         {
             isInstallProcessPaused = true;
         }
@@ -189,7 +189,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// checks if there is any remaining item to install </summary>
         /// <returns> true, if there is any remaining item to install, false otherwise </returns>
-        private bool existsAnyRemainingInstall()
+        private bool ExistsAnyRemainingInstall()
         {
             lock (typeof(SKToolsUnzipPerformer))
             {

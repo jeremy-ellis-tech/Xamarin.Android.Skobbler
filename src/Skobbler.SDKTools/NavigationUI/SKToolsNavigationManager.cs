@@ -1,14 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Skobbler.Ngx.Map;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI
@@ -18,58 +9,58 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         public SKToolsNavigationManager(Activity activity, int rootId)
         {
-            SKToolsLogicManager.Instance.setActivity(activity, rootId);
+            SKToolsLogicManager.Instance.SetActivity(activity, rootId);
         }
 
         /// <summary>
         /// Starts a route calculation. </summary>
         /// <param name="configuration"> </param>
         /// <param name="mapView"> </param>
-        public virtual void launchRouteCalculation(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
+        public virtual void LaunchRouteCalculation(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
         {
-            SKToolsLogicManager.Instance.calculateRoute(configuration, mapView);
+            SKToolsLogicManager.Instance.CalculateRoute(configuration, mapView);
         }
 
         /// <summary>
         /// Removes the screen with the route calculation.
         /// </summary>
-        public virtual void removeRouteCalculationScreen()
+        public virtual void RemoveRouteCalculationScreen()
         {
-            SKToolsLogicManager.Instance.removeRouteCalculationScreen();
+            SKToolsLogicManager.Instance.RemoveRouteCalculationScreen();
         }
 
         /// <summary>
         /// Starts the navigation </summary>
         /// <param name="configuration"> </param>
         /// <param name="mapView"> </param>
-        public virtual void startNavigation(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
+        public virtual void StartNavigation(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
         {
-            SKToolsLogicManager.Instance.startNavigation(configuration, mapView, false);
+            SKToolsLogicManager.Instance.StartNavigation(configuration, mapView, false);
         }
 
         /// <summary>
         /// Stops the navigation.
         /// </summary>
-        public virtual void stopNavigation()
+        public virtual void StopNavigation()
         {
-            SKToolsLogicManager.Instance.stopNavigation();
+            SKToolsLogicManager.Instance.StopNavigation();
         }
 
         /// <summary>
         /// Starts free drive. </summary>
         /// <param name="configuration"> </param>
         /// <param name="mapView"> </param>
-        public virtual void startFreeDriveWithConfiguration(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
+        public virtual void StartFreeDriveWithConfiguration(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
         {
-            SKToolsLogicManager.Instance.startNavigation(configuration, mapView, true);
+            SKToolsLogicManager.Instance.StartNavigation(configuration, mapView, true);
         }
 
         /// <summary>
         /// Method that should be called when the orientation of the activity has changed.
         /// </summary>
-        public virtual void notifyOrientationChanged()
+        public virtual void NotifyOrientationChanged()
         {
-            SKToolsLogicManager.Instance.notifyOrientationChanged();
+            SKToolsLogicManager.Instance.NotifyOrientationChanged();
         }
 
         /// <summary>

@@ -513,12 +513,12 @@ namespace Skobbler.Ngx.SDKTools.Download
                                     if ((skToolsUnzipPerformer == null) || (!skToolsUnzipPerformer.IsAlive))
                                     {
                                         skToolsUnzipPerformer = new SKToolsUnzipPerformer(downloadListener);
-                                        skToolsUnzipPerformer.addItemForInstall(currentDownloadItem);
+                                        skToolsUnzipPerformer.AddItemForInstall(currentDownloadItem);
                                         skToolsUnzipPerformer.Start();
                                     }
                                     else
                                     {
-                                        skToolsUnzipPerformer.addItemForInstall(currentDownloadItem);
+                                        skToolsUnzipPerformer.AddItemForInstall(currentDownloadItem);
                                     }
                                 }
                             }
@@ -867,12 +867,12 @@ namespace Skobbler.Ngx.SDKTools.Download
                                 if ((skToolsUnzipPerformer == null) || (!skToolsUnzipPerformer.IsAlive))
                                 {
                                     skToolsUnzipPerformer = new SKToolsUnzipPerformer(downloadListener);
-                                    skToolsUnzipPerformer.addItemForInstall(currentDownloadItem);
+                                    skToolsUnzipPerformer.AddItemForInstall(currentDownloadItem);
                                     skToolsUnzipPerformer.Start();
                                 }
                                 else
                                 {
-                                    skToolsUnzipPerformer.addItemForInstall(currentDownloadItem);
+                                    skToolsUnzipPerformer.AddItemForInstall(currentDownloadItem);
                                 }
                             }
                         }

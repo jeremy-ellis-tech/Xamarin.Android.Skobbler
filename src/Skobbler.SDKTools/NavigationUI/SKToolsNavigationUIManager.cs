@@ -1172,7 +1172,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     //dialog.Cancel();
                     isFreeDrive = false;
                     currentNavigationMode = NavigationMode.POST_NAVIGATION;
-                    SKToolsLogicManager.Instance.stopNavigation();
+                    SKToolsLogicManager.Instance.StopNavigation();
                 });
 
             alertDialog.SetNegativeButton(currentActivity.Resources.GetString(Resource.String.cancel_label), (s, e) =>

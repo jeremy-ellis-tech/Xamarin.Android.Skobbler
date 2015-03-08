@@ -748,7 +748,7 @@ namespace Skobbler.SDKDemo.Activities
             navigationUI.Visibility = ViewStates.Gone;
             navigationManager = new SKToolsNavigationManager(this, Resource.Id.map_layout_root);
             navigationManager.NavigationListener = this;
-            navigationManager.startFreeDriveWithConfiguration(configuration, mapView);
+            navigationManager.StartFreeDriveWithConfiguration(configuration, mapView);
 
         }
 
@@ -901,7 +901,7 @@ namespace Skobbler.SDKDemo.Activities
 
             if (configuration.StartCoordinate != null && configuration.DestinationCoordinate != null)
             {
-                navigationManager.launchRouteCalculation(configuration, mapView);
+                navigationManager.LaunchRouteCalculation(configuration, mapView);
             }
 
 
@@ -1793,7 +1793,7 @@ namespace Skobbler.SDKDemo.Activities
 
             if (navigationManager != null && skToolsNavigationInProgress)
             {
-                navigationManager.notifyOrientationChanged();
+                navigationManager.NotifyOrientationChanged();
             }
         }
 
@@ -2112,11 +2112,11 @@ namespace Skobbler.SDKDemo.Activities
                 {
                     if (skToolsNavigationInProgress)
                     {
-                        navigationManager.stopNavigation();
+                        navigationManager.StopNavigation();
                     }
                     else
                     {
-                        navigationManager.removeRouteCalculationScreen();
+                        navigationManager.RemoveRouteCalculationScreen();
                     }
                     initializeNavigationUI(false);
                     skToolsRouteCalculated = false;
