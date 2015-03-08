@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="skobbler.sdkdemo" android:versionCode="1" android:versionName="1.0">
 	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="10" />
-  <application android:name="skobbler.sdkdemo.application.DemoApplication" android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:allowBackup="true">
-    <receiver android:name="skobbler.ngx.sdktools.navigationui.autonight.SKToolsCalculateSunriseSunsetTimeAutoReceiver" />
-    <receiver android:name="skobbler.ngx.sdktools.navigationui.autonight.SKToolsChangeMapStyleAutoReceiver" />
-  </application>
+	<application android:name="skobbler.sdkdemo.application.DemoApplication" android:label="@string/app_name" android:icon="@drawable/ic_launcher" android:allowBackup="true">
+		<receiver android:name="skobbler.ngx.sdktools.navigationui.autonight.SKToolsCalculateSunriseSunsetTimeAutoReceiver" />
+		<receiver android:name="skobbler.ngx.sdktools.navigationui.autonight.SKToolsChangeMapStyleAutoReceiver" />
+	</application>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

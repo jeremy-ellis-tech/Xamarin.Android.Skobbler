@@ -14,8 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <AndroidUseLatestPlatformSdk>
     </AndroidUseLatestPlatformSdk>
-    <JavaDocPaths>Jars\docs</JavaDocPaths>
     <TargetFrameworkVersion>v2.3</TargetFrameworkVersion>
+	<JavaDocPaths>Jars\docs</JavaDocPaths>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -482,7 +482,6 @@
     <None Include="Jars\docs\META-INF\MANIFEST.MF" />
     <None Include="Jars\docs\package-list" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

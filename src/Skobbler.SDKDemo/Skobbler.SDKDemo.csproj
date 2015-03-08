@@ -10,7 +10,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Skobbler.SDKDemo</RootNamespace>
-    <AssemblyName>Skobbler.SdkDemo</AssemblyName>
+    <AssemblyName>Skobbler.SDKDemo</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidApplication>true</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
