@@ -25,7 +25,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Singleton instance for current class
         /// </summary>
-        private static volatile SKToolsLogicManager _instance = null;
+        private static volatile SKToolsLogicManager _instance;
 
         /// <summary>
         /// the map view instance
@@ -77,7 +77,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// flag for when a re-routing was done, which is set to true only until the
         /// next update of the navigation state
         /// </summary>
-        private bool _reRoutingInProgress = false;
+        private bool _reRoutingInProgress;
 
         /// <summary>
         /// the current location
@@ -148,7 +148,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="rootId"> </param>
         protected internal virtual void SetActivity(Activity activity, int rootId)
         {
-            this._currentActivity = activity;
+            _currentActivity = activity;
             _currentPositionProvider = new SKCurrentPositionProvider(_currentActivity);
             if (SKToolsUtils.HasGpsModule(_currentActivity))
             {
@@ -168,12 +168,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Sets the listener.
         /// </summary>
         /// <param name="navigationListener"> </param>
-        public virtual ISKToolsNavigationListener NavigationListener
+        public virtual void SetNavigationListener(ISKToolsNavigationListener navigationListener)
         {
-            set
-            {
-                this._navigationListener = value;
-            }
+            _navigationListener = navigationListener;
         }
 
         /// <summary>
@@ -183,8 +180,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="mapView"> </param>
         protected internal virtual void CalculateRoute(SKToolsNavigationConfiguration configuration, SKMapSurfaceView mapView)
         {
-            this._mapView = mapView;
-            this._configuration = configuration;
+            _mapView = mapView;
+            _configuration = configuration;
             SKToolsMapOperationsManager.Instance.MapView = mapView;
             _currentPositionProvider.RequestUpdateFromLastPosition();
             _currentMapStyle = mapView.MapSettings.MapStyle;
@@ -230,7 +227,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 }
                 else
                 {
-                    SKToolsAutoNightManager.Instance.AlarmForHourlyNotification = _currentActivity;
+                    SKToolsAutoNightManager.Instance.SetAlarmForHourlyNotification(_currentActivity);
                 }
             }
             _navigationStopped = false;
@@ -251,7 +248,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
 
             _reRoutingInProgress = false;
-            this._configuration = configuration;
+            _configuration = configuration;
             _mapView = mapSurfaceView;
             _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.Navigation;
             _currentUserDisplayMode = SKMapSettings.SKMapDisplayMode.Mode3d;
@@ -303,7 +300,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     }
                     else
                     {
-                        SKToolsAutoNightManager.Instance.AlarmForHourlyNotification = _currentActivity;
+                        SKToolsAutoNightManager.Instance.SetAlarmForHourlyNotification(_currentActivity);
                     }
                 }
             }

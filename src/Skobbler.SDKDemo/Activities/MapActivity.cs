@@ -233,7 +233,7 @@ namespace Skobbler.SDKDemo.Activities
 
 
 
-        private bool _isStartPointBtnPressed = false, _isEndPointBtnPressed = false, _isViaPointSelected = false;
+        private bool _isStartPointBtnPressed, _isEndPointBtnPressed, _isViaPointSelected;
 
         /// <summary>
         /// The start point(long/lat) for the route.
@@ -293,7 +293,7 @@ namespace Skobbler.SDKDemo.Activities
 
             _menu = FindViewById(Resource.Id.options_menu);
             _altRoutesView = FindViewById(Resource.Id.alt_routes);
-            _altRoutesButtons = new Button[] { (Button)FindViewById(Resource.Id.alt_route_1), (Button)FindViewById(Resource.Id.alt_route_2), (Button)FindViewById(Resource.Id.alt_route_3) };
+            _altRoutesButtons = new[] { (Button)FindViewById(Resource.Id.alt_route_1), (Button)FindViewById(Resource.Id.alt_route_2), (Button)FindViewById(Resource.Id.alt_route_3) };
 
             _mapStylesView = (LinearLayout)FindViewById(Resource.Id.map_styles);
             _bottomButton = (Button)FindViewById(Resource.Id.bottom_button);
@@ -490,10 +490,7 @@ namespace Skobbler.SDKDemo.Activities
                 }
                 return true;
             }
-            else
-            {
-                return base.OnKeyDown(keyCode, e);
-            }
+            return base.OnKeyDown(keyCode, e);
         }
 
         [Export("OnClick")]
@@ -747,7 +744,7 @@ namespace Skobbler.SDKDemo.Activities
 
             _navigationUi.Visibility = ViewStates.Gone;
             _navigationManager = new SKToolsNavigationManager(this, Resource.Id.map_layout_root);
-            _navigationManager.NavigationListener = this;
+            _navigationManager.SetNavigationListener(this);
             _navigationManager.StartFreeDriveWithConfiguration(configuration, _mapView);
 
         }
@@ -897,7 +894,7 @@ namespace Skobbler.SDKDemo.Activities
             configuration.DayStyle = new SKMapViewStyle(_app.MapResourcesDirPath + "daystyle/", "daystyle.json");
             configuration.NightStyle = new SKMapViewStyle(_app.MapResourcesDirPath + "nightstyle/", "nightstyle.json");
             _navigationManager = new SKToolsNavigationManager(this, Resource.Id.map_layout_root);
-            _navigationManager.NavigationListener = this;
+            _navigationManager.SetNavigationListener(this);
 
             if (configuration.StartCoordinate != null && configuration.DestinationCoordinate != null)
             {
@@ -1231,7 +1228,7 @@ namespace Skobbler.SDKDemo.Activities
         /// <summary>
         /// The cunsumption values
         /// </summary>
-        private float[] _energyConsumption = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (float)3.7395504, (float)4.4476889, (float)5.4306439, (float)6.722719, (float)8.2830299, (float)10.0275093, (float)11.8820908, (float)13.799201, (float)15.751434, (float)17.7231534, (float)19.7051378, (float)21.6916725, (float)23.679014, (float)25.6645696, (float)27.6464437, (float)29.6231796, (float)31.5936073 };
+        private float[] _energyConsumption = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (float)3.7395504, (float)4.4476889, (float)5.4306439, (float)6.722719, (float)8.2830299, (float)10.0275093, (float)11.8820908, (float)13.799201, (float)15.751434, (float)17.7231534, (float)19.7051378, (float)21.6916725, (float)23.679014, (float)25.6645696, (float)27.6464437, (float)29.6231796, (float)31.5936073 };
 
         /// <summary>
         /// Initiate real reach energy profile
@@ -1354,8 +1351,8 @@ namespace Skobbler.SDKDemo.Activities
             // set the outline size
             polygon.OutlineSize = 3;
             // set colors used to render the polygon
-            polygon.SetOutlineColor(new float[] { 1f, 0f, 0f, 1f });
-            polygon.SetColor(new float[] { 1f, 0f, 0f, 0.2f });
+            polygon.SetOutlineColor(new[] { 1f, 0f, 0f, 1f });
+            polygon.SetColor(new[] { 1f, 0f, 0f, 0.2f });
             // render the polygon on the map
             _mapView.AddPolygon(polygon);
 
@@ -1365,8 +1362,8 @@ namespace Skobbler.SDKDemo.Activities
             // set the shape's mask scale
             circleMask.MaskedObjectScale = 1.3f;
             // set the colors
-            circleMask.SetColor(new float[] { 1f, 1f, 0.5f, 0.67f });
-            circleMask.SetOutlineColor(new float[] { 0f, 0f, 0f, 1f });
+            circleMask.SetColor(new[] { 1f, 1f, 0.5f, 0.67f });
+            circleMask.SetOutlineColor(new[] { 0f, 0f, 0f, 1f });
             circleMask.OutlineSize = 3;
             // set circle center and radius
             circleMask.CircleCenter = new SKCoordinate(-122.4200, 37.7665);
@@ -1390,9 +1387,9 @@ namespace Skobbler.SDKDemo.Activities
             nodes.Add(new SKCoordinate(-122.4342, 37.7753));
             polyline.Nodes = nodes;
             // set polyline color
-            polyline.SetColor(new float[] { 0f, 0f, 1f, 1f });
+            polyline.SetColor(new[] { 0f, 0f, 1f, 1f });
             // set properties for the outline
-            polyline.SetOutlineColor(new float[] { 0f, 0f, 1f, 1f });
+            polyline.SetOutlineColor(new[] { 0f, 0f, 1f, 1f });
             polyline.OutlineSize = 4;
             polyline.OutlineDottedPixelsSolid = 3;
             polyline.OutlineDottedPixelsSkip = 3;
@@ -1763,8 +1760,8 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnCurrentPositionUpdate(SKPosition currentPosition)
         {
-            this._currentPosition = currentPosition;
-            _mapView.ReportNewGPSPosition(this._currentPosition);
+            _currentPosition = currentPosition;
+            _mapView.ReportNewGPSPosition(_currentPosition);
         }
 
         public void OnOnlineRouteComputationHanging(int status)
@@ -2235,7 +2232,7 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnDownloadPaused(SKToolsDownloadItem currentDownloadItem)
         {
-            MapDownloadResource mapResource = (MapDownloadResource)ResourceDownloadsListActivity.AllMapResources[currentDownloadItem.ItemCode];
+            MapDownloadResource mapResource = ResourceDownloadsListActivity.AllMapResources[currentDownloadItem.ItemCode];
             mapResource.DownloadState = currentDownloadItem.DownloadState;
             mapResource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
             ResourceDownloadsListActivity.MapsDao.UpdateMapResource(mapResource);

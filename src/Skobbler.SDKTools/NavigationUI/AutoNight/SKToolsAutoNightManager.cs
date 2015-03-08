@@ -45,34 +45,23 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 
         public static SKToolsAutoNightManager Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new SKToolsAutoNightManager();
-                }
-                return _instance;
-            }
+            get { return _instance ?? (_instance = new SKToolsAutoNightManager()); }
         }
 
         /// <summary>
         /// Sets the alarm and starts to listen for the times when an hour has passed, in the case when autonight is on. </summary>
-        /// <param name="context"> </param>
-        public virtual Context AlarmForHourlyNotification
+        public virtual void SetAlarmForHourlyNotification(Context value)
         {
-            set
+            if (_hourlyAlarmManager == null)
             {
-                if (_hourlyAlarmManager == null)
-                {
-                    //if it already an existing alarm for hourly notification, cancel it
-                    CancelAlarmForForHourlyNotification();
-                    _hourlyAlarmManager = (AlarmManager)value.GetSystemService(Context.AlarmService);
-                    Intent intent = new Intent(value, typeof(SKToolsCalculateSunriseSunsetTimeAutoReceiver));
-                    _pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(value, 0, intent, 0);
+                //if it already an existing alarm for hourly notification, cancel it
+                CancelAlarmForForHourlyNotification();
+                _hourlyAlarmManager = (AlarmManager) value.GetSystemService(Context.AlarmService);
+                Intent intent = new Intent(value, typeof (SKToolsCalculateSunriseSunsetTimeAutoReceiver));
+                _pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(value, 0, intent, 0);
 
-                    _hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeUtil.JavaTime(), SKToolsSunriseSunsetCalculator.NrOfMillisecondsInAHour, _pendingHourlyAlarmIntent);
-
-                }
+                _hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeUtil.JavaTime(),
+                    SKToolsSunriseSunsetCalculator.NrOfMillisecondsInAHour, _pendingHourlyAlarmIntent);
             }
         }
 
@@ -116,58 +105,61 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
         /// Sets auto day / night alarm according to user position
         /// if the user position is null is set the alarm with fixed hours (8AM, 8PM),
         /// otherwise is set the alarm for calculation of sunrise / sunset hours. </summary>
-        /// <param name="currentActivity"> </param>
         public virtual void SetAutoNightAlarmAccordingToUserPosition(double latitude, double longitude, Activity currentActivity)
         {
             SKToolsSunriseSunsetCalculator.CalculateSunriseSunsetHours(latitude, longitude, SKToolsSunriseSunsetCalculator.Official);
-            AlarmForDayNightModeWithSunriseSunset = currentActivity;
+            SetAlarmForDayNightModeWithSunriseSunset(currentActivity);
         }
 
         /// <summary>
         /// Sets the alarm for sunrise / sunset and starts to listen for the times of changing the map
         /// style (day/night).
         /// </summary>
-        public virtual Context AlarmForDayNightModeWithSunriseSunset
+        public virtual void SetAlarmForDayNightModeWithSunriseSunset(Context value)
         {
-            set
+            Log.Debug(Tag, "setAlarmForDayNightModeWithSunriseSunset");
+            // if there is already an existing alarm then cancel it before starting
+            // a new one
+            CancelAlarmForDayNightModeWithSunriseSunset();
+
+            _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours = PendingIntent.GetBroadcast(value, 0,
+                new Intent(value, typeof (SKToolsChangeMapStyleAutoReceiver)), 0);
+            _alarmManagerForAutoNightForCalculatedSunriseSunsetHours =
+                (AlarmManager) value.GetSystemService(Context.AlarmService);
+
+            DateTime date = DateTime.Now; // initializes to now
+            DateTime mapStyleChangeCalendar = new DateTime(date.Ticks);
+
+            WasSetAlarmForSunriseSunsetCalculation = true;
+
+            if (!SKToolsDateUtils.Daytime)
             {
-                Log.Debug(Tag, "setAlarmForDayNightModeWithSunriseSunset");
-                // if there is already an existing alarm then cancel it before starting
-                // a new one
-                CancelAlarmForDayNightModeWithSunriseSunset();
-
-                _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours = PendingIntent.GetBroadcast(value, 0, new Intent(value, typeof(SKToolsChangeMapStyleAutoReceiver)), 0);
-                _alarmManagerForAutoNightForCalculatedSunriseSunsetHours = (AlarmManager)value.GetSystemService(Context.AlarmService);
-
-                DateTime date = DateTime.Now; // initializes to now
-                DateTime mapStyleChangeCalendar = new DateTime(date.Ticks);
-
-                WasSetAlarmForSunriseSunsetCalculation = true;
-
-                if (!SKToolsDateUtils.Daytime)
+                if (ShouldSetAlarmNextDay())
                 {
-                    if (ShouldSetAlarmNextDay())
-                    {
-                        mapStyleChangeCalendar.AddDays(1);
-                    }
-                    // set the hour for starting the day style
-                    mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month, mapStyleChangeCalendar.Day, SKToolsDateUtils.AutoNightSunriseHour, SKToolsDateUtils.AutoNightSunriseMinute, 0, 0);
+                    mapStyleChangeCalendar = mapStyleChangeCalendar.AddDays(1);
                 }
-                else
-                {
-                    // set the hour for starting the night style
-                    mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month, mapStyleChangeCalendar.Day, SKToolsDateUtils.AutoNightSunsetHour, SKToolsDateUtils.AutoNightSunsetMinute, 0, 0);
-                }
+                // set the hour for starting the day style
+                mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month,
+                    mapStyleChangeCalendar.Day, SKToolsDateUtils.AutoNightSunriseHour, SKToolsDateUtils.AutoNightSunriseMinute,
+                    0, 0);
+            }
+            else
+            {
+                // set the hour for starting the night style
+                mapStyleChangeCalendar = new DateTime(mapStyleChangeCalendar.Year, mapStyleChangeCalendar.Month,
+                    mapStyleChangeCalendar.Day, SKToolsDateUtils.AutoNightSunsetHour, SKToolsDateUtils.AutoNightSunsetMinute, 0,
+                    0);
+            }
 
-                if (Build.VERSION.SdkInt >= Build.VERSION_CODES.Kitkat)
-                {
-                    _alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
-                }
-                else
-                {
-                    _alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks, _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
-                }
-
+            if (Build.VERSION.SdkInt >= Build.VERSION_CODES.Kitkat)
+            {
+                _alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks,
+                    _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
+            }
+            else
+            {
+                _alarmManagerForAutoNightForCalculatedSunriseSunsetHours.Set(AlarmType.Rtc, mapStyleChangeCalendar.Ticks,
+                    _pendingAlarmIntentForAutoNightForCalculatedSunriseSunsetHours);
             }
         }
 

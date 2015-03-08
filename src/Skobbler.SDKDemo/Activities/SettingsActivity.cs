@@ -56,20 +56,20 @@ namespace Skobbler.SDKDemo.Activities
                     {
 
                         ListPreference listSpeedWarningsInTown = (ListPreference)FindPreference("pref_speed_warnings_in_town");
-                        listSpeedWarningsInTown.SetEntries(new string[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
-                        listSpeedWarningsInTown.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                        listSpeedWarningsInTown.SetEntries(new[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
+                        listSpeedWarningsInTown.SetEntryValues(new[] { "0", "1", "2", "3", "4" });
                         ListPreference listSpeedWarningsOutTown = (ListPreference)FindPreference("pref_speed_warnings_out_town");
-                        listSpeedWarningsOutTown.SetEntries(new string[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
-                        listSpeedWarningsOutTown.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                        listSpeedWarningsOutTown.SetEntries(new[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
+                        listSpeedWarningsOutTown.SetEntryValues(new[] { "0", "1", "2", "3", "4" });
                     }
                     else if (e.Preference.Summary.Equals("Kilometers/Meters"))
                     {
                         ListPreference listSpeedWarningsInTown = (ListPreference)FindPreference("pref_speed_warnings_in_town");
-                        listSpeedWarningsInTown.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
-                        listSpeedWarningsInTown.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                        listSpeedWarningsInTown.SetEntries(new[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
+                        listSpeedWarningsInTown.SetEntryValues(new[] { "0", "1", "2", "3", "4" });
                         ListPreference listSpeedWarningsOutTown = (ListPreference)FindPreference("pref_speed_warnings_out_town");
-                        listSpeedWarningsOutTown.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
-                        listSpeedWarningsOutTown.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                        listSpeedWarningsOutTown.SetEntries(new[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
+                        listSpeedWarningsOutTown.SetEntryValues(new[] { "0", "1", "2", "3", "4" });
                     }
                     e.Handled = false;
                 };
@@ -95,13 +95,13 @@ namespace Skobbler.SDKDemo.Activities
 
             if (listDistanceFormat.Summary.Equals("Kilometers/Meters"))
             {
-                lswit.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
-                lswit.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                lswit.SetEntries(new[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
+                lswit.SetEntryValues(new[] { "0", "1", "2", "3", "4" });
             }
             else
             {
-                lswit.SetEntries(new string[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
-                lswit.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                lswit.SetEntries(new[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
+                lswit.SetEntryValues(new[] { "0", "1", "2", "3", "4" });
             }
 
             if (lswit.Value == null)
@@ -121,13 +121,13 @@ namespace Skobbler.SDKDemo.Activities
             ListPreference lswot = (ListPreference)FindPreference(PreferenceTypes.KOutTownSpeedWarning);
             if (listDistanceFormat.Summary.Equals("Kilometers/Meters"))
             {
-                lswot.SetEntries(new string[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
-                lswot.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                lswot.SetEntries(new[] { "5km/h", "10km/h", "15km/h", "20km/h", "25km/h" });
+                lswot.SetEntryValues(new[] { "0", "1", "2", "3", "4" });
             }
             else
             {
-                lswot.SetEntries(new string[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
-                lswot.SetEntryValues(new string[] { "0", "1", "2", "3", "4" });
+                lswot.SetEntries(new[] { "5mi/h", "10mi/h", "15mi/h", "20mi/h", "25mi/h" });
+                lswot.SetEntryValues(new[] { "0", "1", "2", "3", "4" });
             }
 
             if (lswot.Value == null)

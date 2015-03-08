@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Skobbler.Ngx.SDKTools.Download
@@ -43,11 +42,11 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             set
             {
-                this._currentStepIndex = value;
+                _currentStepIndex = value;
             }
             get
             {
-                return this._currentStepIndex;
+                return _currentStepIndex;
             }
         }
 
@@ -63,10 +62,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 {
                     return _downloadSteps[_currentStepIndex];
                 }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
         }
 
@@ -96,11 +92,11 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             set
             {
-                this._downloadState = value;
+                _downloadState = value;
             }
             get
             {
-                return this._downloadState;
+                return _downloadState;
             }
         }
 
@@ -116,7 +112,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             }
             set
             {
-                this._noDownloadedBytes = value;
+                _noDownloadedBytes = value;
                 for (int i = 0; i < _currentStepIndex; i++)
                 {
                     if ((_downloadSteps != null) && (i < _downloadSteps.Count))
@@ -124,7 +120,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                         SKToolsFileDownloadStep currentStep = _downloadSteps[i];
                         if (currentStep != null)
                         {
-                            this._noDownloadedBytes += currentStep.DownloadItemSize;
+                            _noDownloadedBytes += currentStep.DownloadItemSize;
                         }
                     }
                 }
@@ -174,7 +170,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             set
             {
-                this._noDownloadedBytesInThisConnection = value;
+                _noDownloadedBytesInThisConnection = value;
             }
         }
 

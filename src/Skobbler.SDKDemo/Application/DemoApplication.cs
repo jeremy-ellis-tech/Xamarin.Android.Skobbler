@@ -41,7 +41,7 @@ namespace Skobbler.SDKDemo.Application
 		{
 			set
 			{
-				this._mapResourcesDirPath = value;
+				_mapResourcesDirPath = value;
 			}
 			get
 			{
@@ -58,7 +58,7 @@ namespace Skobbler.SDKDemo.Application
 			}
 			set
 			{
-				this._mapCreatorFilePath = value;
+				_mapCreatorFilePath = value;
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Skobbler.SDKDemo.Application
 			}
 			set
 			{
-				this._appPrefs = value;
+				_appPrefs = value;
 			}
 		}
 

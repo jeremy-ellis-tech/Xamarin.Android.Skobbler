@@ -70,8 +70,8 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				try
 				{
-					string latString = ((TextView) FindViewById(Resource.Id.latitude_field)).Text.ToString();
-					string longString = ((TextView) FindViewById(Resource.Id.longitude_field)).Text.ToString();
+					string latString = ((TextView) FindViewById(Resource.Id.latitude_field)).Text;
+					string longString = ((TextView) FindViewById(Resource.Id.longitude_field)).Text;
 					double latitude = double.Parse(latString);
 					double longitude = double.Parse(longString);
 					if (latitude > 90 || latitude < -90)

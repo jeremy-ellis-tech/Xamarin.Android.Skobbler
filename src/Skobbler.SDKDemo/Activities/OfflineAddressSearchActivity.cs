@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
@@ -176,7 +175,7 @@ namespace Skobbler.SDKDemo.Activities
 
             public ResultsListAdapter(OfflineAddressSearchActivity outerInstance)
             {
-                this._outerInstance = outerInstance;
+                _outerInstance = outerInstance;
             }
 
 
@@ -188,10 +187,7 @@ namespace Skobbler.SDKDemo.Activities
                     {
                         return _outerInstance._resultsPerLevel[_outerInstance._currentListLevel].Count;
                     }
-                    else
-                    {
-                        return _outerInstance._packages.Count;
-                    }
+                    return _outerInstance._packages.Count;
                 }
             }
 
@@ -238,10 +234,7 @@ namespace Skobbler.SDKDemo.Activities
                         //TODO;
                         return _outerInstance._packages[position];
                     }
-                    else
-                    {
-                        return _outerInstance._packages[position];
-                    }
+                    return _outerInstance._packages[position];
                 }
             }
         }

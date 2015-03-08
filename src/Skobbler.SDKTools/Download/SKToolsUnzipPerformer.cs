@@ -42,14 +42,14 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             lock (typeof(SKToolsUnzipPerformer))
             {
-                this._queuedInstallingItems = new LinkedList<SKToolsDownloadItem>();
+                _queuedInstallingItems = new LinkedList<SKToolsDownloadItem>();
             }
-            this._downloadListener = downloadListener;
+            _downloadListener = downloadListener;
         }
 
         public virtual void SetDownloadListener(ISKToolsDownloadListener value)
         {
-            this._downloadListener = value;
+            _downloadListener = value;
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <param name="currentItem"> current item </param>
         public virtual void AddItemForInstall(SKToolsDownloadItem currentItem)
         {
-            this._queuedInstallingItems.AddLast(currentItem);
+            _queuedInstallingItems.AddLast(currentItem);
         }
 
         /// <summary>

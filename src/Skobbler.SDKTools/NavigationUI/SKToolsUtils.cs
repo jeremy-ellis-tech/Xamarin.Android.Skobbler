@@ -174,10 +174,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     }
                 }
             }
-            else
-            {
-                return View.GenerateViewId();
-            }
+            return View.GenerateViewId();
         }
 
         /// <summary>
@@ -219,10 +216,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 return distanceInMeters *= MetersToYards;
             }
-            else
-            {
-                return distanceInMeters;
-            }
+            return distanceInMeters;
         }
 
         /// <summary>
@@ -235,10 +229,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             {
                 return distanceInMeters * MetersToYards * FeetInYard;
             }
-            else
-            {
-                return distanceInMeters;
-            }
+            return distanceInMeters;
         }
 
         /// <summary>
@@ -431,8 +422,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             DisplayMetrics dm = context.Resources.DisplayMetrics;
 
-            double x = Math.Pow((double)dm.WidthPixels / (double)dm.DensityDpi, 2);
-            double y = Math.Pow((double)dm.HeightPixels / (double)dm.DensityDpi, 2);
+            double x = Math.Pow(dm.WidthPixels / (double)dm.DensityDpi, 2);
+            double y = Math.Pow(dm.HeightPixels / (double)dm.DensityDpi, 2);
 
             return Math.Sqrt(x + y);
         }

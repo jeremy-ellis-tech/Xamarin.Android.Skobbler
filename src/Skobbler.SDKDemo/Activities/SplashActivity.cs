@@ -46,10 +46,6 @@ namespace Skobbler.SDKDemo.Activities
             {
                 MapResourcesDirPath = applicationPath + "/" + "SKMaps/";
             }
-            else
-            {
-                // show a dialog and then finish
-            }
 
             ((DemoApplication)Application).MapResourcesDirPath = MapResourcesDirPath;
 
@@ -211,17 +207,11 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				return context.FilesDir.Path;
 			}
-			else
-			{
-				if ((context != null) && (context.GetExternalFilesDir(null) != null))
-				{
-					return context.GetExternalFilesDir(null).ToString();
-				}
-				else
-				{
-					return null;
-				}
-			}
+		    if ((context != null) && (context.GetExternalFilesDir(null) != null))
+		    {
+		        return context.GetExternalFilesDir(null).ToString();
+		    }
+		    return null;
 		}
 
 		private const string Tag = "SplashActivity";
@@ -262,22 +252,16 @@ namespace Skobbler.SDKDemo.Activities
 					}
 					catch (IllegalAccessException)
 					{
-						return (long) statFs.AvailableBlocks * (long) statFs.BlockSize;
+						return statFs.AvailableBlocks * (long) statFs.BlockSize;
 					}
 					catch (InvocationTargetException)
 					{
-						return (long) statFs.AvailableBlocks * (long) statFs.BlockSize;
+						return statFs.AvailableBlocks * (long) statFs.BlockSize;
 					}
 				}
-				else
-				{
-					return (long) statFs.AvailableBlocks * (long) statFs.BlockSize;
-				}
+			    return statFs.AvailableBlocks * (long) statFs.BlockSize;
 			}
-			else
-			{
-				return 0;
-			}
+		    return 0;
 		}
 	}
 

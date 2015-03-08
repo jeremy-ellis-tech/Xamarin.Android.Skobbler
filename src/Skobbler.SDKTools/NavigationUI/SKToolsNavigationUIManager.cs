@@ -29,7 +29,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Singleton instance for current class
         /// </summary>
-        private static volatile SKToolsNavigationUiManager _instance = null;
+        private static volatile SKToolsNavigationUiManager _instance;
 
         /// <summary>
         /// OSM street types
@@ -50,7 +50,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// the list with the country codes for which the top panel has a different
         /// color
         /// </summary>
-        private static readonly string[] SignPostsCountryExceptions = new string[] { "DE", "AT", "GB", "IE", "CH", "US" };
+        private static readonly string[] SignPostsCountryExceptions = { "DE", "AT", "GB", "IE", "CH", "US" };
 
 
         private enum NavigationMode
@@ -470,7 +470,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="rootId"> </param>
         protected internal virtual void SetActivity(Activity activity, int rootId)
         {
-            this._currentActivity = activity;
+            _currentActivity = activity;
             _rootLayout = (ViewGroup)_currentActivity.FindViewById(rootId);
         }
 
@@ -708,7 +708,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 TextView twoRoutes = (TextView)_preNavigationPanel.FindViewById(Resource.Id.second_route);
                 TextView threeRoutes = (TextView)_preNavigationPanel.FindViewById(Resource.Id.third_route);
 
-                _altRoutesButtons = new TextView[] { (TextView)_preNavigationPanel.FindViewById(Resource.Id.first_route), (TextView)_preNavigationPanel.FindViewById(Resource.Id.second_route), (TextView)_preNavigationPanel.FindViewById(Resource.Id.third_route) };
+                _altRoutesButtons = new[] { (TextView)_preNavigationPanel.FindViewById(Resource.Id.first_route), (TextView)_preNavigationPanel.FindViewById(Resource.Id.second_route), (TextView)_preNavigationPanel.FindViewById(Resource.Id.third_route) };
                 _currentActivity.RunOnUiThread(() =>
                 {
                     if (id == 0)
@@ -2604,8 +2604,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
             public SpeedExceededThread(SKToolsNavigationUiManager outerInstance, bool speedExceeded)
             {
-                this._outerInstance = outerInstance;
-                this.SpeedExceeded = speedExceeded;
+                _outerInstance = outerInstance;
+                SpeedExceeded = speedExceeded;
             }
 
             public virtual void run()
@@ -2706,7 +2706,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             /// </summary>
             public virtual void Cancel()
             {
-                this.SpeedExceeded = false;
+                SpeedExceeded = false;
             }
         }
 

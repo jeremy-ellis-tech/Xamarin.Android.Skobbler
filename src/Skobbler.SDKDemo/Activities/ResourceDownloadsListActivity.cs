@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
@@ -116,7 +115,7 @@ namespace Skobbler.SDKDemo.Activities
 
 			public ListItem(ResourceDownloadsListActivity outerInstance)
 			{
-				this._outerInstance = outerInstance;
+				_outerInstance = outerInstance;
 			}
 
 
@@ -180,7 +179,7 @@ namespace Skobbler.SDKDemo.Activities
         {
             _refreshDownloadEstimates = true;
             RunOnUiThread(() => { _adapter.NotifyDataSetChanged(); });
-            _handler.PostDelayed(new Action(Updater), 1000);
+            _handler.PostDelayed(Updater, 1000);
         }
 
 		/// <summary>
@@ -335,7 +334,7 @@ namespace Skobbler.SDKDemo.Activities
 
 			public DownloadsAdapter(ResourceDownloadsListActivity outerInstance)
 			{
-				this._outerInstance = outerInstance;
+				_outerInstance = outerInstance;
 			}
 
 
@@ -866,8 +865,8 @@ namespace Skobbler.SDKDemo.Activities
 		/// <returns> formatted string (value and unit) </returns>
 		public static string ConvertBytesToStringRepresentation(long value)
 		{
-			long[] dividers = new long[]{Terra, Giga, Mega, Kilo, 1};
-			string[] units = new string[]{"TB", "GB", "MB", "KB", "B"};
+			long[] dividers = {Terra, Giga, Mega, Kilo, 1};
+			string[] units = {"TB", "GB", "MB", "KB", "B"};
 
 			string result = null;
 			for (int i = 0; i < dividers.Length; i++)
@@ -883,10 +882,7 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				return result;
 			}
-			else
-			{
-				return "0 B";
-			}
+		    return "0 B";
 		}
 
 		/// <summary>
@@ -914,7 +910,7 @@ namespace Skobbler.SDKDemo.Activities
 		/// <returns> formatted value </returns>
 		private static string FormatDecimals(long value, long divider, string unit)
 		{
-			double result = divider > 1 ? (double) value / (double) divider : (double) value;
+			double result = divider > 1 ? value / (double) divider : value;
 			return (new DecimalFormat("#,##0.#")).Format(result) + " " + unit;
 		}
 
@@ -931,7 +927,7 @@ namespace Skobbler.SDKDemo.Activities
 				SKToolsDownloadItem currentItem = currentDownloadResource.ToDownloadItem();
 				if (currentDownloadResource.DownloadState == SKToolsDownloadItem.Queued)
 				{
-					currentItem.CurrentStepIndex = (sbyte) 0;
+					currentItem.CurrentStepIndex = 0;
 				}
 				else if ((currentDownloadResource.DownloadState == SKToolsDownloadItem.Paused) || (currentDownloadResource.DownloadState == SKToolsDownloadItem.Downloading))
 				{

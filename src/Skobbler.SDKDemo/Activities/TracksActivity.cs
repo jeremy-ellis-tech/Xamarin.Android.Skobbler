@@ -60,7 +60,7 @@ namespace Skobbler.SDKDemo.Activities
                 {
                     case MapActivity.Tracks:
                         SetResult(Result.Ok);
-                        this.Finish();
+                        Finish();
                         break;
                     default:
                         break;

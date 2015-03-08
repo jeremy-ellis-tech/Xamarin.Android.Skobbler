@@ -144,16 +144,16 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             lock (typeof(SKToolsDownloadPerformer))
             {
-                this._queuedDownloads = queuedDownloads;
+                _queuedDownloads = queuedDownloads;
             }
-            this._downloadListener = downloadListener;
+            _downloadListener = downloadListener;
         }
 
         public virtual ISKToolsDownloadListener DownloadListener
         {
             set
             {
-                this._downloadListener = value;
+                _downloadListener = value;
                 if (_skToolsUnzipPerformer != null)
                 {
                     _skToolsUnzipPerformer.SetDownloadListener(value);
@@ -261,104 +261,101 @@ namespace Skobbler.Ngx.SDKTools.Download
                         {
                             throw new SocketException();
                         }
-                        else
+                        _anyRetryMade = false;
+                        HttpResponseMessage entity = null; //response.Entity;
+                        int statusCode = 0; // response.StatusLine.StatusCode;
+                        // if other status code than 200 or 206(partial download) throw exception
+                        if (statusCode != (int)HttpURLConnection.HttpOk && statusCode != (int)HttpURLConnection.HttpPartial)
                         {
-                            _anyRetryMade = false;
-                            HttpResponseMessage entity = null; //response.Entity;
-                            int statusCode = 0; // response.StatusLine.StatusCode;
-                            // if other status code than 200 or 206(partial download) throw exception
-                            if (statusCode != (int)HttpURLConnection.HttpOk && statusCode != (int)HttpURLConnection.HttpPartial)
+                            SKLogging.WriteLog(Tag, "Wrong status code returned !", SKLogging.LogDebug);
+                            throw new IOException("HTTP response code: " + statusCode);
+                        }
+                        // stops the timeout handler
+                        stopsDownloadTimeoutHandler();
+                        SKLogging.WriteLog(Tag, "Correct response status code returned !", SKLogging.LogDebug);
+                        try
+                        {
+                            if (entity != null)
                             {
-                                SKLogging.WriteLog(Tag, "Wrong status code returned !", SKLogging.LogDebug);
-                                throw new IOException("HTTP response code: " + statusCode);
+                                responseStream = null; //entity.Content;
                             }
+                        }
+                        catch (IllegalStateException)
+                        {
+                            SKLogging.WriteLog(Tag, "The returned response content is not correct !", SKLogging.LogDebug);
+                        }
+                        if (responseStream == null)
+                        {
+                            SKLogging.WriteLog(Tag, "Response stream is null !!!", SKLogging.LogDebug);
+                        }
+
+                        // create a byte array buffer of 1Mb
+                        data = new byte[NoBytesIntoOneMb];
+                        // creates the randomAccessFile - if exists it opens it
+                        RandomAccessFile localFile = new RandomAccessFile(_currentDownloadStep.DestinationPath, "rw");
+                        bytesReadSoFar = localFile.Length();
+                        // position in the file
+                        localFile.Seek(bytesReadSoFar);
+                        while (true)
+                        {
+                            // starts the timeout handler
+                            startsDownloadTimeoutHandler();
+                            // reads 1 MB data
+                            int bytesReadThisTime = (responseStream != null) ? responseStream.Read(data, 0, data.Length) : 0;
                             // stops the timeout handler
                             stopsDownloadTimeoutHandler();
-                            SKLogging.WriteLog(Tag, "Correct response status code returned !", SKLogging.LogDebug);
-                            try
+                            // check number of read bytes
+                            if (bytesReadThisTime > 0)
                             {
-                                if (entity != null)
+                                _lastTimeWhenInternetWorked = DateTimeUtil.JavaTime();
+                                bytesReadSoFar += bytesReadThisTime;
+                                _currentDownloadItem.NoDownloadedBytes = bytesReadSoFar;
+                                bytesReadInThisConnection += bytesReadThisTime;
+                                _currentDownloadItem.NoDownloadedBytesInThisConnection = bytesReadInThisConnection;
+                                // write the chunk of data in the file
+                                localFile.Write(data, 0, bytesReadThisTime);
+                                long newTime = DateTimeUtil.JavaTime();
+                                // notify the UI every second
+                                if ((newTime - lastDownloadProgressTime) > NoMillisIntoOneSec)
                                 {
-                                    responseStream = null; //entity.Content;
-                                }
-                            }
-                            catch (IllegalStateException)
-                            {
-                                SKLogging.WriteLog(Tag, "The returned response content is not correct !", SKLogging.LogDebug);
-                            }
-                            if (responseStream == null)
-                            {
-                                SKLogging.WriteLog(Tag, "Response stream is null !!!", SKLogging.LogDebug);
-                            }
-
-                            // create a byte array buffer of 1Mb
-                            data = new byte[NoBytesIntoOneMb];
-                            // creates the randomAccessFile - if exists it opens it
-                            RandomAccessFile localFile = new RandomAccessFile(_currentDownloadStep.DestinationPath, "rw");
-                            bytesReadSoFar = localFile.Length();
-                            // position in the file
-                            localFile.Seek(bytesReadSoFar);
-                            while (true)
-                            {
-                                // starts the timeout handler
-                                startsDownloadTimeoutHandler();
-                                // reads 1 MB data
-                                int bytesReadThisTime = (responseStream != null) ? responseStream.Read(data, 0, data.Length) : 0;
-                                // stops the timeout handler
-                                stopsDownloadTimeoutHandler();
-                                // check number of read bytes
-                                if (bytesReadThisTime > 0)
-                                {
-                                    _lastTimeWhenInternetWorked = DateTimeUtil.JavaTime();
-                                    bytesReadSoFar += bytesReadThisTime;
-                                    _currentDownloadItem.NoDownloadedBytes = bytesReadSoFar;
-                                    bytesReadInThisConnection += bytesReadThisTime;
-                                    _currentDownloadItem.NoDownloadedBytesInThisConnection = bytesReadInThisConnection;
-                                    // write the chunk of data in the file
-                                    localFile.Write(data, 0, bytesReadThisTime);
-                                    long newTime = DateTimeUtil.JavaTime();
-                                    // notify the UI every second
-                                    if ((newTime - lastDownloadProgressTime) > NoMillisIntoOneSec)
+                                    lastDownloadProgressTime = newTime;
+                                    if (_downloadListener != null)
                                     {
-                                        lastDownloadProgressTime = newTime;
-                                        if (_downloadListener != null)
-                                        {
-                                            _downloadListener.OnDownloadProgress(_currentDownloadItem);
-                                        }
+                                        _downloadListener.OnDownloadProgress(_currentDownloadItem);
                                     }
                                 }
-                                else if (bytesReadThisTime == -1)
-                                {
-                                    SKLogging.WriteLog(Tag, "No more data to read, so exit !", SKLogging.LogDebug);
-                                    // if no more data to read, exit
-                                    break;
-                                }
-                                if (_isCurrentDownloadCancelled || _isDownloadProcessCancelled || _isDownloadRequestUnresponsive || _isDownloadProcessPaused)
-                                {
-                                    break;
-                                }
                             }
-                            localFile.Close();
-                            responseStream = null;
-
-                            if (!_isDownloadRequestUnresponsive)
+                            else if (bytesReadThisTime == -1)
                             {
-                                if (_isDownloadProcessCancelled)
-                                {
-                                    CancelDownloadProcess();
-                                }
-                                else if (_isCurrentDownloadCancelled)
-                                {
-                                    CancelCurrentDownload();
-                                }
-                                else if (_isDownloadProcessPaused)
-                                {
-                                    PauseDownloadProcess();
-                                }
-                                else
-                                {
-                                    FinishCurrentDownload();
-                                }
+                                SKLogging.WriteLog(Tag, "No more data to read, so exit !", SKLogging.LogDebug);
+                                // if no more data to read, exit
+                                break;
+                            }
+                            if (_isCurrentDownloadCancelled || _isDownloadProcessCancelled || _isDownloadRequestUnresponsive || _isDownloadProcessPaused)
+                            {
+                                break;
+                            }
+                        }
+                        localFile.Close();
+                        responseStream = null;
+
+                        if (!_isDownloadRequestUnresponsive)
+                        {
+                            if (_isDownloadProcessCancelled)
+                            {
+                                CancelDownloadProcess();
+                            }
+                            else if (_isCurrentDownloadCancelled)
+                            {
+                                CancelCurrentDownload();
+                            }
+                            else if (_isDownloadProcessPaused)
+                            {
+                                PauseDownloadProcess();
+                            }
+                            else
+                            {
+                                FinishCurrentDownload();
                             }
                         }
                     }
@@ -828,95 +825,92 @@ namespace Skobbler.Ngx.SDKTools.Download
                     SKLogging.WriteLog(Tag, "The " + _currentDownloadItem.ItemCode + " current file was not fully downloaded ; total bytes read = " + totalBytesRead + " ; size = " + _currentDownloadItem.CurrentDownloadStep.DownloadItemSize + " ; current step index = " + _currentDownloadItem.CurrentStepIndex, SKLogging.LogDebug);
                     throw new SocketException();
                 }
-                else
+                _currentDownloadItem.GoToNextDownloadStep();
+                if (_currentDownloadItem.DownloadFinished)
                 {
-                    _currentDownloadItem.GoToNextDownloadStep();
-                    if (_currentDownloadItem.DownloadFinished)
+                    _currentDownloadItem.DownloadState = SKToolsDownloadItem.Downloaded;
+                    // remove current download from download queue
+                    lock (typeof(SKToolsDownloadPerformer))
                     {
-                        _currentDownloadItem.DownloadState = SKToolsDownloadItem.Downloaded;
-                        // remove current download from download queue
-                        lock (typeof(SKToolsDownloadPerformer))
+                        if (_queuedDownloads != null)
                         {
-                            if (_queuedDownloads != null)
+                            _queuedDownloads.RemoveFirst();
+                        }
+                    }
+                    if (_currentDownloadItem.UnzipIsNeeded())
+                    { // UNZIP is needed for current resource
+                        SKLogging.WriteLog(Tag, "Current item = " + _currentDownloadItem.ItemCode + " is now downloaded => add it to install queue for unzip", SKLogging.LogDebug);
+                        // we know that UNZIP operation corresponds to last download step
+                        _currentDownloadItem.CurrentStepIndex = (sbyte)(_currentDownloadItem.CurrentStepIndex - 1);
+
+                        // notify the UI that current resource was downloaded
+                        if (_downloadListener != null)
+                        {
+                            _downloadListener.OnDownloadProgress(_currentDownloadItem);
+                        }
+
+                        // add current resource to install queue
+                        lock (typeof(SKToolsUnzipPerformer))
+                        {
+                            if ((_skToolsUnzipPerformer == null) || (!_skToolsUnzipPerformer.IsAlive))
                             {
-                                _queuedDownloads.RemoveFirst();
+                                _skToolsUnzipPerformer = new SKToolsUnzipPerformer(_downloadListener);
+                                _skToolsUnzipPerformer.AddItemForInstall(_currentDownloadItem);
+                                _skToolsUnzipPerformer.Start();
+                            }
+                            else
+                            {
+                                _skToolsUnzipPerformer.AddItemForInstall(_currentDownloadItem);
                             }
                         }
-                        if (_currentDownloadItem.UnzipIsNeeded())
-                        { // UNZIP is needed for current resource
-                            SKLogging.WriteLog(Tag, "Current item = " + _currentDownloadItem.ItemCode + " is now downloaded => add it to install queue for unzip", SKLogging.LogDebug);
-                            // we know that UNZIP operation corresponds to last download step
-                            _currentDownloadItem.CurrentStepIndex = (sbyte)(_currentDownloadItem.CurrentStepIndex - 1);
-
-                            // notify the UI that current resource was downloaded
-                            if (_downloadListener != null)
-                            {
-                                _downloadListener.OnDownloadProgress(_currentDownloadItem);
-                            }
-
-                            // add current resource to install queue
-                            lock (typeof(SKToolsUnzipPerformer))
-                            {
-                                if ((_skToolsUnzipPerformer == null) || (!_skToolsUnzipPerformer.IsAlive))
-                                {
-                                    _skToolsUnzipPerformer = new SKToolsUnzipPerformer(_downloadListener);
-                                    _skToolsUnzipPerformer.AddItemForInstall(_currentDownloadItem);
-                                    _skToolsUnzipPerformer.Start();
-                                }
-                                else
-                                {
-                                    _skToolsUnzipPerformer.AddItemForInstall(_currentDownloadItem);
-                                }
-                            }
+                    }
+                    else
+                    { // UNZIP is not needed for current resource => INSTALL it now
+                        // go back to previous step
+                        _currentDownloadItem.CurrentStepIndex = (sbyte)(_currentDownloadItem.CurrentStepIndex - 1);
+                        string rootFilePath = null;
+                        string destinationPath = _currentDownloadItem.CurrentStepDestinationPath;
+                        if (destinationPath != null)
+                        {
+                            rootFilePath = destinationPath.Substring(0, destinationPath.IndexOf((new StringBuilder(_currentDownloadItem.ItemCode)).Append(SKToolsDownloadManager.PointExtension).ToString(), StringComparison.Ordinal));
                         }
-                        else
-                        { // UNZIP is not needed for current resource => INSTALL it now
-                            // go back to previous step
-                            _currentDownloadItem.CurrentStepIndex = (sbyte)(_currentDownloadItem.CurrentStepIndex - 1);
-                            string rootFilePath = null;
-                            string destinationPath = _currentDownloadItem.CurrentStepDestinationPath;
-                            if (destinationPath != null)
+                        SKLogging.WriteLog(Tag, "Current item = " + _currentDownloadItem.ItemCode + " is now downloaded => unzip is not needed => install it now at base path" + " = " + rootFilePath, SKLogging.LogDebug);
+                        if (rootFilePath != null)
+                        {
+                            int result = SKPackageManager.Instance.AddOfflinePackage(rootFilePath, _currentDownloadItem.ItemCode);
+                            SKLogging.WriteLog(Tag, "Current resource installing result code = " + result, SKLogging.LogDebug);
+                            if ((result & SKPackageManager.AddPackageMissingSkmResult & SKPackageManager.AddPackageMissingNgiResult & SKPackageManager.AddPackageMissingNgiDatResult) == 0)
                             {
-                                rootFilePath = destinationPath.Substring(0, destinationPath.IndexOf((new StringBuilder(_currentDownloadItem.ItemCode)).Append(SKToolsDownloadManager.PointExtension).ToString(), StringComparison.Ordinal));
-                            }
-                            SKLogging.WriteLog(Tag, "Current item = " + _currentDownloadItem.ItemCode + " is now downloaded => unzip is not needed => install it now at base path" + " = " + rootFilePath, SKLogging.LogDebug);
-                            if (rootFilePath != null)
-                            {
-                                int result = SKPackageManager.Instance.AddOfflinePackage(rootFilePath, _currentDownloadItem.ItemCode);
-                                SKLogging.WriteLog(Tag, "Current resource installing result code = " + result, SKLogging.LogDebug);
-                                if ((result & SKPackageManager.AddPackageMissingSkmResult & SKPackageManager.AddPackageMissingNgiResult & SKPackageManager.AddPackageMissingNgiDatResult) == 0)
+                                // current install was performed with success set current resource as already download
+                                _currentDownloadItem.DownloadState = SKToolsDownloadItem.Installed;
+                                SKLogging.WriteLog(Tag, "The " + _currentDownloadItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
+                                // notify the UI that current resource was installed
+                                if (_downloadListener != null)
                                 {
-                                    // current install was performed with success set current resource as already download
-                                    _currentDownloadItem.DownloadState = SKToolsDownloadItem.Installed;
-                                    SKLogging.WriteLog(Tag, "The " + _currentDownloadItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
-                                    // notify the UI that current resource was installed
-                                    if (_downloadListener != null)
-                                    {
-                                        _downloadListener.OnInstallFinished(_currentDownloadItem);
-                                    }
-                                }
-                                else
-                                {
-                                    // current install was performed with error => set current resource as NOT_QUEUED, remove downloaded bytes etc
-                                    _currentDownloadItem.MarkAsNotQueued();
-                                    SKLogging.WriteLog(Tag, "The " + _currentDownloadItem.ItemCode + " resource couldn't be installed by our NG component, " + "although it was downloaded.", SKLogging.LogDebug);
-                                    // notify the UI that current resource was not installed
-                                    if (_downloadListener != null)
-                                    {
-                                        _downloadListener.OnDownloadProgress(_currentDownloadItem);
-                                    }
+                                    _downloadListener.OnInstallFinished(_currentDownloadItem);
                                 }
                             }
                             else
                             {
                                 // current install was performed with error => set current resource as NOT_QUEUED, remove downloaded bytes etc
                                 _currentDownloadItem.MarkAsNotQueued();
-                                SKLogging.WriteLog(Tag, "The " + _currentDownloadItem.ItemCode + " resource couldn't be installed by our NG component, " + "although it was downloaded, because installing path is null", SKLogging.LogDebug);
+                                SKLogging.WriteLog(Tag, "The " + _currentDownloadItem.ItemCode + " resource couldn't be installed by our NG component, " + "although it was downloaded.", SKLogging.LogDebug);
                                 // notify the UI that current resource was not installed
                                 if (_downloadListener != null)
                                 {
                                     _downloadListener.OnDownloadProgress(_currentDownloadItem);
                                 }
+                            }
+                        }
+                        else
+                        {
+                            // current install was performed with error => set current resource as NOT_QUEUED, remove downloaded bytes etc
+                            _currentDownloadItem.MarkAsNotQueued();
+                            SKLogging.WriteLog(Tag, "The " + _currentDownloadItem.ItemCode + " resource couldn't be installed by our NG component, " + "although it was downloaded, because installing path is null", SKLogging.LogDebug);
+                            // notify the UI that current resource was not installed
+                            if (_downloadListener != null)
+                            {
+                                _downloadListener.OnDownloadProgress(_currentDownloadItem);
                             }
                         }
                     }

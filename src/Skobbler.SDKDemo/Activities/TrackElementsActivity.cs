@@ -30,7 +30,7 @@ namespace Skobbler.SDKDemo.Activities
 
         protected internal virtual void onCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
+            OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_list);
             FindViewById(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
             _listView = (ListView)FindViewById(Resource.Id.list_view);
@@ -103,7 +103,7 @@ namespace Skobbler.SDKDemo.Activities
 
             public TrackElementsListAdapter(TrackElementsActivity outerInstance)
             {
-                this._outerInstance = outerInstance;
+                _outerInstance = outerInstance;
             }
 
             public override int Count

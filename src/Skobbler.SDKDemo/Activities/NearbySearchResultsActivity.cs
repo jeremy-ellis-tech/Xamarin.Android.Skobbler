@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
@@ -87,7 +86,7 @@ namespace Skobbler.SDKDemo.Activities
 
 			public ResultsListAdapter(NearbySearchResultsActivity outerInstance)
 			{
-				this._outerInstance = outerInstance;
+				_outerInstance = outerInstance;
 			}
 
 

@@ -34,7 +34,7 @@ namespace Skobbler.SDKDemo.Application
 
 		public ApplicationPreferences(Context context)
 		{
-			this._context = context;
+			_context = context;
 			_prefs = context.GetSharedPreferences(PrefsName, FileCreationMode.Private);
 			_prefsEditor = _prefs.Edit();
 		}

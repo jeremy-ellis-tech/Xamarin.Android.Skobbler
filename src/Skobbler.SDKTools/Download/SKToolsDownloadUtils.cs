@@ -57,50 +57,37 @@ namespace Skobbler.Ngx.SDKTools.Download
             {
                 return -1;
             }
-            else
+            if (!IsDataAccessible(path))
             {
-                if (!IsDataAccessible(path))
-                {
-                    return -1;
-                }
-                else if (path.StartsWith("/data", StringComparison.Ordinal))
-                { // resources are on internal memory
-                    long availableMemorySize = GetAvailableMemorySize(Environment.DataDirectory.Path);
-                    if ((neededBytes + MinimumFreeMemory) <= availableMemorySize)
-                    {
-                        return 0;
-                    }
-                    else
-                    {
-                        return (neededBytes + MinimumFreeMemory - availableMemorySize);
-                    }
-                }
-                else
-                { // resources are on other storage
-                    string memoryPath = null;
-                    int androidFolderIndex = path.IndexOf("/Android", StringComparison.Ordinal);
-                    if ((androidFolderIndex > 0) && (androidFolderIndex < path.Length))
-                    {
-                        memoryPath = path.Substring(0, androidFolderIndex);
-                    }
-                    if (memoryPath == null)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        long availableMemorySize = GetAvailableMemorySize(memoryPath);
-                        if ((neededBytes + MinimumFreeMemory) <= availableMemorySize)
-                        {
-                            return 0;
-                        }
-                        else
-                        {
-                            return (neededBytes + MinimumFreeMemory - availableMemorySize);
-                        }
-                    }
-                }
+                return -1;
             }
+            long availableMemorySize;
+            if (path.StartsWith("/data", StringComparison.Ordinal))
+            { // resources are on internal memory
+                availableMemorySize = GetAvailableMemorySize(Environment.DataDirectory.Path);
+                if ((neededBytes + MinimumFreeMemory) <= availableMemorySize)
+                {
+                    return 0;
+                }
+                return (neededBytes + MinimumFreeMemory - availableMemorySize);
+            }
+            // resources are on other storage
+            string memoryPath = null;
+            int androidFolderIndex = path.IndexOf("/Android", StringComparison.Ordinal);
+            if ((androidFolderIndex > 0) && (androidFolderIndex < path.Length))
+            {
+                memoryPath = path.Substring(0, androidFolderIndex);
+            }
+            if (memoryPath == null)
+            {
+                return -1;
+            }
+            availableMemorySize = GetAvailableMemorySize(memoryPath);
+            if ((neededBytes + MinimumFreeMemory) <= availableMemorySize)
+            {
+                return 0;
+            }
+            return (neededBytes + MinimumFreeMemory - availableMemorySize);
         }
 
         /// <summary>
@@ -138,22 +125,16 @@ namespace Skobbler.Ngx.SDKTools.Download
                     }
                     catch (IllegalAccessException)
                     {
-                        return (long)statFs.AvailableBlocks * (long)statFs.BlockSize;
+                        return statFs.AvailableBlocks * (long)statFs.BlockSize;
                     }
                     catch (InvocationTargetException)
                     {
-                        return (long)statFs.AvailableBlocks * (long)statFs.BlockSize;
+                        return statFs.AvailableBlocks * (long)statFs.BlockSize;
                     }
                 }
-                else
-                {
-                    return (long)statFs.AvailableBlocks * (long)statFs.BlockSize;
-                }
+                return statFs.AvailableBlocks * (long)statFs.BlockSize;
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
         /// <summary>
@@ -169,49 +150,40 @@ namespace Skobbler.Ngx.SDKTools.Download
                 {
                     return Directory.Exists(path) || File.Exists(path);
                 }
-                else
+                string memoryPath = null;
+                int androidFolderIndex = path.IndexOf("/Android", StringComparison.Ordinal);
+                if (androidFolderIndex > 0 && androidFolderIndex < path.Length)
                 {
-                    string memoryPath = null;
-                    int androidFolderIndex = path.IndexOf("/Android", StringComparison.Ordinal);
-                    if (androidFolderIndex > 0 && androidFolderIndex < path.Length)
-                    {
-                        memoryPath = path.Substring(0, androidFolderIndex);
-                    }
-                    if (memoryPath != null)
-                    {
-                        bool check = false;
-                        try
-                        {
-                            FileStream fs = new FileStream("/proc/mounts", FileMode.OpenOrCreate); 
-                            StreamReader @in = new StreamReader(fs);
-                            //BufferedReader br = new BufferedReader(new InputStreamReader(@in));
-                            BufferedReader br = null;
-                            string strLine;
-                            while ((strLine = br.ReadLine()) != null && !check)
-                            {
-                                if (strLine.Contains(memoryPath))
-                                {
-                                    check = true;
-                                }
-                            }
-                            br.Close();
-                        }
-                        catch (Exception e)
-                        {
-                            SKLogging.WriteLog(SKToolsDownloadPerformer.Tag, "Exception in isDataAccessible method ; message = " + e.Message, SKLogging.LogDebug);
-                        }
-                        return check && Directory.Exists(path) || File.Exists(path);
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    memoryPath = path.Substring(0, androidFolderIndex);
                 }
-            }
-            else
-            {
+                if (memoryPath != null)
+                {
+                    bool check = false;
+                    try
+                    {
+                        FileStream fs = new FileStream("/proc/mounts", FileMode.OpenOrCreate); 
+                        StreamReader @in = new StreamReader(fs);
+                        //BufferedReader br = new BufferedReader(new InputStreamReader(@in));
+                        BufferedReader br = null;
+                        string strLine;
+                        while ((strLine = br.ReadLine()) != null && !check)
+                        {
+                            if (strLine.Contains(memoryPath))
+                            {
+                                check = true;
+                            }
+                        }
+                        br.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        SKLogging.WriteLog(SKToolsDownloadPerformer.Tag, "Exception in isDataAccessible method ; message = " + e.Message, SKLogging.LogDebug);
+                    }
+                    return check && Directory.Exists(path) || File.Exists(path);
+                }
                 return false;
             }
+            return false;
         }
     }
 }

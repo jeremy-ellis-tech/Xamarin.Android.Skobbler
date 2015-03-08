@@ -33,11 +33,10 @@ namespace Skobbler.SDKDemo.Activities
             internal int Id;
 
             public PoiCategoryListItem(bool isMainCategory, string name, int id)
-                : base()
             {
-                this.IsMainCategory = isMainCategory;
-                this.Name = name;
-                this.Id = id;
+                IsMainCategory = isMainCategory;
+                Name = name;
+                Id = id;
             }
 
             public override string ToString()
@@ -130,7 +129,7 @@ namespace Skobbler.SDKDemo.Activities
 
             public PoiCategoryListAdapter(PoiCategoriesListActivity outerInstance)
             {
-                this._outerInstance = outerInstance;
+                _outerInstance = outerInstance;
             }
 
 

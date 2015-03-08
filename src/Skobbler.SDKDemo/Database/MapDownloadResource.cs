@@ -105,7 +105,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._parentCode = value;
+				_parentCode = value;
 			}
 		}
 
@@ -122,19 +122,13 @@ namespace Skobbler.SDKDemo.Database
 				}
 				if (_names != null)
 				{
-					if (_names[localLanguage] == null)
+				    if (_names[localLanguage] == null)
 					{
 						return _names[Locale.English.Language];
 					}
-					else
-					{
-						return _names[localLanguage];
-					}
+				    return _names[localLanguage];
 				}
-				else
-				{
-					return "";
-				}
+			    return "";
 			}
 		}
 
@@ -143,12 +137,12 @@ namespace Skobbler.SDKDemo.Database
 		/// <param name="newNames"> resource names in all languages </param>
 		public virtual void SetNames(string newNames)
 		{
-			this._names = new Dictionary<string, string>();
+			_names = new Dictionary<string, string>();
 			string[] keyValuePairs = newNames.Split(';');
 			foreach (String keyValue in keyValuePairs)
 			{
 				string[] newName = keyValue.Split('=');
-				this._names[newName[0]] = newName[1];
+				_names[newName[0]] = newName[1];
 			}
 		}
 
@@ -173,7 +167,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._subType = value;
+				_subType = value;
 			}
 		}
 
@@ -187,7 +181,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._skmFileSize = value;
+				_skmFileSize = value;
 			}
 		}
 
@@ -201,7 +195,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._skmAndZipFilesSize = value;
+				_skmAndZipFilesSize = value;
 			}
 		}
 
@@ -215,7 +209,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._txgFileSize = value;
+				_txgFileSize = value;
 			}
 		}
 
@@ -229,7 +223,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._unzippedFileSize = value;
+				_unzippedFileSize = value;
 			}
 		}
 
@@ -248,7 +242,7 @@ namespace Skobbler.SDKDemo.Database
 		{
 			set
 			{
-				this._skmFilePath = value;
+				_skmFilePath = value;
 			}
 		}
 
@@ -261,7 +255,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._zipFilePath = value;
+				_zipFilePath = value;
 			}
 		}
 
@@ -275,7 +269,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._txgFilePath = value;
+				_txgFilePath = value;
 			}
 		}
 
@@ -289,7 +283,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._bbLongMin = value;
+				_bbLongMin = value;
 			}
 		}
 
@@ -303,7 +297,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._bbLongMax = value;
+				_bbLongMax = value;
 			}
 		}
 
@@ -317,7 +311,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._bbLatMin = value;
+				_bbLatMin = value;
 			}
 		}
 
@@ -331,7 +325,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._bbLatMax = value;
+				_bbLatMax = value;
 			}
 		}
 
@@ -345,7 +339,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._flagId = value;
+				_flagId = value;
 			}
 		}
 
@@ -357,38 +351,32 @@ namespace Skobbler.SDKDemo.Database
 			{
 				return firstName.ToLower().CompareTo(secondName.ToLower());
 			}
-			else if (firstName != null)
-			{
-				return -1;
-			}
-			else if (secondName != null)
-			{
-				return 1;
-			}
-			else
-			{
-				return 0;
-			}
+		    if (firstName != null)
+		    {
+		        return -1;
+		    }
+		    if (secondName != null)
+		    {
+		        return 1;
+		    }
+		    return 0;
 		}
 
 		public override bool Equals(object another)
 		{
-			if (another == null)
+		    if (another == null)
 			{
 				return false;
 			}
-			else if (!(another is MapDownloadResource))
-			{
-				return false;
-			}
-			else
-			{
-				MapDownloadResource anotherResource = (MapDownloadResource) another;
-				return this.Code.Equals(anotherResource.Code);
-			}
+		    if (!(another is MapDownloadResource))
+		    {
+		        return false;
+		    }
+		    MapDownloadResource anotherResource = (MapDownloadResource) another;
+		    return Code.Equals(anotherResource.Code);
 		}
 
-		public override SKToolsDownloadItem ToDownloadItem()
+	    public override SKToolsDownloadItem ToDownloadItem()
 		{
 			SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(code);
 			IList<SKToolsFileDownloadStep> downloadSteps = new List<SKToolsFileDownloadStep>();

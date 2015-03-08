@@ -37,7 +37,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this.code = value;
+				code = value;
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this.downloadPath = value;
+				downloadPath = value;
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._downloadState = value;
+				_downloadState = value;
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			set
 			{
-				this._noDownloadedBytes = value;
+				_noDownloadedBytes = value;
 			}
 		}
 

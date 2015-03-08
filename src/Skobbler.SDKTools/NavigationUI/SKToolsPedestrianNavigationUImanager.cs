@@ -11,7 +11,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Singleton instance for current class
         /// </summary>
-        private static SKToolsPedestrianNavigationUiManager _instance = null;
+        private static SKToolsPedestrianNavigationUiManager _instance;
 
         /// <summary>
         /// the current activity
@@ -80,7 +80,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <param name="rootId"> </param>
         protected internal virtual void SetActivity(Activity activity, int rootId)
         {
-            this._currentActivity = activity;
+            _currentActivity = activity;
             _rootLayout = _currentActivity.FindViewById<ViewGroup>(rootId);
         }
 

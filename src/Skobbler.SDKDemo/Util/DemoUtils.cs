@@ -46,17 +46,14 @@ namespace Skobbler.SDKDemo.Util
 		/// @return </param>
 		public static string FormatDistance(int distInMeters)
 		{
-			if (distInMeters < 1000)
+		    if (distInMeters < 1000)
 			{
 				return distInMeters + "m";
 			}
-			else
-			{
-				return ((float) distInMeters / 1000) + "km";
-			}
+		    return ((float) distInMeters / 1000) + "km";
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Copies files from assets to destination folder </summary>
 		/// <param name="assetManager"> </param>
 		/// <param name="sourceFolder"> </param>

@@ -114,7 +114,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             set
             {
-                this._routeType = value;
+                _routeType = value;
             }
             get
             {
@@ -132,7 +132,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._startCoordinate = value;
+                _startCoordinate = value;
             }
         }
 
@@ -146,7 +146,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._destinationCoordinate = value;
+                _destinationCoordinate = value;
             }
         }
 
@@ -160,7 +160,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._viaPointCoordinateList = value;
+                _viaPointCoordinateList = value;
             }
         }
 
@@ -174,7 +174,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._dayStyle = value;
+                _dayStyle = value;
             }
         }
 
@@ -188,7 +188,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._nightStyle = value;
+                _nightStyle = value;
             }
         }
 
@@ -202,7 +202,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._distanceUnitType = value;
+                _distanceUnitType = value;
             }
         }
 
@@ -216,7 +216,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._speedWarningThresholdInCity = value;
+                _speedWarningThresholdInCity = value;
             }
         }
 
@@ -230,7 +230,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._speedWarningThresholdOutsideCity = value;
+                _speedWarningThresholdOutsideCity = value;
             }
         }
 
@@ -244,7 +244,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._automaticDayNight = value;
+                _automaticDayNight = value;
             }
         }
 
@@ -258,7 +258,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._continueFreeDriveAfterNavigationEnd = value;
+                _continueFreeDriveAfterNavigationEnd = value;
             }
         }
 
@@ -272,7 +272,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._navigationType = value;
+                _navigationType = value;
             }
         }
 
@@ -287,7 +287,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._tollRoadsAvoided = value;
+                _tollRoadsAvoided = value;
             }
         }
 
@@ -302,7 +302,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._highWaysAvoided = value;
+                _highWaysAvoided = value;
             }
         }
 
@@ -317,7 +317,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._ferriesAvoided = value;
+                _ferriesAvoided = value;
             }
         }
 
@@ -331,7 +331,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             }
             set
             {
-                this._freeDriveNavigationFilePath = value;
+                _freeDriveNavigationFilePath = value;
             }
         }
 

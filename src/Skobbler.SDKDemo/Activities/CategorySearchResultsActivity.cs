@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
@@ -20,7 +19,7 @@ namespace Skobbler.SDKDemo.Activities
 		/// <summary>
 		/// The main categories for which the nearby search will be executed
 		/// </summary>
-        private static readonly int[] MainCategories = new [] { SKCategories.SKPOIMainCategory.SkpoiMainCategoryAccomodation.Value, SKCategories.SKPOIMainCategory.SkpoiMainCategoryServices.Value, SKCategories.SKPOIMainCategory.SkpoiMainCategoryShopping.Value, SKCategories.SKPOIMainCategory.SkpoiMainCategoryLeisure.Value };
+        private static readonly int[] MainCategories = { SKCategories.SKPOIMainCategory.SkpoiMainCategoryAccomodation.Value, SKCategories.SKPOIMainCategory.SkpoiMainCategoryServices.Value, SKCategories.SKPOIMainCategory.SkpoiMainCategoryShopping.Value, SKCategories.SKPOIMainCategory.SkpoiMainCategoryLeisure.Value };
 
 		/// <summary>
 		/// The main category selected
@@ -129,7 +128,7 @@ namespace Skobbler.SDKDemo.Activities
 
 			public ResultsListAdapter(CategorySearchResultsActivity outerInstance)
 			{
-				this._outerInstance = outerInstance;
+				_outerInstance = outerInstance;
 			}
 
 
@@ -137,14 +136,11 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				get
 				{
-					if (_outerInstance._selectedMainCategory == null)
+				    if (_outerInstance._selectedMainCategory == null)
 					{
 						return _outerInstance._results.Count;
 					}
-					else
-					{
-						return _outerInstance._results[_outerInstance._selectedMainCategory].Count;
-					}
+				    return _outerInstance._results[_outerInstance._selectedMainCategory].Count;
 				}
 			}
 
@@ -187,10 +183,7 @@ namespace Skobbler.SDKDemo.Activities
                     {
                         return null; // return outerInstance.results[mainCategories[0]][position];
                     }
-                    else
-                    {
-                        return _outerInstance._results[_outerInstance._selectedMainCategory][position];
-                    }
+                    return _outerInstance._results[_outerInstance._selectedMainCategory][position];
                 }
             }
         }

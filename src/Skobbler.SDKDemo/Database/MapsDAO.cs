@@ -160,7 +160,7 @@ namespace Skobbler.SDKDemo.Database
 		/// <param name="resourcesDao"> resourcesDAO </param>
 		public MapsDao(ResourcesDao resourcesDao)
 		{
-			this._resourcesDao = resourcesDao;
+			_resourcesDao = resourcesDao;
 		}
 
 		/// <summary>
@@ -312,14 +312,11 @@ namespace Skobbler.SDKDemo.Database
 
 				return maps;
 			}
-			else
-			{
-				if (resultCursor != null)
-				{
-					resultCursor.Close();
-				}
-				return null;
-			}
+		    if (resultCursor != null)
+		    {
+		        resultCursor.Close();
+		    }
+		    return null;
 		}
 
 		/// <summary>
@@ -342,7 +339,7 @@ namespace Skobbler.SDKDemo.Database
 			try
 			{
 				_resourcesDao.Database.BeginTransaction();
-				_resourcesDao.Database.Update(MapsTable, values, Code + "=?", new string[]{mapResource.Code});
+				_resourcesDao.Database.Update(MapsTable, values, Code + "=?", new[]{mapResource.Code});
 				_resourcesDao.Database.SetTransactionSuccessful();
 			}
 			catch (SQLException e)
@@ -366,7 +363,7 @@ namespace Skobbler.SDKDemo.Database
 			try
 			{
 				_resourcesDao.Database.BeginTransaction();
-				_resourcesDao.Database.Update(MapsTable, values, State + "=? OR " + State + "=? OR " + State + "=?", new string[]{Convert.ToString(SKToolsDownloadItem.Downloading), Convert.ToString(SKToolsDownloadItem.Paused), Convert.ToString(SKToolsDownloadItem.Queued)});
+				_resourcesDao.Database.Update(MapsTable, values, State + "=? OR " + State + "=? OR " + State + "=?", new[]{Convert.ToString(SKToolsDownloadItem.Downloading), Convert.ToString(SKToolsDownloadItem.Paused), Convert.ToString(SKToolsDownloadItem.Queued)});
 				_resourcesDao.Database.SetTransactionSuccessful();
 			}
 			catch (SQLException e)

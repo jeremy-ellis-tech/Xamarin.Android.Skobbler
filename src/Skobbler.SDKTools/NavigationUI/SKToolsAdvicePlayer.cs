@@ -40,7 +40,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// The temporary file for storing the current advice
         /// </summary>
-        private string _tempAdviceFile = null;
+        private string _tempAdviceFile;
 
         /// <summary>
         /// Queued advice that will be played after the player finishes playing the
@@ -299,7 +299,6 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 string[] adviceToPlay = _nextAdvice;
                 _nextAdvice = null;
                 PlayAdvice(adviceToPlay, _nextAdvicePriority);
-                return;
             }
         }
 

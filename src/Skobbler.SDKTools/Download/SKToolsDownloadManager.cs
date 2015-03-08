@@ -42,7 +42,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <param name="downloadListener"> download listener </param>
         private SKToolsDownloadManager(ISKToolsDownloadListener downloadListener)
         {
-            this._downloadListener = downloadListener;
+            _downloadListener = downloadListener;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             set
             {
-                this._downloadListener = value;
+                _downloadListener = value;
                 if (_downloadThread != null)
                 {
                     _downloadThread.DownloadListener = value;
@@ -134,7 +134,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                                     _downloadThread.SetCurrentDownloadAsCancelled();
                                     return true;
                                 }
-                                else if (currentItemState == SKToolsDownloadItem.Queued)
+                                if (currentItemState == SKToolsDownloadItem.Queued)
                                 {
                                     removedItem = currentItem;
                                     break;

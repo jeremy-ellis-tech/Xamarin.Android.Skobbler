@@ -81,7 +81,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             set
             {
-                this._mapView = value;
+                _mapView = value;
             }
         }
 
@@ -261,10 +261,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 int correctMapStyleWhenStartDriveMode = GetCorrectMapStyleForDriveModeWhenAutoNightIsOn(autoNightIsOn);
                 return correctMapStyleWhenStartDriveMode;
             }
-            else
-            {
-                return currentMapStyle;
-            }
+            return currentMapStyle;
         }
 
         /// <summary>
@@ -283,10 +280,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     {
                         return DayStyle;
                     }
-                    else
-                    {
-                        return NightStyle;
-                    }
+                    return NightStyle;
                 }
             }
             return DayStyle;

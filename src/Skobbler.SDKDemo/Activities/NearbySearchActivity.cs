@@ -30,12 +30,12 @@ namespace Skobbler.SDKDemo.Activities
 				case Resource.Id.search_button:
 					if (ValidateCoordinates())
 					{
-						int radius = int.Parse(((TextView) FindViewById(Resource.Id.radius_field)).Text.ToString());
+						int radius = int.Parse(((TextView) FindViewById(Resource.Id.radius_field)).Text);
 						Intent intent = new Intent(this, typeof(NearbySearchResultsActivity));
 						intent.PutExtra("radius", radius);
-						intent.PutExtra("latitude", double.Parse(((TextView) FindViewById(Resource.Id.latitude_field)).Text.ToString()));
-						intent.PutExtra("longitude", double.Parse(((TextView) FindViewById(Resource.Id.longitude_field)).Text.ToString()));
-						intent.PutExtra("searchTopic", ((TextView) FindViewById(Resource.Id.search_topic_field)).Text.ToString());
+						intent.PutExtra("latitude", double.Parse(((TextView) FindViewById(Resource.Id.latitude_field)).Text));
+						intent.PutExtra("longitude", double.Parse(((TextView) FindViewById(Resource.Id.longitude_field)).Text));
+						intent.PutExtra("searchTopic", ((TextView) FindViewById(Resource.Id.search_topic_field)).Text);
 						StartActivity(intent);
 					}
 					else
@@ -52,8 +52,8 @@ namespace Skobbler.SDKDemo.Activities
 		{
 			try
 			{
-				string latString = ((TextView) FindViewById(Resource.Id.latitude_field)).Text.ToString();
-				string longString = ((TextView) FindViewById(Resource.Id.longitude_field)).Text.ToString();
+				string latString = ((TextView) FindViewById(Resource.Id.latitude_field)).Text;
+				string longString = ((TextView) FindViewById(Resource.Id.longitude_field)).Text;
 				double latitude = double.Parse(latString);
 				double longitude = double.Parse(longString);
 				if (latitude > 90 || latitude < -90)

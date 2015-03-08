@@ -16,7 +16,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
             {
                 if (SKToolsAutoNightManager.WasSetAlarmForSunriseSunsetCalculation)
                 {
-                    SKToolsAutoNightManager.Instance.AlarmForDayNightModeWithSunriseSunset = SKToolsLogicManager.Instance.CurrentActivity;
+                    SKToolsAutoNightManager.Instance.SetAlarmForDayNightModeWithSunriseSunset(SKToolsLogicManager.Instance.CurrentActivity);
                 }
                 SKToolsLogicManager.Instance.ComputeMapStyle(SKToolsDateUtils.Daytime);
             }
