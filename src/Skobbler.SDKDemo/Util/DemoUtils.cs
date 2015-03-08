@@ -14,7 +14,7 @@ namespace Skobbler.SDKDemo.Util
 	public class DemoUtils
 	{
 
-		private const string API_KEY = "";
+		private const string API_KEY = "API_KEY_HERE";
 
 		/// <summary>
 		/// Gets formatted time from a given number of seconds </summary>

@@ -1,12 +1,20 @@
-﻿using AndroidApplication = Android.App.Application;
+﻿using Android.Runtime;
+using System;
+using AndroidApplication = Android.App.Application;
+using AndroidApplicationAttribute = Android.App.ApplicationAttribute;
 
 namespace Skobbler.SDKDemo.Application
 {
 	/// <summary>
 	/// Class that stores global application state
 	/// </summary>
+    [AndroidApplication]
     public class DemoApplication : AndroidApplication
 	{
+        public DemoApplication(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        {
+
+        }
 
 		/// <summary>
 		/// Path to the map resources directory on the device
