@@ -72,9 +72,9 @@
     <Compile Include="Util\DateTimeUtil.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Skobbler\Skobbler.csproj">
+    <ProjectReference Include="..\Skobbler.Binding\Skobbler.Binding.csproj">
       <Project>{c399b111-040e-485c-85f0-40ae7bb88af4}</Project>
-      <Name>Skobbler</Name>
+      <Name>Skobbler.Binding</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
