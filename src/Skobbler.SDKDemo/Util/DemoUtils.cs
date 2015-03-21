@@ -19,9 +19,8 @@ namespace Skobbler.SDKDemo.Util
         private const string ApiKey = "API_KEY_HERE";
 
 		/// <summary>
-		/// Gets formatted time from a given number of seconds </summary>
-		/// <param name="timeInSec">
-		/// @return </param>
+		/// Gets formatted time from a given number of seconds
+		/// </summary>
 		public static string FormatTime(int timeInSec)
 		{
 			StringBuilder builder = new StringBuilder();
@@ -41,9 +40,9 @@ namespace Skobbler.SDKDemo.Util
 		}
 
 		/// <summary>
-		/// Formats a given distance value (given in meters) </summary>
-		/// <param name="distInMeters">
-		/// @return </param>
+		/// Formats a given distance value (given in meters)
+		/// </summary>
+		/// <param name="distInMeters">Distance in meters</param>
 		public static string FormatDistance(int distInMeters)
 		{
 		    if (distInMeters < 1000)
@@ -54,11 +53,8 @@ namespace Skobbler.SDKDemo.Util
 		}
 
 	    /// <summary>
-		/// Copies files from assets to destination folder </summary>
-		/// <param name="assetManager"> </param>
-		/// <param name="sourceFolder"> </param>
-		/// <param name="destination"> </param>
-		/// <exception cref="Java.IO.IOException"> </exception>
+		/// Copies files from assets to destination folder
+		/// </summary>
 		public static void CopyAssetsToFolder(AssetManager assetManager, string sourceFolder, string destinationFolder)
 		{
 			string[] assets = assetManager.List(sourceFolder);
@@ -71,11 +67,8 @@ namespace Skobbler.SDKDemo.Util
 		}
 
 		/// <summary>
-		/// Copies files from assets to destination folder </summary>
-		/// <param name="assetManager"> </param>
-		/// <param name="sourceFolder"> </param>
-		/// <param name="assetsNames"> </param>
-		/// <exception cref="Java.IO.IOException"> </exception>
+		/// Copies files from assets to destination folder
+		/// </summary>
 		public static void CopyAsset(AssetManager assetManager, string sourceFolder, string destinationFolder, params string[] assetsNames)
 		{
 
@@ -104,9 +97,7 @@ namespace Skobbler.SDKDemo.Util
 		/// Copies files from assets to destination folder. </summary>
 		/// <param name="assetManager"> </param>
 		/// <param name="assetName"> the asset that needs to be copied </param>
-		/// <param name="destinationFolder"> path to folder where you want to store the asset
-		/// archive </param>
-		/// <exception cref="Java.IO.IOException"> </exception>
+		/// <param name="destinationFolder"> path to folder where you want to store the asset archive </param>
 		public static void CopyAsset(AssetManager assetManager, string assetName, string destinationFolder)
 		{
 
@@ -124,9 +115,9 @@ namespace Skobbler.SDKDemo.Util
 		}
 
 		/// <summary>
-		/// Tells if internet is currently available on the device </summary>
-		/// <param name="currentContext">
-		/// @return </param>
+		/// Tells if internet is currently available on the device
+		/// </summary>
+		/// <param name="currentContext">Current context</param>
 		public static bool IsInternetAvailable(Context currentContext)
 		{
 			ConnectivityManager conectivityManager = (ConnectivityManager) currentContext.GetSystemService(Context.ConnectivityService);

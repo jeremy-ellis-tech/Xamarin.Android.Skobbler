@@ -14,6 +14,7 @@ using Skobbler.SDKDemo.Application;
 using Skobbler.SDKDemo.Util;
 using Environment = Android.OS.Environment;
 using IOException = Java.IO.IOException;
+using System.Threading.Tasks;
 
 namespace Skobbler.SDKDemo.Activities
 {
@@ -24,7 +25,6 @@ namespace Skobbler.SDKDemo.Activities
     [Activity(MainLauncher = true)]
 	public class SplashActivity : Activity, ISKPrepareMapTextureListener, ISKMapUpdateListener
 	{
-
 		/// <summary>
 		/// Path to the MapResources directory
 		/// </summary>
@@ -34,7 +34,6 @@ namespace Skobbler.SDKDemo.Activities
         {
             base.OnCreate(savedInstanceState);
 
-            base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_splash);
 
             SKLogging.EnableLogs(true);
@@ -85,7 +84,7 @@ namespace Skobbler.SDKDemo.Activities
 		/// </summary>
 		private void CopyOtherResources()
 		{
-            new Thread(() =>
+            Task.Run(() =>
             {
                 try
                 {
@@ -110,7 +109,7 @@ namespace Skobbler.SDKDemo.Activities
                     Console.WriteLine(e.ToString());
                     Console.Write(e.StackTrace);
                 }
-            }).Start();
+            });
 		}
 
 		/// <summary>
@@ -120,7 +119,7 @@ namespace Skobbler.SDKDemo.Activities
 		{
 			DemoApplication app = (DemoApplication) Application;
 
-            Thread prepareGpxFileThread = new Thread(() =>
+            Task.Run(() =>
             {
                 try
                 {
@@ -149,32 +148,24 @@ namespace Skobbler.SDKDemo.Activities
                     Console.Write(e.StackTrace);
                 }
             });
-
-			prepareGpxFileThread.Start();
 		}
 
 		public void OnMapVersionSet(int newVersion)
 		{
-			// TODO Auto-generated method stub
 
 		}
 
 		public void OnNewVersionDetected(int newVersion)
 		{
-			// TODO Auto-generated method stub
 			Log.Error("", "new version " + newVersion);
 		}
 
 		public void OnNoNewVersionDetected()
 		{
-			// TODO Auto-generated method stub
-
 		}
 
 		public void OnVersionFileDownloadTimeout()
 		{
-			// TODO Auto-generated method stub
-
 		}
 
 		public const long Kilo = 1024;

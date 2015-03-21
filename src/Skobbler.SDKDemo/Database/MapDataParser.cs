@@ -254,7 +254,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 					else if (key.Equals(FileId))
 					{
-						currentMap.SkmFilePath = reader.NextString();
+						currentMap.SetSkmFilePath(reader.NextString());
 					}
 					else if (key.Equals(NbZipId))
 					{
@@ -580,7 +580,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			if (currentMap.SKMFilePath == null)
 			{
-				currentMap.SkmFilePath = "";
+				currentMap.SetSkmFilePath("");
 			}
 			if (currentMap.ZipFilePath == null)
 			{

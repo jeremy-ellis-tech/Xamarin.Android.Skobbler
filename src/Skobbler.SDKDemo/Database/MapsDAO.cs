@@ -257,35 +257,62 @@ namespace Skobbler.SDKDemo.Database
 		}
 
 		/// <summary>
-		/// get all maps from DB (countries, cities or us states)
+		/// Get all maps from DB (countries, cities or us states)
 		/// </summary>
 		/// <returns> all maps of a certain type from database </returns>
 		public virtual IDictionary<string, MapDownloadResource> GetAvailableMapsForACertainType(params string[] mapType)
 		{
-			StringBuilder query = (new StringBuilder("SELECT ")).Append(Code).Append(", ").Append(ParentCode).Append(", ").Append(Region).Append(", ").Append(Names).Append(", ").Append(SkmFilePath).Append(", " + "").Append(ZipFilePath).Append(", ").Append(TxgFilePath).Append(", ").Append(TxgFileSize).Append(", ").Append(SkmAndZipFilesSize).Append(", ").Append(SkmFileSize).Append(", " + "").Append(UnzippedFileSize).Append(", ").Append(BoundingBoxLatitudeMax).Append(", ").Append(BoundingBoxLatitudeMin).Append(", ").Append(BoundingBoxLongitudeMax).Append(", ").Append(BoundingBoxLongitudeMin).Append(", ").Append(Subtype).Append(", ").Append(State).Append(", " + "").Append(NoDownloadedBytes).Append(", ").Append(FlagId).Append(", ").Append(DownloadPath).Append(" FROM ").Append(MapsTable);
+			var query = new StringBuilder("SELECT ").Append(Code)
+                .Append(", ").Append(ParentCode)
+                .Append(", ").Append(Region)
+                .Append(", ").Append(Names)
+                .Append(", ").Append(SkmFilePath)
+                .Append(", " + "").Append(ZipFilePath)
+                .Append(", ").Append(TxgFilePath)
+                .Append(", ").Append(TxgFileSize)
+                .Append(", ").Append(SkmAndZipFilesSize)
+                .Append(", ").Append(SkmFileSize)
+                .Append(", " + "").Append(UnzippedFileSize)
+                .Append(", ").Append(BoundingBoxLatitudeMax)
+                .Append(", ").Append(BoundingBoxLatitudeMin)
+                .Append(", ").Append(BoundingBoxLongitudeMax)
+                .Append(", ").Append(BoundingBoxLongitudeMin)
+                .Append(", ").Append(Subtype)
+                .Append(", ").Append(State)
+                .Append(", " + "").Append(NoDownloadedBytes)
+                .Append(", ").Append(FlagId)
+                .Append(", ").Append(DownloadPath)
+                .Append(" FROM ").Append(MapsTable);
+
 			if ((mapType != null) && (mapType.Length > 0))
 			{
 				query.Append(" WHERE ").Append(Subtype).Append("=?");
+
 				for (int i = 1; i < mapType.Length; i++)
 				{
 					query.Append(" or ").Append(Subtype).Append("=?");
 				}
 			}
+
 			ICursor resultCursor = _resourcesDao.Database.RawQuery(query.ToString(), mapType);
+
 			if ((resultCursor != null) && (resultCursor.Count > 0))
 			{
 				IDictionary<string, MapDownloadResource> maps = new Dictionary<string, MapDownloadResource>();
-				MapDownloadResource currentMap;
-				try
+			    try
 				{
 					resultCursor.MoveToFirst();
 					while (!resultCursor.IsAfterLast)
 					{
-						currentMap = new MapDownloadResource();
-						currentMap.Code = resultCursor.GetString(0);
-                        currentMap.ParentCode = resultCursor.GetString(1);
+
+					    var currentMap = new MapDownloadResource
+					    {
+					        Code = resultCursor.GetString(0),
+					        ParentCode = resultCursor.GetString(1)
+					    };
+
                         currentMap.SetNames(resultCursor.GetString(3));
-                        currentMap.SkmFilePath = resultCursor.GetString(4);
+                        currentMap.SetSkmFilePath(resultCursor.GetString(4));
                         currentMap.ZipFilePath = resultCursor.GetString(5);
                         currentMap.TxgFilePath = resultCursor.GetString(6);
 						currentMap.TxgFileSize = resultCursor.GetInt(7);
@@ -300,8 +327,8 @@ namespace Skobbler.SDKDemo.Database
 						currentMap.DownloadState = (SKDownloadState)resultCursor.GetInt(16);
 						currentMap.NoDownloadedBytes = resultCursor.GetInt(17);
 						currentMap.FlagId = resultCursor.GetInt(18);
-						currentMap.DownloadPath = resultCursor.GetString(19);
-						maps[currentMap.Code] = currentMap;
+                        currentMap.DownloadPath = resultCursor.GetString(19);
+                        maps[currentMap.Code] = currentMap;
 						resultCursor.MoveToNext();
 					}
 				}

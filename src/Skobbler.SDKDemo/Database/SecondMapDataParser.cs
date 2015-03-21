@@ -232,7 +232,7 @@ namespace Skobbler.SDKDemo.Database
 					}
 					try
 					{
-						currentMap.SkmFilePath = currentPackageObject.GetString(FileId);
+						currentMap.SetSkmFilePath(currentPackageObject.GetString(FileId));
 					}
 					catch (JSONException ex)
 					{
@@ -544,7 +544,7 @@ namespace Skobbler.SDKDemo.Database
 			}
 			if (currentMap.SKMFilePath == null)
 			{
-				currentMap.SkmFilePath = "";
+				currentMap.SetSkmFilePath("");
 			}
 			if (currentMap.ZipFilePath == null)
 			{
