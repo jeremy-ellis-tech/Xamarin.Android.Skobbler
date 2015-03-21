@@ -149,15 +149,15 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 string soundFilePath = soundFilesDirPath + adviceParts[i] + ".mp3";
                 try
                 {
-                    System.IO.Stream @is = new FileStream(soundFilePath, FileMode.Open, FileAccess.Read);
-                    int availableBytes = 0;// @is.Available();
+                    System.IO.Stream inputStream = new FileStream(soundFilePath, FileMode.Open, FileAccess.Read);
+                    int availableBytes = (int)inputStream.Length;
                     byte[] tmp = new byte[availableBytes];
-                    @is.Read(tmp, 0, availableBytes);
+                    inputStream.Read(tmp, 0, availableBytes);
                     if (stream != null)
                     {
                         stream.Write(tmp);
                     }
-                    @is.Close();
+                    inputStream.Close();
                     validTokensFound = true;
                 }
                 catch (IOException ioe)
@@ -228,10 +228,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         private void WriteFile(byte[] data, string filePath)
         {
-            System.IO.Stream @out = null;
             try
             {
-                @out = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                System.IO.Stream @out = new FileStream(filePath, FileMode.Create, FileAccess.Write);
                 @out.Write(data, 0, data.Length);
                 try
                 {
