@@ -6,7 +6,6 @@ using Java.IO;
 using Org.Json;
 using Skobbler.Ngx.SDKTools.Extensions;
 using Skobbler.Ngx.Util;
-using Skobbler.SDKDemo.Util;
 using Console = System.Console;
 using StringWriter = Java.IO.StringWriter;
 

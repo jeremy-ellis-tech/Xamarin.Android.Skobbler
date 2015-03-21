@@ -67,7 +67,7 @@ namespace Skobbler.SDKDemo.Util
 			{
 				destFolderFile.Mkdirs();
 			}
-			copyAsset(assetManager, sourceFolder, destinationFolder, assets);
+			CopyAsset(assetManager, sourceFolder, destinationFolder, assets);
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace Skobbler.SDKDemo.Util
 		/// <param name="sourceFolder"> </param>
 		/// <param name="assetsNames"> </param>
 		/// <exception cref="Java.IO.IOException"> </exception>
-		public static void copyAsset(AssetManager assetManager, string sourceFolder, string destinationFolder, params string[] assetsNames)
+		public static void CopyAsset(AssetManager assetManager, string sourceFolder, string destinationFolder, params string[] assetsNames)
 		{
 
 			foreach (string assetName in assetsNames)
@@ -107,7 +107,7 @@ namespace Skobbler.SDKDemo.Util
 		/// <param name="destinationFolder"> path to folder where you want to store the asset
 		/// archive </param>
 		/// <exception cref="Java.IO.IOException"> </exception>
-		public static void copyAsset(AssetManager assetManager, string assetName, string destinationFolder)
+		public static void CopyAsset(AssetManager assetManager, string assetName, string destinationFolder)
 		{
 
 			Stream destinationStream = new FileStream(destinationFolder + "/" + assetName, FileMode.Create, FileAccess.Write);

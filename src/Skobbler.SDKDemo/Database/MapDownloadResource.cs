@@ -364,13 +364,13 @@ namespace Skobbler.SDKDemo.Database
 
 		public override bool Equals(object obj)
 		{
-		    if (Object.ReferenceEquals(obj, this)) return true;
+		    if (ReferenceEquals(obj, this)) return true;
 
 		    var other = obj as MapDownloadResource;
 
 		    if (other == null) return false;
 
-		    return Object.Equals(other.Code, Code);
+		    return Equals(other.Code, Code);
 		}
 
 	    public override int GetHashCode()

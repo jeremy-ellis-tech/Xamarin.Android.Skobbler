@@ -133,7 +133,7 @@ namespace Skobbler.SDKDemo.Activities
                         mapCreatorFolder.Mkdirs();
                     }
                     app.MapCreatorFilePath = mapCreatorFolderPath + "/mapcreatorFile.json";
-                    DemoUtils.copyAsset(Assets, "MapCreator", mapCreatorFolderPath, "mapcreatorFile.json");
+                    DemoUtils.CopyAsset(Assets, "MapCreator", mapCreatorFolderPath, "mapcreatorFile.json");
                     // Copies the log file from assets to a storage.
                     string logFolderPath = MapResourcesDirPath + "logFile";
                     Java.IO.File logFolder = new Java.IO.File(logFolderPath);
@@ -141,7 +141,7 @@ namespace Skobbler.SDKDemo.Activities
                     {
                         logFolder.Mkdirs();
                     }
-                    DemoUtils.copyAsset(Assets, "logFile", logFolderPath, "Seattle.log");
+                    DemoUtils.CopyAsset(Assets, "logFile", logFolderPath, "Seattle.log");
                 }
                 catch (IOException e)
                 {

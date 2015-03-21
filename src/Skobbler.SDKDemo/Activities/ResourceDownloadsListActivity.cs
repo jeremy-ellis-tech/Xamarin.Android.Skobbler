@@ -17,7 +17,6 @@ using Skobbler.Ngx.SDKTools.Download;
 using Skobbler.Ngx.SDKTools.Extensions;
 using Skobbler.SDKDemo.Application;
 using Skobbler.SDKDemo.Database;
-using Skobbler.SDKDemo.Util;
 using Console = System.Console;
 
 namespace Skobbler.SDKDemo.Activities
@@ -132,7 +131,7 @@ namespace Skobbler.SDKDemo.Activities
 			{
 				if (listItem != null && listItem.Name != null && Name != null)
 				{
-					return Name.CompareTo(listItem.Name);
+					return String.Compare(Name, listItem.Name, StringComparison.Ordinal);
 				}
 				return 0;
 			}
@@ -551,10 +550,6 @@ namespace Skobbler.SDKDemo.Activities
                             IList<DownloadResource> mapDownloadResources = new List<DownloadResource>();
                             mapDownloadResources.Add(currentItem.DownloadResource);
                             downloadItems = _outerInstance.CreateDownloadItemsFromDownloadResources(mapDownloadResources);
-                        }
-
-                        foreach (SKToolsDownloadItem item in downloadItems)
-                        {
                         }
                         _outerInstance._downloadManager.StartDownload(downloadItems);
                     }

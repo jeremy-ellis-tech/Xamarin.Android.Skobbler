@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Android.Media;
+using System.IO;
 using Android.Util;
 using Java.IO;
-using Java.Nio.Charset;
-using Stream = System.IO.Stream;
 
 namespace Skobbler.SDKDemo.Database
 {
