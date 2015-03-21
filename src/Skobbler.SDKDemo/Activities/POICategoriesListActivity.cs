@@ -86,7 +86,7 @@ namespace Skobbler.SDKDemo.Activities
                 {
                     if (_selectedCategories.Contains(selectedItem.Id))
                     {
-                        _selectedCategories.RemoveAt(Convert.ToInt32(selectedItem.Id));
+                        _selectedCategories.Remove(selectedItem.Id);
                         e.View.SetBackgroundColor(Resources.GetColor(Resource.Color.white));
                     }
                     else

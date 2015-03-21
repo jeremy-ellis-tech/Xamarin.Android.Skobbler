@@ -16,7 +16,7 @@ namespace Skobbler.SDKDemo.Util
 	public class DemoUtils
 	{
 
-		private const string ApiKey = "API_KEY_HERE";
+        private const string ApiKey = "API_KEY_HERE";
 
 		/// <summary>
 		/// Gets formatted time from a given number of seconds </summary>
@@ -89,7 +89,7 @@ namespace Skobbler.SDKDemo.Util
 					Stream asset = assetManager.Open(sourceFolder + "/" + assetName);
 					try
 					{
-						//ByteStreams.copy(asset, destinationStream);
+                        asset.CopyTo(destinationStream);
 					}
 					finally
 					{
@@ -114,7 +114,7 @@ namespace Skobbler.SDKDemo.Util
 			Stream asset = assetManager.Open(assetName);
 			try
 			{
-				//ByteStreams.copy(asset, destinationStream);
+                asset.CopyTo(destinationStream);
 			}
 			finally
 			{
