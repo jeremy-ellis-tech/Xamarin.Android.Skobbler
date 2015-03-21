@@ -4,30 +4,18 @@ namespace Skobbler.Ngx.SDKTools.Download
 {
     public class SKToolsDownloadItem
     {
-        public const sbyte NotQueued = 0;
-        public const sbyte Queued = 1;
-        public const sbyte Downloading = 2;
-        public const sbyte Paused = 3;
-        public const sbyte Downloaded = 4;
-        public const sbyte Installing = 5;
-        public const sbyte Installed = 6;
-
-        private string _itemCode;
-        private sbyte _downloadState;
-        private IList<SKToolsFileDownloadStep> _downloadSteps;
-        private sbyte _currentStepIndex;
+        private readonly IList<SKToolsFileDownloadStep> _downloadSteps;
         private long _noDownloadedBytes;
         private long _noDownloadedBytesInThisConnection;
-        private bool _unzipIsNeeded;
-        private bool _installOperationIsNeeded;
+        private readonly bool _unzipIsNeeded;
 
-        public SKToolsDownloadItem(string itemCode, IList<SKToolsFileDownloadStep> downloadSteps, sbyte downloadState, bool unzipIsNeeded, bool installOperationIsNeeded)
+        public SKToolsDownloadItem(string itemCode, IList<SKToolsFileDownloadStep> downloadSteps, SKDownloadState skDownloadState, bool unzipIsNeeded, bool installOperationIsNeeded)
         {
-            _itemCode = itemCode;
+            ItemCode = itemCode;
             _downloadSteps = downloadSteps;
-            _downloadState = downloadState;
+            SKDownloadState = skDownloadState;
             _unzipIsNeeded = unzipIsNeeded;
-            _installOperationIsNeeded = installOperationIsNeeded;
+            InstallOperationIsNeeded = installOperationIsNeeded;
         }
 
         public virtual bool UnzipIsNeeded()
@@ -36,19 +24,9 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// sets current download step index </summary>
-        /// <param name="currentStepIndex"> current step index </param>
-        public virtual sbyte CurrentStepIndex
-        {
-            set
-            {
-                _currentStepIndex = value;
-            }
-            get
-            {
-                return _currentStepIndex;
-            }
-        }
+        /// Current download step index
+        /// </summary>
+        public virtual sbyte CurrentStepIndex { set; get; }
 
 
         /// <summary>
@@ -58,9 +36,9 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                if (_downloadSteps != null && _downloadSteps.Count > _currentStepIndex)
+                if (_downloadSteps != null && _downloadSteps.Count > CurrentStepIndex)
                 {
-                    return _downloadSteps[_currentStepIndex];
+                    return _downloadSteps[CurrentStepIndex];
                 }
                 return null;
             }
@@ -73,7 +51,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                return _downloadSteps != null && _downloadSteps.Count <= _currentStepIndex;
+                return _downloadSteps != null && _downloadSteps.Count <= CurrentStepIndex;
             }
         }
 
@@ -82,28 +60,18 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// </summary>
         public virtual void GoToNextDownloadStep()
         {
-            _currentStepIndex++;
+            CurrentStepIndex++;
         }
 
         /// <summary>
-        /// sets download state for current item </summary>
-        /// <param name="downloadState"> download state for current item </param>
-        public virtual sbyte DownloadState
-        {
-            set
-            {
-                _downloadState = value;
-            }
-            get
-            {
-                return _downloadState;
-            }
-        }
+        /// Download state for current item
+        /// </summary>
+        public virtual SKDownloadState SKDownloadState { get; set; }
 
 
         /// <summary>
-        /// gets the number of downloaded bytes </summary>
-        /// <returns> no downloaded bytes </returns>
+        /// The number of downloaded bytes
+        /// </summary>
         public virtual long NoDownloadedBytes
         {
             get
@@ -113,7 +81,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             set
             {
                 _noDownloadedBytes = value;
-                for (int i = 0; i < _currentStepIndex; i++)
+                for (int i = 0; i < CurrentStepIndex; i++)
                 {
                     if ((_downloadSteps != null) && (i < _downloadSteps.Count))
                     {
@@ -129,23 +97,17 @@ namespace Skobbler.Ngx.SDKTools.Download
 
 
         /// <summary>
-        /// gets current download item code </summary>
-        /// <returns> current download item code </returns>
-        public virtual string ItemCode
-        {
-            get
-            {
-                return _itemCode;
-            }
-        }
+        /// Current download item code
+        /// </summary>
+        public virtual string ItemCode { get; private set; }
 
         /// <summary>
-        /// marks current item as NOT-QUEUED (e.g. if its download is cancelled from some reason)
+        /// Marks current item as NOT-QUEUED (e.g. if its download is cancelled from some reason)
         /// </summary>
         public virtual void MarkAsNotQueued()
         {
             // removes already downloaded bytes from current item
-            for (int i = 0; i <= _currentStepIndex; i++)
+            for (int i = 0; i <= CurrentStepIndex; i++)
             {
                 if ((_downloadSteps != null) && (i < _downloadSteps.Count))
                 {
@@ -159,48 +121,44 @@ namespace Skobbler.Ngx.SDKTools.Download
             // revert current item state
             _noDownloadedBytes = 0;
             _noDownloadedBytesInThisConnection = 0;
-            _downloadState = NotQueued;
-            _currentStepIndex = 0;
+            SKDownloadState = SKDownloadState.NotQueued;
+            CurrentStepIndex = 0;
         }
 
         /// <summary>
-        /// sets the number of downloaded bytes during current internet connection </summary>
+        /// Sets the number of downloaded bytes during current internet connection
+        /// </summary>
         /// <param name="noDownloadedBytesInThisConnection"> no downloaded bytes that will be set </param>
-        public virtual long NoDownloadedBytesInThisConnection
+        public virtual void SetNoDownloadedBytesInThisConnection(long noDownloadedBytesInThisConnection)
         {
-            set
-            {
-                _noDownloadedBytesInThisConnection = value;
-            }
+            _noDownloadedBytesInThisConnection = noDownloadedBytesInThisConnection;
         }
 
         /// <summary>
-        /// gets current download step destination path
+        /// Gets current download step destination path
         /// </summary>
         public virtual string CurrentStepDestinationPath
         {
             get
             {
-                if ((_downloadSteps != null) && (_currentStepIndex < _downloadSteps.Count))
+                if ((_downloadSteps != null) && (CurrentStepIndex < _downloadSteps.Count))
                 {
-                    return _downloadSteps[_currentStepIndex].DestinationPath;
+                    return _downloadSteps[CurrentStepIndex].DestinationPath;
                 }
                 return null;
             }
         }
 
         /// <summary>
-        /// returns if install operation is needed </summary>
-        /// <returns> true if install operation is need, false otherwise </returns>
-        public virtual bool InstallOperationIsNeeded
-        {
-            get
-            {
-                return _installOperationIsNeeded;
-            }
-        }
+        /// Returns if install operation is needed
+        /// </summary>
+        /// <returns> True if install operation is need, false otherwise </returns>
+        public virtual bool InstallOperationIsNeeded { get; private set; }
 
-        /// <returns> item size starting with current step (e.g if current step is 0, returns size for all sub-items, otherwise the size starting with current-sub-item) </returns>
+        /// <summary>
+        /// Item size starting with current step (e.g if current step is 0, returns size for all sub-items,
+        /// otherwise the size starting with current-sub-item)
+        /// </summary>
         public virtual long RemainingSize
         {
             get
@@ -208,7 +166,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 long remainingSize = 0;
                 if (_downloadSteps != null)
                 {
-                    for (int i = _currentStepIndex; i < _downloadSteps.Count; i++)
+                    for (int i = CurrentStepIndex; i < _downloadSteps.Count; i++)
                     {
                         SKToolsFileDownloadStep currentStep = _downloadSteps[i];
                         if (currentStep != null)

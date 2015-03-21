@@ -380,18 +380,18 @@ namespace Skobbler.SDKDemo.Database
 
 	    public override SKToolsDownloadItem ToDownloadItem()
 		{
-			SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(code);
+			SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(Code);
 			IList<SKToolsFileDownloadStep> downloadSteps = new List<SKToolsFileDownloadStep>();
-			downloadSteps.Add(new SKToolsFileDownloadStep(info.MapURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.SkmFileExtension).ToString(), _skmFileSize));
+			downloadSteps.Add(new SKToolsFileDownloadStep(info.MapURL, (new StringBuilder(DownloadPath)).Append(Code).Append(SKToolsDownloadManager.SkmFileExtension).ToString(), _skmFileSize));
 			if (_txgFileSize != 0)
 			{
-				downloadSteps.Add(new SKToolsFileDownloadStep(info.TexturesURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.TxgFileExtension).ToString(), _txgFileSize));
+				downloadSteps.Add(new SKToolsFileDownloadStep(info.TexturesURL, (new StringBuilder(DownloadPath)).Append(Code).Append(SKToolsDownloadManager.TxgFileExtension).ToString(), _txgFileSize));
 			}
 			if (_unzippedFileSize != 0)
 			{
-				downloadSteps.Add(new SKToolsFileDownloadStep(info.NameBrowserFilesURL, (new StringBuilder(downloadPath)).Append(code).Append(SKToolsDownloadManager.ZipFileExtension).ToString(), (_skmAndZipFilesSize - _skmFileSize)));
+				downloadSteps.Add(new SKToolsFileDownloadStep(info.NameBrowserFilesURL, (new StringBuilder(DownloadPath)).Append(Code).Append(SKToolsDownloadManager.ZipFileExtension).ToString(), (_skmAndZipFilesSize - _skmFileSize)));
 			}
-			SKToolsDownloadItem currentItem = new SKToolsDownloadItem(code, downloadSteps, DownloadState, (_unzippedFileSize != 0), true);
+			SKToolsDownloadItem currentItem = new SKToolsDownloadItem(Code, downloadSteps, DownloadState, (_unzippedFileSize != 0), true);
 			currentItem.NoDownloadedBytes = NoDownloadedBytes;
 			return currentItem;
 		}

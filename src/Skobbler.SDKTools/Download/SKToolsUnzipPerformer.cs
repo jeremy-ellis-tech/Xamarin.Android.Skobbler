@@ -11,32 +11,32 @@ namespace Skobbler.Ngx.SDKTools.Download
     {
 
         /// <summary>
-        /// the tag associated with this class, used for debugging
+        /// The tag associated with this class, used for debugging
         /// </summary>
         private const string Tag = "SKToolsUnzipPerformer";
 
         /// <summary>
-        /// queued installing items
+        /// Queued installing items
         /// </summary>
         private LinkedList<SKToolsDownloadItem> _queuedInstallingItems;
 
         /// <summary>
-        /// current installing item
+        /// Current installing item
         /// </summary>
         private SKToolsDownloadItem _currentInstallingItem;
 
         /// <summary>
-        /// download listener
+        /// Download listener
         /// </summary>
         private ISKToolsDownloadListener _downloadListener;
 
         /// <summary>
-        /// tells that current install process is paused
+        /// Tells that current install process is paused
         /// </summary>
         private volatile bool _isInstallProcessPaused;
 
         /// <summary>
-        /// creates an object of SKToolsUnzipPerformer type </summary>
+        /// Creates an object of SKToolsUnzipPerformer type </summary>
         /// <param name="downloadListener"> download listener </param>
         public SKToolsUnzipPerformer(ISKToolsDownloadListener downloadListener)
         {
@@ -77,7 +77,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 if (zipFileExists)
                 {
                     // change the state for current download item
-                    _currentInstallingItem.DownloadState = SKToolsDownloadItem.Installing;
+                    _currentInstallingItem.SKDownloadState = SKDownloadState.Installing;
 
                     // database and UI update
                     if (_downloadListener != null)
@@ -102,7 +102,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                         if ((result & SKPackageManager.AddPackageMissingSkmResult & SKPackageManager.AddPackageMissingNgiResult & SKPackageManager.AddPackageMissingNgiDatResult) == 0)
                         {
                             // current install was performed with success set current resource as already download
-                            _currentInstallingItem.DownloadState = SKToolsDownloadItem.Installed;
+                            _currentInstallingItem.SKDownloadState = SKDownloadState.Installed;
                             SKLogging.WriteLog(Tag, "The " + _currentInstallingItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                             // notify the UI that current resource was installed
                             if (_downloadListener != null)
@@ -125,7 +125,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     else
                     {
                         // current install was performed with success set current resource as already download
-                        _currentInstallingItem.DownloadState = SKToolsDownloadItem.Installed;
+                        _currentInstallingItem.SKDownloadState = SKDownloadState.Installed;
                         SKLogging.WriteLog(Tag, "The " + _currentInstallingItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                         // notify the UI that current resource was installed
                         if (_downloadListener != null)
@@ -141,7 +141,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     SKLogging.WriteLog(Tag, "The zip file doesn't exist => download again the resource !!! " + filePath, SKLogging.LogDebug);
                     // prepare again current resource for download queue(change its state, remove all related downloaded bytes)
                     _currentInstallingItem.MarkAsNotQueued();
-                    _currentInstallingItem.DownloadState = SKToolsDownloadItem.Queued;
+                    _currentInstallingItem.SKDownloadState = SKDownloadState.Queued;
 
                     // notify the UI that current resource is again put in download queue
                     if (_downloadListener != null)

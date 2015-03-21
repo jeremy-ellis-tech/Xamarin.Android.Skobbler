@@ -16,16 +16,12 @@ namespace Skobbler.Ngx.SDKTools.Download
     {
 
         /// <summary>
-        /// the values used to convert the memory amount to the proper units(KB, MB, GB...)
+        /// The values used to convert the memory amount to the proper units(KB, MB, GB...)
         /// </summary>
-        public const long Kilo = 1024;
-
+        public static readonly long Kilo = 1024;
         public static readonly long Mega = Kilo * Kilo;
-
         public static readonly long Giga = Mega * Kilo;
-
         public static readonly long Terra = Giga * Kilo;
-
         public static readonly long MinimumFreeMemory = 20 * Mega;
 
         /// <summary>
@@ -35,6 +31,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             string deleteCmd = "rm -r " + currentLocationPath;
             Runtime runtime = Runtime.GetRuntime();
+
             try
             {
                 runtime.Exec(deleteCmd);
@@ -47,10 +44,10 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// gets the bytes needed to perform a download </summary>
-        /// <param name="neededBytes"> number of bytes that should be available, on the device, for performing a download </param>
-        /// <param name="path"> the path where resources will be downloaded </param>
-        /// <returns> needed bytes in order to perform the current download, or 0 if there are enough available bytes is -1 if given path is wrong </returns>
+        /// Gets the bytes needed to perform a download </summary>
+        /// <param name="neededBytes"> Number of bytes that should be available, on the device, for performing a download </param>
+        /// <param name="path"> The path where resources will be downloaded </param>
+        /// <returns> Needed bytes in order to perform the current download, or 0 if there are enough available bytes is -1 if given path is wrong </returns>
         public static long GetNeededBytesForADownload(long neededBytes, string path)
         {
             if (path == null)
@@ -138,9 +135,10 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// checks if data on this path is accessible </summary>
-        /// <param name="path"> the path whose availability is checked </param>
-        /// <returns> true if the data from the given path is accessible, false otherwise (data erased, SD card removed, etc) </returns>
+        /// Checks if data on this path is accessible
+        /// </summary>
+        /// <param name="path"> The path whose availability is checked </param>
+        /// <returns> True if the data from the given path is accessible, false otherwise (data erased, SD card removed, etc) </returns>
         public static bool IsDataAccessible(string path)
         {
             // if file is on internal memory, check its existence

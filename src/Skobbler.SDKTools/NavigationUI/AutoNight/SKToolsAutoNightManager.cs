@@ -3,7 +3,7 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Util;
-using Skobbler.Ngx.SDKTools.Util;
+using Skobbler.Ngx.SDKTools.Extensions;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
 {
@@ -60,7 +60,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 Intent intent = new Intent(value, typeof (SKToolsCalculateSunriseSunsetTimeAutoReceiver));
                 _pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(value, 0, intent, 0);
 
-                _hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeUtil.JavaTime(),
+                _hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeOffset.Now.CurrentTimeMillis(),
                     SKToolsSunriseSunsetCalculator.NrOfMillisecondsInAHour, _pendingHourlyAlarmIntent);
             }
         }
@@ -79,7 +79,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 Intent intent = new Intent(context, typeof(SKToolsCalculateSunriseSunsetTimeAutoReceiver));
                 _pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(context, 0, intent, 0);
 
-                long timeToStart = DateTimeUtil.JavaTime();
+                long timeToStart = DateTimeOffset.Now.CurrentTimeMillis();
                 if (!startNow)
                 {
                     timeToStart += SKToolsSunriseSunsetCalculator.NrOfMillisecondsInAHour;

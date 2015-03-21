@@ -47,31 +47,21 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         private const int OsmStreetTypeTrunkLink = 25;
 
         /// <summary>
-        /// the list with the country codes for which the top panel has a different
-        /// color
+        /// The list with the country codes for which the top panel has a different color
         /// </summary>
         private static readonly string[] SignPostsCountryExceptions = { "DE", "AT", "GB", "IE", "CH", "US" };
 
 
         private enum NavigationMode
         {
-
             Settings,
-
             RouteInfo,
-
             RouteOverview,
-
             Panning,
-
             Roadblock,
-
             Follower,
-
             PreNavigation,
-
             PostNavigation
-
         }
 
         private NavigationMode _currentNavigationMode;
@@ -223,7 +213,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         private TextView _routeDistanceText;
 
         /// <summary>
-        /// arriving navigation distance text value
+        /// arriving navigation distance text isLandscape
         /// </summary>
         private TextView _routeDistanceTextValue;
 
@@ -347,7 +337,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         protected internal string RouteDistanceString;
 
         /// <summary>
-        /// route distance value string
+        /// route distance isLandscape string
         /// </summary>
         protected internal string RouteDistanceValueString;
 
@@ -441,9 +431,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         }
 
         /// <summary>
-        /// Creates a single instance of <seealso cref="SKToolsNavigationUiManager"/>
-        /// 
-        /// @return
+        /// Creates a single instance
         /// </summary>
         public static SKToolsNavigationUiManager Instance
         {
@@ -802,31 +790,28 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// Changes the menu settings for free drive.
         /// </summary>
         /// <param name="isLandscape"> </param>
-        public virtual bool SettingsMenuForFreeDrive
+        public virtual void SetSettingsMenuForFreeDrive(bool isLandscape)
         {
-            set
+            if (!isLandscape)
             {
-                if (!value)
-                {
-                    _currentActivity.FindViewById(Resource.Id.nav_settings_second_row).Visibility = ViewStates.Gone;
+                _currentActivity.FindViewById(Resource.Id.nav_settings_second_row).Visibility = ViewStates.Gone;
 
-                    TextView routeInfo = (TextView)_currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_text);
-                    routeInfo.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_routeinfo, 0, 0);
-                    routeInfo.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_routeinfo);
-                }
-                else
-                {
-                    _currentActivity.FindViewById(Resource.Id.navigation_settings_overview_button).Visibility = ViewStates.Gone;
-                    _currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).Visibility = ViewStates.Gone;
-                }
-
+                TextView routeInfo =
+                    (TextView) _currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_text);
+                routeInfo.SetCompoundDrawablesWithIntrinsicBounds(0, Resource.Drawable.ic_routeinfo, 0, 0);
+                routeInfo.Text = _currentActivity.Resources.GetString(Resource.String.navigate_settings_routeinfo);
+            }
+            else
+            {
+                _currentActivity.FindViewById(Resource.Id.navigation_settings_overview_button).Visibility = ViewStates.Gone;
+                _currentActivity.FindViewById(Resource.Id.navigation_settings_roadblock_info_button).Visibility =
+                    ViewStates.Gone;
             }
         }
 
         /// <summary>
-        /// hide view is visible
+        /// Hide view is visible
         /// </summary>
-        /// <param name="target"> </param>
         private void HideViewIfVisible(ViewGroup target)
         {
             if (target != null && target.Visibility == ViewStates.Visible)
@@ -836,9 +821,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         }
 
         /// <summary>
-        /// shows the view if not visible
+        /// Shows the view if not visible
         /// </summary>
-        /// <param name="target"> </param>
         private void ShowViewIfNotVisible(ViewGroup target)
         {
             if (target != null && target.Visibility == ViewStates.Gone)
@@ -850,8 +834,6 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Shows the block road screen.
         /// </summary>
-        /// <param name="distanceUnit"> </param>
-        /// <param name="distanceToDestination"> </param>
         public virtual void ShowRoadBlockMode(SKMaps.SKDistanceUnitType distanceUnit, long distanceToDestination)
         {
             _currentNavigationMode = NavigationMode.Roadblock;
@@ -961,8 +943,6 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         /// <summary>
         /// Checks if is in pre navigation mode.
-        /// 
-        /// @return
         /// </summary>
         public virtual bool PreNavigationMode
         {
@@ -974,8 +954,6 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         /// <summary>
         /// Checks if the navigation is in follower mode.
-        /// 
-        /// @return
         /// </summary>
         public virtual bool FollowerMode
         {
@@ -1028,7 +1006,6 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Shows the panning mode screen.
         /// </summary>
-        /// <param name="isNavigationTypeReal"> </param>
         public virtual void ShowPanningMode(bool isNavigationTypeReal)
         {
             _currentNavigationMode = NavigationMode.Panning;
@@ -1228,7 +1205,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         }
 
         /// <summary>
-        /// Resets the values to a default value.
+        /// Resets the values to a default isLandscape.
         /// </summary>
         /// <param name="distanceUnit"> </param>
         public virtual void Reset(SKMaps.SKDistanceUnitType distanceUnit)
@@ -1828,7 +1805,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             HideViewIfVisible(_arrivingEtaTimeGroupPanels);
 
             bool isLandscape = _currentActivity.Resources.Configuration.Orientation == Orientation.Landscape;
-            SettingsMenuForFreeDrive = isLandscape;
+            SetSettingsMenuForFreeDrive(isLandscape);
             CancelSpeedExceededThread();
         }
 
@@ -2054,7 +2031,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                     bool isLandscape = _currentActivity.Resources.Configuration.Orientation == Orientation.Landscape;
                     if (_isFreeDrive)
                     {
-                        SettingsMenuForFreeDrive = isLandscape;
+                        SetSettingsMenuForFreeDrive(isLandscape);
                     }
 
                     if (_currentNavigationMode == NavigationMode.Settings)
@@ -2316,7 +2293,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         /// <summary>
         /// sets the image view and the text view for audio button in settings
-        /// screen, depending on the progress value of the volume bar (set
+        /// screen, depending on the progress isLandscape of the volume bar (set
         /// previously) and the current device volume.
         /// </summary>
         protected internal virtual void SetAudioViewsFromSettings()

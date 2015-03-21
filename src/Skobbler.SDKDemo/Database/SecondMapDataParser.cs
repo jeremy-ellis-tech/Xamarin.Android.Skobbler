@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Java.IO;
 using Org.Json;
+using Skobbler.Ngx.SDKTools.Extensions;
 using Skobbler.Ngx.Util;
 using Skobbler.SDKDemo.Util;
 using Console = System.Console;
@@ -96,7 +98,7 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void ParseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, Stream inputStream)
 		{
 			Console.WriteLine("Catalin ; start parsing !!!");
-			long startTime = DateTimeUtil.JavaTime();
+		    long startTime = DateTimeOffset.Now.CurrentTimeMillis();
 			JSONObject reader = new JSONObject(ConvertJsonFileContentToAString(inputStream));
 			JSONArray regionsArray = reader.GetJSONArray(RegionsId);
 			if (regionsArray != null)
@@ -120,7 +122,7 @@ namespace Skobbler.SDKDemo.Database
 			/*-for (Map.Entry<String, String> currentEntry : mapsItemsCodes.entrySet()) {
 			    System.out.println("Catalin ; key = " + currentEntry.getKey() + " ; value = " + currentEntry.getValue());
 			}*/
-			Console.WriteLine("Catalin ; total loading time = " + (DateTimeUtil.JavaTime() - startTime) + " ; maps size = " + maps.Count);
+			Console.WriteLine("Catalin ; total loading time = " + (DateTimeOffset.Now.CurrentTimeMillis() - startTime) + " ; maps size = " + maps.Count);
 		}
 
 		/// <summary>

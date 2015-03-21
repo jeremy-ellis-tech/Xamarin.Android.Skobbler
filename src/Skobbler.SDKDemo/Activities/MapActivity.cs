@@ -2233,7 +2233,7 @@ namespace Skobbler.SDKDemo.Activities
         public void OnDownloadPaused(SKToolsDownloadItem currentDownloadItem)
         {
             MapDownloadResource mapResource = ResourceDownloadsListActivity.AllMapResources[currentDownloadItem.ItemCode];
-            mapResource.DownloadState = currentDownloadItem.DownloadState;
+            mapResource.DownloadState = currentDownloadItem.SKDownloadState;
             mapResource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
             ResourceDownloadsListActivity.MapsDao.UpdateMapResource(mapResource);
             _app.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);

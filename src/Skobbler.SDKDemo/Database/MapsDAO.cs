@@ -236,7 +236,7 @@ namespace Skobbler.SDKDemo.Database
                         insertStatement.BindDouble(columnIndex++, map.BbLongMax);
                         insertStatement.BindDouble(columnIndex++, map.BbLongMin);
 						insertStatement.BindString(columnIndex++, map.SubType);
-						insertStatement.BindLong(columnIndex++, map.DownloadState);
+						insertStatement.BindLong(columnIndex++, (sbyte)map.DownloadState);
                         insertStatement.BindLong(columnIndex++, map.NoDownloadedBytes);
                         insertStatement.BindLong(columnIndex++, 0);
 						insertStatement.BindString(columnIndex, map.DownloadPath);
@@ -297,7 +297,7 @@ namespace Skobbler.SDKDemo.Database
                         currentMap.BbLongMax = resultCursor.GetDouble(13);
                         currentMap.BbLongMin = resultCursor.GetDouble(14);
 						currentMap.SubType = resultCursor.GetString(15);
-						currentMap.DownloadState = (sbyte) resultCursor.GetInt(16);
+						currentMap.DownloadState = (SKDownloadState)resultCursor.GetInt(16);
 						currentMap.NoDownloadedBytes = resultCursor.GetInt(17);
 						currentMap.FlagId = resultCursor.GetInt(18);
 						currentMap.DownloadPath = resultCursor.GetString(19);
@@ -326,7 +326,7 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void UpdateMapResource(MapDownloadResource mapResource)
 		{
 			ContentValues values = new ContentValues();
-			values.Put(State, mapResource.DownloadState);
+			values.Put(State, (sbyte)mapResource.DownloadState);
             values.Put(NoDownloadedBytes, mapResource.NoDownloadedBytes);
             values.Put(SkmFilePath, mapResource.SKMFilePath);
             values.Put(SkmFileSize, mapResource.SkmFileSize);
@@ -358,12 +358,12 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void ClearResourcesInDownloadQueue()
 		{
 			ContentValues values = new ContentValues();
-			values.Put(State, SKToolsDownloadItem.NotQueued);
+            values.Put(State, (sbyte)SKDownloadState.NotQueued);
 			values.Put(NoDownloadedBytes, 0);
 			try
 			{
 				_resourcesDao.Database.BeginTransaction();
-				_resourcesDao.Database.Update(MapsTable, values, State + "=? OR " + State + "=? OR " + State + "=?", new[]{Convert.ToString(SKToolsDownloadItem.Downloading), Convert.ToString(SKToolsDownloadItem.Paused), Convert.ToString(SKToolsDownloadItem.Queued)});
+                _resourcesDao.Database.Update(MapsTable, values, State + "=? OR " + State + "=? OR " + State + "=?", new[] { Convert.ToString(SKDownloadState.Downloading), Convert.ToString(SKDownloadState.Paused), Convert.ToString(SKDownloadState.Queued) });
 				_resourcesDao.Database.SetTransactionSuccessful();
 			}
 			catch (SQLException e)

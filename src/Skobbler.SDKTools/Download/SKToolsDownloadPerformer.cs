@@ -11,7 +11,7 @@ using Java.Lang;
 using Java.Net;
 using Org.Apache.Http.Client.Methods;
 using Skobbler.Ngx.Packages;
-using Skobbler.Ngx.SDKTools.Util;
+using Skobbler.Ngx.SDKTools.Extensions;
 using Skobbler.Ngx.Util;
 using Exception = System.Exception;
 using FileNotFoundException = System.IO.FileNotFoundException;
@@ -136,6 +136,71 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// </summary>
         private SKToolsUnzipPerformer _skToolsUnzipPerformer;
 
+        private WeakReference _dispatcher;
+
+        SKToolsDownloadListenerEventDispatcher EventDispatcher
+        {
+            get
+            {
+                if (_dispatcher == null || !_dispatcher.IsAlive)
+                {
+                    var dispatcher = new SKToolsDownloadListenerEventDispatcher(this);
+                    SetDownloadListener(dispatcher);
+                    _dispatcher = new WeakReference(dispatcher);
+                }
+
+                return _dispatcher.Target as SKToolsDownloadListenerEventDispatcher;
+            }
+        }
+
+        public event EventHandler<SKDownloadProgressEventArgs> DownloadProgress
+        {
+            add { EventDispatcher.DownloadProgress += value; }
+            remove { EventDispatcher.DownloadProgress -= value; }
+        }
+
+        public event EventHandler<SKDownloadCancelledEventArgs> DownloadCancelled
+        {
+            add { EventDispatcher.DownloadCancelled += value; }
+            remove { EventDispatcher.DownloadCancelled -= value; }
+        }
+
+        public event EventHandler<SKDownloadPausedEventArgs> DownloadPaused
+        {
+            add { EventDispatcher.DownloadPaused += value; }
+            remove { EventDispatcher.DownloadPaused -= value; }
+        }
+
+        public event EventHandler<SKInternetConnectionFailedEventArgs> InternetConnectionFailed
+        {
+            add { EventDispatcher.InternetConnectionFailed += value; }
+            remove { EventDispatcher.InternetConnectionFailed -= value; }
+        }
+
+        public event EventHandler AllDownloadsCancelled
+        {
+            add { EventDispatcher.AllDownloadsCancelled += value; }
+            remove { EventDispatcher.AllDownloadsCancelled -= value; }
+        }
+
+        public event EventHandler<SKNotEnoughMemoryOnCurrentStorageEventArgs> NotEnoughMemoryOnCurrentStorage
+        {
+            add { EventDispatcher.NotEnoughMemoryOnCurrentStorage += value; }
+            remove { EventDispatcher.NotEnoughMemoryOnCurrentStorage -= value; }
+        }
+
+        public event EventHandler<SKInstallStartedEventArgs> InstallStarted
+        {
+            add { EventDispatcher.InstallStarted += value; }
+            remove { EventDispatcher.InstallStarted -= value; }
+        }
+
+        public event EventHandler<SKInstallFinishedEventArgs> InstallFinished
+        {
+            add { EventDispatcher.InstallFinished += value; }
+            remove { EventDispatcher.InstallFinished -= value; }
+        } 
+
         /// <summary>
         /// creates an object of SKToolsDownloadPerformer type </summary>
         /// <param name="queuedDownloads"> queued downloads </param>
@@ -149,15 +214,12 @@ namespace Skobbler.Ngx.SDKTools.Download
             _downloadListener = downloadListener;
         }
 
-        public virtual ISKToolsDownloadListener DownloadListener
+        public virtual void SetDownloadListener(ISKToolsDownloadListener downloadListener)
         {
-            set
+            _downloadListener = downloadListener;
+            if (_skToolsUnzipPerformer != null)
             {
-                _downloadListener = value;
-                if (_skToolsUnzipPerformer != null)
-                {
-                    _skToolsUnzipPerformer.SetDownloadListener(value);
-                }
+                _skToolsUnzipPerformer.SetDownloadListener(downloadListener);
             }
         }
 
@@ -165,19 +227,14 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             // current input stream
             Stream responseStream = null;
-            byte[] data;
-            // total bytes read
-            long bytesReadSoFar;
             // bytes read during current INTERNET connection
             long bytesReadInThisConnection = 0;
             // time of the download during current INTERNET connection
             long lastDownloadProgressTime = 0;
-            // memory needed
-            long memoryNeeded;
 
             _anyRetryMade = false;
             _timeAtFirstRetry = 0;
-            _lastTimeWhenInternetWorked = DateTimeUtil.JavaTime();
+            _lastTimeWhenInternetWorked = DateTimeOffset.Now.CurrentTimeMillis();
 
             InitializeResourcesWhenDownloadThreadStarts();
 
@@ -189,9 +246,9 @@ namespace Skobbler.Ngx.SDKTools.Download
                 }
 
                 // change the state for current download item
-                if (_currentDownloadItem.DownloadState != SKToolsDownloadItem.Downloading)
+                if (_currentDownloadItem.SKDownloadState != SKDownloadState.Downloading)
                 {
-                    _currentDownloadItem.DownloadState = SKToolsDownloadItem.Downloading;
+                    _currentDownloadItem.SKDownloadState = SKDownloadState.Downloading;
                 }
 
                 // check if current item is already downloaded (could be the case when download is performed very slow and the user exists the download thread without finishing the
@@ -229,10 +286,10 @@ namespace Skobbler.Ngx.SDKTools.Download
                     SKLogging.WriteLog(Tag, "Current url = " + _currentDownloadStep.DownloadURL + " ; current step = " + _currentDownloadItem.CurrentStepIndex, SKLogging.LogDebug);
 
                     // resume operation => send already downloaded bytes
-                    bytesReadSoFar = SendAlreadyDownloadedBytes();
+                    var bytesReadSoFar = SendAlreadyDownloadedBytes();
 
                     // check if exists any free memory and return if there is not enough memory for this download
-                    memoryNeeded = GetNeededMemoryForCurrentDownload(bytesReadSoFar);
+                    var memoryNeeded = GetNeededMemoryForCurrentDownload(bytesReadSoFar);
                     if (memoryNeeded != 0)
                     {
                         SKLogging.WriteLog(Tag, "Not enough memory on current storage", SKLogging.LogDebug);
@@ -290,7 +347,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                         }
 
                         // create a byte array buffer of 1Mb
-                        data = new byte[NoBytesIntoOneMb];
+                        var data = new byte[NoBytesIntoOneMb];
                         // creates the randomAccessFile - if exists it opens it
                         RandomAccessFile localFile = new RandomAccessFile(_currentDownloadStep.DestinationPath, "rw");
                         bytesReadSoFar = localFile.Length();
@@ -307,14 +364,14 @@ namespace Skobbler.Ngx.SDKTools.Download
                             // check number of read bytes
                             if (bytesReadThisTime > 0)
                             {
-                                _lastTimeWhenInternetWorked = DateTimeUtil.JavaTime();
+                                _lastTimeWhenInternetWorked = DateTimeOffset.Now.CurrentTimeMillis();
                                 bytesReadSoFar += bytesReadThisTime;
                                 _currentDownloadItem.NoDownloadedBytes = bytesReadSoFar;
                                 bytesReadInThisConnection += bytesReadThisTime;
-                                _currentDownloadItem.NoDownloadedBytesInThisConnection = bytesReadInThisConnection;
+                                _currentDownloadItem.SetNoDownloadedBytesInThisConnection(bytesReadInThisConnection);
                                 // write the chunk of data in the file
                                 localFile.Write(data, 0, bytesReadThisTime);
-                                long newTime = DateTimeUtil.JavaTime();
+                                long newTime = DateTimeOffset.Now.CurrentTimeMillis();
                                 // notify the UI every second
                                 if ((newTime - lastDownloadProgressTime) > NoMillisIntoOneSec)
                                 {
@@ -468,7 +525,8 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// gets needed memory for current download </summary>
+        /// Gets needed memory for current download
+        /// </summary>
         /// <param name="bytesRead"> bytes already read </param>
         private long GetNeededMemoryForCurrentDownload(long bytesRead)
         {
@@ -481,8 +539,9 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// checks if there is any remaining item to download </summary>
-        /// <returns> true, if there is any remaining item to download, false otherwise </returns>
+        /// Checks if there is any remaining item to download
+        /// </summary>
+        /// <returns> True, if there is any remaining item to download, false otherwise </returns>
         private bool ExistsAnyRemainingDownload()
         {
             lock (typeof(SKToolsDownloadPerformer))
@@ -492,9 +551,9 @@ namespace Skobbler.Ngx.SDKTools.Download
                     _currentDownloadItem = _queuedDownloads.First.Value;
                     while (_currentDownloadItem != null)
                     {
-                        if ((_currentDownloadItem.DownloadState == SKToolsDownloadItem.Installing) || (_currentDownloadItem.DownloadState == SKToolsDownloadItem.NotQueued) || (_currentDownloadItem.DownloadState == SKToolsDownloadItem.Installed))
+                        if ((_currentDownloadItem.SKDownloadState == SKDownloadState.Installing) || (_currentDownloadItem.SKDownloadState == SKDownloadState.NotQueued) || (_currentDownloadItem.SKDownloadState == SKDownloadState.Installed))
                         {
-                            if (_currentDownloadItem.DownloadState == SKToolsDownloadItem.Installing)
+                            if (_currentDownloadItem.SKDownloadState == SKDownloadState.Installing)
                             {
                                 SKLogging.WriteLog(Tag, "Current download item = " + _currentDownloadItem.ItemCode + " is in INSTALLING state => add it to install queue", SKLogging.LogDebug);
                                 // add current resource to install queue
@@ -536,7 +595,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// initializes resources(http client, wifi lock) when download thread starts
+        /// Initializes resources(http client, wifi lock) when download thread starts
         /// </summary>
         private void InitializeResourcesWhenDownloadThreadStarts()
         {
@@ -550,7 +609,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// release resources(http client, wifi lock) when download thread finishes
+        /// Release resources(http client, wifi lock) when download thread finishes
         /// </summary>
         private void ReleaseResourcesWhenDownloadThreadFinishes()
         {
@@ -581,9 +640,10 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// </summary>
         private void startsDownloadTimeoutHandler()
         {
-            if ((_downloadListener != null) && _downloadListener is Activity)
+            var activity = _downloadListener as Activity;
+            if (activity != null)
             {
-                ((Activity)_downloadListener).RunOnUiThread(() =>
+                activity.RunOnUiThread(() =>
                 {
                     if (_downloadTimeoutHandler == null)
                     {
@@ -626,7 +686,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// stops the download timeout handler
+        /// Stops the download timeout handler
         /// </summary>
         private void stopsDownloadTimeoutHandler()
         {
@@ -650,7 +710,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         private void StopIfTimeoutLimitEnded(bool stopRequest)
         {
             stopsDownloadTimeoutHandler();
-            if (((DateTimeUtil.JavaTime() - _lastTimeWhenInternetWorked) > TimeOutLimit) || stopRequest)
+            if (((DateTimeOffset.Now.CurrentTimeMillis() - _lastTimeWhenInternetWorked) > TimeOutLimit) || stopRequest)
             {
                 SKLogging.WriteLog(Tag, "The request last more than 15 seconds, so no timeout is made", SKLogging.LogDebug);
                 if (!_isDownloadProcessCancelled && !_isCurrentDownloadCancelled && !_isDownloadProcessPaused)
@@ -678,7 +738,8 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// if download process is not paused/cancelled, or current download is not cancelled, retries until timeout limit is reached
+        /// If download process is not paused/cancelled, or current download is not cancelled,
+        /// retries until timeout limit is reached
         /// </summary>
         private void RetryUntilTimeoutLimitReached()
         {
@@ -687,12 +748,12 @@ namespace Skobbler.Ngx.SDKTools.Download
                 // if no retry was made, during current INTERNET connection, then retain the time at which the first one is made
                 if (!_anyRetryMade)
                 {
-                    _timeAtFirstRetry = DateTimeUtil.JavaTime();
+                    _timeAtFirstRetry = DateTimeOffset.Now.CurrentTimeMillis();
                     _anyRetryMade = true;
                 }
 
                 // if it didn't pass 15 seconds from the first retry, will sleep 0.5 seconds and then will make a new attempt to download the resource
-                if ((DateTimeUtil.JavaTime() - _timeAtFirstRetry) < TimeOutLimit)
+                if ((DateTimeOffset.Now.CurrentTimeMillis() - _timeAtFirstRetry) < TimeOutLimit)
                 {
                     SKLogging.WriteLog(Tag, "Sleep and then retry", SKLogging.LogDebug);
                     try
@@ -724,7 +785,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// cancels current download while download process is running
+        /// Cancels current download while download process is running
         /// </summary>
         private void CancelCurrentDownload()
         {
@@ -754,7 +815,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// cancels download process while running
+        /// Cancels download process while running
         /// </summary>
         private void CancelDownloadProcess()
         {
@@ -828,7 +889,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 _currentDownloadItem.GoToNextDownloadStep();
                 if (_currentDownloadItem.DownloadFinished)
                 {
-                    _currentDownloadItem.DownloadState = SKToolsDownloadItem.Downloaded;
+                    _currentDownloadItem.SKDownloadState = SKDownloadState.Downloaded;
                     // remove current download from download queue
                     lock (typeof(SKToolsDownloadPerformer))
                     {
@@ -882,7 +943,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                             if ((result & SKPackageManager.AddPackageMissingSkmResult & SKPackageManager.AddPackageMissingNgiResult & SKPackageManager.AddPackageMissingNgiDatResult) == 0)
                             {
                                 // current install was performed with success set current resource as already download
-                                _currentDownloadItem.DownloadState = SKToolsDownloadItem.Installed;
+                                _currentDownloadItem.SKDownloadState = SKDownloadState.Installed;
                                 SKLogging.WriteLog(Tag, "The " + _currentDownloadItem.ItemCode + " resource was successfully downloaded and installed by our NG component.", SKLogging.LogDebug);
                                 // notify the UI that current resource was installed
                                 if (_downloadListener != null)
@@ -919,7 +980,8 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// stops download process when internet connection fails </summary>
+        /// Stops download process when internet connection fails
+        /// </summary>
         /// <param name="failureResponseReceivedFromServer"> true, if a response was received from server (add to identify a blocking request) </param>
         private void StopDownloadProcessWhenInternetConnectionFails(bool failureResponseReceivedFromServer)
         {
@@ -939,7 +1001,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             // pause current resource
             if (_currentDownloadItem != null)
             {
-                _currentDownloadItem.DownloadState = SKToolsDownloadItem.Paused;
+                _currentDownloadItem.SKDownloadState = SKDownloadState.Paused;
             }
             // automatically stop the download thread
             lock (typeof(SKToolsDownloadPerformer))

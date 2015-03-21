@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +8,7 @@ namespace Skobbler.Ngx.SDKTools.Download
     {
 
         /// <summary>
-        /// download files extensions
+        /// Download files extensions
         /// </summary>
         public const string SkmFileExtension = ".skm";
 
@@ -18,31 +19,57 @@ namespace Skobbler.Ngx.SDKTools.Download
         public const string PointExtension = ".";
 
         /// <summary>
-        /// contains all items that are in download queue
+        /// Contains all items that are in download queue
         /// </summary>
         private LinkedList<SKToolsDownloadItem> _queuedDownloads;
 
         /// <summary>
-        /// current download listener (used to notify the user interface)
+        /// Current download listener (used to notify the user interface)
         /// </summary>
         private ISKToolsDownloadListener _downloadListener;
 
         /// <summary>
-        /// current download thread
+        /// Current download thread
         /// </summary>
         private SKToolsDownloadPerformer _downloadThread;
 
         /// <summary>
-        /// single instance for SKToolsDownloadManager reference
+        /// Single instance for SKToolsDownloadManager reference
         /// </summary>
         private static SKToolsDownloadManager _skToolsDownloadManagerInstance;
 
+        private readonly object _downloadPerformerLock;
+
+        private WeakReference _dispatcher;
+
+        SKToolsDownloadListenerEventDispatcher EventDispatcher
+        {
+            get
+            {
+                if (_dispatcher == null || !_dispatcher.IsAlive)
+                {
+                    var dispatcher = new SKToolsDownloadListenerEventDispatcher(this);
+                    SetDownloadListener(dispatcher);
+                    _dispatcher = new WeakReference(dispatcher);
+                }
+
+                return _dispatcher.Target as SKToolsDownloadListenerEventDispatcher;
+            }
+        }
+
+        public event EventHandler<SKDownloadCancelledEventArgs> DownloadCancelled
+        {
+            add { EventDispatcher.DownloadCancelled += value; }
+            remove { EventDispatcher.DownloadCancelled -= value; }
+        }
+
         /// <summary>
-        /// constructs an object of SKToolsDownloadManager type </summary>
-        /// <param name="downloadListener"> download listener </param>
-        private SKToolsDownloadManager(ISKToolsDownloadListener downloadListener)
+        /// Constructs an object of SKToolsDownloadManager type </summary>
+        /// <param name="downloadListener"> Download listener </param>
+        private SKToolsDownloadManager(ISKToolsDownloadListener downloadListener = null)
         {
             _downloadListener = downloadListener;
+            _downloadPerformerLock = new object();
         }
 
         /// <summary>
@@ -57,7 +84,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             }
             else
             {
-                _skToolsDownloadManagerInstance.DownloadListener = downloadListener;
+                _skToolsDownloadManagerInstance.SetDownloadListener(downloadListener);
             }
             return _skToolsDownloadManagerInstance;
         }
@@ -65,15 +92,12 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <summary>
         /// sets a download listener for download manager component </summary>
         /// <param name="downloadListener"> download listener that will be set </param>
-        public virtual ISKToolsDownloadListener DownloadListener
+        public virtual void SetDownloadListener(ISKToolsDownloadListener downloadListener)
         {
-            set
+            _downloadListener = downloadListener;
+            if (_downloadThread != null)
             {
-                _downloadListener = value;
-                if (_downloadThread != null)
-                {
-                    _downloadThread.DownloadListener = value;
-                }
+                _downloadThread.SetDownloadListener(downloadListener);
             }
         }
 
@@ -82,7 +106,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <param name="downloadItems"> download items that will be added to download queue </param>
         public virtual void StartDownload(IList<SKToolsDownloadItem> downloadItems)
         {
-            lock (typeof(SKToolsDownloadPerformer))
+            lock (_downloadPerformerLock)
             {
                 if ((_downloadThread == null) || (!_downloadThread.IsAlive))
                 {
@@ -115,7 +139,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <returns> true, if current download is cancelled, false otherwise (because download process is not running) </returns>
         public virtual bool CancelDownload(string downloadItemCode)
         {
-            lock (typeof(SKToolsDownloadPerformer))
+            lock (_downloadPerformerLock)
             {
                 if ((_downloadThread != null) && _downloadThread.IsAlive)
                 {
@@ -126,15 +150,15 @@ namespace Skobbler.Ngx.SDKTools.Download
                         {
                             if ((currentItem != null) && (currentItem.ItemCode != null) && currentItem.ItemCode.Equals(downloadItemCode))
                             {
-                                sbyte currentItemState = currentItem.DownloadState;
+                                var currentItemState = currentItem.SKDownloadState;
                                 // if the download is already running (cannot cancel an already downloaded, installing or installed map)
-                                if ((currentItemState == SKToolsDownloadItem.Paused) || (currentItemState == SKToolsDownloadItem.Downloading))
+                                if ((currentItemState == SKDownloadState.Paused) || (currentItemState == SKDownloadState.Downloading))
                                 {
                                     // mark that current download is cancelled, if download thread is running
                                     _downloadThread.SetCurrentDownloadAsCancelled();
                                     return true;
                                 }
-                                if (currentItemState == SKToolsDownloadItem.Queued)
+                                if (currentItemState == SKDownloadState.Queued)
                                 {
                                     removedItem = currentItem;
                                     break;
@@ -163,7 +187,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <returns> true, if download thread is paused, false otherwise (because download process is not running) </returns>
         public virtual bool PauseDownloadThread()
         {
-            lock ((typeof(SKToolsDownloadPerformer)))
+            lock (_downloadPerformerLock)
             {
                 // if download thread is alive, stop it
                 if ((_downloadThread != null) && _downloadThread.IsAlive)
@@ -180,7 +204,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         /// <returns> true, if download thread is cancelled, false otherwise (because download process is not running) </returns>
         public virtual bool CancelAllDownloads()
         {
-            lock (typeof(SKToolsDownloadPerformer))
+            lock (_downloadPerformerLock)
             {
                 // if download thread is alive, stop it and return true
                 if ((_downloadThread != null) && _downloadThread.IsAlive)
@@ -197,7 +221,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         {
             get
             {
-                lock (typeof(SKToolsDownloadPerformer))
+                lock (_downloadPerformerLock)
                 {
                     // if download thread is alive, stop it and return true
                     if ((_downloadThread != null) && _downloadThread.IsAlive)
@@ -218,7 +242,7 @@ namespace Skobbler.Ngx.SDKTools.Download
             int downloadingItemIndex = 0;
             foreach (SKToolsDownloadItem currentItem in downloadItems)
             {
-                if ((currentItem.DownloadState == SKToolsDownloadItem.Downloading) || (currentItem.DownloadState == SKToolsDownloadItem.Paused))
+                if ((currentItem.SKDownloadState == SKDownloadState.Downloading) || (currentItem.SKDownloadState == SKDownloadState.Paused))
                 {
                     downloadingItem = currentItem;
                     break;

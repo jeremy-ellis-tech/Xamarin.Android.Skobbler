@@ -77,12 +77,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Sets the map view, necessary for handling operations on it. </summary>
         /// <param name="mapView"> </param>
-        public virtual SKMapSurfaceView MapView
+        public virtual void SetMapView(SKMapSurfaceView mapView)
         {
-            set
-            {
-                _mapView = value;
-            }
+            _mapView = mapView;
         }
 
         /// <summary>
@@ -258,16 +255,16 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
             if (autoNightIsOn)
             {
-                int correctMapStyleWhenStartDriveMode = GetCorrectMapStyleForDriveModeWhenAutoNightIsOn(autoNightIsOn);
+                int correctMapStyleWhenStartDriveMode = GetCorrectMapStyleForDriveModeWhenAutoNightIsOn(true);
                 return correctMapStyleWhenStartDriveMode;
             }
+
             return currentMapStyle;
         }
 
         /// <summary>
         /// Gets the correct map style (day/night) when auto night is on. </summary>
-        /// <param name="autoNightIsOn">
-        /// @return </param>
+        /// <param name="autoNightIsOn"></param>
         private int GetCorrectMapStyleForDriveModeWhenAutoNightIsOn(bool autoNightIsOn)
         {
             if (autoNightIsOn)
@@ -291,7 +288,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// </summary>
         public virtual void ZoomToRoute(Activity currentActivity)
         {
-            int offsetPixelsTop = 100;
+            const int offsetPixelsTop = 100;
             if ((currentActivity.Resources.Configuration.ScreenLayout & ScreenLayout.SizeMask) == ScreenLayout.SizeLarge || (currentActivity.Resources.Configuration.ScreenLayout & ScreenLayout.SizeMask) == ScreenLayout.SizeXlarge)
             {
                 // large and xlarge
@@ -314,7 +311,5 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
                 }
             }
         }
-
-
     }
 }

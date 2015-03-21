@@ -113,6 +113,53 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
          */
         private SKMapSettings.SKMapDisplayMode _currentUserDisplayMode;
 
+        private WeakReference _dispatcher;
+
+        SKToolsNavigationListenerEventDispatcher EventDispatcher
+        {
+            get
+            {
+                if (_dispatcher == null || !_dispatcher.IsAlive)
+                {
+                    var dispatcher = new SKToolsNavigationListenerEventDispatcher(this);
+                    SetNavigationListener(dispatcher);
+                    _dispatcher = new WeakReference(dispatcher);
+                }
+
+                return _dispatcher.Target as SKToolsNavigationListenerEventDispatcher;
+            }
+        }
+
+        public event EventHandler NavigationStarted
+        {
+            add { EventDispatcher.NavigationStarted += value; }
+            remove { EventDispatcher.NavigationStarted -= value; }
+        }
+
+        public event EventHandler NavigationEnded
+        {
+            add { EventDispatcher.NavigationEnded += value; }
+            remove { EventDispatcher.NavigationEnded -= value; }
+        }
+
+        public event EventHandler RouteCalculationStarted
+        {
+            add { EventDispatcher.RouteCalculationStarted += value; }
+            remove { EventDispatcher.RouteCalculationStarted -= value; }
+        }
+
+        public event EventHandler RouteCalculationCompleted
+        {
+            add { EventDispatcher.RouteCalculationCompleted += value; }
+            remove { EventDispatcher.RouteCalculationCompleted -= value; }
+        }
+
+        public event EventHandler RouteCalculationCanceled
+        {
+            add { EventDispatcher.RouteCalculationCanceled += value; }
+            remove { EventDispatcher.RouteCalculationCanceled -= value; }
+        }
+
         /// <summary>
         /// Creates a single instance of <seealso cref="SKToolsNavigationUiManager"/>
         /// 
@@ -182,28 +229,25 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         {
             _mapView = mapView;
             _configuration = configuration;
-            SKToolsMapOperationsManager.Instance.MapView = mapView;
+            SKToolsMapOperationsManager.Instance.SetMapView(mapView);
             _currentPositionProvider.RequestUpdateFromLastPosition();
             _currentMapStyle = mapView.MapSettings.MapStyle;
-            SKRouteSettings route = new SKRouteSettings();
-            route.StartCoordinate = configuration.StartCoordinate;
-            route.DestinationCoordinate = configuration.DestinationCoordinate;
+
+            SKRouteSettings route = new SKRouteSettings
+            {
+                StartCoordinate = configuration.StartCoordinate,
+                DestinationCoordinate = configuration.DestinationCoordinate
+            };
+
             SKToolsMapOperationsManager.Instance.DrawDestinationNavigationFlag(configuration.DestinationCoordinate.Longitude, configuration.DestinationCoordinate.Latitude);
-            IList<SKViaPoint> viaPointList;
-            viaPointList = configuration.ViaPointCoordinateList;
+            IList<SKViaPoint> viaPointList = configuration.ViaPointCoordinateList;
+
             if (viaPointList != null)
             {
                 route.ViaPoints = viaPointList;
             }
 
-            if (configuration.RouteType == SKRouteSettings.SKRouteMode.CarShortest)
-            {
-                route.NoOfRoutes = 1;
-            }
-            else
-            {
-                route.NoOfRoutes = 3;
-            }
+            route.NoOfRoutes = configuration.RouteType == SKRouteSettings.SKRouteMode.CarShortest ? 1 : 3;
 
             route.RouteMode = configuration.RouteType;
             route.RouteExposed = true;
@@ -257,7 +301,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
             _mapView.MapSettings.MapZoomingEnabled = false;
             _previousMapSurfaceListener = _mapView.MapSurfaceListener;
             _mapView.SetMapSurfaceListener(this);
-            SKToolsMapOperationsManager.Instance.MapView = _mapView;
+            SKToolsMapOperationsManager.Instance.SetMapView(_mapView);
 
             SKNavigationSettings navigationSettings = new SKNavigationSettings();
             navigationSettings.NavigationType = configuration.NavigationType;

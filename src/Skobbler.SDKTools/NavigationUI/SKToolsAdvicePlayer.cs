@@ -65,14 +65,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         public static SKToolsAdvicePlayer Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new SKToolsAdvicePlayer();
-                }
-                return _instance;
-            }
+            get { return _instance ?? (_instance = new SKToolsAdvicePlayer()); }
         }
 
         private SKToolsAdvicePlayer()
@@ -125,7 +118,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
         /// <summary>
         /// Plays an advice. The individual sound files to play are contained in an
-        /// array list. </summary>
+        /// array list.
+        /// </summary>
         /// <param name="adviceParts"> an array list of sound file names </param>
         public virtual void PlayAdvice(string[] adviceParts, int priority)
         {
@@ -230,9 +224,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         }
 
         /// <summary>
-        /// Writes "data" to the "filePath" path on the disk </summary>
-        /// <param name="data"> </param>
-        /// <param name="filePath"> </param>
+        /// Writes "data" to the "filePath" path on the disk
+        /// </summary>
         private void WriteFile(byte[] data, string filePath)
         {
             System.IO.Stream @out = null;

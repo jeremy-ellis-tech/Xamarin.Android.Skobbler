@@ -13,7 +13,7 @@ using Skobbler.Ngx.Search;
 
 namespace Skobbler.Ngx.SDKTools.NavigationUI
 {
-    internal sealed class SKToolsUtils
+    internal static class SKToolsUtils
     {
 
         /// <summary>
@@ -67,10 +67,6 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         private const int LimitToMiles = 1500;
 
         private static readonly AtomicInteger SNextGeneratedId = new AtomicInteger(1);
-
-        private SKToolsUtils()
-        {
-        }
 
         /// <summary>
         /// Get the configuration json file name according to the mapStyle parameter. </summary>

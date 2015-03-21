@@ -6,8 +6,6 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 {
     public class SKToolsPedestrianNavigationUiManager
     {
-
-
         /// <summary>
         /// Singleton instance for current class
         /// </summary>
@@ -51,9 +49,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
 
 
         /// <summary>
-        /// Creates a single instance of <seealso cref="SKToolsPedestrianNavigationUiManager"/>
-        /// 
-        /// @return
+        /// Creates a single instance
         /// </summary>
         public static SKToolsPedestrianNavigationUiManager Instance
         {
@@ -76,8 +72,8 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Sets the current activity.
         /// </summary>
-        /// <param name="activity"> </param>
-        /// <param name="rootId"> </param>
+        /// <param name="activity">The activity</param>
+        /// <param name="rootId">Root layout Id</param>
         protected internal virtual void SetActivity(Activity activity, int rootId)
         {
             _currentActivity = activity;

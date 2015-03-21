@@ -46,8 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Download\SKDownloadState.cs" />
     <Compile Include="Download\SKToolsDownloadItem.cs" />
     <Compile Include="Download\ISKToolsDownloadListener.cs" />
+    <Compile Include="Download\SKToolsDownloadListenerEventDispatcher.cs" />
     <Compile Include="Download\SKToolsDownloadManager.cs" />
     <Compile Include="Download\SKToolsDownloadPerformer.cs" />
     <Compile Include="Download\SKToolsDownloadUtils.cs" />
@@ -63,13 +65,14 @@
     <Compile Include="NavigationUI\SKToolsMapOperationsManager.cs" />
     <Compile Include="NavigationUI\SKToolsNavigationConfiguration.cs" />
     <Compile Include="NavigationUI\ISKToolsNavigationListener.cs" />
+    <Compile Include="NavigationUI\SKToolsNavigationListenerEventDispatcher.cs" />
     <Compile Include="NavigationUI\SKToolsNavigationManager.cs" />
     <Compile Include="NavigationUI\SKToolsNavigationUIManager.cs" />
     <Compile Include="NavigationUI\SKToolsPedestrianNavigationUImanager.cs" />
     <Compile Include="NavigationUI\SKToolsUtils.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\DateTimeUtil.cs" />
+    <Compile Include="Extensions\DateTimeOffsetExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Skobbler.Binding\Skobbler.Binding.csproj">
