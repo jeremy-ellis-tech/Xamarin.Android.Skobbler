@@ -1,13 +1,13 @@
-Xamarin.Android.Skobbler
+Xamarin.Android.Skobbler v2.4.0
 ========================
 
 ## C#  bindings for the Skobbler Android SDK ##
 
 I am not associated with either [Skobbler](http://www.skobbler.com/) or [Xamarin .inc](http://xamarin.com/). All rights belong to their respective owners.
 
-This repository includes a C# translation of the demo included with the Skobbler SDK. This currently has a few small bugs which are probably a result of my [mis]translation. Raise an issue or send a pull request if you would like these fixed ASAP.
+This repository includes a C# translation of the demo included with the Skobbler SDK. This currently has a few small bugs which are probably a result of my [mis]translation. Raise an issue or send a pull request if you would like these fixed ASAP. A more stable version can be found tagged under `v2.3.0`.
 
-**Xamarin.Android.Skobbler currently uses v2.4.0 of the Skobbler Android SDK**
+Xamarin.Android.Skobbler currently uses v2.4.0 of the Skobbler Android SDK
 
 ## Installation ##
 
@@ -15,7 +15,7 @@ This repository includes a C# translation of the demo included with the Skobbler
 2. Build the Skobbler.Binding project.
 3. Reference "Skobbler.dll" from your project; found under `"Xamarin.Android.Skobbler\src\Skobbler\bin\[Debug|Release][-$ABI]\Skobbler.dll"`
 
-There are platform configurations for each native library ABI (`x86`, `armeabi-v7a` & `armeabi`). The `AnyCPU` platform configuration includes all 3 ABIs at the cost of a larger assembly (~5MB for specific platforms and ~11MB for AnyCPU). If you don't know which platform to select just use `AnyCPU`.
+There are platform configurations for each native library ABI (`x86`, `armeabi-v7a` & `armeabi`). The `AnyCPU` platform configuration includes all 3 ABIs at the cost of a larger assembly (~5MB for specific platforms and ~12MB for AnyCPU). If you don't know which platform to select just use `AnyCPU`.
 
 **The Skobbler sdk requires you to have a string resource called "app_name", which your manifest's application label points at. If you do not add this your app will crash on initialization.**
 
@@ -71,7 +71,7 @@ Namespaces should be the same as their respective Java packages, minus the `com`
 ![Map Overlays](docs/Screenshots/MapOverlays.png)
 
 ## Contributing ##
-If you would like to add a feature or fix a known issue, please add any contributions to the `develop` branch and raise a pull request.
+If you would like to add a feature or fix a known issue, please add any contributions to a feature branch from `develop` and raise a pull request.
 
 ## License ##
 The Bindings, SDKTools and SDKDemo are provided under the MIT license. See LICENSE for details.
