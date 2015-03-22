@@ -60,7 +60,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 Intent intent = new Intent(value, typeof (SKToolsCalculateSunriseSunsetTimeAutoReceiver));
                 _pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(value, 0, intent, 0);
 
-                _hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeOffset.Now.CurrentTimeMillis(),
+                _hourlyAlarmManager.SetRepeating(AlarmType.Rtc, DateTimeOffset.Now.JavaTimeMillis(),
                     SKToolsSunriseSunsetCalculator.NrOfMillisecondsInAHour, _pendingHourlyAlarmIntent);
             }
         }
@@ -79,7 +79,7 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI.AutoNight
                 Intent intent = new Intent(context, typeof(SKToolsCalculateSunriseSunsetTimeAutoReceiver));
                 _pendingHourlyAlarmIntent = PendingIntent.GetBroadcast(context, 0, intent, 0);
 
-                long timeToStart = DateTimeOffset.Now.CurrentTimeMillis();
+                long timeToStart = DateTimeOffset.Now.JavaTimeMillis();
                 if (!startNow)
                 {
                     timeToStart += SKToolsSunriseSunsetCalculator.NrOfMillisecondsInAHour;

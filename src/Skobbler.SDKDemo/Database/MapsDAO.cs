@@ -187,10 +187,10 @@ namespace Skobbler.SDKDemo.Database
 					insertCommand.Append(");");
 					_resourcesDao.Database.BeginTransaction();
 					SQLiteStatement insertStatement = _resourcesDao.Database.CompileStatement(insertCommand.ToString());
-					int columnIndex , lineIndex = 0;
-					foreach (MapDownloadResource map in maps)
+				    int lineIndex = 0;
+				    foreach (MapDownloadResource map in maps)
 					{
-						columnIndex = 1;
+						var columnIndex = 1;
 						lineIndex++;
 						insertStatement.ClearBindings();
 						insertStatement.BindLong(columnIndex++, lineIndex);
@@ -218,7 +218,7 @@ namespace Skobbler.SDKDemo.Database
 
 						if (nameInAllSpecifiedLanguages.Length > 1)
 						{
-							//insertStatement.BindString(columnIndex++, nameInAllSpecifiedLanguages.Substring(0, nameInAllSpecifiedLanguages.Length - 1));
+							insertStatement.BindString(columnIndex++, nameInAllSpecifiedLanguages.ToString().Remove(nameInAllSpecifiedLanguages.Length - 1));
 						}
 						else
 						{

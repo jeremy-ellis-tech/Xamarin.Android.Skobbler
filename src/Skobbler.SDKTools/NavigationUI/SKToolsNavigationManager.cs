@@ -66,9 +66,9 @@ namespace Skobbler.Ngx.SDKTools.NavigationUI
         /// <summary>
         /// Sets the listener </summary>
         /// <param name="navigationListener"> </param>
-        public virtual void SetNavigationListener(ISKToolsNavigationListener value)
+        public virtual void SetNavigationListener(ISKToolsNavigationListener navigationListener)
         {
-            SKToolsLogicManager.Instance.SetNavigationListener(value);
+            SKToolsLogicManager.Instance.SetNavigationListener(navigationListener);
         }
     }
 }

@@ -97,7 +97,7 @@ namespace Skobbler.SDKDemo.Database
 		public virtual void ParseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, Stream inputStream)
 		{
 			Console.WriteLine("Catalin ; start parsing !!!");
-		    long startTime = DateTimeOffset.Now.CurrentTimeMillis();
+		    long startTime = DateTimeOffset.Now.JavaTimeMillis();
 			JSONObject reader = new JSONObject(ConvertJsonFileContentToAString(inputStream));
 			JSONArray regionsArray = reader.GetJSONArray(RegionsId);
 			if (regionsArray != null)
@@ -121,7 +121,7 @@ namespace Skobbler.SDKDemo.Database
 			/*-for (Map.Entry<String, String> currentEntry : mapsItemsCodes.entrySet()) {
 			    System.out.println("Catalin ; key = " + currentEntry.getKey() + " ; value = " + currentEntry.getValue());
 			}*/
-			Console.WriteLine("Catalin ; total loading time = " + (DateTimeOffset.Now.CurrentTimeMillis() - startTime) + " ; maps size = " + maps.Count);
+			Console.WriteLine("Catalin ; total loading time = " + (DateTimeOffset.Now.JavaTimeMillis() - startTime) + " ; maps size = " + maps.Count);
 		}
 
 		/// <summary>

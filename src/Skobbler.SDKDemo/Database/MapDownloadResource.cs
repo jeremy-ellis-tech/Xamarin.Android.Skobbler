@@ -35,19 +35,19 @@ namespace Skobbler.SDKDemo.Database
 			get
 			{
 				string localLanguage = Locale.Default.Language;
+
 				if (localLanguage.StartsWith(MapsDao.EnglishLanguageCode, StringComparison.Ordinal))
 				{
 					localLanguage = MapsDao.EnglishLanguageCode;
 				}
-				if (_names != null)
-				{
-				    if (_names[localLanguage] == null)
-					{
-						return _names[Locale.English.Language];
-					}
-				    return _names[localLanguage];
-				}
-			    return "";
+
+			    string value;
+
+			    if (_names.TryGetValue(localLanguage, out value)) return value;
+
+			    if (_names.TryGetValue(Locale.English.Language, out value)) return value;
+
+			    return String.Empty;
 			}
 		}
 

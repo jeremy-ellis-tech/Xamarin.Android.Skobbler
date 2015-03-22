@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using Android.App;
 using Android.Content;
@@ -97,14 +98,9 @@ namespace Skobbler.Ngx.SDKTools.Download
         private WifiManager.WifiLock _wifiLock;
 
         /// <summary>
-        /// instance of HttpClient used for download
-        /// </summary>
-        private HttpClient _httpClient;
-
-        /// <summary>
         /// current HTTP request
         /// </summary>
-        private HttpRequestBase _httpRequest;
+        private HttpWebRequest _httpRequest;
 
         /// <summary>
         /// download timeout handler ; added for the edge cases (networks on which HttpClient blocks)
@@ -234,7 +230,7 @@ namespace Skobbler.Ngx.SDKTools.Download
 
             _anyRetryMade = false;
             _timeAtFirstRetry = 0;
-            _lastTimeWhenInternetWorked = DateTimeOffset.Now.CurrentTimeMillis();
+            _lastTimeWhenInternetWorked = DateTimeOffset.Now.JavaTimeMillis();
 
             InitializeResourcesWhenDownloadThreadStarts();
 
@@ -281,7 +277,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                 else
                 {
                     // create a new download request
-                    _httpRequest = new HttpGet(_currentDownloadStep.DownloadURL);
+                    _httpRequest = WebRequest.CreateHttp(_currentDownloadStep.DownloadURL);
 
                     SKLogging.WriteLog(Tag, "Current url = " + _currentDownloadStep.DownloadURL + " ; current step = " + _currentDownloadItem.CurrentStepIndex, SKLogging.LogDebug);
 
@@ -313,28 +309,30 @@ namespace Skobbler.Ngx.SDKTools.Download
                         // starts the timeout handler
                         startsDownloadTimeoutHandler();
                         // executes the download request
-                        HttpResponseMessage response = null;
+                        HttpWebResponse response = _httpRequest.GetResponse() as HttpWebResponse;
+
                         if (response == null)
                         {
                             throw new SocketException();
                         }
+
                         _anyRetryMade = false;
-                        HttpResponseMessage entity = null; //response.Entity;
-                        int statusCode = 0; // response.StatusLine.StatusCode;
+                        HttpStatusCode statusCode = response.StatusCode;
                         // if other status code than 200 or 206(partial download) throw exception
-                        if (statusCode != (int)HttpURLConnection.HttpOk && statusCode != (int)HttpURLConnection.HttpPartial)
+                        if (statusCode != HttpStatusCode.OK || statusCode != HttpStatusCode.PartialContent)
                         {
                             SKLogging.WriteLog(Tag, "Wrong status code returned !", SKLogging.LogDebug);
                             throw new IOException("HTTP response code: " + statusCode);
                         }
+
                         // stops the timeout handler
                         stopsDownloadTimeoutHandler();
                         SKLogging.WriteLog(Tag, "Correct response status code returned !", SKLogging.LogDebug);
                         try
                         {
-                            if (entity != null)
+                            if (response != null)
                             {
-                                responseStream = null; //entity.Content;
+                                responseStream = response.GetResponseStream();
                             }
                         }
                         catch (IllegalStateException)
@@ -364,14 +362,14 @@ namespace Skobbler.Ngx.SDKTools.Download
                             // check number of read bytes
                             if (bytesReadThisTime > 0)
                             {
-                                _lastTimeWhenInternetWorked = DateTimeOffset.Now.CurrentTimeMillis();
+                                _lastTimeWhenInternetWorked = DateTimeOffset.Now.JavaTimeMillis();
                                 bytesReadSoFar += bytesReadThisTime;
                                 _currentDownloadItem.NoDownloadedBytes = bytesReadSoFar;
                                 bytesReadInThisConnection += bytesReadThisTime;
                                 _currentDownloadItem.SetNoDownloadedBytesInThisConnection(bytesReadInThisConnection);
                                 // write the chunk of data in the file
                                 localFile.Write(data, 0, bytesReadThisTime);
-                                long newTime = DateTimeOffset.Now.CurrentTimeMillis();
+                                long newTime = DateTimeOffset.Now.JavaTimeMillis();
                                 // notify the UI every second
                                 if ((newTime - lastDownloadProgressTime) > NoMillisIntoOneSec)
                                 {
@@ -507,7 +505,7 @@ namespace Skobbler.Ngx.SDKTools.Download
                     else
                     {
                         SKLogging.WriteLog(Tag, "Current resource is only partially downloaded, so its download will continue = ", SKLogging.LogDebug);
-                        _httpRequest.AddHeader(HttpPropRange, "bytes=" + bytesRead + "-");
+                        _httpRequest.Headers.Add(HttpPropRange, "bytes=" + bytesRead + "-");
                     }
                 }
                 destinationFile.Close();
@@ -595,12 +593,10 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// Initializes resources(http client, wifi lock) when download thread starts
+        /// Initializes resources(wifi lock) when download thread starts
         /// </summary>
         private void InitializeResourcesWhenDownloadThreadStarts()
         {
-            // instance of HttpClient instance
-            _httpClient = new HttpClient();
             if ((_downloadListener != null) && (_downloadListener is Activity))
             {
                 WifiManager wifimanager = (WifiManager)((Activity)_downloadListener).GetSystemService(Context.WifiService);
@@ -609,7 +605,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         }
 
         /// <summary>
-        /// Release resources(http client, wifi lock) when download thread finishes
+        /// Release resources(wifi lock) when download thread finishes
         /// </summary>
         private void ReleaseResourcesWhenDownloadThreadFinishes()
         {
@@ -617,21 +613,6 @@ namespace Skobbler.Ngx.SDKTools.Download
             if (_wifiLock != null)
             {
                 _wifiLock.Release();
-            }
-            // release the HttpClient resource
-            if (_httpClient != null)
-            {
-                if (_httpClient != null)
-                {
-                    try
-                    {
-                        _httpClient.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        SKLogging.WriteLog(Tag, "Thrown exception when release the HttpClient resource ; exception = " + ex.Message, SKLogging.LogDebug);
-                    }
-                }
             }
         }
 
@@ -710,7 +691,7 @@ namespace Skobbler.Ngx.SDKTools.Download
         private void StopIfTimeoutLimitEnded(bool stopRequest)
         {
             stopsDownloadTimeoutHandler();
-            if (((DateTimeOffset.Now.CurrentTimeMillis() - _lastTimeWhenInternetWorked) > TimeOutLimit) || stopRequest)
+            if (((DateTimeOffset.Now.JavaTimeMillis() - _lastTimeWhenInternetWorked) > TimeOutLimit) || stopRequest)
             {
                 SKLogging.WriteLog(Tag, "The request last more than 15 seconds, so no timeout is made", SKLogging.LogDebug);
                 if (!_isDownloadProcessCancelled && !_isCurrentDownloadCancelled && !_isDownloadProcessPaused)
@@ -748,12 +729,12 @@ namespace Skobbler.Ngx.SDKTools.Download
                 // if no retry was made, during current INTERNET connection, then retain the time at which the first one is made
                 if (!_anyRetryMade)
                 {
-                    _timeAtFirstRetry = DateTimeOffset.Now.CurrentTimeMillis();
+                    _timeAtFirstRetry = DateTimeOffset.Now.JavaTimeMillis();
                     _anyRetryMade = true;
                 }
 
                 // if it didn't pass 15 seconds from the first retry, will sleep 0.5 seconds and then will make a new attempt to download the resource
-                if ((DateTimeOffset.Now.CurrentTimeMillis() - _timeAtFirstRetry) < TimeOutLimit)
+                if ((DateTimeOffset.Now.JavaTimeMillis() - _timeAtFirstRetry) < TimeOutLimit)
                 {
                     SKLogging.WriteLog(Tag, "Sleep and then retry", SKLogging.LogDebug);
                     try

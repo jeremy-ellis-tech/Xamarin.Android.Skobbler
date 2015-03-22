@@ -6,7 +6,7 @@ namespace Skobbler.Ngx.SDKTools.Extensions
     {
         private static readonly DateTimeOffset UnixEpoch = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
 
-        public static long CurrentTimeMillis(this DateTimeOffset value)
+        public static long JavaTimeMillis(this DateTimeOffset value)
         {
             return (long)(value - UnixEpoch).TotalMilliseconds;
         }

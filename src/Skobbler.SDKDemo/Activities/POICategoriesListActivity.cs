@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
@@ -17,27 +18,24 @@ namespace Skobbler.SDKDemo.Activities
 
         private ListView _listView;
 
-        private PoiCategoryListAdapter _adapter;
+        private POICategoryListAdapter _adapter;
 
-        private IList<PoiCategoryListItem> _listItems;
+        private IList<POICategoryListItem> _listItems;
 
-        private IList<int?> _selectedCategories = new List<int?>();
+        private readonly IList<int> _selectedCategories = new List<int>();
 
-        private class PoiCategoryListItem
+        private class POICategoryListItem
         {
-
-            internal bool IsMainCategory;
-
-            internal string Name;
-
-            internal int Id;
-
-            public PoiCategoryListItem(bool isMainCategory, string name, int id)
+            public POICategoryListItem(bool isMainCategory, string name, int id)
             {
                 IsMainCategory = isMainCategory;
                 Name = name;
                 Id = id;
             }
+
+            public bool IsMainCategory { get; private set; }
+            public string Name { get; private set; }
+            public int Id { get; private set; }
 
             public override string ToString()
             {
@@ -45,20 +43,16 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        private static IList<PoiCategoryListItem> ListItems
+        private static IEnumerable<POICategoryListItem> GetListItems()
         {
-            get
+            foreach (var mainCategory in SKCategories.SKPOIMainCategory.Values())
             {
-                IList<PoiCategoryListItem> listItems = new List<PoiCategoryListItem>();
-                foreach (SKCategories.SKPOIMainCategory mainCategory in SKCategories.SKPOIMainCategory.Values())
+                yield return new POICategoryListItem(true, mainCategory.ToString().Replace("SKPOI_MAIN_CATEGORY_", ""), -1);
+
+                foreach (int categoryId in SKUtils.GetSubcategoriesForCategory(mainCategory.Value))
                 {
-                    listItems.Add(new PoiCategoryListItem(true, mainCategory.ToString().Replace("SKPOI_MAIN_CATEGORY_", ""), -1));
-                    foreach (int categoryId in SKUtils.GetSubcategoriesForCategory(mainCategory.Value))
-                    {
-                        listItems.Add(new PoiCategoryListItem(false, SKUtils.GetMainCategoryForCategory(categoryId).GetNames()[0].ToUpper().Replace("_", " "), categoryId));
-                    }
+                    yield return new POICategoryListItem(false, SKUtils.GetMainCategoryForCategory(categoryId).GetNames()[0].ToUpper().Replace("_", " "), categoryId);
                 }
-                return listItems;
             }
         }
 
@@ -69,19 +63,19 @@ namespace Skobbler.SDKDemo.Activities
 
             FindViewById(Resource.Id.label_operation_in_progress).Visibility = ViewStates.Gone;
 
-            _listItems = ListItems;
+            _listItems = GetListItems().ToList();
 
             _listView = (ListView)FindViewById(Resource.Id.list_view);
             _listView.Visibility = ViewStates.Visible;
 
-            _adapter = new PoiCategoryListAdapter(this);
+            _adapter = new POICategoryListAdapter(this);
             _listView.Adapter = _adapter;
 
             Toast.MakeText(this, "Select the desired POI categories for heat map display", ToastLength.Short).Show();
 
             _listView.ItemClick += (s, e) =>
             {
-                PoiCategoryListItem selectedItem = _listItems[e.Position];
+                POICategoryListItem selectedItem = _listItems[e.Position];
                 if (selectedItem.Id > 0)
                 {
                     if (_selectedCategories.Contains(selectedItem.Id))
@@ -96,14 +90,7 @@ namespace Skobbler.SDKDemo.Activities
                     }
 
                     Button showButton = (Button)FindViewById(Resource.Id.show_heat_map);
-                    if (_selectedCategories.Count == 0)
-                    {
-                        showButton.Visibility = ViewStates.Gone;
-                    }
-                    else
-                    {
-                        showButton.Visibility = ViewStates.Visible;
-                    }
+                    showButton.Visibility = _selectedCategories.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
                 }
             };
         }
@@ -111,23 +98,16 @@ namespace Skobbler.SDKDemo.Activities
         [Export("OnClick")]
         public virtual void OnClick(View v)
         {
-            if (v.Id == Resource.Id.show_heat_map)
-            {
-                SKCategories.SKPOICategory[] categories = new SKCategories.SKPOICategory[_selectedCategories.Count];
-                for (int i = 0; i < _selectedCategories.Count; i++)
-                {
-                    categories[i] = SKCategories.SKPOICategory.ForInt(_selectedCategories[i].Value);
-                }
-                MapActivity.HeatMapCategories = categories;
-                Finish();
-            }
+            if (v.Id != Resource.Id.show_heat_map) return;
+            MapActivity.HeatMapCategories = _selectedCategories.Select(SKCategories.SKPOICategory.ForInt).ToArray();
+            Finish();
         }
 
-        private class PoiCategoryListAdapter : BaseAdapter<PoiCategoryListItem>
+        private class POICategoryListAdapter : BaseAdapter<POICategoryListItem>
         {
             private readonly PoiCategoriesListActivity _outerInstance;
 
-            public PoiCategoryListAdapter(PoiCategoriesListActivity outerInstance)
+            public POICategoryListAdapter(PoiCategoriesListActivity outerInstance)
             {
                 _outerInstance = outerInstance;
             }
@@ -158,7 +138,7 @@ namespace Skobbler.SDKDemo.Activities
                     view = (TextView)convertView;
                 }
 
-                PoiCategoryListItem item = _outerInstance._listItems[position];
+                POICategoryListItem item = _outerInstance._listItems[position];
 
                 view.Text = "  " + item.Name;
                 if (item.IsMainCategory)
@@ -169,19 +149,14 @@ namespace Skobbler.SDKDemo.Activities
                 else
                 {
                     view.SetTextAppearance(_outerInstance, Resource.Style.menu_options_style);
-                    if (!_outerInstance._selectedCategories.Contains(item.Id))
-                    {
-                        view.SetBackgroundColor(_outerInstance.Resources.GetColor(Resource.Color.white));
-                    }
-                    else
-                    {
-                        view.SetBackgroundColor(_outerInstance.Resources.GetColor(Resource.Color.selected));
-                    }
+                    view.SetBackgroundColor(!_outerInstance._selectedCategories.Contains(item.Id)
+                        ? _outerInstance.Resources.GetColor(Resource.Color.white)
+                        : _outerInstance.Resources.GetColor(Resource.Color.selected));
                 }
                 return view;
             }
 
-            public override PoiCategoryListItem this[int position]
+            public override POICategoryListItem this[int position]
             {
                 get { return _outerInstance._listItems[position]; }
             }
