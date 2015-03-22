@@ -854,11 +854,11 @@ namespace Skobbler.Ngx.SDKTools.Download
                     RandomAccessFile currentDestinationFile = new RandomAccessFile(_currentDownloadItem.CurrentStepDestinationPath, "r");
                     totalBytesRead = currentDestinationFile.Length();
                 }
-                catch (FileNotFoundException)
+                catch (Java.IO.FileNotFoundException)
                 {
                     totalBytesRead = 0;
                 }
-                catch (IOException)
+                catch (Java.IO.IOException)
                 {
                     totalBytesRead = 0;
                 }
@@ -1005,21 +1005,24 @@ namespace Skobbler.Ngx.SDKTools.Download
                 long totalBytesRead;
                 try
                 {
-                    RandomAccessFile currentDestinationFile = new RandomAccessFile(_currentDownloadItem.CurrentStepDestinationPath, "r");
+                    RandomAccessFile currentDestinationFile =
+                        new RandomAccessFile(_currentDownloadItem.CurrentStepDestinationPath, "r");
                     totalBytesRead = currentDestinationFile.Length();
                 }
-                catch (FileNotFoundException)
+                catch (Java.IO.FileNotFoundException)
                 {
                     totalBytesRead = 0;
                 }
-                catch (IOException)
+                catch (Java.IO.IOException)
                 {
                     totalBytesRead = 0;
                 }
+
                 if (totalBytesRead == _currentDownloadItem.CurrentDownloadStep.DownloadItemSize)
                 {
                     return true;
                 }
+
                 return false;
             }
         }

@@ -770,9 +770,9 @@ namespace Skobbler.SDKDemo.Activities
 
             public void OnInstallFinished(SKToolsDownloadItem currentInstallingItem)
             {
-                ListItem affectedListItem = _outerInstance._codesMap[currentInstallingItem.ItemCode];
+                ListItem affectedListItem;
                 DownloadResource resource;
-                if (affectedListItem != null)
+                if (_outerInstance._codesMap.TryGetValue(currentInstallingItem.ItemCode, out affectedListItem))
                 {
                     affectedListItem.DownloadResource.DownloadState = SKDownloadState.Installed;
                     resource = affectedListItem.DownloadResource;

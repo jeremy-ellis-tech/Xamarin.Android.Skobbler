@@ -119,7 +119,10 @@ namespace Skobbler.Ngx.SDKTools.Download
                         _queuedDownloads = new LinkedList<SKToolsDownloadItem>();
                     }
                     PutAnyPausedItemFirst(downloadItems);
-                    downloadItems.Select(x => _queuedDownloads.AddLast(x));
+                    foreach (var item in downloadItems)
+                    {
+                        _queuedDownloads.AddLast(item);
+                    }
                     _downloadThread = new SKToolsDownloadPerformer(_queuedDownloads, _downloadListener);
                     _downloadThread.Start();
                 }
