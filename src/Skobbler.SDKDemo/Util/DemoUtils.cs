@@ -10,192 +10,275 @@ using Skobbler.Ngx.Map;
 using Skobbler.Ngx.Navigation;
 using Skobbler.SDKDemo.Application;
 using File = Java.IO.File;
+using Android.App;
+using Skobbler.Ngx.Util;
+using Android.OS;
+using Android.Views;
+using Android.Util;
+using Android.Content.PM;
+using Java.IO;
+using System;
 
 namespace Skobbler.SDKDemo.Util
 {
-	public class DemoUtils
-	{
+    public class DemoUtils
+    {
 
-        private const string ApiKey = "API_KEY_HERE";
+        public static bool IsMultipleMapSupportEnabled;
 
-		/// <summary>
-		/// Gets formatted time from a given number of seconds
-		/// </summary>
-		public static string FormatTime(int timeInSec)
-		{
-			StringBuilder builder = new StringBuilder();
-			int hours = timeInSec / 3600;
-			int minutes = (timeInSec - hours * 3600) / 60;
-			int seconds = timeInSec - hours * 3600 - minutes * 60;
-			builder.Insert(0, seconds + "s");
-			if (minutes > 0 || hours > 0)
-			{
-				builder.Insert(0, minutes + "m ");
-			}
-			if (hours > 0)
-			{
-				builder.Insert(0, hours + "h ");
-			}
-			return builder.ToString();
-		}
+        public static string FormatTime(int timeInSec)
+        {
+            StringBuilder builder = new StringBuilder();
+            int hours = timeInSec / 3600;
+            int minutes = (timeInSec - hours * 3600) / 60;
+            int seconds = timeInSec - hours * 3600 - minutes * 60;
+            builder.Insert(0, seconds + "s");
 
-		/// <summary>
-		/// Formats a given distance value (given in meters)
-		/// </summary>
-		/// <param name="distInMeters">Distance in meters</param>
-		public static string FormatDistance(int distInMeters)
-		{
-		    if (distInMeters < 1000)
-			{
-				return distInMeters + "m";
-			}
-		    return ((float) distInMeters / 1000) + "km";
-		}
+            if (minutes > 0 || hours > 0)
+            {
+                builder.Insert(0, minutes + "m ");
+            }
 
-	    /// <summary>
-		/// Copies files from assets to destination folder
-		/// </summary>
-		public static void CopyAssetsToFolder(AssetManager assetManager, string sourceFolder, string destinationFolder)
-		{
-			string[] assets = assetManager.List(sourceFolder);
-			File destFolderFile = new File(destinationFolder);
-			if (!destFolderFile.Exists())
-			{
-				destFolderFile.Mkdirs();
-			}
-			CopyAsset(assetManager, sourceFolder, destinationFolder, assets);
-		}
+            if (hours > 0)
+            {
+                builder.Insert(0, hours + "h ");
+            }
 
-		/// <summary>
-		/// Copies files from assets to destination folder
-		/// </summary>
-		public static void CopyAsset(AssetManager assetManager, string sourceFolder, string destinationFolder, params string[] assetsNames)
-		{
+            return builder.ToString();
+        }
 
-			foreach (string assetName in assetsNames)
-			{
-				Stream destinationStream = new FileStream(destinationFolder + "/" + assetName, FileMode.Create, FileAccess.Write);
-				string[] files = assetManager.List(sourceFolder + "/" + assetName);
-				if (files == null || files.Length == 0)
-				{
+        public static string FormatDistance(int distInMeters)
+        {
+            if (distInMeters < 1000)
+            {
+                return distInMeters + "m";
+            }
+            else
+            {
+                return ((float)distInMeters / 1000) + "km";
+            }
+        }
 
-					Stream asset = assetManager.Open(sourceFolder + "/" + assetName);
-					try
-					{
+        public static void CopyAssetsToFolder(AssetManager assetManager, string sourceFolder, string destinationFolder)
+        {
+            string[] assets = assetManager.List(sourceFolder);
+
+            File destFolderFile = new File(destinationFolder);
+            if (!destFolderFile.Exists())
+            {
+                destFolderFile.Mkdirs();
+            }
+            CopyAsset(assetManager, sourceFolder, destinationFolder, assets);
+        }
+
+        public static void CopyAsset(AssetManager assetManager, string sourceFolder, string destinationFolder, params string[] assetsNames)
+        {
+
+            foreach (string assetName in assetsNames)
+            {
+                var destinationStream = new FileStream(destinationFolder + "/" + assetName, FileMode.Create);
+
+                string[] files = assetManager.List(sourceFolder + "/" + assetName);
+
+                if (files == null || files.Length == 0)
+                {
+                    var asset = assetManager.Open(sourceFolder + "/" + assetName);
+
+                    try
+                    {
                         asset.CopyTo(destinationStream);
-					}
-					finally
-					{
-						asset.Close();
-						destinationStream.Close();
-					}
-				}
-			}
-		}
+                    }
+                    finally
+                    {
+                        asset.Close();
+                        destinationStream.Close();
+                    }
+                }
+            }
+        }
 
-		/// <summary>
-		/// Copies files from assets to destination folder. </summary>
-		/// <param name="assetManager"> </param>
-		/// <param name="assetName"> the asset that needs to be copied </param>
-		/// <param name="destinationFolder"> path to folder where you want to store the asset archive </param>
-		public static void CopyAsset(AssetManager assetManager, string assetName, string destinationFolder)
-		{
-
-			Stream destinationStream = new FileStream(destinationFolder + "/" + assetName, FileMode.Create, FileAccess.Write);
-			Stream asset = assetManager.Open(assetName);
-			try
-			{
-                asset.CopyTo(destinationStream);
-			}
-			finally
-			{
-				asset.Close();
-				destinationStream.Close();
-			}
-		}
-
-		/// <summary>
-		/// Tells if internet is currently available on the device
-		/// </summary>
-		/// <param name="currentContext">Current context</param>
-		public static bool IsInternetAvailable(Context currentContext)
-		{
-			ConnectivityManager conectivityManager = (ConnectivityManager) currentContext.GetSystemService(Context.ConnectivityService);
-			NetworkInfo networkInfo = conectivityManager.ActiveNetworkInfo;
-			if (networkInfo != null)
-			{
-				if (networkInfo.Type == ConnectivityType.Wifi)
-				{
-					if (networkInfo.IsConnected)
-					{
-						return true;
-					}
-				}
-                else if (networkInfo.Type == ConnectivityType.Mobile)
-				{
+        public static bool IsInternetAvailable(Context currentContext)
+        {
+            ConnectivityManager conectivityManager = currentContext.GetSystemService(Context.ConnectivityService) as ConnectivityManager;
+            NetworkInfo networkInfo = conectivityManager.ActiveNetworkInfo;
+            if (networkInfo != null)
+            {
+                if (networkInfo.Type == ConnectivityType.Wifi)
+                {
                     if (networkInfo.IsConnected)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
+                    {
+                        return true;
+                    }
+                }
+                else if (networkInfo.Type == ConnectivityType.Mobile)
+                {
+                    if (networkInfo.IsConnected)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
-		/// <summary>
-		/// Checks if the current device has a GPS module (hardware) </summary>
-		/// <returns> true if the current device has GPS </returns>
-		public static bool HasGpsModule(Context context)
-		{
-			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
-			foreach (string provider in locationManager.AllProviders)
-			{
-				if (provider.Equals(LocationManager.GpsProvider))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-		/// <summary>
-		/// Checks if the current device has a  NETWORK module (hardware) </summary>
-		/// <returns> true if the current device has NETWORK </returns>
-		public static bool HasNetworkModule(Context context)
-		{
-			LocationManager locationManager = (LocationManager) context.GetSystemService(Context.LocationService);
-		    return locationManager.AllProviders.Any(provider => provider.Equals(LocationManager.NetworkProvider));
-		}
+        public static bool HasGpsModule(Context context)
+        {
+            LocationManager locationManager = context.GetSystemService(Context.LocationService) as LocationManager;
+            foreach (string provider in locationManager.AllProviders)
+            {
+                if (provider.Equals(LocationManager.GpsProvider))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
+        public static bool HasNetworkModule(Context context)
+        {
+            LocationManager locationManager = context.GetSystemService(Context.LocationService) as LocationManager;
+            foreach (string provider in locationManager.AllProviders)
+            {
+                if (provider.Equals(LocationManager.NetworkProvider))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-		/// <summary>
-		/// Initializes the SKMaps framework
-		/// </summary>
-		public static void InitializeLibrary(Context context)
-		{
-			DemoApplication app = (DemoApplication)context.ApplicationContext;
-			// get object holding map initialization settings
-			SKMapsInitSettings initMapSettings = new SKMapsInitSettings();
-			// set path to map resources and initial map style
-			initMapSettings.SetMapResourcesPaths(app.MapResourcesDirPath, new SKMapViewStyle(app.MapResourcesDirPath + "daystyle/", "daystyle.json"));
+        public static bool InitializeLibrary(Activity context)
+        {
+            SKLogging.EnableLogs(true);
+            SKMapsInitSettings initMapSettings = new SKMapsInitSettings();
 
-			SKAdvisorSettings advisorSettings = initMapSettings.AdvisorSettings;
-			advisorSettings.AdvisorConfigPath = app.MapResourcesDirPath + "/Advisor";
-			advisorSettings.ResourcePath = app.MapResourcesDirPath + "/Advisor/Languages";
-			advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LanguageEn;
-			advisorSettings.AdvisorVoice = "en";
-			initMapSettings.AdvisorSettings = advisorSettings;
+            string mapResourcesPath = ((DemoApplication)context.ApplicationContext).AppPrefs.GetStringPreference("mapResourcesPath");
+            initMapSettings.SetMapResourcesPaths(mapResourcesPath, new SKMapViewStyle(mapResourcesPath + "daystyle/", "daystyle.json"));
 
-			// EXAMPLE OF ADDING PREINSTALLED MAPS
-			// initMapSettings.setPreinstalledMapsPath(app.getMapResourcesDirPath()
-			// + "/PreinstalledMaps");
-			// initMapSettings.setConnectivityMode(SKMaps.CONNECTIVITY_MODE_OFFLINE);
+            SKAdvisorSettings advisorSettings = initMapSettings.AdvisorSettings;
+            advisorSettings.AdvisorConfigPath = mapResourcesPath + "/Advisor";
+            advisorSettings.ResourcePath = mapResourcesPath + "/Advisor/Languages";
+            advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LanguageEn;
+            advisorSettings.AdvisorVoice = "en";
+            initMapSettings.AdvisorSettings = advisorSettings;
 
-			// Example of setting light maps
-			 initMapSettings.MapDetailLevel = SKMapsInitSettings.SkMapDetailLight;
-			// initialize map using the settings object
+            // EXAMPLE OF ADDING PREINSTALLED MAPS
+            //         initMapSettings.setPreinstalledMapsPath(((DemoApplication)context.getApplicationContext()).getMapResourcesDirPath()
+            //         + "/PreinstalledMaps");
+            // initMapSettings.setConnectivityMode(SKMaps.CONNECTIVITY_MODE_OFFLINE);
 
-			SKMaps.Instance.InitializeSKMaps(context, initMapSettings, ApiKey);
-		}
+            // Example of setting light maps
+            // initMapSettings.setMapDetailLevel(SKMapsInitSettings.SK_MAP_DETAIL_LIGHT);
+            // initialize map using the settings object
 
-	}
+            try
+            {
+                SKMaps.Instance.InitializeSKMaps(context, initMapSettings);
+                return true;
+            }
+            catch (SKDeveloperKeyException exception)
+            {
+                exception.PrintStackTrace();
+                ShowApiKeyErrorDialog(context);
+                return false;
+            }
+        }
+
+        public static void ShowApiKeyErrorDialog(Activity currentActivity)
+        {
+            new AlertDialog.Builder(currentActivity)
+                .SetTitle("Error")
+                .SetMessage("API_KEY not set")
+                .SetCancelable(false)
+                .SetPositiveButton(currentActivity.Resources.GetString(Resource.String.ok_label), (s, e) => Process.KillProcess(Process.MyPid()))
+                .Show();
+        }
+
+        public static ScreenOrientation GetExactScreenOrientation(Activity activity)
+        {
+            Display defaultDisplay = activity.WindowManager.DefaultDisplay;
+            SurfaceOrientation rotation = defaultDisplay.Rotation;
+            DisplayMetrics dm = new DisplayMetrics();
+            defaultDisplay.GetMetrics(dm);
+            int width = dm.WidthPixels;
+            int height = dm.HeightPixels;
+            ScreenOrientation orientation;
+            // if the device's natural orientation is portrait:
+            if ((rotation == SurfaceOrientation.Rotation0 || rotation == SurfaceOrientation.Rotation180) && height > width || (rotation == SurfaceOrientation.Rotation90 || rotation == SurfaceOrientation.Rotation270) &&
+                    width > height)
+            {
+                switch (rotation)
+                {
+                    case SurfaceOrientation.Rotation0:
+                        orientation = ScreenOrientation.Portrait;
+                        break;
+                    case SurfaceOrientation.Rotation90:
+                        orientation = ScreenOrientation.Landscape;
+                        break;
+                    case SurfaceOrientation.Rotation180:
+                        orientation = ScreenOrientation.Portrait;
+                        break;
+                    case SurfaceOrientation.Rotation270:
+                        orientation = ScreenOrientation.ReverseLandscape;
+                        break;
+                    default:
+                        // Logging.writeLog(TAG, "Unknown screen orientation. Defaulting to " + "portrait.", Logging.LOG_DEBUG);
+                        orientation = ScreenOrientation.Portrait;
+                        break;
+                }
+            }
+            // if the device's natural orientation is landscape or if the device
+            // is square:
+            else
+            {
+                switch (rotation)
+                {
+                    case SurfaceOrientation.Rotation0:
+                        orientation = ScreenOrientation.Landscape;
+                        break;
+                    case SurfaceOrientation.Rotation90:
+                        orientation = ScreenOrientation.Portrait;
+                        break;
+                    case SurfaceOrientation.Rotation180:
+                        orientation = ScreenOrientation.ReverseLandscape;
+                        break;
+                    case SurfaceOrientation.Rotation270:
+                        orientation = ScreenOrientation.ReversePortrait;
+                        break;
+                    default:
+                        orientation = ScreenOrientation.Landscape;
+                        break;
+                }
+            }
+
+            return orientation;
+        }
+
+        public static void DeleteFileOrDirectory(File file)
+        {
+            if (file.IsDirectory)
+            {
+                string[] children = file.List();
+                for (int i = 0; i < children.Length; i++)
+                {
+                    if (new File(file, children[i]).IsDirectory && !children[i].Equals("PreinstalledMaps") && !children[i].Equals("Maps"))
+                    {
+                        DeleteFileOrDirectory(new File(file, children[i]));
+                    }
+                    else
+                    {
+                        new File(file, children[i]).Delete();
+                    }
+                }
+            }
+        }
+
+        private static readonly DateTime Jan1st1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        public static long CurrentTimeMillis()
+        {
+            return (long)(DateTime.UtcNow - Jan1st1970).TotalMilliseconds;
+        }
+
+    }
 }

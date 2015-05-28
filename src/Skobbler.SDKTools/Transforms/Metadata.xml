@@ -1,0 +1,6 @@
+<metadata>
+  <!--.NET friendly namespace names-->
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.navigationui']" name="managedName">Skobbler.Ngx.SDKTools.NavigationUI</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.navigationui.autonight']" name="managedName">Skobbler.Ngx.SDKTools.NavigationUI.Autonight</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.download']" name="managedName">Skobbler.Ngx.SDKTools.Download</attr>
+</metadata>

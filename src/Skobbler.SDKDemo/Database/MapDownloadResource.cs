@@ -7,190 +7,403 @@ using Skobbler.Ngx.SDKTools.Download;
 
 namespace Skobbler.SDKDemo.Database
 {
-	/// <summary>
-	/// Defines a map resource that will be DOWNLOADED
-	/// </summary>
-	public class MapDownloadResource : DownloadResource, IComparable<MapDownloadResource>
-	{
-	    /// <summary>
-		/// resource name in different languages
-		/// </summary>
-		private IDictionary<string, string> _names;
+    public class MapDownloadResource : DownloadResource, IComparable<MapDownloadResource>
+    {
 
-	    /// <summary>
-		/// constructs an object of SKDownloadResource type
-		/// </summary>
-		public MapDownloadResource()
-		{
-			_names = new Dictionary<string, string>();
-		}
+        /**
+         * resource parent code
+         */
+        private string parentCode;
 
-		/// <returns> the resource parent code </returns>
-		public virtual string ParentCode { get; set; }
+        /**
+         * resource name in different languages
+         */
+        private Dictionary<string, string> names;
 
+        /**
+         * resource sub-type (e.g. continent, country, city, state for map resource)
+         */
+        private string subType;
 
-	    /// <returns> the resource name </returns>
-		public virtual string Name
-		{
-			get
-			{
-				string localLanguage = Locale.Default.Language;
+        /**
+         * SKM file size
+         */
+        private long skmFileSize;
 
-				if (localLanguage.StartsWith(MapsDao.EnglishLanguageCode, StringComparison.Ordinal))
-				{
-					localLanguage = MapsDao.EnglishLanguageCode;
-				}
+        /**
+         * SKM + ZIP file size
+         */
+        private long skmAndZipFilesSize;
 
-			    string value;
+        /**
+         * txg file size
+         */
+        private long txgFileSize;
 
-			    if (_names.TryGetValue(localLanguage, out value)) return value;
+        /**
+         * UNZIPPED file size for zip file
+         */
+        private long unzippedFileSize;
 
-			    if (_names.TryGetValue(Locale.English.Language, out value)) return value;
+        /**
+         * .SKM file path
+         */
+        private string skmFilePath;
 
-			    return String.Empty;
-			}
-		}
+        /**
+         * .ZIP file path
+         */
+        private string zipFilePath;
 
-		/// <summary>
-		/// sets the name in all languages </summary>
-		/// <param name="newNames"> resource names in all languages </param>
-		public virtual void SetNames(string newNames)
-		{
-			_names = new Dictionary<string, string>();
-		    try
-		    {
-                string[] keyValuePairs = newNames.Split(';');
-                foreach (String keyValue in keyValuePairs)
+        /**
+         * .TXG file path
+         */
+        private string txgFilePath;
+
+        /**
+         * bounding box minimum longitude
+         */
+        private double bbLongMin;
+
+        /**
+         * bounding box maximum longitude
+         */
+        private double bbLongMax;
+
+        /**
+         * bounding box minimum latitude
+         */
+        private double bbLatMin;
+
+        /**
+         * bounding box maximum latitude
+         */
+        private double bbLatMax;
+
+        /**
+         * constructs an object of SKDownloadResource type
+         */
+        public MapDownloadResource()
+        {
+            names = new Dictionary<string, string>();
+        }
+
+        public string ParentCode { get; set; }
+
+        /**
+         * @return the resource name
+         */
+        public String getName()
+        {
+            String localLanguage = Locale.Default.Language;
+            if (localLanguage.StartsWith(MapsDAO.ENGLISH_LANGUAGE_CODE))
+            {
+                localLanguage = MapsDAO.ENGLISH_LANGUAGE_CODE;
+            }
+            if (names != null)
+            {
+                if (names[localLanguage] == null)
                 {
-                    string[] newName = keyValue.Split('=');
-                    _names.Add(newName[0], newName[1]);
+                    return names[Locale.English.Language];
                 }
-		    }
-		    catch (Exception)
-		    {
-		        // ignored
-		    }
-		}
+                else
+                {
+                    return names[localLanguage];
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
 
-		/// <param name="name"> the resource name for a certain language </param>
-		public virtual void SetName(string name, string language)
-		{
-			_names[language] = name;
-		}
+        /**
+         * sets the name in all languages
+         * @param newNames resource names in all languages
+         */
+        public void setNames(string newNames)
+        {
+            this.names = new Dictionary<string, string>();
+            string[] keyValuePairs = newNames.Split(';');
+            foreach (string keyValue in keyValuePairs)
+            {
+                string[] newName = keyValue.Split('=');
+                this.names.Add(newName[0], newName[1]);
+            }
+        }
 
-		/// <returns> names in all languages for current resource </returns>
-		public virtual IDictionary<string, string> GetNames()
-		{
-			return _names;
-		}
+        /**
+         * @param name the resource name for a certain language
+         */
+        public void setName(String name, String language)
+        {
+            names.Add(language, name);
+        }
 
-		/// <returns> the resource sub-type </returns>
-		public virtual string SubType { get; set; }
+        /**
+         * @return names in all languages for current resource
+         */
+        public Dictionary<string, string> getNames()
+        {
+            return names;
+        }
 
+        /**
+         * @return the resource sub-type
+         */
+        public String getSubType()
+        {
+            return subType;
+        }
 
-	    /// <returns> SKM file size </returns>
-		public virtual long SkmFileSize { get; set; }
+        /**
+         * @param subType the resource sub-type
+         */
+        public void setSubType(String subType)
+        {
+            this.subType = subType;
+        }
 
+        /**
+         * @return SKM file size
+         */
+        public long getSkmFileSize()
+        {
+            return skmFileSize;
+        }
 
-	    /// <returns> the SKM + ZIP files size </returns>
-		public virtual long SkmAndZipFilesSize { get; set; }
+        /**
+         * @param skmFileSize SKM file size
+         */
+        public void setSkmFileSize(long skmFileSize)
+        {
+            this.skmFileSize = skmFileSize;
+        }
 
+        /**
+         * @return the SKM + ZIP files size
+         */
+        public long getSkmAndZipFilesSize()
+        {
+            return skmAndZipFilesSize;
+        }
 
-	    /// <returns> the TXG file size </returns>
-		public virtual long TxgFileSize { get; set; }
+        /**
+         * @param skmAndZipFilesSize the SKM + ZIP files size
+         */
+        public void setSkmAndZipFilesSize(long skmAndZipFilesSize)
+        {
+            this.skmAndZipFilesSize = skmAndZipFilesSize;
+        }
 
+        /**
+         * @return the TXG file size
+         */
+        public long getTXGFileSize()
+        {
+            return txgFileSize;
+        }
 
-	    /// <returns> the unzippedSize for ZIP file </returns>
-		public virtual long UnzippedFileSize { get; set; }
+        /**
+         * @param txgFileSize the TXG file size
+         */
+        public void setTXGFileSize(long txgFileSize)
+        {
+            this.txgFileSize = txgFileSize;
+        }
 
+        /**
+         * @return the unzippedSize for ZIP file
+         */
+        public long getUnzippedFileSize()
+        {
+            return unzippedFileSize;
+        }
 
-	    /// <returns> the SKM file path </returns>
-		public virtual string SKMFilePath { get; private set; }
+        /**
+         * @param unzippedFileSize the unzippedSize for ZIP file
+         */
+        public void setUnzippedFileSize(long unzippedFileSize)
+        {
+            this.unzippedFileSize = unzippedFileSize;
+        }
 
-	    /// <param name="skmFilePath"> the SKM file path </param>
-        public virtual void SetSkmFilePath(string skmFilePath)
-	    {
-            SKMFilePath = skmFilePath;
-	    }
+        /**
+         * @return the SKM file path
+         */
+        public String getSKMFilePath()
+        {
+            return skmFilePath;
+        }
 
-	    /// <returns> the ZIP file path </returns>
-		public virtual string ZipFilePath { get; set; }
+        /**
+         * @param skmFilePath the SKM file path
+         */
+        public void setSkmFilePath(String skmFilePath)
+        {
+            this.skmFilePath = skmFilePath;
+        }
 
+        /**
+         * @return the ZIP file path
+         */
+        public String getZipFilePath()
+        {
+            return zipFilePath;
+        }
 
-	    /// <returns> the TXG file path </returns>
-		public virtual string TxgFilePath { get; set; }
+        /**
+         * @param zipFilePath the ZIP file path
+         */
+        public void setZipFilePath(String zipFilePath)
+        {
+            this.zipFilePath = zipFilePath;
+        }
 
+        /**
+         * @return the TXG file path
+         */
+        public String getTXGFilePath()
+        {
+            return txgFilePath;
+        }
 
-	    /// <returns> bounding-box longitude minim </returns>
-		public virtual double BbLongMin { get; set; }
+        /**
+         * @param txgFilePath the TXG file path
+         */
+        public void setTXGFilePath(String txgFilePath)
+        {
+            this.txgFilePath = txgFilePath;
+        }
 
+        /**
+         * @return bounding-box longitude minim
+         */
+        public double getBbLongMin()
+        {
+            return bbLongMin;
+        }
 
-	    /// <returns> bounding-box longitude maxim </returns>
-		public virtual double BbLongMax { get; set; }
+        /**
+         * @param bbLongMin bounding-box longitude minim
+         */
+        public void setBbLongMin(double bbLongMin)
+        {
+            this.bbLongMin = bbLongMin;
+        }
 
+        /**
+         * @return bounding-box longitude maxim
+         */
+        public double getBbLongMax()
+        {
+            return bbLongMax;
+        }
 
-	    /// <returns> bounding-box latitude minim </returns>
-		public virtual double BbLatMin { get; set; }
+        /**
+         * @param bbLongMax bounding-box longitude maxim
+         */
+        public void setBbLongMax(double bbLongMax)
+        {
+            this.bbLongMax = bbLongMax;
+        }
 
+        /**
+         * @return bounding-box latitude minim
+         */
+        public double getBbLatMin()
+        {
+            return bbLatMin;
+        }
 
-	    /// <returns> bounding-box latitude maxim </returns>
-		public virtual double BbLatMax { get; set; }
+        /**
+         * @param bbLatMin bounding-box latitude minim
+         */
+        public void setBbLatMin(double bbLatMin)
+        {
+            this.bbLatMin = bbLatMin;
+        }
 
+        /**
+         * @return bounding-box latitude maxim
+         */
+        public double getBbLatMax()
+        {
+            return bbLatMax;
+        }
 
-	    /// <returns> the flag ID for current resource </returns>
-		public virtual int FlagId { get; set; }
+        /**
+         * @param bbLatMax bounding-box latitude maxim
+         */
+        public void setBbLatMax(double bbLatMax)
+        {
+            this.bbLatMax = bbLatMax;
+        }
 
+        public int FlagId { get; set; }
 
-	    public virtual int CompareTo(MapDownloadResource another)
-		{
-			string firstName = Name, secondName = (another != null) ? another.Name : null;
-			if ((firstName != null) && (secondName != null))
-			{
-				return firstName.ToLower().CompareTo(secondName.ToLower());
-			}
-		    if (firstName != null)
-		    {
-		        return -1;
-		    }
-		    if (secondName != null)
-		    {
-		        return 1;
-		    }
-		    return 0;
-		}
+        public int CompareTo(MapDownloadResource another)
+        {
+            String firstName = getName(), secondName = (another != null) ? another.getName() : null;
+            if ((firstName != null) && (secondName != null))
+            {
+                return firstName.ToLower().CompareTo(secondName.ToLower());
+            }
+            else if (firstName != null)
+            {
+                return -1;
+            }
+            else if (secondName != null)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
 
-		public override bool Equals(object obj)
-		{
-		    if (ReferenceEquals(obj, this)) return true;
+        public override bool Equals(Object another)
+        {
+            if (another == null)
+            {
+                return false;
+            }
+            else if (!(another is MapDownloadResource))
+            {
+                return false;
+            }
+            else
+            {
+                MapDownloadResource anotherResource = (MapDownloadResource)another;
+                return this.Code.Equals(anotherResource.Code);
+            }
+        }
 
-		    var other = obj as MapDownloadResource;
+        public override int GetHashCode()
+        {
+            return Code.GetHashCode();
+        }
 
-		    if (other == null) return false;
-
-		    return Equals(other.Code, Code);
-		}
-
-	    public override int GetHashCode()
-	    {
-	        return Code.GetHashCode();
-	    }
-
-	    public override SKToolsDownloadItem ToDownloadItem()
-		{
-			SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(Code);
-			IList<SKToolsFileDownloadStep> downloadSteps = new List<SKToolsFileDownloadStep>();
-			downloadSteps.Add(new SKToolsFileDownloadStep(info.MapURL, (new StringBuilder(DownloadPath)).Append(Code).Append(SKToolsDownloadManager.SkmFileExtension).ToString(), SkmFileSize));
-			if (TxgFileSize != 0)
-			{
-				downloadSteps.Add(new SKToolsFileDownloadStep(info.TexturesURL, (new StringBuilder(DownloadPath)).Append(Code).Append(SKToolsDownloadManager.TxgFileExtension).ToString(), TxgFileSize));
-			}
-			if (UnzippedFileSize != 0)
-			{
-				downloadSteps.Add(new SKToolsFileDownloadStep(info.NameBrowserFilesURL, (new StringBuilder(DownloadPath)).Append(Code).Append(SKToolsDownloadManager.ZipFileExtension).ToString(), (SkmAndZipFilesSize - SkmFileSize)));
-			}
-			SKToolsDownloadItem currentItem = new SKToolsDownloadItem(Code, downloadSteps, DownloadState, (UnzippedFileSize != 0), true);
-			currentItem.NoDownloadedBytes = NoDownloadedBytes;
-			return currentItem;
-		}
-	}
+        public override SKToolsDownloadItem ToDownloadItem()
+        {
+            SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(Code);
+            List<SKToolsFileDownloadStep> downloadSteps = new List<SKToolsFileDownloadStep>();
+            downloadSteps.Add(new SKToolsFileDownloadStep(info.MapURL, new StringBuilder(DownloadPath).Append(Code)
+                    .Append(SKToolsDownloadManager.SkmFileExtension).ToString(), skmFileSize));
+            if (txgFileSize != 0)
+            {
+                downloadSteps.Add(new SKToolsFileDownloadStep(info.TexturesURL, new StringBuilder(DownloadPath).Append(Code)
+                        .Append(SKToolsDownloadManager.TxgFileExtension).ToString(), txgFileSize));
+            }
+            if (unzippedFileSize != 0)
+            {
+                downloadSteps.Add(new SKToolsFileDownloadStep(info.NameBrowserFilesURL, new StringBuilder(DownloadPath).Append(Code)
+                        .Append(SKToolsDownloadManager.ZipFileExtension).ToString(), (skmAndZipFilesSize - skmFileSize)));
+            }
+            SKToolsDownloadItem currentItem = new SKToolsDownloadItem(Code, downloadSteps, DownloadState, (unzippedFileSize != 0), true);
+            currentItem.NoDownloadedBytes = (NoDownloadedBytes);
+            return currentItem;
+        }
+    }
 }

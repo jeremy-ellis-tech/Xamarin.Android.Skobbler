@@ -4,7 +4,6 @@
         <item>@string/route_type_car_shortest</item>
         <item>@string/route_type_car_fastest</item>
         <item>@string/route_type_car_efficient</item>
-        <item>@string/route_type_pedestrian</item>
         <item>@string/route_type_bicycle_fast</item>
         <item>@string/route_type_bicycle_short</item>
         <item>@string/route_type_bicycle_quiet</item>
@@ -16,7 +15,6 @@
         <item>3</item>
         <item>4</item>
         <item>5</item>
-        <item>6</item>
     </string-array>
     <string-array name="distance_unit">
         <item>@string/km_m</item>
@@ -55,6 +53,15 @@
         <!-- simulation -->
     </string-array>
 
-
+    <string-array name="real_reach_measurement_unit">
+        <item>@string/real_reach_profile_time</item>
+        <item>@string/real_reach_profile_distance</item>
+        <item>@string/real_reach_profile_energy</item>
+    </string-array>
+    <string-array name="real_reach_online_offline_hybrid">
+        <item>@string/real_reach_online</item>
+        <item>@string/real_reach_offline</item>
+        <item>@string/real_reach_hybrid</item>
+    </string-array>
 
 </resources>

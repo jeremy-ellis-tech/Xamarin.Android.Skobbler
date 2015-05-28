@@ -5,591 +5,503 @@ using Java.IO;
 
 namespace Skobbler.SDKDemo.Database
 {
-	/// <summary>
-	/// This class provides methods for parsing the "Maps" json file
-	/// </summary>
-	public class MapDataParser
-	{
+    public class MapDataParser
+    {
+        private static readonly string REGIONS_ID = "regions";
 
-		/// <summary>
-		/// names for maps items tags
-		/// </summary>
-		private const string RegionsId = "regions";
+        private static readonly string REGION_CODE_ID = "regionCode";
 
-		private const string RegionCodeId = "regionCode";
+        private static readonly string SUB_REGIONS_ID = "subRegions";
 
-		private const string SubRegionsId = "subRegions";
+        private static readonly string SUB_REGION_CODE_ID = "subRegionCode";
 
-		private const string SubRegionCodeId = "subRegionCode";
+        private static readonly string VERSION_ID = "version";
 
-		private const string VersionId = "version";
+        private static readonly string PACKAGES_ID = "packages";
 
-		private const string PackagesId = "packages";
+        private static readonly string PACKAGE_CODE_ID = "packageCode";
 
-		private const string PackageCodeId = "packageCode";
+        private static readonly string FILE_ID = "file";
 
-		private const string FileId = "file";
+        private static readonly string SIZE_ID = "size";
 
-		private const string SizeId = "size";
+        private static readonly string UNZIP_SIZE_ID = "unzipsize";
 
-		private const string UnzipSizeId = "unzipsize";
+        private static readonly string TYPE_ID = "type";
 
-		private const string TypeId = "type";
+        private static readonly string LANGUAGES_ID = "languages";
 
-		private const string LanguagesId = "languages";
+        private static readonly string TL_NAME_ID = "tlName";
 
-		private const string TlNameId = "tlName";
+        private static readonly string LNG_CODE_ID = "lngCode";
 
-		private const string LngCodeId = "lngCode";
+        private static readonly string BBOX_ID = "bbox";
 
-		private const string BboxId = "bbox";
+        private static readonly string LAT_MIN_ID = "latMin";
 
-		private const string LatMinId = "latMin";
+        private static readonly string LAT_MAX_ID = "latMax";
 
-		private const string LatMaxId = "latMax";
+        private static readonly string LONG_MIN_ID = "longMin";
 
-		private const string LongMinId = "longMin";
+        private static readonly string LONG_MAX_ID = "longMax";
 
-		private const string LongMaxId = "longMax";
+        private static readonly string SKM_SIZE_ID = "skmsize";
 
-		private const string SkmSizeId = "skmsize";
+        private static readonly string NB_ZIP_ID = "nbzip";
 
-		private const string NbZipId = "nbzip";
+        private static readonly string TEXTURE_ID = "texture";
 
-		private const string TextureId = "texture";
+        private static readonly string TEXTURES_BIG_FILE_ID = "texturesbigfile";
 
-		private const string TexturesBigFileId = "texturesbigfile";
+        private static readonly string SIZE_BIG_FILE_ID = "sizebigfile";
 
-		private const string SizeBigFileId = "sizebigfile";
+        private static readonly string XML_VERSION_ID = "xmlVersion";
 
-		private const string XmlVersionId = "xmlVersion";
+        private static readonly string WORLD_ID = "world";
 
-		private const string WorldId = "world";
+        private static readonly string CONTINENTS_ID = "continents";
 
-		private const string ContinentsId = "continents";
+        private static readonly string COUNTRIES_ID = "countries";
 
-		private const string CountriesId = "countries";
+        private static readonly string CONTINENT_CODE_ID = "continentCode";
 
-		private const string ContinentCodeId = "continentCode";
+        private static readonly string COUNTRY_CODE_ID = "countryCode";
 
-		private const string CountryCodeId = "countryCode";
+        private static readonly string CITY_CODES_ID = "cityCodes";
 
-		private const string CityCodesId = "cityCodes";
+        private static readonly string CITY_CODE_ID = "cityCode";
 
-		private const string CityCodeId = "cityCode";
+        private static readonly string STATE_CODES_ID = "stateCodes";
 
-		private const string StateCodesId = "stateCodes";
+        private static readonly string STATE_CODE_ID = "stateCode";
 
-		private const string StateCodeId = "stateCode";
-
-		/// <summary>
-		/// parses maps JSON data </summary>
-		/// <param name="maps"> a list of SKToolsDownloadResource items that represents the maps defined in JSON file </param>
-		/// <param name="mapsItemsCodes"> a map representing the maps hierarchy defined in JSON file </param>
-		/// <param name="regionItemsCodes"> a map representing the regions hierarchy defined in JSON file </param>
-		/// <param name="inputStream"> input stream from JSON file </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		public virtual void ParseMapJsonData(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, Stream inputStream)
-		{
+        public void parseMapJsonData(List<MapDownloadResource> maps, Dictionary<string, string> mapsItemsCodes, Dictionary<string, string> regionItemsCodes, Stream inputStream)
+        {
             JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(VersionId) || key.Equals(XmlVersionId))
-					{
-						reader.SkipValue();
-					}
-					else if (key.Equals(PackagesId))
-					{
-						ReadMapsDetails(maps, reader);
-					}
-					else if (key.Equals(WorldId))
-					{
-						reader.BeginObject();
-					}
-					else if (key.Equals(ContinentsId))
-					{
-						ReadWorldHierarchy(mapsItemsCodes, reader);
-						reader.EndObject();
-					}
-					else if (key.Equals(RegionsId))
-					{
-						ReadRegionsDetails(regionItemsCodes, reader);
-					}
-				}
-			}
-			reader.EndObject();
-		}
+            reader.BeginObject();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(VERSION_ID) || key.Equals(XML_VERSION_ID))
+                    {
+                        reader.SkipValue();
+                    }
+                    else if (key.Equals(PACKAGES_ID))
+                    {
+                        readMapsDetails(maps, reader);
+                    }
+                    else if (key.Equals(WORLD_ID))
+                    {
+                        reader.BeginObject();
+                    }
+                    else if (key.Equals(CONTINENTS_ID))
+                    {
+                        readWorldHierarchy(mapsItemsCodes, reader);
+                        reader.EndObject();
+                    }
+                    else if (key.Equals(REGIONS_ID))
+                    {
+                        readRegionsDetails(regionItemsCodes, reader);
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <summary>
-		/// read regions details list </summary>
-		/// <param name="regionItemsCodes"> a map representing the regions hierarchy defined in JSON file </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadRegionsDetails(IDictionary<string, string> regionItemsCodes, JsonReader reader)
-		{
-			reader.BeginArray();
-			while (reader.HasNext)
-			{
-				ReadCurrentRegionDetails(regionItemsCodes, reader);
-			}
-			reader.EndArray();
-		}
+        private void readRegionsDetails(Dictionary<string, string> regionItemsCodes, JsonReader reader)
+        {
+            reader.BeginArray();
+            while (reader.HasNext)
+            {
+                readCurrentRegionDetails(regionItemsCodes, reader);
+            }
+            reader.EndArray();
+        }
 
-		/// <summary>
-		/// read regions details list </summary>
-		/// <param name="regionItemsCodes"> a map representing the regions hierarchy defined in JSON file </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadCurrentRegionDetails(IDictionary<string, string> regionItemsCodes, JsonReader reader)
-		{
-			reader.BeginObject();
-			string currentRegionCode = null;
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(RegionCodeId))
-					{
-						currentRegionCode = reader.NextString();
-					}
-					else if (key.Equals(SubRegionsId))
-					{
-						if (currentRegionCode != null)
-						{
-							ReadSubRegionsForCurrentRegion(regionItemsCodes, currentRegionCode, reader);
-						}
-					}
-				}
-			}
-			reader.EndObject();
-		}
+        private void readCurrentRegionDetails(Dictionary<string, string> regionItemsCodes, JsonReader reader)
+        {
+            reader.BeginObject();
+            string currentRegionCode = null;
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(REGION_CODE_ID))
+                    {
+                        currentRegionCode = reader.NextString();
+                    }
+                    else if (key.Equals(SUB_REGIONS_ID))
+                    {
+                        if (currentRegionCode != null)
+                        {
+                            readSubRegionsForCurrentRegion(regionItemsCodes, currentRegionCode, reader);
+                        }
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <summary>
-		/// read sub-regions for current region </summary>
-		/// <param name="regionItemsCodes"> a map representing the regions hierarchy defined in JSON file </param>
-		/// <param name="currentRegionCode"> current region code </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadSubRegionsForCurrentRegion(IDictionary<string, string> regionItemsCodes, string currentRegionCode, JsonReader reader)
-		{
-			reader.BeginArray();
-			while (reader.HasNext)
-			{
-				reader.BeginObject();
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(SubRegionCodeId))
-					{
-						string subRegionCode = reader.NextString();
-						if (subRegionCode != null)
-						{
-							regionItemsCodes[subRegionCode] = currentRegionCode;
-						}
-					}
-				}
-				reader.EndObject();
-			}
-			reader.EndArray();
-		}
+        private void readSubRegionsForCurrentRegion(Dictionary<string, string> regionItemsCodes, string currentRegionCode, JsonReader reader)
+        {
+            reader.BeginArray();
+            while (reader.HasNext)
+            {
+                reader.BeginObject();
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(SUB_REGION_CODE_ID))
+                    {
+                        string subRegionCode = reader.NextString();
+                        if (subRegionCode != null)
+                        {
+                            regionItemsCodes.Add(subRegionCode, currentRegionCode);
+                        }
+                    }
+                }
+                reader.EndObject();
+            }
+            reader.EndArray();
+        }
 
-		/// <summary>
-		/// read maps details list </summary>
-		/// <param name="maps"> a list of maps objects that will be read from JSON file </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadMapsDetails(IList<MapDownloadResource> maps, JsonReader reader)
-		{
-			reader.BeginArray();
-			while (reader.HasNext)
-			{
-				ReadCurrentMapDetails(maps, reader);
-			}
-			reader.EndArray();
-		}
+        private void readMapsDetails(List<MapDownloadResource> maps, JsonReader reader)
+        {
+            reader.BeginArray();
+            while (reader.HasNext)
+            {
+                readCurrentMapDetails(maps, reader);
+            }
+            reader.EndArray();
+        }
 
-		/// <summary>
-		/// read current map details </summary>
-		/// <param name="maps"> a list of maps objects that will be read from JSON file </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadCurrentMapDetails(IList<MapDownloadResource> maps, JsonReader reader)
-		{
-			MapDownloadResource currentMap = new MapDownloadResource();
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(PackageCodeId))
-					{
-						currentMap.Code = reader.NextString();
-					}
-					else if (key.Equals(TypeId))
-					{
-						currentMap.SubType = GetMapType(reader.NextInt());
-					}
-					else if (key.Equals(LanguagesId))
-					{
-						reader.BeginArray();
-						while (reader.HasNext)
-						{
-							ReadCurrentMapNames(currentMap, reader);
-						}
-						reader.EndArray();
-					}
-					else if (key.Equals(BboxId))
-					{
-						ReadCurrentMapBoundingBoxDetails(currentMap, reader);
-					}
-					else if (key.Equals(SkmSizeId))
-					{
-						currentMap.SkmFileSize = reader.NextLong();
-					}
-					else if (key.Equals(FileId))
-					{
-						currentMap.SetSkmFilePath(reader.NextString());
-					}
-					else if (key.Equals(NbZipId))
-					{
-						currentMap.ZipFilePath = reader.NextString();
-					}
-					else if (key.Equals(UnzipSizeId))
-					{
-						currentMap.UnzippedFileSize = reader.NextLong();
-					}
-					else if (key.Equals(TextureId))
-					{
-						ReadCurrentMapTxgDetails(currentMap, reader);
-					}
-					else if (key.Equals(SizeId))
-					{
-						currentMap.SkmAndZipFilesSize = reader.NextLong();
-					}
-					else
-					{
-						// for now, we skip the elevation tag
-						reader.SkipValue();
-					}
-				}
-			}
-			reader.EndObject();
+        private void readCurrentMapDetails(List<MapDownloadResource> maps, JsonReader reader)
+        {
+            MapDownloadResource currentMap = new MapDownloadResource();
+            reader.BeginObject();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(PACKAGE_CODE_ID))
+                    {
+                        currentMap.Code = reader.NextString();
+                    }
+                    else if (key.Equals(TYPE_ID))
+                    {
+                        currentMap.setSubType(getMapType(reader.NextInt()));
+                    }
+                    else if (key.Equals(LANGUAGES_ID))
+                    {
+                        reader.BeginArray();
+                        while (reader.HasNext)
+                        {
+                            readCurrentMapNames(currentMap, reader);
+                        }
+                        reader.EndArray();
+                    }
+                    else if (key.Equals(BBOX_ID))
+                    {
+                        readCurrentMapBoundingBoxDetails(currentMap, reader);
+                    }
+                    else if (key.Equals(SKM_SIZE_ID))
+                    {
+                        currentMap.setSkmFileSize(reader.NextLong());
+                    }
+                    else if (key.Equals(FILE_ID))
+                    {
+                        currentMap.setSkmFilePath(reader.NextString());
+                    }
+                    else if (key.Equals(NB_ZIP_ID))
+                    {
+                        currentMap.setZipFilePath(reader.NextString());
+                    }
+                    else if (key.Equals(UNZIP_SIZE_ID))
+                    {
+                        currentMap.setUnzippedFileSize(reader.NextLong());
+                    }
+                    else if (key.Equals(TEXTURE_ID))
+                    {
+                        readCurrentMapTXGDetails(currentMap, reader);
+                    }
+                    else if (key.Equals(SIZE_ID))
+                    {
+                        currentMap.setSkmAndZipFilesSize(reader.NextLong());
+                    }
+                    else
+                    {
+                        // for now, we skip the elevation tag
+                        reader.SkipValue();
+                    }
+                }
+            }
+            reader.EndObject();
 
-			if ((currentMap.Code != null) && (currentMap.SubType != null))
-			{
-				RemoveNullValuesIfExist(currentMap);
-				maps.Add(currentMap);
-			}
-		}
+            if ((currentMap.Code != null) && (currentMap.getSubType() != null))
+            {
+                removeNullValuesIfExist(currentMap);
+                maps.Add(currentMap);
+            }
+        }
 
-		/// <summary>
-		/// read current map names </summary>
-		/// <param name="currentMap"> current map whose name will be read from JSON file </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadCurrentMapNames(MapDownloadResource currentMap, JsonReader reader)
-		{
-			string currentMapName = null;
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(TlNameId))
-					{
-						currentMapName = reader.NextString();
-					}
-					else if (key.Equals(LngCodeId))
-					{
-						if (currentMapName != null)
-						{
-							currentMap.SetName(currentMapName, reader.NextString());
-						}
-					}
-				}
-			}
-			reader.EndObject();
-		}
+        private void readCurrentMapNames(MapDownloadResource currentMap, JsonReader reader)
+        {
+            string currentMapName = null;
+            reader.BeginObject();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(TL_NAME_ID))
+                    {
+                        currentMapName = reader.NextString();
+                    }
+                    else if (key.Equals(LNG_CODE_ID))
+                    {
+                        if (currentMapName != null)
+                        {
+                            currentMap.setName(currentMapName, reader.NextString());
+                        }
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <summary>
-		/// read current map TXG details </summary>
-		/// <param name="currentMap"> current map whose TXG details will be read from JSON file </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadCurrentMapTxgDetails(MapDownloadResource currentMap, JsonReader reader)
-		{
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(TexturesBigFileId))
-					{
-						currentMap.TxgFilePath = reader.NextString();
-					}
-					else if (key.Equals(SizeBigFileId))
-					{
-						currentMap.TxgFileSize = reader.NextLong();
-					}
-					else
-					{
-						// for now, we skip the tags referring ZIP files details related to TXG files
-						reader.SkipValue();
-					}
-				}
-			}
-			reader.EndObject();
-		}
+        private void readCurrentMapTXGDetails(MapDownloadResource currentMap, JsonReader reader)
+        {
+            reader.BeginObject();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(TEXTURES_BIG_FILE_ID))
+                    {
+                        currentMap.setTXGFilePath(reader.NextString());
+                    }
+                    else if (key.Equals(SIZE_BIG_FILE_ID))
+                    {
+                        currentMap.setTXGFileSize(reader.NextLong());
+                    }
+                    else
+                    {
+                        // for now, we skip the tags referring ZIP files details related to TXG files
+                        reader.SkipValue();
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <summary>
-		/// read current map bounding box details </summary>
-		/// <param name="currentMap"> current map whose bounding box will be read from JSON file </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadCurrentMapBoundingBoxDetails(MapDownloadResource currentMap, JsonReader reader)
-		{
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(LatMaxId))
-					{
-						currentMap.BbLatMax = reader.NextDouble();
-					}
-					else if (key.Equals(LatMinId))
-					{
-						currentMap.BbLatMin = reader.NextDouble();
-					}
-					else if (key.Equals(LongMaxId))
-					{
-						currentMap.BbLongMax = reader.NextDouble();
-					}
-					else if (key.Equals(LongMinId))
-					{
-						currentMap.BbLongMin = reader.NextDouble();
-					}
-				}
-			}
-			reader.EndObject();
-		}
+        private void readCurrentMapBoundingBoxDetails(MapDownloadResource currentMap, JsonReader reader)
+        {
+            reader.BeginObject();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(LAT_MAX_ID))
+                    {
+                        currentMap.setBbLatMax(reader.NextDouble());
+                    }
+                    else if (key.Equals(LAT_MIN_ID))
+                    {
+                        currentMap.setBbLatMin(reader.NextDouble());
+                    }
+                    else if (key.Equals(LONG_MAX_ID))
+                    {
+                        currentMap.setBbLongMax(reader.NextDouble());
+                    }
+                    else if (key.Equals(LONG_MIN_ID))
+                    {
+                        currentMap.setBbLongMin(reader.NextDouble());
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <summary>
-		/// read world hierarchy for maps items </summary>
-		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadWorldHierarchy(IDictionary<string, string> mapsItemsCodes, JsonReader reader)
-		{
-			reader.BeginArray();
-			while (reader.HasNext)
-			{
-				ReadContinentsHierarchy(mapsItemsCodes, reader);
-			}
-			reader.EndArray();
-		}
+        private void readWorldHierarchy(Dictionary<string, string> mapsItemsCodes, JsonReader reader)
+        {
+            reader.BeginArray();
+            while (reader.HasNext)
+            {
+                readContinentsHierarchy(mapsItemsCodes, reader);
+            }
+            reader.EndArray();
+        }
 
-		/// <summary>
-		/// read continents hierarchy for maps items </summary>
-		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadContinentsHierarchy(IDictionary<string, string> mapsItemsCodes, JsonReader reader)
-		{
-			string currentContinentCode = null;
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(ContinentCodeId))
-					{
-						currentContinentCode = reader.NextString();
-						if (currentContinentCode != null)
-						{
-							mapsItemsCodes[currentContinentCode] = "";
-						}
-					}
-					else if (key.Equals(CountriesId))
-					{
-						reader.BeginArray();
-						while (reader.HasNext)
-						{
-							ReadCountriesHierarchy(mapsItemsCodes, currentContinentCode, reader);
-						}
-						reader.EndArray();
-					}
-				}
-			}
-			reader.EndObject();
-		}
+        private void readContinentsHierarchy(Dictionary<string, string> mapsItemsCodes, JsonReader reader)
+        {
+            string currentContinentCode = null;
+            reader.BeginObject();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(CONTINENT_CODE_ID))
+                    {
+                        currentContinentCode = reader.NextString();
+                        if (currentContinentCode != null)
+                        {
+                            mapsItemsCodes.Add(currentContinentCode, "");
+                        }
+                    }
+                    else if (key.Equals(COUNTRIES_ID))
+                    {
+                        reader.BeginArray();
+                        while (reader.HasNext)
+                        {
+                            readCountriesHierarchy(mapsItemsCodes, currentContinentCode, reader);
+                        }
+                        reader.EndArray();
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <summary>
-		/// read countries hierarchy for maps items </summary>
-		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
-		/// <param name="currentContinentCode"> current continent code </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadCountriesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentContinentCode, JsonReader reader)
-		{
-			string currentCountryCode = null;
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(CountryCodeId))
-					{
-						currentCountryCode = reader.NextString();
-						if ((currentContinentCode != null) && (currentCountryCode != null))
-						{
-							mapsItemsCodes[currentCountryCode] = currentContinentCode;
-						}
-					}
-					else if (key.Equals(CityCodesId))
-					{
-						reader.BeginArray();
-						while (reader.HasNext)
-						{
-							ReadCitiesHierarchy(mapsItemsCodes, currentCountryCode, reader);
-						}
-						reader.EndArray();
-					}
-					else if (key.Equals(StateCodesId))
-					{
-						reader.BeginArray();
-						while (reader.HasNext)
-						{
-							ReadStatesHierarchy(mapsItemsCodes, currentCountryCode, reader);
-						}
-						reader.EndArray();
-					}
-				}
-			}
-			reader.EndObject();
-		}
+        private void readCountriesHierarchy(Dictionary<string, string> mapsItemsCodes, string currentContinentCode, JsonReader reader)
+        {
+            string currentCountryCode = null;
+            reader.BeginObject();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(COUNTRY_CODE_ID))
+                    {
+                        currentCountryCode = reader.NextString();
+                        if ((currentContinentCode != null) && (currentCountryCode != null))
+                        {
+                            mapsItemsCodes.Add(currentCountryCode, currentContinentCode);
+                        }
+                    }
+                    else if (key.Equals(CITY_CODES_ID))
+                    {
+                        reader.BeginArray();
+                        while (reader.HasNext)
+                        {
+                            readCitiesHierarchy(mapsItemsCodes, currentCountryCode, reader);
+                        }
+                        reader.EndArray();
+                    }
+                    else if (key.Equals(STATE_CODES_ID))
+                    {
+                        reader.BeginArray();
+                        while (reader.HasNext)
+                        {
+                            readStatesHierarchy(mapsItemsCodes, currentCountryCode, reader);
+                        }
+                        reader.EndArray();
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <summary>
-		/// read states hierarchy for maps items </summary>
-		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
-		/// <param name="currentCountryCode"> current country code </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadStatesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentCountryCode, JsonReader reader)
-		{
-			string currentStateCode = null;
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(StateCodeId))
-					{
-						currentStateCode = reader.NextString();
-						if ((currentStateCode != null) && (currentCountryCode != null))
-						{
-							mapsItemsCodes[currentStateCode] = currentCountryCode;
-						}
-					}
-					else if (key.Equals(CityCodesId))
-					{
-						reader.BeginArray();
-						while (reader.HasNext)
-						{
-							ReadCitiesHierarchy(mapsItemsCodes, currentStateCode, reader);
-						}
-						reader.EndArray();
-					}
-				}
-			}
-			reader.EndObject();
-		}
+        private void readStatesHierarchy(Dictionary<string, string> mapsItemsCodes, string currentCountryCode, JsonReader reader)
+        {
+            string currentStateCode = null;
+            reader.BeginObject();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(STATE_CODE_ID))
+                    {
+                        currentStateCode = reader.NextString();
+                        if ((currentStateCode != null) && (currentCountryCode != null))
+                        {
+                            mapsItemsCodes.Add(currentStateCode, currentCountryCode);
+                        }
+                    }
+                    else if (key.Equals(CITY_CODES_ID))
+                    {
+                        reader.BeginArray();
+                        while (reader.HasNext)
+                        {
+                            readCitiesHierarchy(mapsItemsCodes, currentStateCode, reader);
+                        }
+                        reader.EndArray();
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <summary>
-		/// read cities hierarchy for maps items </summary>
-		/// <param name="mapsItemsCodes"> a map of type (code ; parentCode) that contains all maps items codes </param>
-		/// <param name="currentParentCode"> current parent code </param>
-		/// <param name="reader"> JSON file reader </param>
-		/// <exception cref="java.io.IOException"> </exception>
-		private void ReadCitiesHierarchy(IDictionary<string, string> mapsItemsCodes, string currentParentCode, JsonReader reader)
-		{
-			reader.BeginObject();
-			while (reader.HasNext)
-			{
-				string key = reader.NextName();
-				if (key != null)
-				{
-					if (key.Equals(CityCodeId))
-					{
-						string currentCityCode = reader.NextString();
-						if ((currentCityCode != null) && (currentParentCode != null))
-						{
-							mapsItemsCodes[currentCityCode] = currentParentCode;
-						}
-					}
-				}
-			}
-			reader.EndObject();
-		}
+        private void readCitiesHierarchy(Dictionary<string, string> mapsItemsCodes, string currentParentCode, JsonReader reader)
+        {
+            reader.BeginArray();
+            while (reader.HasNext)
+            {
+                string key = reader.NextName();
+                if (key != null)
+                {
+                    if (key.Equals(CITY_CODE_ID))
+                    {
+                        string currentCityCode = reader.NextString();
+                        if ((currentCityCode != null) && (currentParentCode != null))
+                        {
+                            mapsItemsCodes.Add(currentCityCode, currentParentCode);
+                        }
+                    }
+                }
+            }
+            reader.EndObject();
+        }
 
-		/// <param name="mapTypeInt"> an integer associated with map type </param>
-		/// <returns> the String associated with map type </returns>
-		private string GetMapType(int mapTypeInt)
-		{
-			switch (mapTypeInt)
-			{
-				case 0:
-					return MapsDao.CountryType;
-				case 1:
-					return MapsDao.CityType;
-				case 2:
-					return MapsDao.ContinentType;
-				case 3:
-					return MapsDao.RegionType;
-				case 4:
-					return MapsDao.StateType;
-				default:
-					return "";
-			}
-		}
+        private string getMapType(int mapTypeInt)
+        {
+            switch (mapTypeInt)
+            {
+                case 0:
+                    return MapsDAO.COUNTRY_TYPE;
+                case 1:
+                    return MapsDAO.CITY_TYPE;
+                case 2:
+                    return MapsDAO.CONTINENT_TYPE;
+                case 3:
+                    return MapsDAO.REGION_TYPE;
+                case 4:
+                    return MapsDAO.STATE_TYPE;
+                default:
+                    return "";
+            }
+        }
 
-		/// <summary>
-		/// removes null attributes for current map </summary>
-		/// <param name="currentMap"> current map that is parsed </param>
-		private void RemoveNullValuesIfExist(MapDownloadResource currentMap)
-		{
-			if (currentMap.ParentCode == null)
-			{
-				currentMap.ParentCode = "";
-			}
-			if (currentMap.DownloadPath == null)
-			{
-				currentMap.DownloadPath = "";
-			}
-			if (currentMap.SKMFilePath == null)
-			{
-				currentMap.SetSkmFilePath("");
-			}
-			if (currentMap.ZipFilePath == null)
-			{
-				currentMap.ZipFilePath = "";
-			}
-			if (currentMap.TxgFilePath == null)
-			{
-				currentMap.TxgFilePath = "";
-			}
-		}
-	}
+        private void removeNullValuesIfExist(MapDownloadResource currentMap)
+        {
+            if (currentMap.ParentCode == null)
+            {
+                currentMap.ParentCode = "";
+            }
+            if (currentMap.DownloadPath == null)
+            {
+                currentMap.DownloadPath = "";
+            }
+            if (currentMap.getSKMFilePath() == null)
+            {
+                currentMap.setSkmFilePath("");
+            }
+            if (currentMap.getZipFilePath() == null)
+            {
+                currentMap.setZipFilePath("");
+            }
+            if (currentMap.getTXGFilePath() == null)
+            {
+                currentMap.setTXGFilePath("");
+            }
+        }
+    }
 }

@@ -10,7 +10,6 @@ com.skobbler.ngx.positioner.logging
 com.skobbler.ngx.reversegeocode
 com.skobbler.ngx.routing
 com.skobbler.ngx.search
-com.skobbler.ngx.tile
 com.skobbler.ngx.tracks
 com.skobbler.ngx.trail
 com.skobbler.ngx.util

@@ -11,7 +11,7 @@
   <attr path="/api/package[@name='com.skobbler.ngx.navigation']/class[@name='SKNavigationSettings']/method[@name='isFcdEnabled']" name="visibility">private</attr>
 
   <!--Change event name to stop hiding of inherited glSurfaceView member-->
-  <attr path="/api/package[@name='com.skobbler.ngx.map']/interface[@name='SKMapSurfaceListener']/method[@name='onSurfaceCreated' and count(parameter)=0]" name="eventName">MapSurfaceCreated</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.map']/interface[@name='SKMapSurfaceListener']/method[@name='onSurfaceCreated' and count(parameter)=1]" name="eventName">MapSurfaceCreated</attr>
   
     <!--More descriptive event names-->
   <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapSurfaceView']/method[@name='setRealReachListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.map.realreach.SKRealReachListener']]" name="eventName">RealReachChanged</attr>
@@ -38,7 +38,6 @@
   <attr path="/api/package[@name='com.skobbler.ngx.reversegeocode']" name="managedName">Skobbler.Ngx.ReverseGeocode</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.routing']" name="managedName">Skobbler.Ngx.Routing</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.search']" name="managedName">Skobbler.Ngx.Search</attr>
-  <attr path="/api/package[@name='com.skobbler.ngx.tile']" name="managedName">Skobbler.Ngx.Tile</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.tracks']" name="managedName">Skobbler.Ngx.Tracks</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.trail']" name="managedName">Skobbler.Ngx.Trail</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.util']" name="managedName">Skobbler.Ngx.Util</attr>

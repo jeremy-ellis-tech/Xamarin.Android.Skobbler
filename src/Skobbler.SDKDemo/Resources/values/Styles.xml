@@ -8,7 +8,7 @@
         <item name="android:textSize">21dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:clickable">true</item>
-        <item name="android:onClick">OnMenuOptionClick</item>
+        <item name="android:onClick">onMenuOptionClick</item>
         <item name="android:paddingBottom">3dp</item>
         <item name="android:paddingTop">3dp</item>
         <item name="android:paddingLeft">8dp</item>
@@ -53,7 +53,7 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/blue_outline</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:onClick">OnClick</item>
+        <item name="android:onClick">onClick</item>
     </style>
 
     <style name="button_style">
@@ -67,10 +67,69 @@
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/blue_outline</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:onClick">OnClick</item>
+        <item name="android:onClick">onClick</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
+    <style name="menu_bar_item_background">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/menu_bar_item_selector</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+    </style>
+    <!-- menu bar item text -->
+    <style name="menu_bar_item_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/menu_bar_item_text</item>
+        <item name="android:textSize">21dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <style name="menu_bar_item_text_normal_screen" parent="@style/menu_bar_item_text">
+        <item name="android:textSize">18dp</item>
+    </style>
+    <!-- menu bar header text -->
+    <style name="menu_bar_header_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:textColor">@color/menu_bar_header_text</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:drawablePadding">15dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/menu_bar_header_background</item>
+    </style>
+
+    <style name="menu_bar_header_text_normal_screen" parent="@style/menu_bar_header_text">
+        <item name="android:layout_height">25dp</item>
+    </style>
+    <style name="left_drawer_list">
+        <item name="android:layout_width">250dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:descendantFocusability">beforeDescendants</item>
+        <item name="android:background">@color/top_bar_color</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:clipToPadding">false</item>
+    </style>
+    <style name="SplashActivityTheme" parent="@android:style/Theme.Holo.Light.NoActionBar">
+        <item name="android:windowBackground">@null</item>
     </style>
 
 </resources>

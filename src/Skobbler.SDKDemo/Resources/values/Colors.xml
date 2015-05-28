@@ -12,5 +12,12 @@
     <color name="orange">#ffff8800</color>
     <color name="light_orange">#ffe27d18</color>
     <color name="list_text_color">#1b1b1b</color>
+    <color name="transparent">#00000000</color>
+    <color name="menu_bar_separator_color">#656565</color>
+    <color name="menu_bar_item_text">#e4e2e3</color>
+    <color name="menu_bar_header_text">#8c8b8b</color>
+    <color name="top_bar_color">#D9222222</color>
+    <color name="navigate_blue_button">#0080ff</color>
+    <color name="green">#00ff00</color>
 
 </resources>

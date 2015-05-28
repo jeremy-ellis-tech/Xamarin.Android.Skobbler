@@ -13,125 +13,55 @@ using Java.Net;
 using Java.Text;
 using Newtonsoft.Json;
 using Skobbler.Ngx.Packages;
-using Skobbler.Ngx.SDKTools.Download;
-using Skobbler.Ngx.SDKTools.Extensions;
 using Skobbler.SDKDemo.Application;
 using Skobbler.SDKDemo.Database;
 using Console = System.Console;
+using Skobbler.Ngx.SDKTools.Download;
+using System.Timers;
+using Android.Content;
+using Skobbler.SDKDemo.Util;
 
 namespace Skobbler.SDKDemo.Activities
 {
-    /// <summary>
-    /// Activity that displays a list of downloadable resources and provides the ability to download them
-    /// </summary>
-    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
+    [Activity(ConfigurationChanges = (ConfigChanges.Orientation | ConfigChanges.ScreenSize))]
     public class ResourceDownloadsListActivity : Activity
     {
+        public static long KILO = 1024;
+        public static long MEGA = KILO * KILO;
+        public static long GIGA = MEGA * KILO;
+        public static long TERRA = GIGA * KILO;
 
-        /// <summary>
-        /// Constants
-        /// </summary>
-        public const long Kilo = 1024;
+        private SKToolsDownloadManager downloadManager;
+        private DownloadsAdapter adapter;
+        private ListView listView;
+        private List<ListItem> currentListItems;
+        private Dictionary<string, ListItem> codesMap = new Dictionary<String, ListItem>();
+        public static Dictionary<String, MapDownloadResource> allMapResources;
+        public static List<DownloadResource> activeDownloads = new List<DownloadResource>();
+        public static MapsDAO mapsDAO;
+        private Stack<int> previousListIndexes = new Stack<int>();
+        private DemoApplication appContext;
+        private Dictionary<long, long> downloadChunksMap = new Dictionary<long, long>();
+        private Timer handler;
+        private bool refreshDownloadEstimates;
+        private long downloadStartTime;
 
-        public static readonly long Mega = Kilo * Kilo;
-
-        public static readonly long Giga = Mega * Kilo;
-
-        public static readonly long Terra = Giga * Kilo;
-
-        /// <summary>
-        /// Download manager used for controlling the download process
-        /// </summary>
-        private SKToolsDownloadManager _downloadManager;
-
-        /// <summary>
-        /// Adapter for download items
-        /// </summary>
-        private DownloadsAdapter _adapter;
-
-        /// <summary>
-        /// List element displaying download items
-        /// </summary>
-        private ListView _listView;
-
-        /// <summary>
-        /// List of items in the current screen
-        /// </summary>
-        private IList<ListItem> _currentListItems;
-
-        /// <summary>
-        /// Map from resource codes to items
-        /// </summary>
-        private IDictionary<string, ListItem> _codesMap = new Dictionary<string, ListItem>();
-
-        /// <summary>
-        /// List of all map resources
-        /// </summary>
-        public static IDictionary<string, MapDownloadResource> AllMapResources;
-
-        /// <summary>
-        /// List of downloads which are currently in progress
-        /// </summary>
-        public static IList<DownloadResource> ActiveDownloads = new List<DownloadResource>();
-
-        /// <summary>
-        /// DAO object for accessing the maps database
-        /// </summary>
-        public static MapsDao MapsDao;
-
-        /// <summary>
-        /// Stack containing list indexes for opened screens
-        /// </summary>
-        private Stack<int?> _previousListIndexes = new Stack<int?>();
-
-        /// <summary>
-        /// Context object
-        /// </summary>
-        private DemoApplication _appContext;
-
-        private IDictionary<long?, long?> _downloadChunksMap = new SortedDictionary<long?, long?>();
-
-        /// <summary>
-        /// Handler object used for scheduling periodic UI updates while downloading is in progress
-        /// </summary>
-        private Handler _handler;
-
-        /// <summary>
-        /// True if download estimates should be refreshed at next UI update
-        /// </summary>
-        private bool _refreshDownloadEstimates;
-
-        /// <summary>
-        /// Timestamp at which last download started
-        /// </summary>
-        private long _downloadStartTime;
-
-        /// <summary>
-        /// Item in the download list
-        /// </summary>
         private class ListItem : IComparable<ListItem>
         {
-            private readonly ResourceDownloadsListActivity _outerInstance;
 
-            public ListItem(ResourceDownloadsListActivity outerInstance)
-            {
-                _outerInstance = outerInstance;
-            }
+            public string Name { get; set; }
 
+            public DownloadResource DownloadResource { get; set; }
 
-            internal string Name;
+            public List<ListItem> Children { get; set; }
 
-            internal DownloadResource DownloadResource;
+            public ListItem Parent { get; set; }
 
-            internal IList<ListItem> Children;
-
-            internal ListItem parent;
-
-            public virtual int CompareTo(ListItem listItem)
+            public int CompareTo(ListItem listItem)
             {
                 if (listItem != null && listItem.Name != null && Name != null)
                 {
-                    return String.Compare(Name, listItem.Name, StringComparison.Ordinal);
+                    return Name.CompareTo(listItem.Name);
                 }
                 return 0;
             }
@@ -140,138 +70,133 @@ namespace Skobbler.SDKDemo.Activities
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
             SetContentView(Resource.Layout.activity_downloads_list);
-            _appContext = (DemoApplication)Application;
-            _handler = new Handler();
+            appContext = (DemoApplication)Application;
+            handler = new Timer();
 
-            ListItem mapResourcesItem = new ListItem(this);
+            ListItem mapResourcesItem = new ListItem();
 
-            bool success = await Task<bool>.Run(() => InitializeMapResources());
-
-            if (success)
-            {
-                PopulateWithChildMaps(mapResourcesItem);
-                _currentListItems = mapResourcesItem.Children;
-
-                _listView = (ListView)FindViewById(Resource.Id.list_view);
-                _adapter = new DownloadsAdapter(this);
-                _listView.Adapter = _adapter;
-                FindViewById(Resource.Id.cancel_all_button).Visibility = ActiveDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
-                _downloadManager = SKToolsDownloadManager.GetInstance(_adapter);
-
-                if (ActiveDownloads.Count > 0 && ActiveDownloads[0].DownloadState == SKDownloadState.Downloading)
+            await Task.Run(() => initializeMapResources())
+                .ContinueWith((r) =>
                 {
-                    StartPeriodicUpdates();
-                }
-            }
-            else
-            {
-                Toast.MakeText(this, "Could not retrieve map data from the server", ToastLength.Short).Show();
-                Finish();
-            }
+                    if (r.IsCompleted)
+                    {
+                        appContext.AppPrefs.SaveBooleanPreference(ApplicationPreferences.MAP_RESOURCES_UPDATE_NEEDED, false);
+                        populateWithChildMaps(mapResourcesItem);
+                        currentListItems = mapResourcesItem.Children;
+
+                        listView = (ListView)FindViewById(Resource.Id.list_view);
+                        adapter = new DownloadsAdapter(this);
+                        listView.Adapter = adapter;
+                        FindViewById(Resource.Id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
+                        downloadManager = SKToolsDownloadManager.GetInstance(adapter);
+                        if (activeDownloads.Count != 0 && activeDownloads[0].DownloadState == SKToolsDownloadItem.Downloading)
+                        {
+                            StartPeriodicUpdates();
+                        }
+                    }
+                    else
+                    {
+                        Toast.MakeText(this, "Could not retrieve map data from the server", ToastLength.Short).Show();
+                        Finish();
+                    }
+                });
         }
 
-        /// <summary>
-        /// Runnable used to trigger UI updates that refresh the download estimates (for current speed and remaining time)
-        /// </summary>
-        private void Updater()
-        {
-            _refreshDownloadEstimates = true;
-            RunOnUiThread(() => { _adapter.NotifyDataSetChanged(); });
-            _handler.PostDelayed(Updater, 1000);
-        }
+        ///**
+        // * Runnable used to trigger UI updates that refresh the download estimates (for current speed and remaining time)
+        // */
+        //private Action updater = () =>
+        //{
+        //    refreshDownloadEstimates = true;
+        //    RunOnUiThread(() => adapter.NotifyDataSetChanged());
+        //    handler.Interval = 1000;
+        //    handler.Elapsed += () => { };
+        //    handler.Start();
+        //};
 
-        /// <summary>
-        /// Starte periodic UI updates
-        /// </summary>
         private void StartPeriodicUpdates()
         {
-            _downloadStartTime = DateTimeOffset.Now.JavaTimeMillis();
-            _handler.PostDelayed(Updater, 3000);
+            downloadStartTime = DemoUtils.CurrentTimeMillis();
+            //handler.PostDelayed(updater, 3000);
         }
 
-        /// <summary>
-        /// Stops the periodic UI updates
-        /// </summary>
         private void StopPeriodicUpdates()
         {
-            _downloadChunksMap.Clear();
-            _handler.RemoveCallbacks(Updater);
+            downloadChunksMap.Clear();
+            handler.Stop();
         }
 
-        /// <summary>
-        /// Initializes the map resources (reads them from the database if they are available there or parses them otherwise and stores them in the database)
-        /// </summary>
-        private bool InitializeMapResources()
+        private bool initializeMapResources()
         {
-            MapsDao = ResourcesDaoHandler.GetInstance(this).MapsDao;
-            if (AllMapResources == null)
+            mapsDAO = ResourcesDAOHandler.GetInstance(this).getMapsDAO();
+
+            if (allMapResources == null || appContext.AppPrefs.GetBooleanPreference(ApplicationPreferences.MAP_RESOURCES_UPDATE_NEEDED))
             {
-                AllMapResources = MapsDao.GetAvailableMapsForACertainType(null);
-                if (AllMapResources == null)
+
+                if (appContext.AppPrefs.GetBooleanPreference(ApplicationPreferences.MAP_RESOURCES_UPDATE_NEEDED))
                 {
-                    // maps table in DB not populated yet
-                    IList<MapDownloadResource> parsedMapResources = new List<MapDownloadResource>();
-                    IDictionary<string, string> parsedMapItemsCodes = new Dictionary<string, string>();
-                    IDictionary<string, string> regionItemsCodes = new Dictionary<string, string>();
+                    mapsDAO.deleteMaps();
+                }
+
+                allMapResources = mapsDAO.getAvailableMapsForACertainType(null);
+                if (allMapResources == null || appContext.AppPrefs.GetBooleanPreference(ApplicationPreferences.MAP_RESOURCES_UPDATE_NEEDED))
+                {
+                    // maps table in DB not populated yet or needs to be updated
+                    List<MapDownloadResource> parsedMapResources = new List<MapDownloadResource>();
+                    Dictionary<string, string> parsedMapItemsCodes = new Dictionary<string, string>();
+                    Dictionary<string, string> regionItemsCodes = new Dictionary<string, string>();
                     try
                     {
                         // parse Maps.json
                         string jsonUrl = SKPackageManager.Instance.MapsJSONPathForCurrentVersion;
-                        HttpURLConnection connection = (HttpURLConnection)(new URL(jsonUrl)).OpenConnection();
-                        (new MapDataParser()).ParseMapJsonData(parsedMapResources, parsedMapItemsCodes, regionItemsCodes, connection.InputStream);
+                        HttpURLConnection connection = (HttpURLConnection)new URL(jsonUrl).OpenConnection();
+                        new MapDataParser().parseMapJsonData(parsedMapResources, parsedMapItemsCodes, regionItemsCodes, connection.InputStream);
                         // populate DB maps table with parsing results
-                        MapsDao.InsertMaps(parsedMapResources, parsedMapItemsCodes, regionItemsCodes, this);
+                        mapsDAO.insertMaps(parsedMapResources, parsedMapItemsCodes, regionItemsCodes, this);
                         // get all map resources
-                        AllMapResources = MapsDao.GetAvailableMapsForACertainType(null);
+                        allMapResources = mapsDAO.getAvailableMapsForACertainType(null);
                     }
                     catch (IOException e)
                     {
-                        Console.WriteLine(e.ToString());
-                        Console.Write(e.StackTrace);
+                        e.PrintStackTrace();
                     }
                 }
-                ActiveDownloads = ActiveMapDownloads;
-                if (ActiveDownloads.Count > 0 && ActiveDownloads[0].DownloadState == SKDownloadState.Downloading)
+                if (appContext.AppPrefs.GetBooleanPreference(ApplicationPreferences.MAP_RESOURCES_UPDATE_NEEDED))
                 {
-                    // pausing first download in queue, if it's in downloading state
-                    ActiveDownloads[0].DownloadState = SKDownloadState.Paused;
-                    MapsDao.UpdateMapResource((MapDownloadResource)ActiveDownloads[0]);
+                    activeDownloads = new List<DownloadResource>();
+                }
+                else
+                {
+                    activeDownloads = getActiveMapDownloads();
+                    if (activeDownloads.Count != 0 && activeDownloads[0].DownloadState == SKToolsDownloadItem.Downloading)
+                    {
+                        activeDownloads[0].DownloadState = SKToolsDownloadItem.Paused;
+                        mapsDAO.updateMapResource((MapDownloadResource)activeDownloads[0]);
+                    }
                 }
             }
 
-            return AllMapResources != null && AllMapResources.Count > 0;
+            return allMapResources != null && allMapResources.Count > 0;
         }
 
-        /// <summary>
-        /// Filters the active downloads (having their state QUEUED, DOWNLOADING or PAUSED) from all the available downloads
-        /// 
-        /// @return
-        /// </summary>
-        private IList<DownloadResource> ActiveMapDownloads
+        private List<DownloadResource> getActiveMapDownloads()
         {
-            get
+            List<DownloadResource> activeMapDownloads = new List<DownloadResource>();
+            //String[] mapCodesArray = new Gson().fromJson(appContext.AppPrefs.GetStringPreference(ApplicationPreferences.DOWNLOAD_QUEUE_PREF_KEY), typeof(string[]));
+            string[] mapCodesArray = JsonConvert.DeserializeObject<string[]>(appContext.AppPrefs.GetStringPreference(ApplicationPreferences.DOWNLOAD_QUEUE_PREF_KEY));
+            if (mapCodesArray == null)
             {
-                IList<DownloadResource> activeMapDownloads = new List<DownloadResource>();
-                string[] mapCodesArray = JsonConvert.DeserializeObject<string[]>(_appContext.AppPrefs.GetStringPreference(ApplicationPreferences.DownloadQueuePrefKey));
-                if (mapCodesArray == null)
-                {
-                    return activeMapDownloads;
-                }
-                foreach (string mapCode in mapCodesArray)
-                {
-                    activeMapDownloads.Add(AllMapResources[mapCode]);
-                }
                 return activeMapDownloads;
             }
+            foreach (string mapCode in mapCodesArray)
+            {
+                activeMapDownloads.Add(allMapResources[mapCode]);
+            }
+            return activeMapDownloads;
         }
 
-        /// <summary>
-        /// Recursively populates list items with the corresponding parent & child data
-        /// </summary>
-        /// <param name="mapItem"> </param>
-        private void PopulateWithChildMaps(ListItem mapItem)
+        private void populateWithChildMaps(ListItem mapItem)
         {
             string code;
             if (mapItem.DownloadResource == null)
@@ -283,81 +208,70 @@ namespace Skobbler.SDKDemo.Activities
                 code = mapItem.DownloadResource.Code;
             }
 
-            IList<ListItem> childrenItems = GetChildrenOf(code);
-            childrenItems = childrenItems.OrderBy(x => x.Name).ToList();
+            List<ListItem> childrenItems = getChildrenOf(code);
+            childrenItems.Sort();
             foreach (ListItem childItem in childrenItems)
             {
-                childItem.parent = mapItem;
-                PopulateWithChildMaps(childItem);
+                childItem.Parent = mapItem;
+                populateWithChildMaps(childItem);
             }
             mapItem.Children = childrenItems;
         }
 
-        /// <summary>
-        /// Gets the list of child items for a given code
-        /// </summary>
-        private IList<ListItem> GetChildrenOf(string parentCode)
+        private List<ListItem> getChildrenOf(String parentCode)
         {
-            IList<ListItem> children = new List<ListItem>();
-            foreach (MapDownloadResource mapResource in AllMapResources.Values)
+            List<ListItem> children = new List<ListItem>();
+            foreach (MapDownloadResource mapResource in allMapResources.Values)
             {
                 if (mapResource.ParentCode.Equals(parentCode))
                 {
-                    ListItem listItem = new ListItem(this)
-                    {
-                        Name = mapResource.Name,
-                        DownloadResource = mapResource
-                    };
+                    ListItem listItem = new ListItem();
+                    listItem.Name = mapResource.getName();
+                    listItem.DownloadResource = mapResource;
                     children.Add(listItem);
                 }
             }
             return children;
         }
 
-        /// <summary>
-        /// Constructs a map from resource codes (keys )to list items (values) for the items currently displayed
-        /// </summary>
-        private void BuildCodesMap()
+        private void buildCodesMap()
         {
-            foreach (ListItem item in _currentListItems)
+            foreach (ListItem item in currentListItems)
             {
-                _codesMap[item.DownloadResource.Code] = item;
+                codesMap.Add(item.DownloadResource.Code, item);
             }
         }
 
-        /// <summary>
-        /// Represents the adapter associated with maps list
-        /// </summary>
         private class DownloadsAdapter : BaseAdapter<ListItem>, ISKToolsDownloadListener
         {
-            private readonly ResourceDownloadsListActivity _outerInstance;
-
-            public DownloadsAdapter(ResourceDownloadsListActivity outerInstance)
+            private readonly ResourceDownloadsListActivity _activity;
+            public DownloadsAdapter(ResourceDownloadsListActivity activity)
             {
-                _outerInstance = outerInstance;
+                _activity = activity;
             }
-
 
             public override int Count
             {
-                get
-                {
-                    return _outerInstance._currentListItems.Count;
-                }
+                get { return _activity.currentListItems.Count; }
             }
 
-            public override long GetItemId(int i)
+            public override ListItem this[int position]
+            {
+                get { return _activity.currentListItems[position]; }
+            }
+
+            public override long GetItemId(int position)
             {
                 return 0;
             }
 
-            public override View GetView(int position, View convertView, ViewGroup viewGroup)
+            public override View GetView(int position, View convertView, ViewGroup parent)
             {
                 ListItem currentItem = this[position];
-                View view;
+                View view = null;
                 if (convertView == null)
                 {
-                    LayoutInflater inflater = (LayoutInflater)_outerInstance.GetSystemService(LayoutInflaterService);
+                    LayoutInflater inflater = _activity.GetSystemService(Context.LayoutInflaterService) as LayoutInflater;
                     view = inflater.Inflate(Resource.Layout.element_download_list_item, null);
                 }
                 else
@@ -365,18 +279,18 @@ namespace Skobbler.SDKDemo.Activities
                     view = convertView;
                 }
 
-                ImageView arrowImage = (ImageView)view.FindViewById(Resource.Id.arrow);
-                TextView downloadSizeText = (TextView)view.FindViewById(Resource.Id.package_size);
-                TextView downloadNameText = (TextView)view.FindViewById(Resource.Id.package_name);
-                RelativeLayout middleLayout = (RelativeLayout)view.FindViewById(Resource.Id.middle_layout);
-                ImageView startPauseImage = (ImageView)view.FindViewById(Resource.Id.start_pause);
-                ImageView cancelImage = (ImageView)view.FindViewById(Resource.Id.cancel);
-                TextView stateText = (TextView)view.FindViewById(Resource.Id.current_state);
-                ProgressBar progressBar = (ProgressBar)view.FindViewById(Resource.Id.download_progress);
-                RelativeLayout progressDetailsLayout = (RelativeLayout)view.FindViewById(Resource.Id.progress_details);
-                TextView percentageText = (TextView)view.FindViewById(Resource.Id.percentage);
-                TextView timeLeftText = (TextView)view.FindViewById(Resource.Id.time_left);
-                TextView speedText = (TextView)view.FindViewById(Resource.Id.speed);
+                ImageView arrowImage = view.FindViewById<ImageView>(Resource.Id.arrow);
+                TextView downloadSizeText = view.FindViewById<TextView>(Resource.Id.package_size);
+                TextView downloadNameText = view.FindViewById<TextView>(Resource.Id.package_name);
+                RelativeLayout middleLayout = view.FindViewById<RelativeLayout>(Resource.Id.middle_layout);
+                ImageView startPauseImage = view.FindViewById<ImageView>(Resource.Id.start_pause);
+                ImageView cancelImage = view.FindViewById<ImageView>(Resource.Id.cancel);
+                TextView stateText = view.FindViewById<TextView>(Resource.Id.current_state);
+                ProgressBar progressBar = view.FindViewById<ProgressBar>(Resource.Id.download_progress);
+                RelativeLayout progressDetailsLayout = view.FindViewById<RelativeLayout>(Resource.Id.progress_details);
+                TextView percentageText = view.FindViewById<TextView>(Resource.Id.percentage);
+                TextView timeLeftText = view.FindViewById<TextView>(Resource.Id.time_left);
+                TextView speedText = view.FindViewById<TextView>(Resource.Id.speed);
 
                 downloadNameText.Text = currentItem.Name;
 
@@ -394,24 +308,24 @@ namespace Skobbler.SDKDemo.Activities
 
                     DownloadResource downloadResource = currentItem.DownloadResource;
 
-                    bool progressShown = downloadResource.DownloadState == SKDownloadState.Downloading || downloadResource.DownloadState == SKDownloadState.Paused;
+                    bool progressShown = downloadResource.DownloadState == SKToolsDownloadItem.Downloading || downloadResource.DownloadState == SKToolsDownloadItem.Paused;
                     if (progressShown)
                     {
                         progressBar.Visibility = ViewStates.Visible;
                         progressDetailsLayout.Visibility = ViewStates.Visible;
-                        progressBar.Progress = GetPercentage(downloadResource);
-                        percentageText.Text = GetPercentage(downloadResource) + "%";
-                        if (downloadResource.DownloadState == SKDownloadState.Paused)
+                        progressBar.Progress = getPercentage(downloadResource);
+                        percentageText.Text = getPercentage(downloadResource) + "%";
+                        if (downloadResource.DownloadState == SKToolsDownloadItem.Paused)
                         {
                             timeLeftText.Text = "-";
                             speedText.Text = "-";
                         }
-                        else if (_outerInstance._refreshDownloadEstimates)
+                        else if (_activity.refreshDownloadEstimates)
                         {
-                            Tuple<string, string> pair = CalculateDownloadEstimates(downloadResource, 20);
+                            Tuple<string, string> pair = calculateDownloadEstimates(downloadResource, 20);
                             speedText.Text = pair.Item1;
                             timeLeftText.Text = pair.Item2;
-                            _outerInstance._refreshDownloadEstimates = false;
+                            _activity.refreshDownloadEstimates = false;
                         }
                     }
                     else
@@ -424,14 +338,14 @@ namespace Skobbler.SDKDemo.Activities
                     if (downloadResource is MapDownloadResource)
                     {
                         MapDownloadResource mapResource = (MapDownloadResource)downloadResource;
-                        bytesToDownload = mapResource.SkmAndZipFilesSize + mapResource.TxgFileSize;
+                        bytesToDownload = mapResource.getSkmAndZipFilesSize() + mapResource.getTXGFileSize();
                     }
 
                     if (bytesToDownload != 0)
                     {
                         middleLayout.Visibility = ViewStates.Visible;
                         downloadSizeText.Visibility = ViewStates.Visible;
-                        downloadSizeText.Text = ConvertBytesToStringRepresentation(bytesToDownload);
+                        downloadSizeText.Text = convertBytesToStringRepresentation(bytesToDownload);
                     }
                     else
                     {
@@ -441,33 +355,36 @@ namespace Skobbler.SDKDemo.Activities
 
                     switch (downloadResource.DownloadState)
                     {
-                        case SKDownloadState.NotQueued:
-                            stateText.Text = "NOT QUEUED";
+                        case SKToolsDownloadItem.NotQueued:
+                            stateText.Text = ("NOT QUEUED");
                             break;
-                        case SKDownloadState.Queued:
-                            stateText.Text = "QUEUED";
+                        case SKToolsDownloadItem.Queued:
+                            stateText.Text = ("QUEUED");
                             break;
-                        case SKDownloadState.Downloading:
-                            stateText.Text = "DOWNLOADING";
+                        case SKToolsDownloadItem.Downloading:
+                            stateText.Text = ("DOWNLOADING");
                             break;
-                        case SKDownloadState.Downloaded:
-                            stateText.Text = "DOWNLOADED";
+                        case SKToolsDownloadItem.Downloaded:
+                            stateText.Text = ("DOWNLOADED");
                             break;
-                        case SKDownloadState.Paused:
-                            stateText.Text = "PAUSED";
+                        case SKToolsDownloadItem.Paused:
+                            stateText.Text = ("PAUSED");
                             break;
-                        case SKDownloadState.Installing:
-                            stateText.Text = "INSTALLING";
+                        case SKToolsDownloadItem.Installing:
+                            stateText.Text = ("INSTALLING");
                             break;
-                        case SKDownloadState.Installed:
-                            stateText.Text = "INSTALLED";
+                        case SKToolsDownloadItem.Installed:
+                            stateText.Text = ("INSTALLED");
+                            break;
+                        default:
                             break;
                     }
 
-                    if (downloadResource.DownloadState == SKDownloadState.NotQueued || downloadResource.DownloadState == SKDownloadState.Downloading || downloadResource.DownloadState == SKDownloadState.Paused)
+                    if (downloadResource.DownloadState == SKToolsDownloadItem.NotQueued || downloadResource.DownloadState == SKToolsDownloadItem.Downloading ||
+                            downloadResource.DownloadState == SKToolsDownloadItem.Paused)
                     {
                         startPauseImage.Visibility = ViewStates.Visible;
-                        if (downloadResource.DownloadState == SKDownloadState.Downloading)
+                        if (downloadResource.DownloadState == SKToolsDownloadItem.Downloading)
                         {
                             startPauseImage.SetImageResource(Resource.Drawable.pause);
                         }
@@ -481,7 +398,7 @@ namespace Skobbler.SDKDemo.Activities
                         startPauseImage.Visibility = ViewStates.Gone;
                     }
 
-                    if (downloadResource.DownloadState == SKDownloadState.NotQueued || downloadResource.DownloadState == SKDownloadState.Installing)
+                    if (downloadResource.DownloadState == SKToolsDownloadItem.NotQueued || downloadResource.DownloadState == SKToolsDownloadItem.Installing)
                     {
                         cancelImage.Visibility = ViewStates.Gone;
                     }
@@ -513,64 +430,64 @@ namespace Skobbler.SDKDemo.Activities
                         return;
                     }
 
-                    _outerInstance._currentListItems = currentItem.Children;
-                    _outerInstance.BuildCodesMap();
-                    _outerInstance._previousListIndexes.Push(_outerInstance._listView.FirstVisiblePosition);
-                    _outerInstance.UpdateListAndScrollToPosition(0);
+                    _activity.currentListItems = currentItem.Children;
+                    _activity.buildCodesMap();
+                    _activity.previousListIndexes.Push(_activity.listView.FirstVisiblePosition);
+                    _activity.updateListAndScrollToPosition(0);
                 };
 
                 startPauseImage.Click += (s, e) =>
                 {
-                    if (currentItem.DownloadResource.DownloadState != SKDownloadState.Downloading)
+                    if (currentItem.DownloadResource.DownloadState != SKToolsDownloadItem.Downloading)
                     {
-                        if (currentItem.DownloadResource.DownloadState != SKDownloadState.Paused)
+                        if (currentItem.DownloadResource.DownloadState != SKToolsDownloadItem.Paused)
                         {
-                            ActiveDownloads.Add(currentItem.DownloadResource);
-                            currentItem.DownloadResource.DownloadState = SKDownloadState.Queued;
-                            _outerInstance._appContext.AppPrefs.SaveDownloadQueuePreference(ActiveDownloads);
-                            string destinationPath = _outerInstance._appContext.MapResourcesDirPath + "downloads/";
+                            activeDownloads.Add(currentItem.DownloadResource);
+                            currentItem.DownloadResource.DownloadState = SKToolsDownloadItem.Queued;
+                            _activity.appContext.AppPrefs.SaveDownloadQueuePreference(activeDownloads);
+                            String destinationPath = _activity.appContext.MapResourcesDirPath + "downloads/";
                             File destinationFile = new File(destinationPath);
                             if (!destinationFile.Exists())
                             {
                                 destinationFile.Mkdirs();
                             }
                             currentItem.DownloadResource.DownloadPath = destinationPath;
-                            MapsDao.UpdateMapResource((MapDownloadResource)currentItem.DownloadResource);
+                            mapsDAO.updateMapResource((MapDownloadResource)currentItem.DownloadResource);
                         }
 
                         NotifyDataSetChanged();
 
-                        IList<SKToolsDownloadItem> downloadItems;
-                        if (!_outerInstance._downloadManager.DownloadProcessRunning)
+                        List<SKToolsDownloadItem> downloadItems;
+                        if (!_activity.downloadManager.IsDownloadProcessRunning)
                         {
-                            downloadItems = _outerInstance.CreateDownloadItemsFromDownloadResources(ActiveDownloads);
+                            downloadItems = _activity.createDownloadItemsFromDownloadResources(activeDownloads);
                         }
                         else
                         {
-                            IList<DownloadResource> mapDownloadResources = new List<DownloadResource>();
+                            List<DownloadResource> mapDownloadResources = new List<DownloadResource>();
                             mapDownloadResources.Add(currentItem.DownloadResource);
-                            downloadItems = _outerInstance.CreateDownloadItemsFromDownloadResources(mapDownloadResources);
+                            downloadItems = _activity.createDownloadItemsFromDownloadResources(mapDownloadResources);
                         }
-                        _outerInstance._downloadManager.StartDownload(downloadItems);
+                        _activity.downloadManager.StartDownload(downloadItems);
                     }
                     else
                     {
-                        _outerInstance._downloadManager.PauseDownloadThread();
+                        _activity.downloadManager.PauseDownloadThread();
                     }
                 };
 
                 cancelImage.Click += (s, e) =>
                 {
-                    if (currentItem.DownloadResource.DownloadState != SKDownloadState.Installed)
+                    if (currentItem.DownloadResource.DownloadState != SKToolsDownloadItem.Installed)
                     {
-                        bool downloadCancelled = _outerInstance._downloadManager.CancelDownload(currentItem.DownloadResource.Code);
+                        bool downloadCancelled = _activity.downloadManager.CancelDownload(currentItem.DownloadResource.Code);
                         if (!downloadCancelled)
                         {
-                            currentItem.DownloadResource.DownloadState = SKDownloadState.NotQueued;
-                            currentItem.DownloadResource.NoDownloadedBytes = 0;
-                            MapsDao.UpdateMapResource((MapDownloadResource)currentItem.DownloadResource);
-                            ActiveDownloads.Remove(currentItem.DownloadResource);
-                            _outerInstance._appContext.AppPrefs.SaveDownloadQueuePreference(ActiveDownloads);
+                            currentItem.DownloadResource.DownloadState = (SKToolsDownloadItem.NotQueued);
+                            currentItem.DownloadResource.NoDownloadedBytes = (0);
+                            mapsDAO.updateMapResource((MapDownloadResource)currentItem.DownloadResource);
+                            activeDownloads.Remove(currentItem.DownloadResource);
+                            _activity.appContext.AppPrefs.SaveDownloadQueuePreference(activeDownloads);
                             NotifyDataSetChanged();
                         }
                     }
@@ -579,11 +496,11 @@ namespace Skobbler.SDKDemo.Activities
                         bool packageDeleted = SKPackageManager.Instance.DeleteOfflinePackage(currentItem.DownloadResource.Code);
                         if (packageDeleted)
                         {
-                            Toast.MakeText(_outerInstance._appContext, ((MapDownloadResource)currentItem.DownloadResource).Name + " was uninstalled", ToastLength.Short).Show();
+                            Toast.MakeText(_activity.appContext, ((MapDownloadResource)currentItem.DownloadResource).getName() + " was uninstalled", ToastLength.Short).Show();
                         }
-                        currentItem.DownloadResource.DownloadState = SKDownloadState.NotQueued;
-                        currentItem.DownloadResource.NoDownloadedBytes = 0;
-                        MapsDao.UpdateMapResource((MapDownloadResource)currentItem.DownloadResource);
+                        currentItem.DownloadResource.DownloadState = (SKToolsDownloadItem.NotQueued);
+                        currentItem.DownloadResource.NoDownloadedBytes = (0);
+                        mapsDAO.updateMapResource((MapDownloadResource)currentItem.DownloadResource);
                         NotifyDataSetChanged();
                     }
                 };
@@ -591,37 +508,30 @@ namespace Skobbler.SDKDemo.Activities
                 return view;
             }
 
-            /// <summary>
-            /// Calculates download estimates (for current speed and remaining time) for the currently downloading resource.
-            /// This estimate is based on how much was downloaded during the reference period.
-            /// </summary>
-            /// <param name="resource"> currently downloading resource </param>
-            /// <param name="referencePeriodInSeconds"> the reference period (in seconds) </param>
-            /// <returns> formatted string representations of the current download speed and remaining time </returns>
-            internal virtual Tuple<string, string> CalculateDownloadEstimates(DownloadResource resource, int referencePeriodInSeconds)
+            private Tuple<String, String> calculateDownloadEstimates(DownloadResource resource, int referencePeriodInSeconds)
             {
                 long referencePeriod = 1000 * referencePeriodInSeconds;
-                long currentTimestamp = DateTimeOffset.Now.JavaTimeMillis();
-                long downloadPeriod = currentTimestamp - referencePeriod < _outerInstance._downloadStartTime ? currentTimestamp - _outerInstance._downloadStartTime : referencePeriod;
+                long currentTimestamp = DemoUtils.CurrentTimeMillis();
+                long downloadPeriod = currentTimestamp - referencePeriod < _activity.downloadStartTime ? currentTimestamp - _activity.downloadStartTime : referencePeriod;
                 long totalBytesDownloaded = 0;
-                IEnumerator<KeyValuePair<long?, long?>> iterator = _outerInstance._downloadChunksMap.GetEnumerator();
-                while (iterator.MoveNext())
+                var iterator = _activity.downloadChunksMap.GetEnumerator();
+                do
                 {
-                    KeyValuePair<long?, long?> entry = iterator.Current;
-                    long timestamp = entry.Key.Value;
-                    long bytesDownloaded = entry.Value.Value;
+                    var entry = iterator.Current;
+                    long timestamp = entry.Key;
+                    long bytesDownloaded = entry.Value;
                     if (currentTimestamp - timestamp > referencePeriod)
                     {
-                        //iterator.Remove();
+                        //iterator.remove(); remove current item
                     }
                     else
                     {
                         totalBytesDownloaded += bytesDownloaded;
                     }
-                }
+                } while (iterator.MoveNext());
                 float downloadPeriodSec = downloadPeriod / 1000f;
                 long bytesPerSecond = (long)Math.Round(totalBytesDownloaded / downloadPeriodSec);
-                string formattedTimeLeft = "";
+                String formattedTimeLeft = "";
                 if (totalBytesDownloaded == 0)
                 {
                     formattedTimeLeft = "-";
@@ -629,330 +539,298 @@ namespace Skobbler.SDKDemo.Activities
                 else if (resource is MapDownloadResource)
                 {
                     MapDownloadResource mapResource = (MapDownloadResource)resource;
-                    long remainingBytes = (mapResource.SkmAndZipFilesSize + mapResource.TxgFileSize) - mapResource.NoDownloadedBytes;
+                    long remainingBytes = (mapResource.getSkmAndZipFilesSize() + mapResource.getTXGFileSize()) - mapResource.NoDownloadedBytes;
                     long timeLeft = (downloadPeriod * remainingBytes) / totalBytesDownloaded;
-                    formattedTimeLeft = GetFormattedTime(timeLeft);
+                    formattedTimeLeft = getFormattedTime(timeLeft);
                 }
 
-                return new Tuple<string, string>(ConvertBytesToStringRepresentation(bytesPerSecond) + "/s", formattedTimeLeft);
+                return new Tuple<string, string>(convertBytesToStringRepresentation(bytesPerSecond) + "/s", formattedTimeLeft);
             }
 
             public override void NotifyDataSetChanged()
             {
-                _outerInstance.FindViewById(Resource.Id.cancel_all_button).Visibility = ActiveDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
+                _activity.FindViewById(Resource.Id.cancel_all_button).Visibility = activeDownloads.Count == 0 ? ViewStates.Gone : ViewStates.Visible;
                 base.NotifyDataSetChanged();
-                _outerInstance._listView.PostInvalidate();
+                _activity.listView.PostInvalidate();
             }
 
-            /// <summary>
-            /// Gets a percentage of how much was downloaded from the given resource
-            /// </summary>
-            /// <param name="downloadResource"> download resource </param>
-            /// <returns> perecntage value </returns>
-            internal virtual int GetPercentage(DownloadResource downloadResource)
+            private int getPercentage(DownloadResource downloadResource)
             {
                 int percentage = 0;
                 if (downloadResource is MapDownloadResource)
                 {
                     MapDownloadResource mapDownloadResource = (MapDownloadResource)downloadResource;
-                    percentage = (int)(((float)mapDownloadResource.NoDownloadedBytes / (mapDownloadResource.SkmAndZipFilesSize + mapDownloadResource.TxgFileSize)) * 100);
+                    percentage = (int)(((float)mapDownloadResource.NoDownloadedBytes / (mapDownloadResource.getSkmAndZipFilesSize() + mapDownloadResource.getTXGFileSize())) * 100);
                 }
                 return percentage;
             }
 
             public void OnDownloadProgress(SKToolsDownloadItem currentDownloadItem)
             {
-                ListItem affectedListItem = _outerInstance._codesMap[currentDownloadItem.ItemCode];
+                ListItem affectedListItem = _activity.codesMap[currentDownloadItem.ItemCode];
                 DownloadResource resource;
                 bool stateChanged = false;
                 long bytesDownloadedSinceLastUpdate = 0;
                 if (affectedListItem != null)
                 {
-                    stateChanged = currentDownloadItem.SKDownloadState != affectedListItem.DownloadResource.DownloadState;
+                    stateChanged = currentDownloadItem.DownloadState != affectedListItem.DownloadResource.DownloadState;
                     bytesDownloadedSinceLastUpdate = currentDownloadItem.NoDownloadedBytes - affectedListItem.DownloadResource.NoDownloadedBytes;
-                    affectedListItem.DownloadResource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
-                    affectedListItem.DownloadResource.DownloadState = currentDownloadItem.SKDownloadState;
+                    affectedListItem.DownloadResource.NoDownloadedBytes = (currentDownloadItem.NoDownloadedBytes);
+                    affectedListItem.DownloadResource.DownloadState = (currentDownloadItem.DownloadState);
                     resource = affectedListItem.DownloadResource;
-                    _outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
+                    _activity.RunOnUiThread((() => NotifyDataSetChanged()));
                 }
                 else
                 {
-                    resource = AllMapResources[currentDownloadItem.ItemCode];
+                    resource = allMapResources[currentDownloadItem.ItemCode];
                     bytesDownloadedSinceLastUpdate = currentDownloadItem.NoDownloadedBytes - resource.NoDownloadedBytes;
-                    stateChanged = currentDownloadItem.SKDownloadState != resource.DownloadState;
+                    stateChanged = currentDownloadItem.DownloadState != resource.DownloadState;
                     resource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
-                    resource.DownloadState = currentDownloadItem.SKDownloadState;
+                    resource.DownloadState = currentDownloadItem.DownloadState;
                 }
-                if (resource.DownloadState == SKDownloadState.Downloaded)
+                if (resource.DownloadState == SKToolsDownloadItem.Downloaded)
                 {
-                    ActiveDownloads.Remove(resource);
-                    _outerInstance._appContext.AppPrefs.SaveDownloadQueuePreference(ActiveDownloads);
+                    activeDownloads.Remove(resource);
+                    _activity.appContext.AppPrefs.SaveDownloadQueuePreference(activeDownloads);
                 }
-                else if (resource.DownloadState == SKDownloadState.Downloading)
+                else if (resource.DownloadState == SKToolsDownloadItem.Downloading)
                 {
-                    _outerInstance._downloadChunksMap[DateTimeOffset.Now.JavaTimeMillis()] = bytesDownloadedSinceLastUpdate;
+                    _activity.downloadChunksMap.Add(DemoUtils.CurrentTimeMillis(), bytesDownloadedSinceLastUpdate);
                     if (stateChanged)
                     {
-                        _outerInstance.StartPeriodicUpdates();
+                        _activity.StartPeriodicUpdates();
                     }
                 }
-                if (resource.DownloadState != SKDownloadState.Downloading)
+                if (resource.DownloadState != SKToolsDownloadItem.Downloading)
                 {
-                    _outerInstance.StopPeriodicUpdates();
+                    _activity.StopPeriodicUpdates();
                 }
                 if (stateChanged)
                 {
-                    MapsDao.UpdateMapResource((MapDownloadResource)resource);
+                    mapsDAO.updateMapResource((MapDownloadResource)resource);
                 }
 
-                _outerInstance._appContext.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
+                _activity.appContext.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
             }
 
             public void OnDownloadCancelled(string currentDownloadItemCode)
             {
-                _outerInstance.StopPeriodicUpdates();
-                ListItem affectedListItem = _outerInstance._codesMap[currentDownloadItemCode];
+                _activity.StopPeriodicUpdates();
+                ListItem affectedListItem = _activity.codesMap[currentDownloadItemCode];
                 if (affectedListItem != null)
                 {
-                    affectedListItem.DownloadResource.NoDownloadedBytes = 0;
-                    affectedListItem.DownloadResource.DownloadState = SKDownloadState.NotQueued;
-                    ActiveDownloads.Remove(affectedListItem.DownloadResource);
-                    MapsDao.UpdateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
-                    _outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
+                    affectedListItem.DownloadResource.NoDownloadedBytes = (0);
+                    affectedListItem.DownloadResource.DownloadState = (SKToolsDownloadItem.NotQueued);
+                    activeDownloads.Remove(affectedListItem.DownloadResource);
+                    mapsDAO.updateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
+                    _activity.RunOnUiThread(()=>_activity.adapter.NotifyDataSetChanged());
                 }
                 else
                 {
-                    DownloadResource downloadResource = AllMapResources[currentDownloadItemCode];
+                    DownloadResource downloadResource = allMapResources[currentDownloadItemCode];
                     downloadResource.NoDownloadedBytes = 0;
-                    downloadResource.DownloadState = SKDownloadState.NotQueued;
-                    ActiveDownloads.Remove(downloadResource);
-                    MapsDao.UpdateMapResource((MapDownloadResource)downloadResource);
+                    downloadResource.DownloadState = (SKToolsDownloadItem.NotQueued);
+                    activeDownloads.Remove(downloadResource);
+                    mapsDAO.updateMapResource((MapDownloadResource)downloadResource);
                 }
-                _outerInstance._appContext.AppPrefs.SaveDownloadQueuePreference(ActiveDownloads);
+                _activity.appContext.AppPrefs.SaveDownloadQueuePreference(activeDownloads);
             }
 
             public void OnAllDownloadsCancelled()
             {
-                _outerInstance.StopPeriodicUpdates();
-                _outerInstance._appContext.AppPrefs.SaveDownloadStepPreference(0);
-                foreach (DownloadResource downloadResource in ActiveDownloads)
+                _activity.StopPeriodicUpdates();
+                _activity.appContext.AppPrefs.SaveDownloadStepPreference(0);
+                foreach (DownloadResource downloadResource in activeDownloads)
                 {
-                    downloadResource.DownloadState = SKDownloadState.NotQueued;
+                    downloadResource.DownloadState = SKToolsDownloadItem.NotQueued;
                     downloadResource.NoDownloadedBytes = 0;
                 }
-                MapsDao.ClearResourcesInDownloadQueue();
-                ActiveDownloads.Clear();
-                _outerInstance._appContext.AppPrefs.SaveDownloadQueuePreference(ActiveDownloads);
-                _outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
+
+                mapsDAO.clearResourcesInDownloadQueue();
+                activeDownloads.Clear();
+                _activity.appContext.AppPrefs.SaveDownloadQueuePreference(activeDownloads);
+                _activity.RunOnUiThread(() => _activity.adapter.NotifyDataSetChanged());
             }
 
             public void OnDownloadPaused(SKToolsDownloadItem currentDownloadItem)
             {
-                _outerInstance.StopPeriodicUpdates();
-                ListItem affectedListItem = _outerInstance._codesMap[currentDownloadItem.ItemCode];
+                _activity.StopPeriodicUpdates();
+                ListItem affectedListItem = _activity.codesMap[currentDownloadItem.ItemCode];
                 if (affectedListItem != null)
                 {
-                    affectedListItem.DownloadResource.DownloadState = currentDownloadItem.SKDownloadState;
-                    affectedListItem.DownloadResource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
-                    MapsDao.UpdateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
-                    _outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
+                    affectedListItem.DownloadResource.DownloadState = (currentDownloadItem.DownloadState);
+                    affectedListItem.DownloadResource.NoDownloadedBytes = (currentDownloadItem.NoDownloadedBytes);
+                    mapsDAO.updateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
+                    _activity.RunOnUiThread(() => _activity.adapter.NotifyDataSetChanged());
                 }
                 else
                 {
-                    DownloadResource downloadResource = AllMapResources[currentDownloadItem.ItemCode];
-                    downloadResource.DownloadState = currentDownloadItem.SKDownloadState;
+                    DownloadResource downloadResource = allMapResources[currentDownloadItem.ItemCode];
+                    downloadResource.DownloadState = currentDownloadItem.DownloadState;
                     downloadResource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
-                    MapsDao.UpdateMapResource((MapDownloadResource)downloadResource);
+                    mapsDAO.updateMapResource((MapDownloadResource)downloadResource);
                 }
 
-                _outerInstance._appContext.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
+                _activity.appContext.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
             }
 
             public void OnInstallFinished(SKToolsDownloadItem currentInstallingItem)
             {
-                ListItem affectedListItem;
+                ListItem affectedListItem = _activity.codesMap[currentInstallingItem.ItemCode];
                 DownloadResource resource;
-                if (_outerInstance._codesMap.TryGetValue(currentInstallingItem.ItemCode, out affectedListItem))
+                if (affectedListItem != null)
                 {
-                    affectedListItem.DownloadResource.DownloadState = SKDownloadState.Installed;
+                    affectedListItem.DownloadResource.DownloadState = SKToolsDownloadItem.Installed;
                     resource = affectedListItem.DownloadResource;
-                    MapsDao.UpdateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
-                    _outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
+                    mapsDAO.updateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
+                    _activity.RunOnUiThread(() => _activity.adapter.NotifyDataSetChanged());
                 }
                 else
                 {
-                    resource = AllMapResources[currentInstallingItem.ItemCode];
-                    resource.DownloadState = SKDownloadState.Installed;
-                    MapsDao.UpdateMapResource((MapDownloadResource)resource);
+                    resource = allMapResources[currentInstallingItem.ItemCode];
+                    resource.DownloadState = SKToolsDownloadItem.Installed;
+                    mapsDAO.updateMapResource((MapDownloadResource)resource);
                 }
-                _outerInstance.RunOnUiThread(() => { Toast.MakeText(_outerInstance._appContext, ((MapDownloadResource)resource).Name + " was installed", ToastLength.Short).Show(); });
+
+                _activity.RunOnUiThread(() => Toast.MakeText(_activity.appContext, ((MapDownloadResource)resource).getName() + " was installed", ToastLength.Short).Show());
             }
 
             public void OnInstallStarted(SKToolsDownloadItem currentInstallingItem)
             {
-                ListItem affectedListItem = _outerInstance._codesMap[currentInstallingItem.ItemCode];
+                ListItem affectedListItem = _activity.codesMap[currentInstallingItem.ItemCode];
                 if (affectedListItem != null)
                 {
-                    affectedListItem.DownloadResource.DownloadState = SKDownloadState.Installing;
-                    MapsDao.UpdateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
-                    _outerInstance.RunOnUiThread(() => { NotifyDataSetChanged(); });
+                    affectedListItem.DownloadResource.DownloadState = SKToolsDownloadItem.Installing;
+                    mapsDAO.updateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
+                    _activity.RunOnUiThread(() => _activity.adapter.NotifyDataSetChanged());
                 }
                 else
                 {
-                    DownloadResource downloadResource = AllMapResources[currentInstallingItem.ItemCode];
-                    downloadResource.DownloadState = SKDownloadState.Installing;
-                    MapsDao.UpdateMapResource((MapDownloadResource)downloadResource);
+                    DownloadResource downloadResource = allMapResources[currentInstallingItem.ItemCode];
+                    downloadResource.DownloadState = (SKToolsDownloadItem.Installing);
+                    mapsDAO.updateMapResource((MapDownloadResource)downloadResource);
                 }
             }
 
             public void OnInternetConnectionFailed(SKToolsDownloadItem currentDownloadItem, bool responseReceivedFromServer)
             {
-                _outerInstance.StopPeriodicUpdates();
-                _outerInstance._appContext.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
+                _activity.StopPeriodicUpdates();
+                _activity.appContext.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
             }
 
             public void OnNotEnoughMemoryOnCurrentStorage(SKToolsDownloadItem currentDownloadItem)
             {
-                _outerInstance.RunOnUiThread(() => { Toast.MakeText(_outerInstance.ApplicationContext, "Not enough memory on the storage", ToastLength.Short).Show(); });
-            }
-
-            public override ListItem this[int position]
-            {
-                get { return _outerInstance._currentListItems[position]; }
+                _activity.RunOnUiThread(() => Toast.MakeText(_activity.ApplicationContext, "Not enough memory on the storage", ToastLength.Short).Show());
             }
         }
 
         public override void OnBackPressed()
         {
+            if (currentListItems == null || currentListItems.Count == 0)
+            {
+                base.OnBackPressed();
+                return;
+            }
 
-            ListItem firstItem = _currentListItems[0];
-            if (firstItem.parent.parent == null)
+            ListItem firstItem = currentListItems[0];
+
+            if (firstItem.Parent.Parent == null)
             {
                 base.OnBackPressed();
             }
             else
             {
-                _currentListItems = _currentListItems[0].parent.parent.Children;
-                BuildCodesMap();
-                UpdateListAndScrollToPosition(_previousListIndexes.Pop().Value);
+                currentListItems = currentListItems[0].Parent.Parent.Children;
+                buildCodesMap();
+                updateListAndScrollToPosition(previousListIndexes.Pop());
             }
         }
 
-        /// <summary>
-        /// Triggers an update on the list and sets its position to the given value </summary>
-        /// <param name="position"> </param>
-        private void UpdateListAndScrollToPosition(int position)
+        private void updateListAndScrollToPosition(int position)
         {
-            _listView.Visibility = ViewStates.Invisible;
-            _adapter.NotifyDataSetChanged();
-            _listView.Post(() =>
+            listView.Visibility = ViewStates.Invisible;
+            adapter.NotifyDataSetChanged();
+            listView.Post(() =>
             {
-                _listView.SetSelection(position);
-                _listView.Visibility = ViewStates.Visible;
+                listView.SetSelection(position);
+                listView.Visibility = ViewStates.Visible;
             });
         }
 
-        /// <summary>
-        /// Formats a given value (provided in bytes)
-        /// </summary>
-        /// <param name="value"> value (in bytes) </param>
-        /// <returns> formatted string (value and unit) </returns>
-        public static string ConvertBytesToStringRepresentation(long value)
+        public static String convertBytesToStringRepresentation(long value)
         {
-            long[] dividers = { Terra, Giga, Mega, Kilo, 1 };
-            string[] units = { "TB", "GB", "MB", "KB", "B" };
+            long[] dividers = new long[] { TERRA, GIGA, MEGA, KILO, 1 };
+            string[] units = new string[] { "TB", "GB", "MB", "KB", "B" };
 
             string result = null;
             for (int i = 0; i < dividers.Length; i++)
             {
                 long divider = dividers[i];
+
                 if (value >= divider)
                 {
-                    result = FormatDecimals(value, divider, units[i]);
+                    result = formatDecimals(value, divider, units[i]);
                     break;
                 }
             }
-            if (result != null)
-            {
-                return result;
-            }
-            return "0 B";
+
+            return result ?? "O B";
         }
 
-        /// <summary>
-        /// Format the time value given as parameter (in milliseconds)
-        /// </summary>
-        /// <param name="time"> time value (provided in milliseconds) </param>
-        /// <returns> formatted time </returns>
-        public static string GetFormattedTime(long time)
+        public static string getFormattedTime(long time)
         {
-            string format = string.Format("%0{0:D}d", 2);
+            string format = String.Format("%%0%dd", 2);
             time = time / 1000;
-            string seconds = string.Format(format, time % 60);
-            string minutes = string.Format(format, (time % 3600) / 60);
-            string hours = string.Format(format, time / 3600);
+            string seconds = String.Format(format, time % 60);
+            string minutes = String.Format(format, (time % 3600) / 60);
+            string hours = String.Format(format, time / 3600);
             string formattedTime = hours + ":" + minutes + ":" + seconds;
             return formattedTime;
         }
 
-        /// <summary>
-        /// Formats decimal numbers
-        /// </summary>
-        /// <param name="value"> the value that needs to be formatted </param>
-        /// <param name="divider"> the amount to divide the value to obtain the proper unit </param>
-        /// <param name="unit"> unit of the result </param>
-        /// <returns> formatted value </returns>
-        private static string FormatDecimals(long value, long divider, string unit)
+        private static String formatDecimals(long value, long divider, String unit)
         {
-            double result = divider > 1 ? value / (double)divider : value;
-            return (new DecimalFormat("#,##0.#")).Format(result) + " " + unit;
+            double result = divider > 1 ? (double)value / (double)divider : (double)value;
+            return new DecimalFormat("#,##0.#").Format(result) + " " + unit;
         }
 
-        /// <summary>
-        /// Generates a list of download items based on the list of resources given as input
-        /// </summary>
-        /// <param name="downloadResources"> list of resources </param>
-        /// <returns> a list of SKToolsDownloadItem objects </returns>
-        private IList<SKToolsDownloadItem> CreateDownloadItemsFromDownloadResources(IList<DownloadResource> downloadResources)
+        private List<SKToolsDownloadItem> createDownloadItemsFromDownloadResources(List<DownloadResource> downloadResources)
         {
-            IList<SKToolsDownloadItem> downloadItems = new List<SKToolsDownloadItem>();
+            List<SKToolsDownloadItem> downloadItems = new List<SKToolsDownloadItem>();
             foreach (DownloadResource currentDownloadResource in downloadResources)
             {
                 SKToolsDownloadItem currentItem = currentDownloadResource.ToDownloadItem();
-                if (currentDownloadResource.DownloadState == SKDownloadState.Queued)
+                if (currentDownloadResource.DownloadState == SKToolsDownloadItem.Queued)
                 {
-                    currentItem.CurrentStepIndex = 0;
+                    currentItem.CurrentStepIndex = ((sbyte)0);
                 }
-                else if ((currentDownloadResource.DownloadState == SKDownloadState.Paused) || (currentDownloadResource.DownloadState == SKDownloadState.Downloading))
+                else if ((currentDownloadResource.DownloadState == SKToolsDownloadItem.Paused) || (currentDownloadResource.DownloadState == SKToolsDownloadItem.Downloading))
                 {
-                    int downloadStepIndex = _appContext.AppPrefs.GetIntPreference(ApplicationPreferences.DownloadStepIndexPrefKey);
-                    currentItem.CurrentStepIndex = (sbyte)downloadStepIndex;
+                    int downloadStepIndex = appContext.AppPrefs.GetIntPreference(ApplicationPreferences.DOWNLOAD_STEP_INDEX_PREF_KEY);
+                    currentItem.CurrentStepIndex = ((sbyte)downloadStepIndex);
                 }
                 downloadItems.Add(currentItem);
             }
             return downloadItems;
         }
 
-        /// <summary>
-        /// Click handler </summary>
-        /// <param name="view"> </param>
-        [Export("OnClick")]
-        public virtual void OnClick(View view)
+        [Export("onClick")]
+        public void onClick(View view)
         {
             if (view.Id == Resource.Id.cancel_all_button)
             {
-                bool cancelled = _downloadManager.CancelAllDownloads();
+                bool cancelled = downloadManager.CancelAllDownloads();
                 if (!cancelled)
                 {
-                    foreach (DownloadResource resource in ActiveDownloads)
+                    foreach (DownloadResource resource in activeDownloads)
                     {
-                        resource.NoDownloadedBytes = 0;
-                        resource.DownloadState = SKDownloadState.NotQueued;
+                        resource.NoDownloadedBytes = (0);
+                        resource.DownloadState = (SKToolsDownloadItem.NotQueued);
                     }
-                    ActiveDownloads.Clear();
-                    _appContext.AppPrefs.SaveDownloadQueuePreference(ActiveDownloads);
-                    MapsDao.ClearResourcesInDownloadQueue();
-                    _adapter.NotifyDataSetChanged();
+                    activeDownloads.Clear();
+                    appContext.AppPrefs.SaveDownloadQueuePreference(activeDownloads);
+                    mapsDAO.clearResourcesInDownloadQueue();
+                    adapter.NotifyDataSetChanged();
                 }
             }
         }

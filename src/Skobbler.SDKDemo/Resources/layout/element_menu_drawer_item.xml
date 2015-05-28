@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    style="@style/menu_bar_item_background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/navmenu_item_label"
+        style="@style/menu_bar_item_text_normal_screen"
+        tools:text="ITEM 1" />
+
+
+</RelativeLayout>
+

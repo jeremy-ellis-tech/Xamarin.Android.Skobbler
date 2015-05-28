@@ -1,13 +1,11 @@
-Xamarin.Android.Skobbler v2.4.0
+Xamarin.Android.Skobbler v2.5.0
 ========================
 
 ## C#  bindings for the Skobbler Android SDK ##
 
 I am not associated with either [Skobbler](http://www.skobbler.com/) or [Xamarin .inc](http://xamarin.com/). All rights belong to their respective owners.
 
-This repository includes a C# translation of the demo included with the Skobbler SDK. This currently has a few small bugs which are probably a result of my [mis]translation. Raise an issue or send a pull request if you would like these fixed ASAP. A more stable version can be found tagged under `v2.3.0`.
-
-Xamarin.Android.Skobbler currently uses v2.4.0 of the Skobbler Android SDK
+This repository includes a C# translation of the demo included with the Skobbler SDK. This currently has a few small bugs which are probably a result of my [mis]translation. Raise an issue or send a pull request if you would like these fixed ASAP.
 
 ## Installation ##
 

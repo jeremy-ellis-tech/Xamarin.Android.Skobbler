@@ -22,8 +22,8 @@
     <string name="option_annotations">Annotations</string>
     <string name="option_routing_and_navigation">Routing and navigation</string>
     <string name="option_poi_tracking">POI tracking</string>
-    <string name="option_navigation_ui">Navigation UI</string>
-    <string name="option_pedestrian_navigation">Pedestrian Navigation</string>
+    <string name="option_car_navigation_ui">Car navigation UI</string>
+    <string name="option_pedestrian_navigation_ui">Pedestrian navigation UI</string>
     <string name="option_heat_map">Heat Map</string>
     <string name="map_style_day">Day</string>
     <string name="map_style_night">Night</string>
@@ -76,6 +76,22 @@
     <string name="clear_via_point">Clear via point</string>
     <string name="no_position_message">No current position</string>
     <string name="cancel_all_downloads">CANCEL ALL DOWNLOADS</string>
+    <string name="text_to_speech_engine_not_initialized">Text-to-speech could not be initialized</string>
+    <string name="no_offline_packages">No offline map packages are available</string>
+    <string name="test">Test</string>
+    <string name="testing">Testing</string>
+
+
+    <string name="real_reach_choose_type">Choose the real reach profile</string>
+    <string name="real_reach_profile_time">Time</string>
+    <string name="real_reach_profile_energy">Energy</string>
+    <string name="real_reach_profile_distance">Distance</string>
+
+    <string name="real_reach_online">Online</string>
+    <string name="real_reach_offline">Offline</string>
+    <string name="real_reach_hybrid">Hybrid</string>
+    <string name="round_trip">Round trip on</string>
+    <string name="round_trip_off">Round trip off</string>
 
     <!--Settings-->
     <string name="general_label">General</string>
@@ -111,6 +127,11 @@
     <string name="ten_mi_h">10mi/h</string>
     <string name="fifteen_mi_h">15mi/h</string>
     <string name="twelve_mi_h">20mi/h</string>
+
+    <string name="open_drawer">OPEN</string>
+    <string name="close_drawer">CLOSE</string>
+
+
 
 
 </resources>

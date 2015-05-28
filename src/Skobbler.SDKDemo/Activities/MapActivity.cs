@@ -29,312 +29,382 @@ using Skobbler.Ngx.Versioning;
 using Skobbler.SDKDemo.Application;
 using Skobbler.SDKDemo.Database;
 using Skobbler.SDKDemo.Util;
+using Android.Support.V4.Widget;
+using Android.Support.V4.App;
+using Android.Support.V4.View;
+using Skobbler.SDKDemo.Model;
+using Skobbler.SDKDemo.Adapter;
+using JavaObject = Java.Lang.Object;
 
 namespace Skobbler.SDKDemo.Activities
 {
-    [Activity(ConfigurationChanges = ConfigChanges.Orientation)]
-    class MapActivity : Activity, ISKMapSurfaceListener, ISKRouteListener, ISKNavigationListener, ISKRealReachListener, ISKPOITrackerListener, ISKCurrentPositionListener, ISensorEventListener, ISKMapUpdateListener, ISKToolsNavigationListener, TextToSpeech.IOnInitListener, ISKToolsDownloadListener
+    [Activity(ConfigurationChanges=(ConfigChanges.Orientation|ConfigChanges.ScreenSize))]
+    public class MapActivity : Activity, ISKMapSurfaceListener, ISKRouteListener, ISKNavigationListener, ISKRealReachListener, 
+        ISKPOITrackerListener, ISKCurrentPositionListener, ISensorEventListener, ISKMapUpdateListener, ISKToolsNavigationListener, ISKToolsDownloadListener
     {
-        private const sbyte GreenPinIconId = 0;
+        private static readonly byte GreenPinIconId = 0;
 
-        private const sbyte RedPinIconId = 1;
+        private static readonly byte RedPinIconId = 1;
 
-        public const sbyte ViaPointIconId = 4;
+        public static readonly byte ViaPointIconId = 4;
 
-        private const string Tag = "MapActivity";
+        private static readonly string Tag = "MapActivity";
 
         public const int Tracks = 1;
 
-        private enum MapOption
-        {
-            MapDisplay,
-            MapOverlays,
-            AlternativeRoutes,
-            MapStyles,
-            RealReach,
-            Tracks,
-            Annotations,
-            RoutingAndNavigation,
-            PoiTracking,
-            HeatMap,
-            MapInteraction,
-            NaviUi
-        }
+        public ToggleButton _toggleButton;
 
-        private enum MapAdvices
-        {
-            TextToSpeech,
-            AudioFiles
-        }
+        public static bool RoundTrip;
 
+        public static bool CompassAvailable;
+
+        private static readonly int MinimumTimeUntiLMapCanBeUpdated = 30;
+
+        private static readonly float SmoothFactorCompass = 0.1f;
 
         public static SKCategories.SKPOICategory[] HeatMapCategories;
 
-        /// <summary>
-        /// Current option selected
-        /// </summary>
-        private MapOption _currentMapOption = MapOption.MapDisplay;
+        public enum MapOption
+        {
+            MAP_DISPLAY,
+            MAP_STYLES,
+            HEAT_MAP,
+            MAP_CREATOR,
+            MAP_OVERLAYS,
+            ANNOTATIONS,
+            MAP_DOWNLOADS,
+            MAP_UPDATES,
+            MAP_INTERACTION,
+            ALTERNATIVE_ROUTES,
+            REAL_REACH,
+            TRACKS,
+            ROUTING_AND_NAVIGATION,
+            POI_TRACKING,
+            NAVI_UI,
+            ADDRESS_SEARCH,
+            NEARBY_SEARCH,
+            CATEGORY_SEARCH,
+            REVERSE_GEOCODING,
+            MAP_SECTION,
+            NAVIGATION_SECTION,
+            SEARCHES_SECTION,
+            PEDESTRIAN_NAVI,
+            TEST_SECTION,
+            TEST
+        }
 
-        /// <summary>
-        /// Application context object
-        /// </summary>
+        public enum MapAdvices
+        {
+            TEXT_TO_SPEECH, AUDIO_FILES
+        }
+
+        private float[] _energyConsumption = new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (float) 3.7395504, (float) 4.4476889, (float) 5.4306439, (float) 6.722719,
+            (float) 8.2830299, (float) 10.0275093, (float) 11.8820908, (float) 13.799201, (float) 15.751434, (float) 17.7231534, (float) 19.7051378, (float) 21.6916725,
+            (float) 23.679014, (float) 25.6645696, (float) 27.6464437, (float) 29.6231796, (float) 31.5936073};
+
+
+        private float[] _orientationValues;
+        private long _lastTimeWhenReceivedGpsSignal;
+        private float _currentCompassValue;
+        private ScreenOrientation _lastExactScreenOrientation = ScreenOrientation.Unspecified;
+        private MapOption _currentMapOption = MapOption.MAP_DISPLAY;
         private DemoApplication _app;
-
-        /// <summary>
-        /// Surface view for displaying the map
-        /// </summary>
         private SKMapSurfaceView _mapView;
-
-        /// <summary>
-        /// Options menu
-        /// </summary>
-        private View _menu;
-
-        /// <summary>
-        /// View for selecting alternative routes
-        /// </summary>
         private View _altRoutesView;
-
-        /// <summary>
-        /// View for selecting the map style
-        /// </summary>
         private LinearLayout _mapStylesView;
-
-        /// <summary>
-        /// View for real reach time profile
-        /// </summary>
-        private RelativeLayout _realReachTimeLayout;
-
-        /// <summary>
-        /// View for real reach energy profile
-        /// </summary>
-        private RelativeLayout _realReachEnergyLayout;
-
-        /// <summary>
-        /// Buttons for selecting alternative routes
-        /// </summary>
+        private LinearLayout _realReachLayout;
         private Button[] _altRoutesButtons;
-
-        /// <summary>
-        /// Bottom button
-        /// </summary>
-        private Button _bottomButton;
-
-        /// <summary>
-        /// The current position button
-        /// </summary>
+        public Button _bottomButton;
         private Button _positionMeButton;
-
-        /// <summary>
-        /// Custom view for adding an annotation
-        /// </summary>
         private RelativeLayout _customView;
-
-        /// <summary>
-        /// The heading button
-        /// </summary>
         private Button _headingButton;
-
-        /// <summary>
-        /// The map popup view
-        /// </summary>
         private SKCalloutView _mapPopup;
-
-        /// <summary>
-        /// Custom callout view title
-        /// </summary>
         private TextView _popupTitleView;
-
-        /// <summary>
-        /// Custom callout view description
-        /// </summary>
         private TextView _popupDescriptionView;
-
-        /// <summary>
-        /// Ids for alternative routes
-        /// </summary>
-        private IList<int?> _routeIds = new List<int?>();
-
-        /// <summary>
-        /// Tells if a navigation is ongoing
-        /// </summary>
+        private List<int> _routeIds = new List<int>();
         private bool _navigationInProgress;
-
-        /// <summary>
-        /// Tells if a navigation is ongoing
-        /// </summary>
         private bool _skToolsNavigationInProgress;
-
-        /// <summary>
-        /// Tells if a route calculation is ongoing
-        /// </summary>
         private bool _skToolsRouteCalculated;
-
-        /// <summary>
-        /// POIs to be detected on route
-        /// </summary>
-        private IDictionary<int?, SKTrackablePOI> _trackablePoIs;
-
-        /// <summary>
-        /// Trackable POIs that are currently rendered on the map
-        /// </summary>
-        private IDictionary<int?, SKTrackablePOI> _drawnTrackablePoIs;
-
-        /// <summary>
-        /// Tracker manager object
-        /// </summary>
+        private Dictionary<int, SKTrackablePOI> _trackablePOIs;
+        private Dictionary<int, SKTrackablePOI> _drawnTrackablePOIs;
         private SKPOITrackerManager _poiTrackingManager;
-
-        /// <summary>
-        /// Current position provider
-        /// </summary>
         private SKCurrentPositionProvider _currentPositionProvider;
-
-        /// <summary>
-        /// Current position
-        /// </summary>
         private SKPosition _currentPosition;
-
-        /// <summary>
-        /// Tells if heading is currently active
-        /// </summary>
         private bool _headingOn;
-
-
-        /// <summary>
-        /// Real reach range
-        /// </summary>
-        private int _realReachRange;
-
-        /// <summary>
-        /// Real reach default vehicle type
-        /// </summary>
-        private sbyte _realReachVehicleType = SKRealReachSettings.VehicleTypePedestrian;
-
-        /// <summary>
-        /// Pedestrian button
-        /// </summary>
+        private int _realReachRange = 10;
+        private SKRealReachSettings.SKRealReachVehicleType _realReachVehicleType = SKRealReachSettings.SKRealReachVehicleType.Car;
+        private SKRealReachSettings.SKRealReachMeasurementUnit _realReachUnitType = SKRealReachSettings.SKRealReachMeasurementUnit.Second;
+        private SKRouteSettings.SKRouteConnectionMode _skRouteConnectionMode = SKRouteSettings.SKRouteConnectionMode.Offline;
         private ImageButton _pedestrianButton;
-
-        /// <summary>
-        /// Bike button
-        /// </summary>
         private ImageButton _bikeButton;
-
-        /// <summary>
-        /// Car button
-        /// </summary>
         private ImageButton _carButton;
-
-        /// <summary>
-        /// Navigation UI layout
-        /// </summary>
-        private RelativeLayout _navigationUi;
-
-
-
-        private bool _isStartPointBtnPressed, _isEndPointBtnPressed, _isViaPointSelected;
-
-        /// <summary>
-        /// The start point(long/lat) for the route.
-        /// </summary>
+        private RelativeLayout _navigationUI;
+        private bool _isStartPointBtnPressed = false;
+        private bool _isEndPointBtnPressed = false;
+        private bool _isViaPointSelected = false;
         private SKCoordinate _startPoint;
-
-        /// <summary>
-        /// The destination(long/lat) point for the route
-        /// </summary>
         private SKCoordinate _destinationPoint;
-
-        /// <summary>
-        /// The via point(long/lat) for the route
-        /// </summary>
         private SKViaPoint _viaPoint;
-
-        /// <summary>
-        /// Text to speech engine
-        /// </summary>
-        private TextToSpeech _textToSpeechEngine;
-
+        public TextToSpeech _textToSpeechEngine;
         private SKToolsNavigationManager _navigationManager;
+        private DrawerLayout _drawerLayout;
+        private ListView _drawerList;
+        private ActionBarDrawerToggle _actionBarDrawerToggle;
+        private Dictionary<MapOption, MenuDrawerItem> _menuItems;
+        private List<MenuDrawerItem> _list;
+        private SKMapViewHolder _mapViewGroup;
+        private bool _shouldCacheTheNextRoute;
+        private int? _cachedRouteId;
+        private ListView _listView;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
             DemoUtils.InitializeLibrary(this);
-            SetContentView(Resource.Layout.activity_map);
+            base.OnCreate(savedInstanceState);
 
-            _app = (DemoApplication)Application;
+            SetContentView(Resource.Layout.activity_map);
+            _app = Application as DemoApplication;
 
             _currentPositionProvider = new SKCurrentPositionProvider(this);
             _currentPositionProvider.SetCurrentPositionListener(this);
+            _currentPositionProvider.RequestLocationUpdates(DemoUtils.HasGpsModule(this), DemoUtils.HasNetworkModule(this), false);
 
-            if (DemoUtils.HasGpsModule(this))
-            {
-                _currentPositionProvider.RequestLocationUpdates(true, false, true);
-            }
-            else if (DemoUtils.HasNetworkModule(this))
-            {
-                _currentPositionProvider.RequestLocationUpdates(false, true, true);
-            }
+            _mapViewGroup = FindViewById<SKMapViewHolder>(Resource.Id.view_group_map);
+            _mapViewGroup.SetMapSurfaceListener(this);
+            LayoutInflater inflater = GetSystemService(Context.LayoutInflaterService) as LayoutInflater;
+            _mapPopup = _mapViewGroup.CalloutView;
 
-            SKMapViewHolder mapViewGroup = (SKMapViewHolder)FindViewById(Resource.Id.view_group_map);
-            _mapView = mapViewGroup.MapSurfaceView;
-            _mapView.SetMapSurfaceListener(this);
-            LayoutInflater inflater = (LayoutInflater)GetSystemService(LayoutInflaterService);
-            _mapPopup = mapViewGroup.CalloutView;
             View view = inflater.Inflate(Resource.Layout.layout_popup, null);
-            _popupTitleView = (TextView)view.FindViewById(Resource.Id.top_text);
-            _popupDescriptionView = (TextView)view.FindViewById(Resource.Id.bottom_text);
+            _popupTitleView = view.FindViewById<TextView>(Resource.Id.top_text);
+            _popupDescriptionView = view.FindViewById<TextView>(Resource.Id.bottom_text);
             _mapPopup.SetCustomView(view);
 
-
-            ApplySettingsOnMapView();
             _poiTrackingManager = new SKPOITrackerManager(this);
 
-            _menu = FindViewById(Resource.Id.options_menu);
             _altRoutesView = FindViewById(Resource.Id.alt_routes);
-            _altRoutesButtons = new[] { (Button)FindViewById(Resource.Id.alt_route_1), (Button)FindViewById(Resource.Id.alt_route_2), (Button)FindViewById(Resource.Id.alt_route_3) };
 
-            _mapStylesView = (LinearLayout)FindViewById(Resource.Id.map_styles);
-            _bottomButton = (Button)FindViewById(Resource.Id.bottom_button);
-            _positionMeButton = (Button)FindViewById(Resource.Id.position_me_button);
-            _headingButton = (Button)FindViewById(Resource.Id.heading_button);
+            _altRoutesButtons = new Button[]
+        {
+            FindViewById<Button>(Resource.Id.alt_route_1),
+			FindViewById<Button>(Resource.Id.alt_route_2),
+			FindViewById<Button>(Resource.Id.alt_route_3)
+        };
 
-            _pedestrianButton = (ImageButton)FindViewById(Resource.Id.real_reach_pedestrian_button);
-            _bikeButton = (ImageButton)FindViewById(Resource.Id.real_reach_bike_button);
-            _carButton = (ImageButton)FindViewById(Resource.Id.real_reach_car_button);
+            _mapStylesView = FindViewById<LinearLayout>(Resource.Id.map_styles);
+            _bottomButton = FindViewById<Button>(Resource.Id.bottom_button);
+            _positionMeButton = FindViewById<Button>(Resource.Id.position_me_button);
+            _headingButton = FindViewById<Button>(Resource.Id.heading_button);
+
+            _pedestrianButton = FindViewById<ImageButton>(Resource.Id.real_reach_pedestrian_button);
+            _bikeButton = FindViewById<ImageButton>(Resource.Id.real_reach_bike_button);
+            _carButton = FindViewById<ImageButton>(Resource.Id.real_reach_car_button);
 
             SKVersioningManager.Instance.SetMapUpdateListener(this);
 
-            TextView realReachTimeText = (TextView)FindViewById(Resource.Id.real_reach_time);
-            TextView realReachEnergyText = (TextView)FindViewById(Resource.Id.real_reach_energy);
+            _toggleButton = FindViewById<ToggleButton>(Resource.Id.real_reach_round_trip);
+            _toggleButton.CheckedChange += (s, e) => RoundTrip = e.IsChecked;
 
-            SeekBar realReachSeekBar = (SeekBar)FindViewById(Resource.Id.real_reach_seekbar);
+            _realReachLayout = FindViewById<LinearLayout>(Resource.Id.real_reach_time_layout);
+            TextView realReachTimeText = FindViewById<TextView>(Resource.Id.real_reach_time);
+            SeekBar realReachSeekBar = FindViewById<SeekBar>(Resource.Id.real_reach_seekbar);
 
             realReachSeekBar.ProgressChanged += (s, e) =>
             {
-                realReachTimeText.Text = _realReachRange + " min";
-                ShowRealReach(_realReachVehicleType, _realReachRange);
-            };
-
-            SeekBar realReachEnergySeekBar = (SeekBar)FindViewById(Resource.Id.real_reach_energy_seekbar);
-            realReachEnergySeekBar.ProgressChanged += (s, e) =>
-            {
                 _realReachRange = e.Progress;
-                realReachEnergyText.Text = _realReachRange + "%";
-                ShowRealReachEnergy(_realReachRange);
+
+                string unit;
+                if (_realReachUnitType == SKRealReachSettings.SKRealReachMeasurementUnit.Second)
+                {
+                    unit = "min";
+                }
+                else if (_realReachUnitType == SKRealReachSettings.SKRealReachMeasurementUnit.Meter)
+                {
+                    unit = "km";
+                }
+                else
+                {
+                    unit = "%";
+                }
+
+                realReachTimeText.Text = _realReachRange + " " + unit;
+                ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
             };
 
-            _realReachTimeLayout = (RelativeLayout)FindViewById(Resource.Id.real_reach_time_layout);
-            _realReachEnergyLayout = (RelativeLayout)FindViewById(Resource.Id.real_reach_energy_layout);
-            _navigationUi = (RelativeLayout)FindViewById(Resource.Id.navigation_ui_layout);
 
-            InitializeTrackablePoIs();
+            Spinner spinner = FindViewById<Spinner>(Resource.Id.real_reach_spinner);
+
+            var adapter = ArrayAdapter.CreateFromResource(this, Resource.Array.real_reach_measurement_unit, Android.Resource.Layout.SimpleSpinnerItem);
+
+            adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+
+            spinner.Adapter = adapter;
+
+            spinner.ItemSelected += (s, e) =>
+            {
+                String unit = (String)e.Parent.GetItemAtPosition(e.Position);
+
+                realReachSeekBar.Progress = 10;
+
+                if (unit.Equals(GetString(Resource.String.real_reach_profile_distance)) || unit.Equals(GetString(Resource.String.real_reach_profile_time)))
+                {
+
+                    _realReachVehicleType = SKRealReachSettings.SKRealReachVehicleType.Car;
+                    _carButton.SetBackgroundColor(Resources.GetColor(Resource.Color.blue_filling));
+                    _bikeButton.SetBackgroundColor(Resources.GetColor(Resource.Color.grey));
+                    _pedestrianButton.SetBackgroundColor(Resources.GetColor(Resource.Color.grey));
+                    FindViewById(Resource.Id.real_reach_vehicle_layout).Visibility = ViewStates.Visible;
+
+                    if (unit.Equals(GetString(Resource.String.real_reach_profile_distance)))
+                    {
+                        _realReachUnitType = SKRealReachSettings.SKRealReachMeasurementUnit.Meter;
+                        realReachSeekBar.Max = 30;
+                        ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
+                    }
+                    else if (unit.Equals(GetString(Resource.String.real_reach_profile_time)))
+                    {
+                        _realReachUnitType = SKRealReachSettings.SKRealReachMeasurementUnit.Second;
+                        realReachSeekBar.Max = 60;
+                        ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
+                    }
+                }
+                else
+                {
+                    _realReachUnitType = SKRealReachSettings.SKRealReachMeasurementUnit.MiliwattHours;
+                    _realReachVehicleType = SKRealReachSettings.SKRealReachVehicleType.Bicycle;
+                    realReachSeekBar.Max = 100;
+                    FindViewById(Resource.Id.real_reach_vehicle_layout).Visibility = ViewStates.Gone;
+                    ShowRealReach(_realReachUnitType, SKRealReachSettings.SKRealReachVehicleType.Bicycle, _realReachRange, _skRouteConnectionMode);
+                }
+            };
+
+            spinner.NothingSelected += (s, e) =>
+            {
+                _realReachUnitType = SKRealReachSettings.SKRealReachMeasurementUnit.Second;
+                _realReachVehicleType = SKRealReachSettings.SKRealReachVehicleType.Car;
+                realReachSeekBar.Max = 60;
+                realReachSeekBar.Progress = 10;
+                FindViewById(Resource.Id.real_reach_vehicle_layout).Visibility = ViewStates.Visible;
+                ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
+            };
+
+            Spinner spinnerOnOfHy = FindViewById<Spinner>(Resource.Id.real_reach_online_offline_hybrid);
+            ArrayAdapter adapterOnOfHy = ArrayAdapter.CreateFromResource(this, Resource.Array.real_reach_online_offline_hybrid, Android.Resource.Layout.SimpleSpinnerItem);
+            adapterOnOfHy.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            spinnerOnOfHy.Adapter = adapterOnOfHy;
+
+            spinnerOnOfHy.ItemSelected += (s, e) =>
+            {
+                string unit = (string)e.Parent.GetItemAtPosition(e.Position);
+                realReachSeekBar.Progress = 10;
+
+                if (unit.Equals(GetString(Resource.String.real_reach_online)) || unit.Equals(GetString(Resource.String.real_reach_offline)))
+                {
+                    if (unit.Equals(GetString(Resource.String.real_reach_online)))
+                    {
+                        _skRouteConnectionMode = SKRouteSettings.SKRouteConnectionMode.Online;
+                        ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
+                    }
+                    else if (unit.Equals(GetString(Resource.String.real_reach_offline)))
+                    {
+                        _skRouteConnectionMode = SKRouteSettings.SKRouteConnectionMode.Offline;
+                        ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
+                    }
+
+                }
+                else
+                {
+                    _skRouteConnectionMode = SKRouteSettings.SKRouteConnectionMode.Hybrid;
+                    ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
+                }
+            };
+
+            spinnerOnOfHy.NothingSelected += (s, e) =>
+            {
+                _realReachUnitType = SKRealReachSettings.SKRealReachMeasurementUnit.Second;
+                _realReachVehicleType = SKRealReachSettings.SKRealReachVehicleType.Car;
+                realReachSeekBar.Max = 60;
+                realReachSeekBar.Progress = 10;
+                FindViewById(Resource.Id.real_reach_vehicle_layout).Visibility = ViewStates.Visible;
+                ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
+            };
+
+            _navigationUI = FindViewById<RelativeLayout>(Resource.Id.navigation_ui_layout);
+            InitializeTrackablePOIs();
+
+            _drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            _drawerList = FindViewById<ListView>(Resource.Id.left_drawer);
+            _drawerLayout.SetDrawerShadow(Resource.Drawable.drawer_shadow, GravityCompat.Start);
+
+            _actionBarDrawerToggle = new ActionBarDrawerToggle(this, _drawerLayout, Resource.Drawable.ic_launcher, Resource.String.open_drawer, Resource.String.close_drawer);
+
+            ActionBar.SetDisplayHomeAsUpEnabled(true);
+            ActionBar.SetHomeButtonEnabled(true);
+
+            _drawerLayout.SetDrawerListener(_actionBarDrawerToggle);
+
+            InitializeMenuItems();
         }
 
-        /// <summary>
-        /// Customize the map view
-        /// </summary>
+        public void InitializeMenuItems()
+        {
+            _menuItems = new Dictionary<MapOption, MenuDrawerItem>();
+            _menuItems.Add(MapOption.MAP_SECTION, Create(MapOption.MAP_SECTION, Resources.GetString(Resource.String.options_group_map).ToUpper(), MenuDrawerItem.SectionType));
+            _menuItems.Add(MapOption.MAP_DISPLAY, Create(MapOption.MAP_DISPLAY, Resources.GetString(Resource.String.option_map_display), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.MAP_STYLES, Create(MapOption.MAP_STYLES, Resources.GetString(Resource.String.option_map_styles), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.HEAT_MAP, Create(MapOption.HEAT_MAP, Resources.GetString(Resource.String.option_heat_map), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.MAP_CREATOR, Create(MapOption.MAP_CREATOR, Resources.GetString(Resource.String.option_map_creator), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.MAP_OVERLAYS, Create(MapOption.MAP_OVERLAYS, Resources.GetString(Resource.String.option_overlays), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.ANNOTATIONS, Create(MapOption.ANNOTATIONS, Resources.GetString(Resource.String.option_annotations), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.MAP_DOWNLOADS, Create(MapOption.MAP_DOWNLOADS, Resources.GetString(Resource.String.option_map_xml_and_downloads), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.MAP_UPDATES, Create(MapOption.MAP_UPDATES, Resources.GetString(Resource.String.option_map_updates), MenuDrawerItem.ItemTypeType));
+
+            if (DemoUtils.IsMultipleMapSupportEnabled)
+            {
+                _menuItems.Add(MapOption.MAP_INTERACTION, Create(MapOption.MAP_INTERACTION, Resources.GetString(Resource.String.option_other_map), MenuDrawerItem.ItemTypeType));
+            }
+
+            _menuItems.Add(MapOption.NAVIGATION_SECTION, Create(MapOption.NAVIGATION_SECTION, Resources.GetString(Resource.String.options_group_navigation).ToUpper(), MenuDrawerItem.SectionType));
+            _menuItems.Add(MapOption.ROUTING_AND_NAVIGATION, Create(MapOption.ROUTING_AND_NAVIGATION, Resources.GetString(Resource.String.option_routing_and_navigation), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.ALTERNATIVE_ROUTES, Create(MapOption.ALTERNATIVE_ROUTES, Resources.GetString(Resource.String.option_alternative_routes), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.REAL_REACH, Create(MapOption.REAL_REACH, Resources.GetString(Resource.String.option_real_reach), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.TRACKS, Create(MapOption.TRACKS, Resources.GetString(Resource.String.option_tracks), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.POI_TRACKING, Create(MapOption.POI_TRACKING, Resources.GetString(Resource.String.option_poi_tracking), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.NAVI_UI, Create(MapOption.NAVI_UI, Resources.GetString(Resource.String.option_car_navigation_ui), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.PEDESTRIAN_NAVI, Create(MapOption.PEDESTRIAN_NAVI, Resources.GetString(Resource.String.option_pedestrian_navigation_ui), MenuDrawerItem.ItemTypeType));
+
+            _menuItems.Add(MapOption.SEARCHES_SECTION, Create(MapOption.SEARCHES_SECTION, Resources.GetString(Resource.String.search).ToUpper(), MenuDrawerItem.SectionType));
+            _menuItems.Add(MapOption.ADDRESS_SEARCH, Create(MapOption.ADDRESS_SEARCH, Resources.GetString(Resource.String.option_address_search), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.NEARBY_SEARCH, Create(MapOption.NEARBY_SEARCH, Resources.GetString(Resource.String.option_nearby_search), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.CATEGORY_SEARCH, Create(MapOption.CATEGORY_SEARCH, Resources.GetString(Resource.String.option_category_search), MenuDrawerItem.ItemTypeType));
+            _menuItems.Add(MapOption.REVERSE_GEOCODING, Create(MapOption.REVERSE_GEOCODING, Resources.GetString(Resource.String.option_reverse_geocoding), MenuDrawerItem.ItemTypeType));
+
+            //menuItems.put(MapOption.TEST_SECTION, Create(MapOption.TEST_SECTION, Resources.GetString(Resource.String.test).toUpperCase(), MenuDrawerItem.SECTION_TYPE));
+            //menuItems.put(MapOption.TEST, Create(MapOption.TEST, Resources.GetString(Resource.String.testing), MenuDrawerItem.ITEM_TYPE));
+
+            _list = new List<MenuDrawerItem>(_menuItems.Values);
+
+            _drawerList.Adapter = new MenuDrawerAdapter(this, Resource.Layout.element_menu_drawer_item, _list);
+            _drawerList.ItemClick += (s, e) => SelectItem(e.Position);
+        }
+
+        public void SelectItem(int position)
+        {
+            _drawerList.SetItemChecked(position, true);
+            if (_drawerLayout.IsDrawerOpen(_drawerList))
+            {
+                _drawerLayout.CloseDrawer(_drawerList);
+            }
+            HandleMenuItemClick(_list[position].MapOption);
+        }
+
+        public static MenuDrawerItem Create(MapOption mapOption, string label, int itemType)
+        {
+            MenuDrawerItem menuDrawerItem = new MenuDrawerItem(mapOption);
+            menuDrawerItem.Label = label;
+            menuDrawerItem.ItemType = itemType;
+            return menuDrawerItem;
+        }
+
         private void ApplySettingsOnMapView()
         {
             _mapView.MapSettings.MapRotationEnabled = true;
@@ -346,51 +416,49 @@ namespace Skobbler.SDKDemo.Activities
             _mapView.MapSettings.InertiaPanningEnabled = true;
         }
 
-        /// <summary>
-        /// Populate the collection of trackable POIs
-        /// </summary>
-        private void InitializeTrackablePoIs()
+        private void InitializeTrackablePOIs()
         {
+            _trackablePOIs = new Dictionary<int, SKTrackablePOI>();
 
-            _trackablePoIs = new Dictionary<int?, SKTrackablePOI>();
+            _trackablePOIs.Add(64142, new SKTrackablePOI(64142, 0, 37.735610, -122.446434, -1, "Teresita Boulevard"));
+            _trackablePOIs.Add(64143, new SKTrackablePOI(64143, 0, 37.732367, -122.442033, -1, "Congo Street"));
+            _trackablePOIs.Add(64144, new SKTrackablePOI(64144, 0, 37.732237, -122.429190, -1, "John F Foran Freeway"));
+            _trackablePOIs.Add(64145, new SKTrackablePOI(64145, 1, 37.738090, -122.401470, -1, "Revere Avenue"));
+            _trackablePOIs.Add(64146, new SKTrackablePOI(64146, 0, 37.741128, -122.398562, -1, "McKinnon Ave"));
+            _trackablePOIs.Add(64147, new SKTrackablePOI(64147, 1, 37.746154, -122.394077, -1, "Evans Ave"));
+            _trackablePOIs.Add(64148, new SKTrackablePOI(64148, 0, 37.750057, -122.392287, -1, "Cesar Chavez Street"));
+            _trackablePOIs.Add(64149, new SKTrackablePOI(64149, 1, 37.762823, -122.392957, -1, "18th Street"));
+            _trackablePOIs.Add(64150, new SKTrackablePOI(64150, 0, 37.760242, -122.392495, 180, "20th Street"));
+            _trackablePOIs.Add(64151, new SKTrackablePOI(64151, 0, 37.755157, -122.392196, 180, "23rd Street"));
 
-            _trackablePoIs[64142] = new SKTrackablePOI(64142, 0, 37.735610, -122.446434, -1, "Teresita Boulevard");
-            _trackablePoIs[64143] = new SKTrackablePOI(64143, 0, 37.732367, -122.442033, -1, "Congo Street");
-            _trackablePoIs[64144] = new SKTrackablePOI(64144, 0, 37.732237, -122.429190, -1, "John F Foran Freeway");
-            _trackablePoIs[64145] = new SKTrackablePOI(64145, 1, 37.738090, -122.401470, -1, "Revere Avenue");
-            _trackablePoIs[64146] = new SKTrackablePOI(64146, 0, 37.741128, -122.398562, -1, "McKinnon Ave");
-            _trackablePoIs[64147] = new SKTrackablePOI(64147, 1, 37.746154, -122.394077, -1, "Evans Ave");
-            _trackablePoIs[64148] = new SKTrackablePOI(64148, 0, 37.750057, -122.392287, -1, "Cesar Chavez Street");
-            _trackablePoIs[64149] = new SKTrackablePOI(64149, 1, 37.762823, -122.392957, -1, "18th Street");
-            _trackablePoIs[64150] = new SKTrackablePOI(64150, 0, 37.760242, -122.392495, 180, "20th Street");
-            _trackablePoIs[64151] = new SKTrackablePOI(64151, 0, 37.755157, -122.392196, 180, "23rd Street");
+            _trackablePOIs.Add(64152, new SKTrackablePOI(64152, 0, 37.773526, -122.452706, -1, "Shrader Street"));
+            _trackablePOIs.Add(64153, new SKTrackablePOI(64153, 0, 37.786535, -122.444528, -1, "Pine Street"));
+            _trackablePOIs.Add(64154, new SKTrackablePOI(64154, 1, 37.792242, -122.424426, -1, "Franklin Street"));
+            _trackablePOIs.Add(64155, new SKTrackablePOI(64155, 0, 37.716146, -122.409480, -1, "Campbell Ave"));
+            _trackablePOIs.Add(64156, new SKTrackablePOI(64156, 0, 37.719133, -122.388280, -1, "Fitzgerald Ave"));
 
-            _trackablePoIs[64152] = new SKTrackablePOI(64152, 0, 37.773526, -122.452706, -1, "Shrader Street");
-            _trackablePoIs[64153] = new SKTrackablePOI(64153, 0, 37.786535, -122.444528, -1, "Pine Street");
-            _trackablePoIs[64154] = new SKTrackablePOI(64154, 1, 37.792242, -122.424426, -1, "Franklin Street");
-            _trackablePoIs[64155] = new SKTrackablePOI(64155, 0, 37.716146, -122.409480, -1, "Campbell Ave");
-            _trackablePoIs[64156] = new SKTrackablePOI(64156, 0, 37.719133, -122.388280, -1, "Fitzgerald Ave");
-
-            _drawnTrackablePoIs = new Dictionary<int?, SKTrackablePOI>();
+            _drawnTrackablePOIs = new Dictionary<int, SKTrackablePOI>();
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            _mapView.OnResume();
+
+            _mapViewGroup.OnResume();
 
             if (_headingOn)
             {
                 StartOrientationSensor();
             }
 
-            if (_currentMapOption == MapOption.NaviUi)
+            if (_currentMapOption == MapOption.NAVI_UI)
             {
-                ToggleButton selectStartPointBtn = (ToggleButton)FindViewById(Resource.Id.select_start_point_button);
+                ToggleButton selectStartPointBtn = FindViewById<ToggleButton>(Resource.Id.select_start_point_button);
                 ISharedPreferences sharedPreferences = PreferenceManager.GetDefaultSharedPreferences(this);
-                string prefNavigationType = sharedPreferences.GetString(PreferenceTypes.KNavigationType, "1");
+                string prefNavigationType = sharedPreferences.GetString(PreferenceTypes.K_NAVIGATION_TYPE, "1");
+
                 if (prefNavigationType.Equals("0"))
-                { // real navi
+                {
                     selectStartPointBtn.Visibility = ViewStates.Gone;
                 }
                 else if (prefNavigationType.Equals("1"))
@@ -399,17 +467,24 @@ namespace Skobbler.SDKDemo.Activities
                 }
             }
 
-            if (_currentMapOption == MapOption.HeatMap && HeatMapCategories != null)
+            if (!DemoUtils.IsMultipleMapSupportEnabled && _currentMapOption == MapOption.HEAT_MAP && HeatMapCategories != null)
             {
                 _mapView.ShowHeatMapsWithPoiType(HeatMapCategories);
+            }
+
+            if (_currentMapOption == MapOption.MAP_INTERACTION && IsRouteCached)
+            {
+                LoadRouteFromCache();
             }
         }
 
         protected override void OnPause()
         {
             base.OnPause();
-            _mapView.OnPause();
-            if (_headingOn)
+
+            _mapViewGroup.OnPause();
+
+            if (_headingOn || CompassAvailable)
             {
                 StopOrientationSensor();
             }
@@ -418,32 +493,53 @@ namespace Skobbler.SDKDemo.Activities
         protected override void OnDestroy()
         {
             base.OnDestroy();
+
             _currentPositionProvider.StopLocationUpdates();
+
             SKMaps.Instance.DestroySKMaps();
+
             if (_textToSpeechEngine != null)
             {
                 _textToSpeechEngine.Stop();
                 _textToSpeechEngine.Shutdown();
             }
-            Process.KillProcess(Process.MyPid());
         }
 
-        public void OnSurfaceCreated()
+        public void OnSurfaceCreated(SKMapViewHolder mapHolder)
         {
-            View chessBackground = FindViewById(Resource.Id.chess_board_background);
-            chessBackground.Visibility = ViewStates.Gone;
-            _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.None;
+            FindViewById(Resource.Id.chess_board_background).Visibility = ViewStates.Gone;
+
+            _mapView = mapHolder.MapSurfaceView;
+
+            ApplySettingsOnMapView();
+
+            if (SplashActivity.NewMapVersionDetected != 0)
+            {
+                ShowUpdateDialog(SplashActivity.NewMapVersionDetected);
+            }
+
+            if (!_navigationInProgress)
+            {
+                _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.None;
+            }
+
+            if (DemoUtils.IsMultipleMapSupportEnabled && _currentMapOption == MapOption.HEAT_MAP && HeatMapCategories != null)
+            {
+                _mapView.ShowHeatMapsWithPoiType(HeatMapCategories);
+            }
+
+            if (_currentPosition != null)
+            {
+                _mapView.ReportNewGPSPosition(_currentPosition);
+            }
         }
 
         public void OnBoundingBoxImageRendered(int i)
         {
-
         }
-
 
         public void OnGLInitializationError(string messsage)
         {
-
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
@@ -455,7 +551,7 @@ namespace Skobbler.SDKDemo.Activities
                 switch (requestCode)
                 {
                     case Tracks:
-                        if (_currentMapOption.Equals(MapOption.Tracks) && TrackElementsActivity.SelectedTrackElement != null)
+                        if (_currentMapOption.Equals(MapOption.TRACKS) && TrackElementsActivity.SelectedTrackElement != null)
                         {
                             _mapView.DrawTrackElement(TrackElementsActivity.SelectedTrackElement);
                             _mapView.FitTrackElementInView(TrackElementsActivity.SelectedTrackElement, false);
@@ -470,6 +566,7 @@ namespace Skobbler.SDKDemo.Activities
                 }
             }
 
+
         }
 
         public override bool OnKeyDown(Keycode keyCode, KeyEvent e)
@@ -478,25 +575,19 @@ namespace Skobbler.SDKDemo.Activities
             {
                 if (keyCode == Keycode.Menu)
                 {
-                    if (_menu.Visibility == ViewStates.Visible)
-                    {
-                        _menu.Visibility = ViewStates.Gone;
-                    }
-                    else if (_menu.Visibility == ViewStates.Gone)
-                    {
-                        _menu.Visibility = ViewStates.Visible;
-                        _menu.BringToFront();
-                    }
+                    _drawerLayout.OpenDrawer((int)GravityFlags.Left);
                 }
                 return true;
             }
-            return base.OnKeyDown(keyCode, e);
+            else
+            {
+                return base.OnKeyDown(keyCode, e);
+            }
         }
 
-        [Export("OnClick")]
+        [Export("onClick")]
         public void OnClick(View v)
         {
-
             switch (v.Id)
             {
 
@@ -522,36 +613,37 @@ namespace Skobbler.SDKDemo.Activities
                     SelectMapStyle(new SKMapViewStyle(_app.MapResourcesDirPath + "grayscalestyle/", "grayscalestyle.json"));
                     break;
                 case Resource.Id.bottom_button:
-                    if (_currentMapOption == MapOption.RoutingAndNavigation || _currentMapOption == MapOption.Tracks)
+                    if (_currentMapOption == MapOption.ROUTING_AND_NAVIGATION || _currentMapOption == MapOption.TRACKS)
                     {
                         if (_bottomButton.Text.Equals(Resources.GetString(Resource.String.calculate_route)))
                         {
-                            LaunchRouteCalculation();
+                            LaunchRouteCalculation(new SKCoordinate(-122.397674, 37.761278), new SKCoordinate(-122.448270, 37.738761));
                         }
                         else if (_bottomButton.Text.Equals(Resources.GetString(Resource.String.start_navigation)))
                         {
-                            (new AlertDialog.Builder(this))
-                                .SetMessage("Choose the advice type")
-                                .SetCancelable(false)
-                                .SetPositiveButton("Scout audio", (s, e) =>
-                                {
-                                    _bottomButton.Text = Resources.GetString(Resource.String.stop_navigation);
-                                    AdvicesAndStartNavigation = MapAdvices.AudioFiles;
-                                })
-                                   .SetNegativeButton("Text to speech", (s, e) =>
-                                   {
-                                       if (_textToSpeechEngine == null)
-                                       {
-                                           Toast.MakeText(this, "Initializing TTS engine", ToastLength.Long).Show();
-                                           _textToSpeechEngine = new TextToSpeech(this, this);
-                                       }
-                                       else
-                                       {
-                                           _bottomButton.Text = Resources.GetString(Resource.String.stop_navigation);
-                                           AdvicesAndStartNavigation = MapAdvices.TextToSpeech;
-                                       }
-                                   })
-                                   .Show();
+                            new AlertDialog.Builder(this)
+                                    .SetMessage("Choose the advice type")
+                                    .SetCancelable(false)
+                                    .SetPositiveButton("Scout audio", (s, e) =>
+                                    {
+                                        _bottomButton.Text = Resources.GetString(Resource.String.stop_navigation);
+                                        SetAdvicesAndStartNavigation(MapAdvices.AUDIO_FILES);
+                                    })
+                                    .SetNegativeButton("Text to speech", (s, e) =>
+                                    {
+                                        if (_textToSpeechEngine == null)
+                                        {
+                                            Toast.MakeText(this, "Initializing TTS engine", ToastLength.Long).Show();
+                                            _textToSpeechEngine = new TextToSpeech(this, new TextToSpeechOnInitListener(this));
+                                        }
+                                        else
+                                        {
+                                            _bottomButton.Text = Resources.GetString(Resource.String.stop_navigation);
+                                            SetAdvicesAndStartNavigation(MapAdvices.TEXT_TO_SPEECH);
+                                        }
+
+                                    })
+                                    .Show();
                             _bottomButton.Text = Resources.GetString(Resource.String.stop_navigation);
                         }
                         else if (_bottomButton.Text.Equals(Resources.GetString(Resource.String.stop_navigation)))
@@ -560,13 +652,21 @@ namespace Skobbler.SDKDemo.Activities
                             _bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
                         }
                     }
+                    else if (_currentMapOption == MapOption.MAP_INTERACTION)
+                    {
+                        Toast.MakeText(this, "New map instance created", ToastLength.Long).Show();
+                        SKRouteManager.Instance.ClearCurrentRoute();
+
+                        Intent intent = new Intent(this, typeof(MapCacheActivity));
+                        StartActivity(intent);
+                    }
                     break;
                 case Resource.Id.position_me_button:
                     if (_headingOn)
                     {
-                        Heading = false;
+                        setHeading(false);
                     }
-                    if (_currentPosition != null)
+                    if (_mapView != null && _currentPosition != null)
                     {
                         _mapView.CenterMapOnCurrentPositionSmooth(17, 500);
                     }
@@ -578,7 +678,7 @@ namespace Skobbler.SDKDemo.Activities
                 case Resource.Id.heading_button:
                     if (_currentPosition != null)
                     {
-                        Heading = true;
+                        setHeading(true);
                     }
                     else
                     {
@@ -586,37 +686,30 @@ namespace Skobbler.SDKDemo.Activities
                     }
                     break;
                 case Resource.Id.real_reach_pedestrian_button:
-                    _realReachVehicleType = SKRealReachSettings.VehicleTypePedestrian;
-                    ShowRealReach(_realReachVehicleType, _realReachRange);
+                    _realReachVehicleType = SKRealReachSettings.SKRealReachVehicleType.Pedestrian;
+                    ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
                     _pedestrianButton.SetBackgroundColor(Resources.GetColor(Resource.Color.blue_filling));
                     _bikeButton.SetBackgroundColor(Resources.GetColor(Resource.Color.grey));
                     _carButton.SetBackgroundColor(Resources.GetColor(Resource.Color.grey));
                     break;
                 case Resource.Id.real_reach_bike_button:
-                    _realReachVehicleType = SKRealReachSettings.VehicleTypeBicycle;
-                    ShowRealReach(_realReachVehicleType, _realReachRange);
+                    _realReachVehicleType = SKRealReachSettings.SKRealReachVehicleType.Bicycle;
+                    ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
                     _bikeButton.SetBackgroundColor(Resources.GetColor(Resource.Color.blue_filling));
                     _pedestrianButton.SetBackgroundColor(Resources.GetColor(Resource.Color.grey));
                     _carButton.SetBackgroundColor(Resources.GetColor(Resource.Color.grey));
                     break;
                 case Resource.Id.real_reach_car_button:
-                    _realReachVehicleType = SKRealReachSettings.VehicleTypeCar;
-                    ShowRealReach(_realReachVehicleType, _realReachRange);
+                    _realReachVehicleType = SKRealReachSettings.SKRealReachVehicleType.Car;
+                    ShowRealReach(_realReachUnitType, _realReachVehicleType, _realReachRange, _skRouteConnectionMode);
                     _carButton.SetBackgroundColor(Resources.GetColor(Resource.Color.blue_filling));
                     _pedestrianButton.SetBackgroundColor(Resources.GetColor(Resource.Color.grey));
                     _bikeButton.SetBackgroundColor(Resources.GetColor(Resource.Color.grey));
                     break;
-                case Resource.Id.exit_real_reach_time:
-                    _realReachTimeLayout.Visibility = ViewStates.Gone;
-                    ClearMap();
-                    break;
-                case Resource.Id.exit_real_reach_energy:
-                    _realReachEnergyLayout.Visibility = ViewStates.Gone;
-                    ClearMap();
-                    break;
                 case Resource.Id.navigation_ui_back_button:
-                    Button backButton = (Button)FindViewById(Resource.Id.navigation_ui_back_button);
-                    LinearLayout naviButtons = (LinearLayout)FindViewById(Resource.Id.navigation_ui_buttons);
+                    Button backButton = FindViewById<Button>(Resource.Id.navigation_ui_back_button);
+                    LinearLayout naviButtons = FindViewById<LinearLayout>(Resource.Id.navigation_ui_buttons);
+
                     if (backButton.Text.Equals(">"))
                     {
                         naviButtons.Visibility = ViewStates.Visible;
@@ -629,19 +722,23 @@ namespace Skobbler.SDKDemo.Activities
                     }
                     break;
                 case Resource.Id.calculate_routes_button:
+                    _drawerLayout.SetDrawerLockMode(DrawerLayout.LockModeLockedClosed);
+                    ActionBar.SetDisplayHomeAsUpEnabled(false);
+                    ActionBar.SetHomeButtonEnabled(false);
                     CalculateRouteFromSKTools();
                     break;
 
                 case Resource.Id.settings_button:
-                    Intent intent = new Intent(this, typeof(SettingsActivity));
-                    StartActivity(intent);
+                    StartActivity(new Intent(this, typeof(SettingsActivity)));
                     break;
                 case Resource.Id.start_free_drive_button:
                     StartFreeDriveFromSKTools();
+                    ActionBar.SetDisplayHomeAsUpEnabled(false);
+                    ActionBar.SetHomeButtonEnabled(false);
                     break;
                 case Resource.Id.clear_via_point_button:
                     _viaPoint = null;
-                    _mapView.DeleteAnnotation(ViaPointIconId);
+                    _mapView.DeleteAnnotation(MapActivity.ViaPointIconId);
                     FindViewById(Resource.Id.clear_via_point_button).Visibility = ViewStates.Gone;
                     break;
                 case Resource.Id.position_me_navigation_ui_button:
@@ -656,33 +753,46 @@ namespace Skobbler.SDKDemo.Activities
                         Toast.MakeText(this, GetString(Resource.String.no_position_available), ToastLength.Long).Show();
                     }
                     break;
+
                 default:
                     break;
             }
         }
 
-        public void OnInit(OperationResult status)
+        private class TextToSpeechOnInitListener : JavaObject, TextToSpeech.IOnInitListener
         {
-            if (status == OperationResult.Success)
+            private readonly MapActivity _context;
+            public TextToSpeechOnInitListener(MapActivity context)
             {
-                LanguageAvailableResult result = _textToSpeechEngine.SetLanguage(Locale.English);
-
-                if (result == LanguageAvailableResult.MissingData || result == LanguageAvailableResult.NotSupported)
-                {
-                    Toast.MakeText(this, "This Language is not supported", ToastLength.Long).Show();
-                }
+                _context = context;
             }
-            _bottomButton.Text = Resources.GetString(Resource.String.stop_navigation);
-            AdvicesAndStartNavigation = MapAdvices.TextToSpeech;
-        }
 
+            public void OnInit(OperationResult status)
+            {
+
+                if (status == OperationResult.Success)
+                {
+                    LanguageAvailableResult result = _context._textToSpeechEngine.SetLanguage(Locale.English);
+                    if (result == LanguageAvailableResult.MissingData || result == LanguageAvailableResult.NotSupported)
+                    {
+                        Toast.MakeText(_context, "This Language is not supported", ToastLength.Long).Show();
+                    }
+                }
+                else
+                {
+                    Toast.MakeText(_context, _context.GetString(Resource.String.text_to_speech_engine_not_initialized), ToastLength.Short).Show();
+                }
+                _context._bottomButton.Text = _context.Resources.GetString(Resource.String.stop_navigation);
+                _context.SetAdvicesAndStartNavigation(MapAdvices.TEXT_TO_SPEECH);
+            }
+        }
 
         private void StartFreeDriveFromSKTools()
         {
             SKToolsNavigationConfiguration configuration = new SKToolsNavigationConfiguration();
 
             ISharedPreferences sharedPreferences = PreferenceManager.GetDefaultSharedPreferences(this);
-            string prefDistanceFormat = sharedPreferences.GetString(PreferenceTypes.KDistanceUnit, "0");
+            String prefDistanceFormat = sharedPreferences.GetString(PreferenceTypes.K_DISTANCE_UNIT, "0");
             if (prefDistanceFormat.Equals("0"))
             {
                 configuration.DistanceUnitType = SKMaps.SKDistanceUnitType.DistanceUnitKilometerMeters;
@@ -696,8 +806,7 @@ namespace Skobbler.SDKDemo.Activities
                 configuration.DistanceUnitType = SKMaps.SKDistanceUnitType.DistanceUnitMilesYards;
             }
 
-            //set speed in town
-            string prefSpeedInTown = sharedPreferences.GetString(PreferenceTypes.KInTownSpeedWarning, "0");
+            string prefSpeedInTown = sharedPreferences.GetString(PreferenceTypes.K_IN_TOWN_SPEED_WARNING, "0");
             if (prefSpeedInTown.Equals("0"))
             {
                 configuration.SpeedWarningThresholdInCity = 5.0;
@@ -714,39 +823,47 @@ namespace Skobbler.SDKDemo.Activities
             {
                 configuration.SpeedWarningThresholdInCity = 20.0;
             }
-            //set speed out
-            string prefSpeedOutTown = sharedPreferences.GetString(PreferenceTypes.KOutTownSpeedWarning, "0");
+
+            string prefSpeedOutTown = sharedPreferences.GetString(PreferenceTypes.K_OUT_TOWN_SPEED_WARNING, "0");
             if (prefSpeedOutTown.Equals("0"))
             {
-                configuration.SpeedWarningThresholdOutsideCity = 5.0;
+                configuration.SpeedWarningThresholdOutsideCity = (5.0);
             }
             else if (prefSpeedOutTown.Equals("1"))
             {
-                configuration.SpeedWarningThresholdOutsideCity = 10.0;
+                configuration.SpeedWarningThresholdOutsideCity = (10.0);
             }
             else if (prefSpeedOutTown.Equals("2"))
             {
-                configuration.SpeedWarningThresholdOutsideCity = 15.0;
+                configuration.SpeedWarningThresholdOutsideCity = (15.0);
             }
             else if (prefSpeedOutTown.Equals("3"))
             {
-                configuration.SpeedWarningThresholdOutsideCity = 20.0;
+                configuration.SpeedWarningThresholdOutsideCity = (20.0);
             }
-            bool dayNight = sharedPreferences.GetBoolean(PreferenceTypes.KAutoDayNight, true);
+
+            bool dayNight = sharedPreferences.GetBoolean(PreferenceTypes.K_AUTO_DAY_NIGHT, true);
+
             if (!dayNight)
             {
                 configuration.AutomaticDayNight = false;
             }
+
             configuration.NavigationType = SKNavigationSettings.SKNavigationType.File;
             configuration.FreeDriveNavigationFilePath = _app.MapResourcesDirPath + "logFile/Seattle.log";
             configuration.DayStyle = new SKMapViewStyle(_app.MapResourcesDirPath + "daystyle/", "daystyle.json");
             configuration.NightStyle = new SKMapViewStyle(_app.MapResourcesDirPath + "nightstyle/", "nightstyle.json");
 
-            _navigationUi.Visibility = ViewStates.Gone;
+            _navigationUI.Visibility = ViewStates.Gone;
             _navigationManager = new SKToolsNavigationManager(this, Resource.Id.map_layout_root);
             _navigationManager.SetNavigationListener(this);
-            _navigationManager.StartFreeDriveWithConfiguration(configuration, _mapView);
 
+            if (_currentMapOption == MapOption.PEDESTRIAN_NAVI)
+            {
+                configuration.RouteType = SKRouteSettings.SKRouteMode.Pedestrian;
+            }
+
+            _navigationManager.StartFreeDriveWithConfiguration(configuration, _mapViewGroup);
         }
 
         private void CalculateRouteFromSKTools()
@@ -755,17 +872,20 @@ namespace Skobbler.SDKDemo.Activities
             SKToolsNavigationConfiguration configuration = new SKToolsNavigationConfiguration();
             ISharedPreferences sharedPreferences = PreferenceManager.GetDefaultSharedPreferences(this);
 
-            //set navigation type
-            string prefNavigationType = sharedPreferences.GetString(PreferenceTypes.KNavigationType, "1");
+            string prefNavigationType = sharedPreferences.GetString(PreferenceTypes.K_NAVIGATION_TYPE, "1");
+
             if (prefNavigationType.Equals("0"))
             {
                 configuration.NavigationType = SKNavigationSettings.SKNavigationType.Real;
+
                 if (_currentPosition == null)
                 {
                     ShowNoCurrentPosDialog();
                     return;
                 }
+
                 _startPoint = new SKCoordinate(_currentPosition.Longitude, _currentPosition.Latitude);
+
             }
             else if (prefNavigationType.Equals("1"))
             {
@@ -773,39 +893,46 @@ namespace Skobbler.SDKDemo.Activities
 
             }
 
-            //set route type
-            string prefRouteType = sharedPreferences.GetString(PreferenceTypes.KRouteType, "2");
-            if (prefRouteType.Equals("0"))
-            {
-                configuration.RouteType = SKRouteSettings.SKRouteMode.CarShortest;
-            }
-            else if (prefRouteType.Equals("1"))
-            {
-                configuration.RouteType = SKRouteSettings.SKRouteMode.CarFastest;
-            }
-            else if (prefRouteType.Equals("2"))
-            {
-                configuration.RouteType = SKRouteSettings.SKRouteMode.Efficient;
-            }
-            else if (prefRouteType.Equals("3"))
+            string prefRouteType = "0";
+            if (_currentMapOption == MapOption.PEDESTRIAN_NAVI)
             {
                 configuration.RouteType = SKRouteSettings.SKRouteMode.Pedestrian;
             }
-            else if (prefRouteType.Equals("4"))
+            else
             {
-                configuration.RouteType = SKRouteSettings.SKRouteMode.BicycleFastest;
-            }
-            else if (prefRouteType.Equals("5"))
-            {
-                configuration.RouteType = SKRouteSettings.SKRouteMode.BicycleShortest;
-            }
-            else if (prefRouteType.Equals("6"))
-            {
-                configuration.RouteType = SKRouteSettings.SKRouteMode.BicycleQuietest;
+                prefRouteType = sharedPreferences.GetString(PreferenceTypes.K_ROUTE_TYPE,
+                        "2");
+                if (prefRouteType.Equals("0"))
+                {
+                    configuration.RouteType = SKRouteSettings.SKRouteMode.CarShortest;
+                }
+                else if (prefRouteType.Equals("1"))
+                {
+                    configuration.RouteType = SKRouteSettings.SKRouteMode.CarFastest;
+                }
+                else if (prefRouteType.Equals("2"))
+                {
+                    configuration.RouteType = SKRouteSettings.SKRouteMode.Efficient;
+                }
+                else if (prefRouteType.Equals("3"))
+                {
+                    configuration.RouteType = SKRouteSettings.SKRouteMode.Pedestrian;
+                }
+                else if (prefRouteType.Equals("4"))
+                {
+                    configuration.RouteType = SKRouteSettings.SKRouteMode.BicycleFastest;
+                }
+                else if (prefRouteType.Equals("5"))
+                {
+                    configuration.RouteType = SKRouteSettings.SKRouteMode.BicycleShortest;
+                }
+                else if (prefRouteType.Equals("6"))
+                {
+                    configuration.RouteType = SKRouteSettings.SKRouteMode.BicycleQuietest;
+                }
             }
 
-            //set distance format
-            string prefDistanceFormat = sharedPreferences.GetString(PreferenceTypes.KDistanceUnit, "0");
+            string prefDistanceFormat = sharedPreferences.GetString(PreferenceTypes.K_DISTANCE_UNIT, "0");
             if (prefDistanceFormat.Equals("0"))
             {
                 configuration.DistanceUnitType = SKMaps.SKDistanceUnitType.DistanceUnitKilometerMeters;
@@ -819,8 +946,7 @@ namespace Skobbler.SDKDemo.Activities
                 configuration.DistanceUnitType = SKMaps.SKDistanceUnitType.DistanceUnitMilesYards;
             }
 
-            //set speed in town
-            string prefSpeedInTown = sharedPreferences.GetString(PreferenceTypes.KInTownSpeedWarning, "0");
+            string prefSpeedInTown = sharedPreferences.GetString(PreferenceTypes.K_IN_TOWN_SPEED_WARNING, "0");
             if (prefSpeedInTown.Equals("0"))
             {
                 configuration.SpeedWarningThresholdInCity = 5.0;
@@ -838,8 +964,7 @@ namespace Skobbler.SDKDemo.Activities
                 configuration.SpeedWarningThresholdInCity = 20.0;
             }
 
-            //set speed out
-            string prefSpeedOutTown = sharedPreferences.GetString(PreferenceTypes.KOutTownSpeedWarning, "0");
+            String prefSpeedOutTown = sharedPreferences.GetString(PreferenceTypes.K_OUT_TOWN_SPEED_WARNING, "0");
             if (prefSpeedOutTown.Equals("0"))
             {
                 configuration.SpeedWarningThresholdOutsideCity = 5.0;
@@ -856,36 +981,37 @@ namespace Skobbler.SDKDemo.Activities
             {
                 configuration.SpeedWarningThresholdOutsideCity = 20.0;
             }
-            bool dayNight = sharedPreferences.GetBoolean(PreferenceTypes.KAutoDayNight, true);
+
+            bool dayNight = sharedPreferences.GetBoolean(PreferenceTypes.K_AUTO_DAY_NIGHT, true);
             if (!dayNight)
             {
                 configuration.AutomaticDayNight = false;
             }
-            bool tollRoads = sharedPreferences.GetBoolean(PreferenceTypes.KAvoidTollRoads, false);
+            bool tollRoads = sharedPreferences.GetBoolean(PreferenceTypes.K_AVOID_TOLL_ROADS, false);
             if (tollRoads)
             {
                 configuration.TollRoadsAvoided = true;
             }
-            bool avoidFerries = sharedPreferences.GetBoolean(PreferenceTypes.KAvoidFerries, false);
+            bool avoidFerries = sharedPreferences.GetBoolean(PreferenceTypes.K_AVOID_FERRIES, false);
             if (avoidFerries)
             {
                 configuration.FerriesAvoided = true;
             }
-            bool highWays = sharedPreferences.GetBoolean(PreferenceTypes.KAvoidHighways, false);
+            bool highWays = sharedPreferences.GetBoolean(PreferenceTypes.K_AVOID_HIGHWAYS, false);
             if (highWays)
             {
                 configuration.HighWaysAvoided = true;
             }
-            bool freeDrive = sharedPreferences.GetBoolean(PreferenceTypes.KFreeDrive, true);
+            bool freeDrive = sharedPreferences.GetBoolean(PreferenceTypes.K_FREE_DRIVE, true);
             if (!freeDrive)
             {
                 configuration.ContinueFreeDriveAfterNavigationEnd = false;
             }
 
-            _navigationUi.Visibility = ViewStates.Gone;
+            _navigationUI.Visibility = ViewStates.Gone;
             configuration.StartCoordinate = _startPoint;
             configuration.DestinationCoordinate = _destinationPoint;
-            IList<SKViaPoint> viaPointList = new List<SKViaPoint>();
+            List<SKViaPoint> viaPointList = new List<SKViaPoint>();
             if (_viaPoint != null)
             {
                 viaPointList.Add(_viaPoint);
@@ -898,167 +1024,62 @@ namespace Skobbler.SDKDemo.Activities
 
             if (configuration.StartCoordinate != null && configuration.DestinationCoordinate != null)
             {
-                _navigationManager.LaunchRouteCalculation(configuration, _mapView);
+                _navigationManager.LaunchRouteCalculation(configuration, _mapViewGroup);
             }
-
-
         }
 
-        [Export("OnMenuOptionClick")]
-        public void OnMenuOptionClick(View v)
+        private void StartOrientationSensorInPedestrian()
         {
-            ClearMap();
-            switch (v.Id)
+            CompassAvailable = PackageManager.HasSystemFeature(PackageManager.FeatureSensorCompass);
+
+            if (CompassAvailable)
             {
-                case Resource.Id.option_map_display:
-                    _mapView.ClearHeatMapsDisplay();
-                    _currentMapOption = MapOption.MapDisplay;
-                    _bottomButton.Visibility = ViewStates.Gone;
-                    SKRouteManager.Instance.ClearCurrentRoute();
-                    break;
-                case Resource.Id.option_overlays:
-                    _currentMapOption = MapOption.MapOverlays;
-                    DrawShapes();
-                    _mapView.SetZoom(14);
-                    _mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
-                    break;
-                case Resource.Id.option_alt_routes:
-                    _currentMapOption = MapOption.AlternativeRoutes;
-                    _altRoutesView.Visibility = ViewStates.Visible;
-                    LaunchAlternativeRouteCalculation();
-                    break;
-                case Resource.Id.option_map_styles:
-                    _currentMapOption = MapOption.MapStyles;
-                    _mapStylesView.Visibility = ViewStates.Visible;
-                    SelectStyleButton();
-                    break;
-                case Resource.Id.option_map_creator:
-                    _currentMapOption = MapOption.MapDisplay;
-                    _mapView.ApplySettingsFromFile(_app.MapCreatorFilePath);
-                    break;
-                case Resource.Id.option_tracks:
-                    _currentMapOption = MapOption.Tracks;
-                    Intent intent = new Intent(this, typeof(TracksActivity));
-                    StartActivityForResult(intent, Tracks);
-                    break;
-                case Resource.Id.option_real_reach:
-                    (new AlertDialog.Builder(this))
-                        .SetMessage("Choose the real reach type")
-                        .SetCancelable(false)
-                        .SetPositiveButton("Time profile", (s, e) =>
-                        {
-                            _currentMapOption = MapOption.RealReach;
-                            _realReachTimeLayout.Visibility = ViewStates.Visible;
-                            ShowRealReach(_realReachVehicleType, _realReachRange);
-                        })
-                           .SetNegativeButton("Energy profile", (s, e) =>
-                           {
-                               _currentMapOption = MapOption.RealReach;
-                               _realReachEnergyLayout.Visibility = ViewStates.Visible;
-                               ShowRealReachEnergy(_realReachRange);
-                           })
-                           .Show();
-                    break;
-                case Resource.Id.option_map_xml_and_downloads:
-                    if (DemoUtils.IsInternetAvailable(this))
-                    {
-                        StartActivity(new Intent(this, typeof(ResourceDownloadsListActivity)));
-                    }
-                    else
-                    {
-                        Toast.MakeText(this, Resources.GetString(Resource.String.no_internet_connection), ToastLength.Short).Show();
-                    }
-                    break;
-                case Resource.Id.option_reverse_geocoding:
-                    StartActivity(new Intent(this, typeof(ReverseGeocodingActivity)));
-                    break;
-                case Resource.Id.option_address_search:
-                    StartActivity(new Intent(this, typeof(OfflineAddressSearchActivity)));
-                    break;
-                case Resource.Id.option_nearby_search:
-                    StartActivity(new Intent(this, typeof(NearbySearchActivity)));
-                    break;
-                case Resource.Id.option_annotations:
-                    _currentMapOption = MapOption.Annotations;
-                    PrepareAnnotations();
-                    break;
-                case Resource.Id.option_category_search:
-                    StartActivity(new Intent(this, typeof(CategorySearchResultsActivity)));
-                    break;
-                case Resource.Id.option_routing_and_navigation:
-                    _currentMapOption = MapOption.RoutingAndNavigation;
-                    _bottomButton.Visibility = ViewStates.Visible;
-                    _bottomButton.Text = Resources.GetString(Resource.String.calculate_route);
-                    break;
-                case Resource.Id.option_poi_tracking:
-                    _currentMapOption = MapOption.PoiTracking;
-                    if (_trackablePoIs == null)
-                    {
-                        InitializeTrackablePoIs();
-                    }
-                    LaunchRouteCalculation();
-                    break;
-                case Resource.Id.option_heat_map:
-                    _currentMapOption = MapOption.HeatMap;
-                    StartActivity(new Intent(this, typeof(PoiCategoriesListActivity)));
-                    break;
-                case Resource.Id.option_map_updates:
-                    SKVersioningManager.Instance.CheckNewVersion(3);
-                    break;
-                case Resource.Id.option_map_interaction:
-                    _currentMapOption = MapOption.MapInteraction;
-                    HandleMapInteractionOption();
-                    break;
-                case Resource.Id.option_navigation_ui:
-                    _currentMapOption = MapOption.NaviUi;
-                    InitializeNavigationUi(true);
-                    break;
-                default:
-                    break;
+                StartOrientationSensor();
             }
-            if (_currentMapOption != MapOption.MapDisplay)
+            else
             {
-                _positionMeButton.Visibility = ViewStates.Gone;
-                _headingButton.Visibility = ViewStates.Gone;
+                StopOrientationSensor();
             }
-            _menu.Visibility = ViewStates.Gone;
         }
 
-        private void InitializeNavigationUi(bool showStartingAndDestinationAnnotations)
+        private void InitializeNavigationUI(bool showStartingAndDestinationAnnotations)
         {
-            ToggleButton selectViaPointBtn = (ToggleButton)FindViewById(Resource.Id.select_via_point_button);
-            ToggleButton selectStartPointBtn = (ToggleButton)FindViewById(Resource.Id.select_start_point_button);
-            ToggleButton selectEndPointBtn = (ToggleButton)FindViewById(Resource.Id.select_end_point_button);
+            ToggleButton selectViaPointBtn = FindViewById<ToggleButton>(Resource.Id.select_via_point_button);
+            ToggleButton selectStartPointBtn = FindViewById<ToggleButton>(Resource.Id.select_start_point_button);
+            ToggleButton selectEndPointBtn = FindViewById<ToggleButton>(Resource.Id.select_end_point_button);
+
+            StartOrientationSensorInPedestrian();
 
             ISharedPreferences sharedPreferences = PreferenceManager.GetDefaultSharedPreferences(this);
-            string prefNavigationType = sharedPreferences.GetString(PreferenceTypes.KNavigationType, "1");
+            String prefNavigationType = sharedPreferences.GetString(PreferenceTypes.K_NAVIGATION_TYPE, "1");
             if (prefNavigationType.Equals("0"))
-            { // real navi
+            {
                 selectStartPointBtn.Visibility = ViewStates.Gone;
             }
             else if (prefNavigationType.Equals("1"))
             {
+
                 selectStartPointBtn.Visibility = ViewStates.Visible;
             }
 
             if (showStartingAndDestinationAnnotations)
             {
                 _startPoint = new SKCoordinate(13.34615707397461, 52.513086884218325);
-                SKAnnotation annotation = new SKAnnotation(GreenPinIconId);
+                SKAnnotation annotation = new SKAnnotation(SKAnnotation.SkAnnotationTypeGreen);
                 annotation.AnnotationType = SKAnnotation.SkAnnotationTypeGreen;
                 annotation.Location = _startPoint;
                 _mapView.AddAnnotation(annotation, SKAnimationSettings.AnimationNone);
 
                 _destinationPoint = new SKCoordinate(13.398685455322266, 52.50995268098114);
-                annotation = new SKAnnotation(RedPinIconId);
+                annotation = new SKAnnotation(SKAnnotation.SkAnnotationTypeRed);
                 annotation.AnnotationType = SKAnnotation.SkAnnotationTypeRed;
                 annotation.Location = _destinationPoint;
                 _mapView.AddAnnotation(annotation, SKAnimationSettings.AnimationNone);
 
             }
-            _mapView.SetZoom(11);
-            _mapView.CenterMapOnPosition(_startPoint);
 
+            _mapView.SetZoom(11.0F);
+            _mapView.CenterMapOnPosition(_startPoint);
 
             selectStartPointBtn.CheckedChange += (s, e) =>
             {
@@ -1111,288 +1132,174 @@ namespace Skobbler.SDKDemo.Activities
                 }
             };
 
-            _navigationUi.Visibility = ViewStates.Visible;
+            _navigationUI.Visibility = ViewStates.Visible;
         }
 
         private void ShowNoCurrentPosDialog()
         {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            //alert.setTitle("Really quit?");
-            alert.SetMessage("There is no current position available");
-            alert.SetNegativeButton("Ok", (s, e) => { });
-            alert.Show();
+            new AlertDialog.Builder(this)
+            .SetMessage("There is no current position available")
+            .SetNegativeButton("Ok", (s,e) => { })
+            .Show();
         }
 
-        private void HandleMapInteractionOption()
+        private void LaunchRouteCalculation(SKCoordinate startPoint, SKCoordinate destinationPoint)
         {
+            ClearRouteFromCache();
 
-            _mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
-
-            // get the annotation object
-            SKAnnotation annotation1 = new SKAnnotation(10);
-            // set annotation location
-            annotation1.Location = new SKCoordinate(-122.4200, 37.7765);
-            // set minimum zoom level at which the annotation should be visible
-            annotation1.MininumZoomLevel = 5;
-            // set the annotation's type
-            annotation1.AnnotationType = SKAnnotation.SkAnnotationTypeRed;
-            // render annotation on map
-            _mapView.AddAnnotation(annotation1, SKAnimationSettings.AnimationNone);
-
-            SKAnnotation annotation2 = new SKAnnotation(11);
-            annotation2.Location = new SKCoordinate(-122.419789, 37.775428);
-            annotation2.MininumZoomLevel = 5;
-            annotation2.AnnotationType = SKAnnotation.SkAnnotationTypeGreen;
-            _mapView.AddAnnotation(annotation2, SKAnimationSettings.AnimationNone);
-
-            float density = Resources.DisplayMetrics.Density;
-
-            TextView topText = (TextView)_mapPopup.FindViewById(Resource.Id.top_text);
-            topText.Text = "Get details";
-
-            topText.Click += (s, e) =>
+            SKRouteSettings route = new SKRouteSettings
             {
-                StartActivity(new Intent(this, typeof(InteractionMapActivity)));
+                StartCoordinate = startPoint,
+                DestinationCoordinate = destinationPoint,
+                NoOfRoutes = 1,
+                RouteMode = SKRouteSettings.SKRouteMode.CarFastest,
+                RouteExposed = true
             };
 
-            _mapPopup.FindViewById(Resource.Id.bottom_text).Visibility = ViewStates.Gone;
-
-            _mapPopup.SetVerticalOffset(30 * density);
-            _mapPopup.ShowAtLocation(annotation1.Location, true);
-
-        }
-
-        /// <summary>
-        /// Launches a single route calculation
-        /// </summary>
-        private void LaunchRouteCalculation()
-        {
-            // get a route object and populate it with the desired properties
-            SKRouteSettings route = new SKRouteSettings();
-            // set start and destination points
-            route.StartCoordinate = new SKCoordinate(-122.397674, 37.761278);
-            route.DestinationCoordinate = new SKCoordinate(-122.448270, 37.738761);
-            // set the number of routes to be calculated
-            route.NoOfRoutes = 1;
-            // set the route mode
-            route.RouteMode = SKRouteSettings.SKRouteMode.CarFastest;
-            // set whether the route should be shown on the map after it's computed
-            route.RouteExposed = true;
-            // set the route listener to be notified of route calculation
-            // events
             SKRouteManager.Instance.SetRouteListener(this);
-            // pass the route to the calculation routine
+
             SKRouteManager.Instance.CalculateRoute(route);
         }
 
-        /// <summary>
-        /// Launches the calculation of three alternative routes
-        /// </summary>
         private void LaunchAlternativeRouteCalculation()
         {
-            SKRouteSettings route = new SKRouteSettings();
-            route.StartCoordinate = new SKCoordinate(-122.392284, 37.787189);
-            route.DestinationCoordinate = new SKCoordinate(-122.484378, 37.856300);
-            // number of alternative routes specified here
-            route.NoOfRoutes = 3;
-            route.RouteMode = SKRouteSettings.SKRouteMode.CarFastest;
-            route.RouteExposed = true;
+            SKRouteSettings route = new SKRouteSettings()
+            {
+                StartCoordinate = new SKCoordinate(-122.392284, 37.787189),
+                DestinationCoordinate = new SKCoordinate(-122.484378, 37.856300),
+                NoOfRoutes = 3,
+                RouteMode = SKRouteSettings.SKRouteMode.CarFastest,
+                RouteExposed = true
+            };
+
             SKRouteManager.Instance.SetRouteListener(this);
             SKRouteManager.Instance.CalculateRoute(route);
         }
 
-        /// <summary>
-        /// Initiate real reach time profile
-        /// </summary>
-        private void ShowRealReach(sbyte vehicleType, int range)
-        {
-
-            // set listener for real reach calculation events
-            _mapView.SetRealReachListener(this);
-            // get object that can be used to specify real reach calculation
-            // properties
-            SKRealReachSettings realReachSettings = new SKRealReachSettings();
-            // set center position for real reach
-            SKCoordinate realReachCenter = new SKCoordinate(23.593957, 46.773361);
-            realReachSettings.Location = realReachCenter;
-            // set measurement unit for real reach
-            realReachSettings.MeasurementUnit = SKRealReachSettings.UnitSecond;
-            // set the range value (in the unit previously specified)
-            realReachSettings.Range = range * 60;
-            // set the transport mode
-            realReachSettings.TransportMode = vehicleType;
-            // initiate real reach
-            _mapView.DisplayRealReachWithSettings(realReachSettings);
-        }
-
-        /// <summary>
-        /// The cunsumption values
-        /// </summary>
-        private float[] _energyConsumption = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (float)3.7395504, (float)4.4476889, (float)5.4306439, (float)6.722719, (float)8.2830299, (float)10.0275093, (float)11.8820908, (float)13.799201, (float)15.751434, (float)17.7231534, (float)19.7051378, (float)21.6916725, (float)23.679014, (float)25.6645696, (float)27.6464437, (float)29.6231796, (float)31.5936073 };
-
-        /// <summary>
-        /// Initiate real reach energy profile
-        /// </summary>
-
-        private void ShowRealReachEnergy(int range)
-        {
-
-            //set listener for real reach calculation events
-            _mapView.SetRealReachListener(this);
-            // get object that can be used to specify real reach calculation
-            // properties
-            SKRealReachSettings realReachSettings = new SKRealReachSettings();
-            SKCoordinate realReachCenter = new SKCoordinate(23.593957, 46.773361);
-            realReachSettings.Location = realReachCenter;
-            // set measurement unit for real reach
-            realReachSettings.MeasurementUnit = SKRealReachSettings.UnitMiliwattHours;
-            // set consumption values
-            realReachSettings.SetConsumption(_energyConsumption);
-            // set the range value (in the unit previously specified)
-            realReachSettings.Range = range * 100;
-            // set the transport mode
-            realReachSettings.TransportMode = SKRealReachSettings.VehicleTypeBicycle;
-            // initiate real reach
-            _mapView.DisplayRealReachWithSettings(realReachSettings);
-
-        }
-
-        /// <summary>
-        /// Draws annotations on map
-        /// </summary>
         private void PrepareAnnotations()
         {
+            SKAnnotation annotation1 = new SKAnnotation(10)
+            {
+                Location = new SKCoordinate(-122.4200, 37.7765),
+                MininumZoomLevel = 5,
+                AnnotationType = SKAnnotation.SkAnnotationTypeRed
+            };
 
-            // Add annotation using texture ID - from the json files.
-            // get the annotation object
-            SKAnnotation annotation1 = new SKAnnotation(10);
-            // set annotation location
-            annotation1.Location = new SKCoordinate(-122.4200, 37.7765);
-            // set minimum zoom level at which the annotation should be visible
-            annotation1.MininumZoomLevel = 5;
-            // set the annotation's type
-            annotation1.AnnotationType = SKAnnotation.SkAnnotationTypeRed;
-            // render annotation on map
             _mapView.AddAnnotation(annotation1, SKAnimationSettings.AnimationNone);
 
-
             // Add an annotation using the absolute path to the image.
-            SKAnnotation annotation = new SKAnnotation(13);
-            annotation.Location = new SKCoordinate(-122.434516, 37.770712);
-            annotation.MininumZoomLevel = 5;
-
+            SKAnnotation annotation = new SKAnnotation(13)
+            {
+                Location = new SKCoordinate(-122.434516, 37.770712),
+                MininumZoomLevel = 5
+            };
 
             DisplayMetrics metrics = new DisplayMetrics();
             WindowManager.DefaultDisplay.GetMetrics(metrics);
             if (metrics.DensityDpi < DisplayMetrics.DensityHigh)
             {
                 annotation.ImagePath = SKMaps.Instance.MapInitSettings.MapResourcesPath + "/.Common/icon_bluepin@2x.png";
-                // set the size of the image in pixels
                 annotation.ImageSize = 128;
             }
             else
             {
                 annotation.ImagePath = SKMaps.Instance.MapInitSettings.MapResourcesPath + "/.Common/icon_bluepin@3x.png";
-                // set the size of the image in pixels
                 annotation.ImageSize = 256;
 
             }
-            // by default the center of the image corresponds with the location .annotation.setOffset can be use to position the image around the location.
+
             _mapView.AddAnnotation(annotation, SKAnimationSettings.AnimationNone);
 
+            SKAnnotationView annotationView = new SKAnnotationView
+            {
+                DrawableResourceId = Resource.Drawable.icon_map_popup_navigate,
+                Width = 128,
+                Height = 128
+            };
 
-            // add an annotation with a drawable resource
-            SKAnnotation annotationDrawable = new SKAnnotation(14);
-            annotationDrawable.Location = new SKCoordinate(-122.437182, 37.777079);
-            annotationDrawable.MininumZoomLevel = 5;
+            SKAnnotation annotationDrawable = new SKAnnotation(14)
+            {
+                Location = new SKCoordinate(-122.437182, 37.777079),
+                MininumZoomLevel = 5,
+                AnnotationView = annotationView,
+            };
 
-
-            SKAnnotationView annotationView = new SKAnnotationView();
-            annotationView.DrawableResourceId = Resource.Drawable.icon_map_popup_navigate;
-            // set the width and height of the image in pixels . If they are not power of 2 the actual size of the image will be the next power of 2 of max(width,height)
-            annotationView.Width = 128;
-            annotationView.Height = 128;
-            annotationDrawable.AnnotationView = annotationView;
             _mapView.AddAnnotation(annotationDrawable, SKAnimationSettings.AnimationNone);
 
+            _customView = (GetSystemService(Context.LayoutInflaterService) as LayoutInflater).Inflate(Resource.Layout.layout_custom_view, null, false) as RelativeLayout;
 
-            // // add an annotation with a view
-            SKAnnotation annotationFromView = new SKAnnotation(15);
-            annotationFromView.Location = new SKCoordinate(-122.423573, 37.761349);
-            annotationFromView.MininumZoomLevel = 5;
-            annotationView = new SKAnnotationView();
-            _customView = (RelativeLayout)((LayoutInflater)GetSystemService(LayoutInflaterService)).Inflate(Resource.Layout.layout_custom_view, null, false);
-            //  If width and height of the view  are not power of 2 the actual size of the image will be the next power of 2 of max(width,height).
-            annotationView.View = _customView;
-            annotationFromView.AnnotationView = annotationView;
+            annotationView = new SKAnnotationView
+            {
+                View = _customView
+            };
+
+            SKAnnotation annotationFromView = new SKAnnotation(15)
+            {
+                Location = new SKCoordinate(-122.423573, 37.761349),
+                MininumZoomLevel = 5,
+                AnnotationView = annotationView
+            };
+
             _mapView.AddAnnotation(annotationFromView, SKAnimationSettings.AnimationNone);
 
-            // set map zoom level
             _mapView.SetZoom(13);
-            // center map on a position
+
             _mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
         }
 
-        /// <summary>
-        /// Draws shapes on map
-        /// </summary>
         private void DrawShapes()
         {
+            SKPolygon polygon = new SKPolygon
+            {
+                Nodes = new List<SKCoordinate>
+					{
+						new SKCoordinate(-122.4342, 37.7765),
+						new SKCoordinate(-122.4141, 37.7765),
+						new SKCoordinate(-122.4342, 37.7620)
+					},
+                OutlineSize = 3,
+                Identifier = 10,
+            };
 
-            // get a polygon shape object
-            SKPolygon polygon = new SKPolygon();
-            polygon.Identifier = 1;
-            // set the polygon's nodes
-            IList<SKCoordinate> nodes = new List<SKCoordinate>();
-            nodes.Add(new SKCoordinate(-122.4342, 37.7765));
-            nodes.Add(new SKCoordinate(-122.4141, 37.7765));
-            nodes.Add(new SKCoordinate(-122.4342, 37.7620));
-            polygon.Nodes = nodes;
-            // set the outline size
-            polygon.OutlineSize = 3;
-            // set colors used to render the polygon
-            polygon.SetOutlineColor(new[] { 1f, 0f, 0f, 1f });
-            polygon.SetColor(new[] { 1f, 0f, 0f, 0.2f });
-            // render the polygon on the map
+            polygon.SetOutlineColor(new float[] { 1f, 0f, 0f, 1f });
+            polygon.SetColor(new float[] { 1f, 0f, 0f, 0.2f });
+
             _mapView.AddPolygon(polygon);
 
-            // get a circle mask shape object
-            SKCircle circleMask = new SKCircle();
-            circleMask.Identifier = 2;
-            // set the shape's mask scale
-            circleMask.MaskedObjectScale = 1.3f;
-            // set the colors
-            circleMask.SetColor(new[] { 1f, 1f, 0.5f, 0.67f });
-            circleMask.SetOutlineColor(new[] { 0f, 0f, 0f, 1f });
-            circleMask.OutlineSize = 3;
-            // set circle center and radius
-            circleMask.CircleCenter = new SKCoordinate(-122.4200, 37.7665);
-            circleMask.Radius = 300;
-            // set outline properties
-            circleMask.OutlineDottedPixelsSkip = 6;
-            circleMask.OutlineDottedPixelsSolid = 10;
-            // set the number of points for rendering the circle
-            circleMask.NumberOfPoints = 150;
-            // render the circle mask
+            SKCircle circleMask = new SKCircle
+            {
+                MaskedObjectScale = 1.3f,
+                OutlineSize = 3,
+                CircleCenter = new SKCoordinate(-122.4200, 37.7665),
+                Radius = 300,
+                OutlineDottedPixelsSkip = 6,
+                OutlineDottedPixelsSolid = 10,
+                NumberOfPoints = 150,
+                Identifier = 11,
+            };
+
+            circleMask.SetColor(new float[] { 1f, 1f, 0.5f, 0.67f });
+            circleMask.SetOutlineColor(new float[] { 0f, 0f, 0f, 1f });
+
             _mapView.AddCircle(circleMask);
 
+            SKPolyline polyline = new SKPolyline
+            {
+                Nodes = new List<SKCoordinate>
+					{
+						new SKCoordinate(-122.4342, 37.7898),
+						new SKCoordinate(-122.4141, 37.7898),
+						new SKCoordinate(-122.4342, 37.7753)
+					},
+                OutlineSize = 4,
+                OutlineDottedPixelsSolid = 3,
+                OutlineDottedPixelsSkip = 3,
+                Identifier = 12
+            };
 
-            // get a polyline object
-            SKPolyline polyline = new SKPolyline();
-            polyline.Identifier = 3;
-            // set the nodes on the polyline
-            nodes = new List<SKCoordinate>();
-            nodes.Add(new SKCoordinate(-122.4342, 37.7898));
-            nodes.Add(new SKCoordinate(-122.4141, 37.7898));
-            nodes.Add(new SKCoordinate(-122.4342, 37.7753));
-            polyline.Nodes = nodes;
-            // set polyline color
-            polyline.SetColor(new[] { 0f, 0f, 1f, 1f });
-            // set properties for the outline
-            polyline.SetOutlineColor(new[] { 0f, 0f, 1f, 1f });
-            polyline.OutlineSize = 4;
-            polyline.OutlineDottedPixelsSolid = 3;
-            polyline.OutlineDottedPixelsSkip = 3;
+            polyline.SetColor(new float[] { 0f, 0f, 1f, 1f });
+            polyline.SetOutlineColor(new float[] { 0f, 0f, 1f, 1f });
+
             _mapView.AddPolyline(polyline);
         }
 
@@ -1402,16 +1309,15 @@ namespace Skobbler.SDKDemo.Activities
             SelectStyleButton();
         }
 
-        /// <summary>
-        /// Selects the style button for the current map style
-        /// </summary>
         private void SelectStyleButton()
         {
             for (int i = 0; i < _mapStylesView.ChildCount; i++)
             {
                 _mapStylesView.GetChildAt(i).Selected = false;
             }
+
             SKMapViewStyle mapStyle = _mapView.MapSettings.MapStyle;
+
             if (mapStyle == null || mapStyle.StyleFileName.Equals("daystyle.json"))
             {
                 FindViewById(Resource.Id.map_style_day).Selected = true;
@@ -1430,96 +1336,92 @@ namespace Skobbler.SDKDemo.Activities
             }
         }
 
-        /// <summary>
-        /// Clears the map
-        /// </summary>
         private void ClearMap()
         {
-            Heading = false;
+            setHeading(false);
+
             switch (_currentMapOption)
             {
-                case MapOption.MapDisplay:
+                case MapOption.MAP_DISPLAY:
                     break;
-                case MapOption.MapOverlays:
-                    // clear all map overlays (shapes)
+                case MapOption.MAP_OVERLAYS:
                     _mapView.ClearAllOverlays();
                     break;
-                case MapOption.AlternativeRoutes:
+                case MapOption.ALTERNATIVE_ROUTES:
                     HideAlternativeRoutesButtons();
-                    // clear the alternative routes
                     SKRouteManager.Instance.ClearRouteAlternatives();
-                    // clear the selected route
                     SKRouteManager.Instance.ClearCurrentRoute();
                     _routeIds.Clear();
                     break;
-                case MapOption.MapStyles:
+                case MapOption.MAP_STYLES:
                     _mapStylesView.Visibility = ViewStates.Gone;
                     break;
-                case MapOption.Tracks:
+                case MapOption.TRACKS:
+
                     if (_navigationInProgress)
                     {
-                        // stop the navigation
                         StopNavigation();
                     }
+
                     _bottomButton.Visibility = ViewStates.Gone;
+
                     if (TrackElementsActivity.SelectedTrackElement != null)
                     {
                         _mapView.ClearTrackElement(TrackElementsActivity.SelectedTrackElement);
                         SKRouteManager.Instance.ClearCurrentRoute();
                     }
+
                     TrackElementsActivity.SelectedTrackElement = null;
+
                     break;
-                case MapOption.RealReach:
-                    // removes real reach from the map
+                case MapOption.REAL_REACH:
                     _mapView.ClearRealReachDisplay();
-                    _realReachTimeLayout.Visibility = ViewStates.Gone;
-                    _realReachEnergyLayout.Visibility = ViewStates.Gone;
+                    _realReachLayout.Visibility = ViewStates.Gone;
+                    Spinner spinner = FindViewById<Spinner>(Resource.Id.real_reach_spinner);
+                    spinner.SetSelection(0);
                     break;
-                case MapOption.Annotations:
+                case MapOption.ANNOTATIONS:
                     _mapPopup.Visibility = ViewStates.Gone;
-                    // removes the annotations and custom POIs currently rendered
                     _mapView.DeleteAllAnnotationsAndCustomPOIs();
-                    goto case MapOption.RoutingAndNavigation;
-                case MapOption.RoutingAndNavigation:
+                    break;
+                case MapOption.ROUTING_AND_NAVIGATION:
                     _bottomButton.Visibility = ViewStates.Gone;
                     SKRouteManager.Instance.ClearCurrentRoute();
+                    _mapView.DeleteAllAnnotationsAndCustomPOIs();
                     if (_navigationInProgress)
                     {
-                        // stop navigation if ongoing
                         StopNavigation();
                     }
                     break;
-                case MapOption.PoiTracking:
+                case MapOption.POI_TRACKING:
                     if (_navigationInProgress)
                     {
-                        // stop the navigation
                         StopNavigation();
                     }
                     SKRouteManager.Instance.ClearCurrentRoute();
-                    // remove the detected POIs from the map
                     _mapView.DeleteAllAnnotationsAndCustomPOIs();
-                    // stop the POI tracker
                     _poiTrackingManager.StopPOITracker();
                     break;
-                case MapOption.HeatMap:
+                case MapOption.HEAT_MAP:
                     HeatMapCategories = null;
                     _mapView.ClearHeatMapsDisplay();
                     break;
-                case MapOption.MapInteraction:
-                    _mapPopup.Visibility = ViewStates.Gone;
+                case MapOption.NAVI_UI:
+                case MapOption.PEDESTRIAN_NAVI:
+                    _navigationUI.Visibility = ViewStates.Gone;
                     _mapView.DeleteAllAnnotationsAndCustomPOIs();
-                    ((TextView)FindViewById(Resource.Id.top_text)).SetOnClickListener(null);
-                    ((TextView)FindViewById(Resource.Id.top_text)).Text = "Title text";
-                    ((TextView)FindViewById(Resource.Id.bottom_text)).Text = "Subtitle text";
                     break;
-                case MapOption.NaviUi:
-                    _navigationUi.Visibility = ViewStates.Gone;
+                case MapOption.MAP_INTERACTION:
                     _mapView.DeleteAllAnnotationsAndCustomPOIs();
+                    _bottomButton.Visibility = ViewStates.Gone;
+                    SKRouteManager.Instance.ClearCurrentRoute();
+                    ClearRouteFromCache();
+                    _shouldCacheTheNextRoute = false;
                     break;
                 default:
                     break;
             }
-            _currentMapOption = MapOption.MapDisplay;
+            _currentMapOption = MapOption.MAP_DISPLAY;
             _positionMeButton.Visibility = ViewStates.Visible;
             _headingButton.Visibility = ViewStates.Visible;
         }
@@ -1535,7 +1437,9 @@ namespace Skobbler.SDKDemo.Activities
         private void HideAlternativeRoutesButtons()
         {
             DeselectAlternativeRoutesButtons();
+
             _altRoutesView.Visibility = ViewStates.Gone;
+
             foreach (Button b in _altRoutesButtons)
             {
                 b.Text = "distance\ntime";
@@ -1549,219 +1453,270 @@ namespace Skobbler.SDKDemo.Activities
                 DeselectAlternativeRoutesButtons();
                 _altRoutesButtons[routeIndex].Selected = true;
                 SKRouteManager.Instance.ZoomToRoute(1, 1, 110, 8, 8, 8);
-                SKRouteManager.Instance.SetCurrentRouteByUniqueId(_routeIds[routeIndex].Value);
+                SKRouteManager.Instance.SetCurrentRouteByUniqueId(_routeIds[routeIndex]);
             }
 
         }
 
-        /// <summary>
-        /// Launches a navigation on the current route
-        /// </summary>
         private void LaunchNavigation()
         {
             if (TrackElementsActivity.SelectedTrackElement != null)
             {
                 _mapView.ClearTrackElement(TrackElementsActivity.SelectedTrackElement);
-
             }
-            // get navigation settings object
-            SKNavigationSettings navigationSettings = new SKNavigationSettings();
-            // set the desired navigation settings
-            navigationSettings.NavigationType = SKNavigationSettings.SKNavigationType.Simulation;
-            navigationSettings.PositionerVerticalAlignment = -0.25f;
-            navigationSettings.ShowRealGPSPositions = false;
-            // get the navigation manager object
+
+            SKNavigationSettings navigationSettings = new SKNavigationSettings
+            {
+                NavigationType = SKNavigationSettings.SKNavigationType.Simulation,
+                PositionerVerticalAlignment = -0.25f,
+                ShowRealGPSPositions = false
+            };
+
             SKNavigationManager navigationManager = SKNavigationManager.Instance;
             navigationManager.SetMapView(_mapView);
-            // set listener for navigation events
             navigationManager.SetNavigationListener(this);
-
-            // start navigating using the settings
             navigationManager.StartNavigation(navigationSettings);
+
             _navigationInProgress = true;
         }
 
-        /// <summary>
-        /// Setting the audio advices
-        /// </summary>
-        private MapAdvices AdvicesAndStartNavigation
+        public void SetAdvicesAndStartNavigation(MapAdvices currentMapAdvices)
         {
-            set
+            SKAdvisorSettings advisorSettings = new SKAdvisorSettings
             {
-                SKAdvisorSettings advisorSettings = new SKAdvisorSettings();
-                advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LanguageEn;
-                advisorSettings.AdvisorConfigPath = _app.MapResourcesDirPath + "/Advisor";
-                advisorSettings.ResourcePath = _app.MapResourcesDirPath + "/Advisor/Languages";
-                advisorSettings.AdvisorVoice = "en";
-                switch (value)
-                {
-                    case MapAdvices.AudioFiles:
-                        advisorSettings.AdvisorType = SKAdvisorSettings.SKAdvisorType.AudioFiles;
-                        break;
-                    case MapAdvices.TextToSpeech:
-                        advisorSettings.AdvisorType = SKAdvisorSettings.SKAdvisorType.TextToSpeech;
-                        break;
-                }
-                SKRouteManager.Instance.SetAudioAdvisorSettings(advisorSettings);
-                LaunchNavigation();
+                Language = SKAdvisorSettings.SKAdvisorLanguage.LanguageEn,
+                AdvisorConfigPath = _app.MapResourcesDirPath + "/Advisor",
+                ResourcePath = _app.MapResourcesDirPath + "/Advisor/Languages",
+                AdvisorVoice = "en"
+            };
 
+            switch (currentMapAdvices)
+            {
+                case MapAdvices.AUDIO_FILES:
+                    advisorSettings.AdvisorType = SKAdvisorSettings.SKAdvisorType.AudioFiles;
+                    break;
+                case MapAdvices.TEXT_TO_SPEECH:
+                    advisorSettings.AdvisorType = SKAdvisorSettings.SKAdvisorType.TextToSpeech;
+                    break;
             }
+
+            SKRouteManager.Instance.SetAudioAdvisorSettings(advisorSettings);
+            LaunchNavigation();
         }
 
-
-        /// <summary>
-        /// Stops the navigation
-        /// </summary>
         private void StopNavigation()
         {
             _navigationInProgress = false;
             _routeIds.Clear();
+
             if (_textToSpeechEngine != null && !_textToSpeechEngine.IsSpeaking)
             {
                 _textToSpeechEngine.Stop();
             }
-            if (_currentMapOption.Equals(MapOption.Tracks) && TrackElementsActivity.SelectedTrackElement != null)
+            if (_currentMapOption.Equals(MapOption.TRACKS) && TrackElementsActivity.SelectedTrackElement != null)
             {
                 SKRouteManager.Instance.ClearCurrentRoute();
+
                 _mapView.DrawTrackElement(TrackElementsActivity.SelectedTrackElement);
                 _mapView.FitTrackElementInView(TrackElementsActivity.SelectedTrackElement, false);
 
                 SKRouteManager.Instance.SetRouteListener(this);
                 SKRouteManager.Instance.CreateRouteFromTrackElement(TrackElementsActivity.SelectedTrackElement, SKRouteSettings.SKRouteMode.BicycleFastest, true, true, false);
             }
+
             SKNavigationManager.Instance.StopNavigation();
 
         }
 
-        // route computation callbacks ...
         public void OnAllRoutesCompleted()
         {
+            if (_shouldCacheTheNextRoute)
+            {
+                _shouldCacheTheNextRoute = false;
+                SKRouteManager.Instance.SaveRouteToCache(_cachedRouteId.Value);
+            }
 
             SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
-            if (_currentMapOption == MapOption.PoiTracking)
+
+            if (_currentMapOption == MapOption.POI_TRACKING)
             {
-                // start the POI tracker
                 _poiTrackingManager.StartPOITrackerWithRadius(10000, 0.5);
-                // set warning rules for trackable POIs
                 _poiTrackingManager.AddWarningRulesforPoiType(SKTrackablePOIType.Speedcam);
-                // launch navigation
                 LaunchNavigation();
             }
         }
 
-
         public void OnReceivedPOIs(SKTrackablePOIType type, IList<SKDetectedPOI> detectedPois)
         {
-            UpdateMapWithLatestDetectedPoIs(detectedPois);
+            UpdateMapWithLatestDetectedPOIs(detectedPois);
         }
 
-        /// <summary>
-        /// Updates the map when trackable POIs are detected such that only the
-        /// currently detected POIs are rendered on the map
-        /// </summary>
-        /// <param name="detectedPois"> </param>
-        private void UpdateMapWithLatestDetectedPoIs(IList<SKDetectedPOI> detectedPois)
+        private void UpdateMapWithLatestDetectedPOIs(IList<SKDetectedPOI> detectedPois)
         {
 
-            IList<int?> detectedIdsList = new List<int?>();
+            List<int> detectedIdsList = new List<int>();
+
             foreach (SKDetectedPOI detectedPoi in detectedPois)
             {
                 detectedIdsList.Add(detectedPoi.PoiID);
             }
+
             foreach (int detectedPoiId in detectedIdsList)
             {
                 if (detectedPoiId == -1)
                 {
                     continue;
                 }
-                if (!_drawnTrackablePoIs.ContainsKey(detectedPoiId))
+                if (_drawnTrackablePOIs[detectedPoiId] == null)
                 {
-                    _drawnTrackablePoIs.Add(detectedPoiId, _trackablePoIs[detectedPoiId]);
-                    DrawDetectedPoi(detectedPoiId);
+                    _drawnTrackablePOIs.Add(detectedPoiId, _trackablePOIs[detectedPoiId]);
+                    DrawDetectedPOI(detectedPoiId);
                 }
             }
-            foreach (int drawnPoiId in new List<int?>(_drawnTrackablePoIs.Keys))
+            foreach (int drawnPoiId in new List<int>(_drawnTrackablePOIs.Keys))
             {
                 if (!detectedIdsList.Contains(drawnPoiId))
                 {
-                    _drawnTrackablePoIs.Remove(drawnPoiId);
+                    _drawnTrackablePOIs.Remove(drawnPoiId);
                     _mapView.DeleteAnnotation(drawnPoiId);
                 }
             }
         }
 
-        /// <summary>
-        /// Draws a detected trackable POI as an annotation on the map
-        /// </summary>
-        /// <param name="poiId"> </param>
-        private void DrawDetectedPoi(int poiId)
+        private void DrawDetectedPOI(int poiId)
         {
-            SKAnnotation annotation = new SKAnnotation(poiId);
-            SKTrackablePOI poi = _trackablePoIs[poiId];
-            annotation.Location = poi.Coordinate;
-            annotation.MininumZoomLevel = 5;
-            annotation.AnnotationType = SKAnnotation.SkAnnotationTypeMarker;
+            SKTrackablePOI poi = _trackablePOIs[poiId];
+
+            SKAnnotation annotation = new SKAnnotation(poiId)
+            {
+                Location = poi.Coordinate,
+                MininumZoomLevel = 5,
+                AnnotationType = SKAnnotation.SkAnnotationTypeMarker
+            };
+
             _mapView.AddAnnotation(annotation, SKAnimationSettings.AnimationNone);
         }
 
         public void OnUpdatePOIsInRadius(double latitude, double longitude, int radius)
         {
-
-            // set the POIs to be tracked by the POI tracker
-            _poiTrackingManager.SetTrackedPOIs(SKTrackablePOIType.Speedcam, new List<SKTrackablePOI>(_trackablePoIs.Values));
+            _poiTrackingManager.SetTrackedPOIs(SKTrackablePOIType.Speedcam, new List<SKTrackablePOI>(_trackablePOIs.Values));
         }
 
-        public void OnSensorChanged(SensorEvent e)
+        private void ApplySmoothAlgorithm(float newCompassValue)
         {
-            _mapView.ReportNewHeading(e.Values[0]);
-        }
-
-        /// <summary>
-        /// Enables/disables heading mode
-        /// </summary>
-        /// <param name="enabled"> </param>
-        private bool Heading
-        {
-            set
+            if (Math.Abs(newCompassValue - _currentCompassValue) < 180)
             {
-                if (value)
+                _currentCompassValue = _currentCompassValue + SmoothFactorCompass * (newCompassValue - _currentCompassValue);
+            }
+            else
+            {
+                if (_currentCompassValue > newCompassValue)
                 {
-                    _headingOn = true;
-                    _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.PositionPlusHeading;
-                    StartOrientationSensor();
+                    _currentCompassValue = (_currentCompassValue + SmoothFactorCompass * ((360 + newCompassValue - _currentCompassValue) % 360) + 360) % 360;
                 }
                 else
                 {
-                    _headingOn = false;
-                    _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.None;
-                    StopOrientationSensor();
+                    _currentCompassValue = (_currentCompassValue - SmoothFactorCompass * ((360 - newCompassValue + _currentCompassValue) % 360) + 360) % 360;
                 }
             }
         }
 
-        /// <summary>
-        /// Activates the orientation sensor
-        /// </summary>
+        public void OnSensorChanged(SensorEvent sensorEvent)
+        {
+            //_mapView.reportNewHeading(t.values[0]);
+            switch (sensorEvent.Sensor.Type)
+            {
+                case SensorType.Orientation:
+                    if (_orientationValues != null)
+                    {
+                        for (int i = 0; i < _orientationValues.Length; i++)
+                        {
+                            _orientationValues[i] = sensorEvent.Values[i];
+
+                        }
+                        if (_orientationValues[0] != 0)
+                        {
+                            if ((DemoUtils.CurrentTimeMillis() - _lastTimeWhenReceivedGpsSignal) > MinimumTimeUntiLMapCanBeUpdated)
+                            {
+                                ApplySmoothAlgorithm(_orientationValues[0]);
+                                ScreenOrientation currentExactScreenOrientation = DemoUtils.GetExactScreenOrientation(this);
+                                if (_lastExactScreenOrientation != currentExactScreenOrientation)
+                                {
+                                    _lastExactScreenOrientation = currentExactScreenOrientation;
+                                    switch (_lastExactScreenOrientation)
+                                    {
+                                        case ScreenOrientation.Portrait:
+                                            _mapView.ReportNewDeviceOrientation(SKMapSurfaceView.SKOrientationType.Portrait);
+                                            break;
+                                        case ScreenOrientation.ReversePortrait:
+                                            _mapView.ReportNewDeviceOrientation(SKMapSurfaceView.SKOrientationType.PortraitUpsidedown);
+                                            break;
+                                        case ScreenOrientation.Landscape:
+                                            _mapView.ReportNewDeviceOrientation(SKMapSurfaceView.SKOrientationType.LandscapeRight);
+                                            break;
+                                        case ScreenOrientation.ReverseLandscape:
+                                            _mapView.ReportNewDeviceOrientation(SKMapSurfaceView.SKOrientationType.LandscapeLeft);
+                                            break;
+                                    }
+                                }
+
+                                // report to NG the new value
+                                if (_orientationValues[0] < 0)
+                                {
+                                    _mapView.ReportNewHeading(-_orientationValues[0]);
+                                }
+                                else
+                                {
+                                    _mapView.ReportNewHeading(_orientationValues[0]);
+                                }
+
+                                _lastTimeWhenReceivedGpsSignal = DemoUtils.CurrentTimeMillis();
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private void setHeading(bool enabled)
+        {
+            if (enabled)
+            {
+                _headingOn = true;
+                _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.PositionPlusHeading;
+                StartOrientationSensor();
+            }
+            else
+            {
+                _headingOn = false;
+                _mapView.MapSettings.FollowerMode = SKMapSettings.SKMapFollowerMode.None;
+                StopOrientationSensor();
+            }
+        }
+
         private void StartOrientationSensor()
         {
-            SensorManager sensorManager = (SensorManager)GetSystemService(SensorService);
+            _orientationValues = new float[3];
+            SensorManager sensorManager = GetSystemService(SensorService) as SensorManager;
             Sensor orientationSensor = sensorManager.GetDefaultSensor(SensorType.Orientation);
             sensorManager.RegisterListener(this, orientationSensor, SensorDelay.Ui);
         }
 
-        /// <summary>
-        /// Deactivates the orientation sensor
-        /// </summary>
         private void StopOrientationSensor()
         {
-            SensorManager sensorManager = (SensorManager)GetSystemService(SensorService);
+            _orientationValues = null;
+            SensorManager sensorManager = GetSystemService(SensorService) as SensorManager;
             sensorManager.UnregisterListener(this);
         }
 
         public void OnCurrentPositionUpdate(SKPosition currentPosition)
         {
             _currentPosition = currentPosition;
-            _mapView.ReportNewGPSPosition(_currentPosition);
+
+            if (_mapView != null)
+            {
+                _mapView.ReportNewGPSPosition(_currentPosition);
+            }
         }
 
         public void OnOnlineRouteComputationHanging(int status)
@@ -1769,13 +1724,11 @@ namespace Skobbler.SDKDemo.Activities
 
         }
 
-
-        // map interaction callbacks ...
         public void OnActionPan()
         {
             if (_headingOn)
             {
-                Heading = false;
+                setHeading(false);
             }
         }
 
@@ -1796,61 +1749,39 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnAnnotationSelected(SKAnnotation annotation)
         {
-            DisplayMetrics metrics = new DisplayMetrics();
-            float density = Resources.DisplayMetrics.Density;
-            if (_navigationUi.Visibility == ViewStates.Visible)
+            if (_navigationUI.Visibility == ViewStates.Visible)
             {
                 return;
             }
-            // show the popup at the proper position when selecting an
-            // annotation
+
+            int annotationHeight = 0;
+            float annotationOffset = annotation.Offset.GetY();
+
             switch (annotation.UniqueID)
             {
                 case 10:
-                    if (density <= 1)
-                    {
-                        SKLogging.WriteLog(Tag, "Density 1 ", SKLogging.LogError);
-                        _mapPopup.SetVerticalOffset(48 / density);
-                    }
-                    else if (density <= 2)
-                    {
-                        SKLogging.WriteLog(Tag, "Density 2 ", SKLogging.LogError);
-                        _mapPopup.SetVerticalOffset(96 / density);
-
-                    }
-                    else
-                    {
-                        SKLogging.WriteLog(Tag, "Density 3 ", SKLogging.LogError);
-                        _mapPopup.SetVerticalOffset(192 / density);
-                    }
+                    annotationHeight = annotation.ImageSize;
                     _popupTitleView.Text = "Annotation using texture ID";
-                    _popupDescriptionView.Text = " Red pin ";
+                    _popupDescriptionView.Text = " Red pin";
                     break;
                 case 13:
-                    // because the location of the annotation is the center of the image the vertical offset has to be imageSize/2
-                    _mapPopup.SetVerticalOffset(annotation.ImageSize / 2 / density);
+                    annotationHeight = annotation.ImageSize;
                     _popupTitleView.Text = "Annotation using absolute \n image path";
                     _popupDescriptionView.Text = null;
                     break;
                 case 14:
-                    int properSize = CalculateProperSizeForView(annotation.AnnotationView.Width, annotation.AnnotationView.Height);
-                    // If  imageWidth and imageHeight for the annotationView  are not power of 2 the actual size of the image will be the next power of 2 of max(width,
-                    // height) so the vertical offset
-                    // for the callout has to be half of the annotation's size
-                    _mapPopup.SetVerticalOffset(properSize / 2 / density);
+                    annotationHeight = annotation.AnnotationView.Height;
                     _popupTitleView.Text = "Annotation using  \n drawable resource ID ";
                     _popupDescriptionView.Text = null;
                     break;
                 case 15:
-                    properSize = CalculateProperSizeForView(_customView.Width, _customView.Height);
-                    // If  width and height of the view  are not power of 2 the actual size of the image will be the next power of 2 of max(width,height) so the vertical offset
-                    // for the callout has to be half of the annotation's size
-                    _mapPopup.SetVerticalOffset(properSize / 2 / density);
+                    annotationHeight = _customView.Height;
                     _popupTitleView.Text = "Annotation using custom view";
                     _popupDescriptionView.Text = null;
                     break;
-
             }
+
+            _mapPopup.SetVerticalOffset(-annotationOffset + annotationHeight / 2);
             _mapPopup.ShowAtLocation(annotation.Location, true);
         }
 
@@ -1866,28 +1797,24 @@ namespace Skobbler.SDKDemo.Activities
             }
 
             return power;
-
         }
 
-        public void OnCustomPOISelected(SKMapCustomPOI skMapCustomPoi)
+        public void OnCustomPOISelected(SKMapCustomPOI customPoi)
         {
-
         }
-
 
         public void OnDoubleTap(SKScreenPoint point)
         {
-            // zoom in on a position when double tapping
             _mapView.ZoomInAt(point);
         }
 
         public void OnInternetConnectionNeeded()
         {
-
         }
 
         public void OnLongPress(SKScreenPoint point)
         {
+
             SKCoordinate poiCoordinates = _mapView.PointToCoordinate(point);
             SKSearchResult place = SKReverseGeocoderManager.Instance.ReverseGeocodePosition(poiCoordinates);
 
@@ -1895,6 +1822,7 @@ namespace Skobbler.SDKDemo.Activities
             if (poiCoordinates != null && place != null && selectPoint)
             {
                 SKAnnotation annotation = new SKAnnotation(GreenPinIconId);
+
                 if (_isStartPointBtnPressed)
                 {
                     annotation.UniqueID = GreenPinIconId;
@@ -1924,17 +1852,14 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnMapActionDown(SKScreenPoint point)
         {
-
         }
 
         public void OnMapActionUp(SKScreenPoint point)
         {
-
         }
 
-        public void OnMapPOISelected(SKMapPOI skMapPoi)
+        public void OnMapPOISelected(SKMapPOI mapPOI)
         {
-
         }
 
         public void OnMapRegionChanged(SKCoordinateRegion mapRegion)
@@ -1943,12 +1868,6 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnRotateMap()
         {
-
-        }
-
-        public void OnScreenOrientationChanged()
-        {
-
         }
 
         public void OnSingleTap(SKScreenPoint point)
@@ -1956,10 +1875,8 @@ namespace Skobbler.SDKDemo.Activities
             _mapPopup.Visibility = ViewStates.Gone;
         }
 
-
         public void OnCompassSelected()
         {
-
         }
 
         public void OnInternationalisationCalled(int result)
@@ -1970,30 +1887,24 @@ namespace Skobbler.SDKDemo.Activities
         public void OnDestinationReached()
         {
             Toast.MakeText(this, "Destination reached", ToastLength.Short).Show();
-            // clear the map when reaching destination
             ClearMap();
         }
 
-
-        public void OnFreeDriveUpdated(string countryCode, string streetName, SKNavigationState.SKStreetType streetType, double currentSpeed, double speedLimit)
+        public void OnFreeDriveUpdated(String countryCode, String streetName, SKNavigationState.SKStreetType streetType, double currentSpeed, double speedLimit)
         {
-
         }
 
         public void OnReRoutingStarted()
         {
-
         }
 
-        public void OnSpeedExceededWithAudioFiles(string[] adviceList, bool speedExceeded)
+        public void OnSpeedExceededWithAudioFiles(String[] adviceList, bool speedExceeded)
         {
-
         }
 
         public void OnUpdateNavigationState(SKNavigationState navigationState)
         {
         }
-
 
         public void OnVisualAdviceChanged(bool firstVisualAdviceChanged, bool secondVisualAdviceChanged, SKNavigationState navigationState)
         {
@@ -2001,74 +1912,59 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnRealReachCalculationCompleted(SKBoundingBox bbox)
         {
-            // fit the reachable area on the screen when real reach calculataion
-            // ends
             _mapView.FitRealReachInView(bbox, false, 0);
         }
 
-
         public void OnPOIClusterSelected(SKPOICluster poiCluster)
         {
-            // TODO Auto-generated method stub
-
         }
 
         public void OnAccuracyChanged(Sensor sensor, SensorStatus accuracy)
         {
-            // TODO Auto-generated method stub
-
         }
 
         public void OnTunnelEvent(bool tunnelEntered)
         {
-            // TODO Auto-generated method stub
-
         }
 
         public void OnMapRegionChangeEnded(SKCoordinateRegion mapRegion)
         {
-            // TODO Auto-generated method stub
-
         }
 
         public void OnMapRegionChangeStarted(SKCoordinateRegion mapRegion)
         {
-            // TODO Auto-generated method stub
-
         }
 
         public void OnMapVersionSet(int newVersion)
         {
-            // TODO Auto-generated method stub
-
         }
 
-        public void OnNewVersionDetected(int newVersion)
+        private void ShowUpdateDialog(int newVersion)
         {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).Create();
-            alertDialog.SetMessage("New map version available");
-            alertDialog.SetCancelable(true);
-
-            alertDialog.SetButton(GetString(Resource.String.update_label), (s, e) =>
+            new AlertDialog.Builder(this)
+            .SetMessage("New map version available")
+            .SetCancelable(true)
+            .SetPositiveButton(GetString(Resource.String.update_label), (s, e) =>
             {
                 SKVersioningManager manager = SKVersioningManager.Instance;
                 bool updated = manager.UpdateMapsVersion(newVersion);
                 if (updated)
                 {
+                    _app.AppPrefs.SaveBooleanPreference(ApplicationPreferences.MAP_RESOURCES_UPDATE_NEEDED, true);
+                    SplashActivity.NewMapVersionDetected = 0;
                     Toast.MakeText(this, "The map has been updated to version " + newVersion, ToastLength.Short).Show();
                 }
                 else
                 {
                     Toast.MakeText(this, "An error occurred in updating the map ", ToastLength.Short).Show();
                 }
-            });
+            })
+            .SetNegativeButton(GetString(Resource.String.cancel_label), (s, e) => {/*AlertDialog.Cancel()*/}).Create().Show();
+        }
 
-            alertDialog.SetButton(GetString(Resource.String.cancel_label), (s, e) =>
-            {
-                alertDialog.Cancel();
-            });
-
-            alertDialog.Show();
+        public void OnNewVersionDetected(int newVersion)
+        {
+            ShowUpdateDialog(newVersion);
         }
 
         public void OnNoNewVersionDetected()
@@ -2078,14 +1974,10 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnVersionFileDownloadTimeout()
         {
-            // TODO Auto-generated method stub
-
         }
 
         public void OnCurrentPositionSelected()
         {
-            // TODO Auto-generated method stub
-
         }
 
         public void OnObjectSelected(int id)
@@ -2094,19 +1986,16 @@ namespace Skobbler.SDKDemo.Activities
 
         public override void OnBackPressed()
         {
-            // TODO Auto-generated method stub
-            if (_menu.Visibility == ViewStates.Visible)
-            {
-                _menu.Visibility = ViewStates.Gone;
-            }
-            else if (_skToolsNavigationInProgress || _skToolsRouteCalculated)
+            if (_skToolsNavigationInProgress || _skToolsRouteCalculated)
             {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.SetTitle("Really quit?");
                 alert.SetMessage("Do you want to exit navigation?");
-
                 alert.SetPositiveButton("Yes", (s, e) =>
                 {
+                    _drawerLayout.SetDrawerLockMode(DrawerLayout.LockModeUnlocked);
+                    ActionBar.SetDisplayHomeAsUpEnabled(true);
+                    ActionBar.SetHomeButtonEnabled(true);
                     if (_skToolsNavigationInProgress)
                     {
                         _navigationManager.StopNavigation();
@@ -2115,11 +2004,10 @@ namespace Skobbler.SDKDemo.Activities
                     {
                         _navigationManager.RemoveRouteCalculationScreen();
                     }
-                    InitializeNavigationUi(false);
+                    InitializeNavigationUI(false);
                     _skToolsRouteCalculated = false;
                     _skToolsNavigationInProgress = false;
                 });
-
                 alert.SetNegativeButton("Cancel", (s, e) => { });
                 alert.Show();
             }
@@ -2128,41 +2016,89 @@ namespace Skobbler.SDKDemo.Activities
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.SetTitle("Really quit? ");
                 alert.SetMessage("Do you really want to exit the app?");
-
                 alert.SetPositiveButton("Yes", (s, e) =>
                 {
-                    if (ResourceDownloadsListActivity.MapsDao != null)
+                    if (ResourceDownloadsListActivity.mapsDAO != null)
                     {
+                        //todo
                         SKToolsDownloadManager downloadManager = SKToolsDownloadManager.GetInstance(this);
-                        if (downloadManager.DownloadProcessRunning)
+                        if (downloadManager.IsDownloadProcessRunning)
                         {
-                            // pause downloads when exiting app if one is currently in progress
                             downloadManager.PauseDownloadThread();
                             return;
                         }
                     }
                     Finish();
+                    Process.KillProcess(Process.MyPid());
                 });
-
-                alert.SetNegativeButton("Cancel", (s, e) => { });
+                alert.SetNegativeButton("Cancel", (s,e) => { });
                 alert.Show();
+
             }
+
         }
 
-        public void OnRouteCalculationCompleted()
+        public void OnDownloadPaused(SKToolsDownloadItem currentDownloadItem)
         {
-            
+            MapDownloadResource mapResource = (MapDownloadResource)ResourceDownloadsListActivity.allMapResources[currentDownloadItem.ItemCode];
+            mapResource.DownloadState = (currentDownloadItem.DownloadState);
+            mapResource.NoDownloadedBytes = (currentDownloadItem.NoDownloadedBytes);
+            ResourceDownloadsListActivity.mapsDAO.updateMapResource(mapResource);
+            _app.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
+            Finish();
+        }
+
+
+        public void OnRouteCalculationCompleted(SKRouteInfo routeInfo)
+        {
+            if (_currentMapOption == MapOption.ALTERNATIVE_ROUTES)
+            {
+                int routeIndex = _routeIds.Count;
+                _routeIds.Add(routeInfo.RouteID);
+                _altRoutesButtons[routeIndex].Text = DemoUtils.FormatDistance(routeInfo.Distance) + "\n" + DemoUtils.FormatTime(routeInfo.EstimatedTime);
+                if (routeIndex == 0)
+                {
+                    // select 1st alternative by default
+                    SelectAlternativeRoute(0);
+                }
+            }
+            else if (_currentMapOption == MapOption.ROUTING_AND_NAVIGATION || _currentMapOption == MapOption.POI_TRACKING
+                  || _currentMapOption == MapOption.NAVI_UI)
+            {
+                // select the current route (on which navigation will run)
+                SKRouteManager.Instance.SetCurrentRouteByUniqueId(routeInfo.RouteID);
+                // zoom to the current route
+                SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
+
+                if (_currentMapOption == MapOption.ROUTING_AND_NAVIGATION)
+                {
+                    _bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
+                }
+            }
+            else if (_currentMapOption == MapOption.TRACKS)
+            {
+                SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
+                _bottomButton.Visibility = ViewStates.Visible;
+                _bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
+            }
+            else if (_currentMapOption == MapOption.MAP_INTERACTION)
+            {
+                if (_shouldCacheTheNextRoute)
+                {
+                    _cachedRouteId = routeInfo.RouteID;
+                }
+            }
         }
 
         public void OnRouteCalculationFailed(SKRouteListenerSKRoutingErrorCode arg0)
         {
+            _shouldCacheTheNextRoute = false;
             Toast.MakeText(this, Resources.GetString(Resource.String.route_calculation_failed), ToastLength.Short).Show();
         }
 
         public void OnSignalNewAdviceWithAudioFiles(string[] audioFiles, bool specialSoundFile)
         {
-            // a new navigation advice was received
-            SKLogging.WriteLog(Tag, " onSignalNewAdviceWithAudioFiles " + audioFiles, SKLogging.LogDebug);
+            SKLogging.WriteLog(Tag, " onSignalNewAdviceWithAudioFiles " + Arrays.AsList(audioFiles), SKLogging.LogDebug);
             SKToolsAdvicePlayer.Instance.PlayAdvice(audioFiles, SKToolsAdvicePlayer.PriorityNavigation);
         }
 
@@ -2178,8 +2114,6 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnServerLikeRouteCalculationCompleted(SKRouteJsonAnswer arg0)
         {
-            // TODO Auto-generated method stub
-
         }
 
         public void OnViaPointReached(int index)
@@ -2189,9 +2123,9 @@ namespace Skobbler.SDKDemo.Activities
         public void OnNavigationStarted()
         {
             _skToolsNavigationInProgress = true;
-            if (_navigationUi.Visibility == ViewStates.Visible)
+            if (_navigationUI.Visibility == ViewStates.Visible)
             {
-                _navigationUi.Visibility = ViewStates.Gone;
+                _navigationUI.Visibility = ViewStates.Gone;
             }
         }
 
@@ -2199,7 +2133,10 @@ namespace Skobbler.SDKDemo.Activities
         {
             _skToolsRouteCalculated = false;
             _skToolsNavigationInProgress = false;
-            InitializeNavigationUi(false);
+            _drawerLayout.SetDrawerLockMode(DrawerLayout.LockModeUnlocked);
+            ActionBar.SetDisplayHomeAsUpEnabled(true);
+            ActionBar.SetHomeButtonEnabled(true);
+            InitializeNavigationUI(false);
         }
 
         public void OnRouteCalculationStarted()
@@ -2207,96 +2144,255 @@ namespace Skobbler.SDKDemo.Activities
             _skToolsRouteCalculated = true;
         }
 
-        public void onRouteCalculationCompleted()
+        public void OnRouteCalculationCompleted()
         {
-
         }
-
 
         public void OnRouteCalculationCanceled()
         {
             _skToolsRouteCalculated = false;
             _skToolsNavigationInProgress = false;
-            InitializeNavigationUi(false);
+            _drawerLayout.SetDrawerLockMode(DrawerLayout.LockModeUnlocked);
+            ActionBar.SetHomeButtonEnabled(true);
+            ActionBar.SetDisplayHomeAsUpEnabled(true);
+            InitializeNavigationUI(false);
         }
 
-        public void OnDownloadProgress(SKToolsDownloadItem currentDownloadItem)
+        public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            throw new NotImplementedException();
+            if (_actionBarDrawerToggle.OnOptionsItemSelected(item))
+            {
+                return true;
+            }
+
+            return base.OnOptionsItemSelected(item);
         }
 
-        public void OnDownloadCancelled(string currentDownloadItemCode)
+        protected void HandleMenuItemClick(MapOption mapOption)
         {
-            throw new NotImplementedException();
+            ClearMap();
+            switch (mapOption)
+            {
+                case MapOption.MAP_DISPLAY:
+                    _mapView.ClearHeatMapsDisplay();
+                    _currentMapOption = MapOption.MAP_DISPLAY;
+                    _bottomButton.Visibility = ViewStates.Gone;
+                    SKRouteManager.Instance.ClearCurrentRoute();
+                    break;
+                case MapOption.MAP_INTERACTION:
+                    _currentMapOption = MapOption.MAP_INTERACTION;
+                    HandleMapInteractionOption();
+                    break;
+                case MapOption.MAP_OVERLAYS:
+                    _currentMapOption = MapOption.MAP_OVERLAYS;
+                    DrawShapes();
+                    _mapView.SetZoom(14);
+                    _mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
+                    break;
+                case MapOption.ALTERNATIVE_ROUTES:
+                    _currentMapOption = MapOption.ALTERNATIVE_ROUTES;
+                    _altRoutesView.Visibility = ViewStates.Visible;
+                    LaunchAlternativeRouteCalculation();
+                    break;
+                case MapOption.MAP_STYLES:
+                    _currentMapOption = MapOption.MAP_STYLES;
+                    _mapStylesView.Visibility = ViewStates.Visible;
+                    SelectStyleButton();
+                    break;
+                case MapOption.MAP_CREATOR:
+                    _currentMapOption = MapOption.MAP_DISPLAY;
+                    _mapView.ApplySettingsFromFile(_app.MapCreatorFilePath);
+                    break;
+                case MapOption.TRACKS:
+                    _currentMapOption = MapOption.TRACKS;
+                    Intent trackIntent = new Intent(this, typeof(TracksActivity));
+                    StartActivityForResult(trackIntent, Tracks);
+                    break;
+                case MapOption.REAL_REACH:
+                    _currentMapOption = MapOption.REAL_REACH;
+                    _mapView.CenterMapOnPosition(new SKCoordinate(13.4127, 52.5233));
+                    _realReachLayout.Visibility = ViewStates.Visible;
+                    break;
+                case MapOption.MAP_DOWNLOADS:
+                    if (DemoUtils.IsInternetAvailable(this))
+                    {
+                        StartActivity(new Intent(this, typeof(ResourceDownloadsListActivity)));
+                    }
+                    else
+                    {
+                        Toast.MakeText(this, Resources.GetString(Resource.String.no_internet_connection), ToastLength.Short).Show();
+                    }
+                    break;
+                case MapOption.REVERSE_GEOCODING:
+                    StartActivity(new Intent(this, typeof(ReverseGeocodingActivity)));
+                    break;
+                case MapOption.ADDRESS_SEARCH:
+                    StartActivity(new Intent(this, typeof(OfflineAddressSearchActivity)));
+                    break;
+                case MapOption.NEARBY_SEARCH:
+                    StartActivity(new Intent(this, typeof(NearbySearchActivity)));
+                    break;
+                case MapOption.ANNOTATIONS:
+                    _currentMapOption = MapOption.ANNOTATIONS;
+                    PrepareAnnotations();
+                    break;
+                case MapOption.CATEGORY_SEARCH:
+                    StartActivity(new Intent(this, typeof(CategorySearchResultsActivity)));
+                    break;
+                case MapOption.ROUTING_AND_NAVIGATION:
+                    _currentMapOption = MapOption.ROUTING_AND_NAVIGATION;
+                    _bottomButton.Visibility = ViewStates.Visible;
+                    _bottomButton.Text = Resources.GetString(Resource.String.calculate_route);
+                    break;
+                case MapOption.POI_TRACKING:
+                    _currentMapOption = MapOption.POI_TRACKING;
+                    if (_trackablePOIs == null)
+                    {
+                        InitializeTrackablePOIs();
+                    }
+                    LaunchRouteCalculation(new SKCoordinate(-122.397674, 37.761278), new SKCoordinate(-122.448270, 37.738761));
+                    break;
+                case MapOption.HEAT_MAP:
+                    _currentMapOption = MapOption.HEAT_MAP;
+                    StartActivity(new Intent(this, typeof(POICategoriesListActivity)));
+                    break;
+                case MapOption.MAP_UPDATES:
+                    SKVersioningManager.Instance.CheckNewVersion(3);
+                    break;
+                case MapOption.NAVI_UI:
+                    _currentMapOption = MapOption.NAVI_UI;
+                    InitializeNavigationUI(true);
+                    FindViewById(Resource.Id.clear_via_point_button).Visibility = ViewStates.Gone;
+                    FindViewById(Resource.Id.settings_button).Visibility = ViewStates.Visible;
+                    ((Button)FindViewById(Resource.Id.start_free_drive_button)).Text = "Start free drive";
+                    break;
+                case MapOption.PEDESTRIAN_NAVI:
+                    _currentMapOption = MapOption.PEDESTRIAN_NAVI;
+                    InitializeNavigationUI(true);
+                    FindViewById(Resource.Id.clear_via_point_button).Visibility = ViewStates.Gone;
+                    FindViewById(Resource.Id.settings_button).Visibility = ViewStates.Gone;
+                    ((Button)FindViewById(Resource.Id.start_free_drive_button)).Text = "Start free walk";
+                    Toast.MakeText(this, "Pedestrian navigation: illustrating optimized 2D view with previous positions trail and pedestrian specific follow-modes: historic, compass & north bound", ToastLength.Long).Show();
+                    break;
+                default:
+                    break;
+            }
+            if (_currentMapOption != MapOption.MAP_DISPLAY)
+            {
+                _positionMeButton.Visibility = ViewStates.Gone;
+                _headingButton.Visibility = ViewStates.Gone;
+            }
         }
 
-        public void OnDownloadPaused(SKToolsDownloadItem currentDownloadItem)
+        private void ShowRealReach(SKRealReachSettings.SKRealReachMeasurementUnit unitType, SKRealReachSettings.SKRealReachVehicleType vehicleType, int range, SKRouteSettings.SKRouteConnectionMode skRouteConnectionMode)
         {
-            MapDownloadResource mapResource = ResourceDownloadsListActivity.AllMapResources[currentDownloadItem.ItemCode];
-            mapResource.DownloadState = currentDownloadItem.SKDownloadState;
-            mapResource.NoDownloadedBytes = currentDownloadItem.NoDownloadedBytes;
-            ResourceDownloadsListActivity.MapsDao.UpdateMapResource(mapResource);
-            _app.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
-            Finish();
+            if (_mapView == null)
+            {
+                return;
+            }
+
+            _mapView.ClearRealReachDisplay();
+
+            _mapView.SetRealReachListener(this);
+
+            SKRealReachSettings realReachSettings = new SKRealReachSettings
+            {
+                Location = new SKCoordinate(13.4127, 52.5233),
+                MeasurementUnit = unitType,
+                RoundTrip = MapActivity.RoundTrip,
+                ConnectionMode = skRouteConnectionMode,
+                TransportMode = vehicleType
+            };
+
+            if (unitType == SKRealReachSettings.SKRealReachMeasurementUnit.MiliwattHours)
+            {
+                realReachSettings.SetConsumption(_energyConsumption);
+                realReachSettings.Range = range * 100;
+            }
+            else if (unitType == SKRealReachSettings.SKRealReachMeasurementUnit.Second)
+            {
+                realReachSettings.Range = range * 60;
+            }
+            else
+            {
+                realReachSettings.Range = range * 1000;
+            }
+
+            _mapView.DisplayRealReachWithSettings(realReachSettings);
         }
 
-        public void OnInternetConnectionFailed(SKToolsDownloadItem currentDownloadItem, bool responseReceivedFromServer)
+        private void HandleMapInteractionOption()
         {
-            throw new NotImplementedException();
+            _mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
+
+            SKAnnotation annotation1 = new SKAnnotation(10)
+            {
+                Location = new SKCoordinate(-122.4200, 37.7765),
+                MininumZoomLevel = 5,
+                AnnotationType = SKAnnotation.SkAnnotationTypeRed
+            };
+
+            _mapView.AddAnnotation(annotation1, SKAnimationSettings.AnimationNone);
+
+            SKAnnotation annotation2 = new SKAnnotation(11)
+            {
+                Location = new SKCoordinate(-122.412753, 37.777142),
+                MininumZoomLevel = 5,
+                AnnotationType = SKAnnotation.SkAnnotationTypeGreen
+            };
+
+            _mapView.AddAnnotation(annotation2, SKAnimationSettings.AnimationNone);
+
+            _bottomButton.Visibility = ViewStates.Visible;
+            _bottomButton.Text = "Open new map instance";
+
+            _shouldCacheTheNextRoute = true;
+
+            LaunchRouteCalculation(new SKCoordinate(-122.4200, 37.7765), new SKCoordinate(-122.412753, 37.777142));
+        }
+
+        private bool IsRouteCached
+        {
+            get { return _cachedRouteId != null; }
+        }
+
+        public void LoadRouteFromCache()
+        {
+            SKRouteManager.Instance.LoadRouteFromCache(_cachedRouteId.Value);
+        }
+
+        public void ClearRouteFromCache()
+        {
+            SKRouteManager.Instance.ClearAllRoutesFromCache();
+            _cachedRouteId = null;
         }
 
         public void OnAllDownloadsCancelled()
         {
-            throw new NotImplementedException();
         }
 
-        public void OnNotEnoughMemoryOnCurrentStorage(SKToolsDownloadItem currentDownloadItem)
+        public void OnDownloadCancelled(string p0)
         {
-            throw new NotImplementedException();
         }
 
-        public void OnInstallStarted(SKToolsDownloadItem currentInstallingItem)
+        public void OnDownloadProgress(SKToolsDownloadItem p0)
         {
-            throw new NotImplementedException();
         }
 
-        public void OnInstallFinished(SKToolsDownloadItem currentInstallingItem)
+        public void OnInstallFinished(SKToolsDownloadItem p0)
         {
-            throw new NotImplementedException();
         }
 
-
-        public void OnRouteCalculationCompleted(SKRouteInfo routeInfo)
+        public void OnInstallStarted(SKToolsDownloadItem p0)
         {
-            if (_currentMapOption == MapOption.AlternativeRoutes)
-            {
-                int routeIndex = _routeIds.Count;
-                _routeIds.Add(routeInfo.RouteID);
-                _altRoutesButtons[routeIndex].Text = DemoUtils.FormatDistance(routeInfo.Distance) + "\n" + DemoUtils.FormatTime(routeInfo.EstimatedTime);
-                if (routeIndex == 0)
-                {
-                    // select 1st alternative by default
-                    SelectAlternativeRoute(0);
-                }
-            }
-            else if (_currentMapOption == MapOption.RoutingAndNavigation || _currentMapOption == MapOption.PoiTracking || _currentMapOption == MapOption.NaviUi)
-            {
-                // select the current route (on which navigation will run)
-                SKRouteManager.Instance.SetCurrentRouteByUniqueId(routeInfo.RouteID);
-                // zoom to the current route
-                SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
+        }
 
-                if (_currentMapOption == MapOption.RoutingAndNavigation)
-                {
-                    _bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
-                }
-            }
-            else if (_currentMapOption == MapOption.Tracks)
-            {
-                SKRouteManager.Instance.ZoomToRoute(1, 1, 8, 8, 8, 8);
-                _bottomButton.Visibility = ViewStates.Visible;
-                _bottomButton.Text = Resources.GetString(Resource.String.start_navigation);
-            }
+        public void OnInternetConnectionFailed(SKToolsDownloadItem p0, bool p1)
+        {
+        }
+
+        public void OnNotEnoughMemoryOnCurrentStorage(SKToolsDownloadItem p0)
+        {
         }
     }
 }

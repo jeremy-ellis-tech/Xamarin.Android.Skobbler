@@ -9,398 +9,377 @@ using Skobbler.Ngx.Util;
 
 namespace Skobbler.SDKDemo.Database
 {
-	/// <summary>
-	/// This class provides methods for accessing the "Maps" table
-	/// </summary>
-	public class MapsDao
-	{
+    public class MapsDAO
+    {
 
-		/// <summary>
-		/// US country code
-		/// </summary>
-		public const string UsCode = "US";
+        /**
+         * US country code
+         */
+        public static String US_CODE = "US";
 
-		/// <summary>
-		/// ENGLISH language code
-		/// </summary>
-		public const string EnglishLanguageCode = "en";
+        /**
+         * ENGLISH language code
+         */
+        public static String ENGLISH_LANGUAGE_CODE = "en";
 
-		/// <summary>
-		/// name of the maps data table
-		/// </summary>
-		public const string MapsTable = "Maps";
+        /**
+         * name of the maps data table
+         */
+        public static String MAPS_TABLE = "Maps";
 
-		/// <summary>
-		/// map code column key
-		/// </summary>
-		public const string Code = "Code";
+        /**
+         * map code column key
+         */
+        public static String CODE = "Code";
 
-		/// <summary>
-		/// map parent code column key
-		/// </summary>
-		public const string ParentCode = "ParentCode";
+        /**
+         * map parent code column key
+         */
+        public static String PARENT_CODE = "ParentCode";
 
-		/// <summary>
-		/// region column key (has a value only for state column)
-		/// </summary>
-		public const string Region = "Region";
+        /**
+         * region column key (has a value only for state column)
+         */
+        public static String REGION = "Region";
 
-		/// <summary>
-		/// map names column key
-		/// </summary>
-		public const string Names = "Names";
+        /**
+         * map names column key
+         */
+        public static String NAMES = "Names";
 
-		/// <summary>
-		/// map SKM file path column key
-		/// </summary>
-		public const string SkmFilePath = "SkmFilePath";
+        /**
+         * map SKM file path column key
+         */
+        public static String SKM_FILE_PATH = "SkmFilePath";
 
-		/// <summary>
-		/// map ZIP file path column key
-		/// </summary>
-		public const string ZipFilePath = "ZipFilePath";
+        /**
+         * map ZIP file path column key
+         */
+        public static String ZIP_FILE_PATH = "ZipFilePath";
 
-		/// <summary>
-		/// map TXG file path column key
-		/// </summary>
-		public const string TxgFilePath = "TxgFilePath";
+        /**
+         * map TXG file path column key
+         */
+        public static String TXG_FILE_PATH = "TxgFilePath";
 
-		/// <summary>
-		/// map TXG file size column key
-		/// </summary>
-		public const string TxgFileSize = "TxgFileSize";
+        /**
+         * map TXG file size column key
+         */
+        public static String TXG_FILE_SIZE = "TxgFileSize";
 
-		/// <summary>
-		/// map total size(SKM + ZIP) files size column key
-		/// </summary>
-		public const string SkmAndZipFilesSize = "SkmAndZipFilesSize";
+        /**
+         * map total size(SKM + ZIP) files size column key
+         */
+        public static String SKM_AND_ZIP_FILES_SIZE = "SkmAndZipFilesSize";
 
-		/// <summary>
-		/// map SKM file size column key
-		/// </summary>
-		public const string SkmFileSize = "SkmFileSize";
+        /**
+         * map SKM file size column key
+         */
+        public static String SKM_FILE_SIZE = "SkmFileSize";
 
-		/// <summary>
-		/// map UNZIPPED file size column key
-		/// </summary>
-		public const string UnzippedFileSize = "UnzippedFileSize";
+        /**
+         * map UNZIPPED file size column key
+         */
+        public static String UNZIPPED_FILE_SIZE = "UnzippedFileSize";
 
-		/// <summary>
-		/// map sub-type column key
-		/// </summary>
-		public const string Subtype = "SubType";
+        /**
+         * map sub-type column key
+         */
+        public static String SUBTYPE = "SubType";
 
-		/// <summary>
-		/// map state column key
-		/// </summary>
-		public const string State = "State";
+        /**
+         * map state column key
+         */
+        public static String STATE = "State";
 
-		/// <summary>
-		/// Bounding box column keys
-		/// </summary>
-		public const string BoundingBoxLongitudeMin = "LongMin";
+        /**
+         * Bounding box column keys
+         */
+        public static String BOUNDING_BOX_LONGITUDE_MIN = "LongMin";
 
-		public const string BoundingBoxLongitudeMax = "LongMax";
+        public static String BOUNDING_BOX_LONGITUDE_MAX = "LongMax";
 
-		public const string BoundingBoxLatitudeMin = "LatMin";
+        public static String BOUNDING_BOX_LATITUDE_MIN = "LatMin";
 
-		public const string BoundingBoxLatitudeMax = "LatMax";
+        public static String BOUNDING_BOX_LATITUDE_MAX = "LatMax";
 
-		/// <summary>
-		/// map no bytes column key
-		/// </summary>
-		public const string NoDownloadedBytes = "NoDownloadedBytes";
+        /**
+         * map no bytes column key
+         */
+        public static String NO_DOWNLOADED_BYTES = "NoDownloadedBytes";
 
-		/// <summary>
-		/// flag ID
-		/// </summary>
-		public const string FlagId = "FlagID";
+        /**
+         * flag ID
+         */
+        public static String FLAG_ID = "FlagID";
 
-		/// <summary>
-		/// download path
-		/// </summary>
-		public const string DownloadPath = "DownloadPath";
+        /**
+         * download path
+         */
+        public static String DOWNLOAD_PATH = "DownloadPath";
 
-		/// <summary>
-		/// Prefix for the flag image resources
-		/// </summary>
-		public const string FlagBigIconPrefix = "icon_flag_big_";
+        /**
+         * Prefix for the flag image resources
+         */
+        public static String FLAG_BIG_ICON_PREFIX = "icon_flag_big_";
 
-		/// <summary>
-		/// map type column values
-		/// </summary>
-		public const string ContinentType = "continent";
+        /**
+         * map type column values
+         */
+        public static String CONTINENT_TYPE = "continent";
 
-		public const string CountryType = "country";
+        public static String COUNTRY_TYPE = "country";
 
-		public const string RegionType = "region";
+        public static String REGION_TYPE = "region";
 
-		public const string CityType = "city";
+        public static String CITY_TYPE = "city";
 
-		public const string StateType = "state";
+        public static String STATE_TYPE = "state";
 
-		/// <summary>
-		/// tag for the class
-		/// </summary>
-		private const string Tag = "MapsDAO";
+        /**
+         * tag for the class
+         */
+        private static String TAG = "MapsDAO";
 
-		/// <summary>
-		/// auto-increment column key (primary key ID)
-		/// </summary>
-		public const string Key = "Key";
+        /**
+         * auto-increment column key (primary key ID)
+         */
+        public static String KEY = "Key";
 
-		/// <summary>
-		/// the associated resources DAO
-		/// </summary>
-		private readonly ResourcesDao _resourcesDao;
+        /**
+         * the associated resources DAO
+         */
+        private ResourcesDAO resourcesDAO;
 
-		/// <summary>
-		/// constructs an object of this type
-		/// </summary>
-		/// <param name="resourcesDao"> resourcesDAO </param>
-		public MapsDao(ResourcesDao resourcesDao)
-		{
-			_resourcesDao = resourcesDao;
-		}
+        /**
+         * constructs an object of this type
+         *
+         * @param resourcesDAO resourcesDAO
+         */
+        public MapsDAO(ResourcesDAO resourcesDAO)
+        {
+            this.resourcesDAO = resourcesDAO;
+        }
 
-		/// <summary>
-		/// insert the maps and codes into resources database (maps table)
-		/// </summary>
-		/// <param name="maps">               map objects that will be inserted into database </param>
-		/// <param name="mapsItemsCodes">     a map representing the maps hierarchy defined in JSON file </param>
-		/// <param name="regionItemsCodes">   a map representing the regions hierarchy defined in JSON file </param>
-		/// <param name="applicationContext"> application context </param>
-		public virtual void InsertMaps(IList<MapDownloadResource> maps, IDictionary<string, string> mapsItemsCodes, IDictionary<string, string> regionItemsCodes, Context applicationContext)
-		{
-			try
-			{
-				if ((maps != null) && (mapsItemsCodes != null) && (regionItemsCodes != null))
-				{
-					// create a compile statement for inserting the maps using transactions
-					StringBuilder insertCommand = new StringBuilder("INSERT INTO ");
-					insertCommand.Append(MapsTable).Append(" VALUES (?");
-					// the number of columns in maps table is 20
-					for (int i = 0; i < 20; i++)
-					{
-						insertCommand.Append(",?");
-					}
-					insertCommand.Append(");");
-					_resourcesDao.Database.BeginTransaction();
-					SQLiteStatement insertStatement = _resourcesDao.Database.CompileStatement(insertCommand.ToString());
-				    int lineIndex = 0;
-				    foreach (MapDownloadResource map in maps)
-					{
-						var columnIndex = 1;
-						lineIndex++;
-						insertStatement.ClearBindings();
-						insertStatement.BindLong(columnIndex++, lineIndex);
-						insertStatement.BindString(columnIndex++, map.Code);
-						insertStatement.BindString(columnIndex++, mapsItemsCodes[map.Code]);
-						if ((map.SubType != null) && map.SubType.Equals(StateType, StringComparison.CurrentCultureIgnoreCase))
-						{
-							insertStatement.BindString(columnIndex++, regionItemsCodes[map.Code]);
-						}
-						else
-						{
-							insertStatement.BindString(columnIndex++, "");
-						}
+        public void insertMaps(List<MapDownloadResource> maps, Dictionary<string, string> mapsItemsCodes, Dictionary<string, string> regionItemsCodes, Context applicationContext)
+        {
+            try
+            {
+                if ((maps != null) && (mapsItemsCodes != null) && (regionItemsCodes != null))
+                {
+                    // create a compile statement for inserting the maps using transactions
+                    StringBuilder insertCommand = new StringBuilder("INSERT INTO ");
+                    insertCommand.Append(MAPS_TABLE).Append(" VALUES (?");
+                    // the number of columns in maps table is 20
+                    for (int i = 0; i < 20; i++)
+                    {
+                        insertCommand.Append(",?");
+                    }
+                    insertCommand.Append(");");
+                    resourcesDAO.getDatabase().BeginTransaction();
+                    SQLiteStatement insertStatement = resourcesDAO.getDatabase().CompileStatement(insertCommand.ToString());
+                    int columnIndex, lineIndex = 0;
+                    foreach (MapDownloadResource map in maps)
+                    {
+                        columnIndex = 1;
+                        lineIndex++;
+                        insertStatement.ClearBindings();
+                        insertStatement.BindLong(columnIndex++, lineIndex);
+                        insertStatement.BindString(columnIndex++, map.Code);
+                        insertStatement.BindString(columnIndex++, mapsItemsCodes[map.Code]);
+                        if ((map.getSubType() != null) && map.getSubType().Equals(STATE_TYPE)) //ignorecode
+                        {
+                            insertStatement.BindString(columnIndex++, regionItemsCodes[map.Code]);
+                        }
+                        else
+                        {
+                            insertStatement.BindString(columnIndex++, "");
+                        }
 
-						// compute the string that contains all the name translations
-						StringBuilder nameInAllSpecifiedLanguages = new StringBuilder();
+                        // compute the string that contains all the name translations
+                        StringBuilder nameInAllSpecifiedLanguages = new StringBuilder();
 
-						if (map.GetNames() != null)
-						{
-							foreach (KeyValuePair<string, string> currentEntry in map.GetNames())
-							{
-								nameInAllSpecifiedLanguages.Append(currentEntry.Key).Append("=").Append(currentEntry.Value).Append(";");
-							}
-						}
+                        if (map.getNames() != null)
+                        {
+                            foreach (var currentEntry in map.getNames())
+                            {
+                                nameInAllSpecifiedLanguages.Append(currentEntry.Key).Append("=").Append(currentEntry.Value).Append(";");
+                            }
+                        }
 
-						if (nameInAllSpecifiedLanguages.Length > 1)
-						{
-							insertStatement.BindString(columnIndex++, nameInAllSpecifiedLanguages.ToString().Remove(nameInAllSpecifiedLanguages.Length - 1));
-						}
-						else
-						{
-							insertStatement.BindString(columnIndex++, "");
-						}
-						insertStatement.BindString(columnIndex++, map.SKMFilePath);
-                        insertStatement.BindString(columnIndex++, map.ZipFilePath);
-                        insertStatement.BindString(columnIndex++, map.TxgFilePath);
-						insertStatement.BindLong(columnIndex++, (int) map.TxgFileSize);
-                        insertStatement.BindLong(columnIndex++, (int)map.SkmAndZipFilesSize);
-                        insertStatement.BindLong(columnIndex++, (int)map.SkmFileSize);
-                        insertStatement.BindLong(columnIndex++, (int)map.UnzippedFileSize);
-						insertStatement.BindDouble(columnIndex++, map.BbLatMax);
-                        insertStatement.BindDouble(columnIndex++, map.BbLatMin);
-                        insertStatement.BindDouble(columnIndex++, map.BbLongMax);
-                        insertStatement.BindDouble(columnIndex++, map.BbLongMin);
-						insertStatement.BindString(columnIndex++, map.SubType);
-						insertStatement.BindLong(columnIndex++, (sbyte)map.DownloadState);
+                        if (nameInAllSpecifiedLanguages.Length > 1)
+                        {
+                            insertStatement.BindString(columnIndex++, nameInAllSpecifiedLanguages.ToString().Substring(0, nameInAllSpecifiedLanguages.Length - 1));
+                        }
+                        else
+                        {
+                            insertStatement.BindString(columnIndex++, "");
+                        }
+                        insertStatement.BindString(columnIndex++, map.getSKMFilePath());
+                        insertStatement.BindString(columnIndex++, map.getZipFilePath());
+                        insertStatement.BindString(columnIndex++, map.getTXGFilePath());
+                        insertStatement.BindLong(columnIndex++, (int)map.getTXGFileSize());
+                        insertStatement.BindLong(columnIndex++, (int)map.getSkmAndZipFilesSize());
+                        insertStatement.BindLong(columnIndex++, (int)map.getSkmFileSize());
+                        insertStatement.BindLong(columnIndex++, (int)map.getUnzippedFileSize());
+                        insertStatement.BindDouble(columnIndex++, map.getBbLatMax());
+                        insertStatement.BindDouble(columnIndex++, map.getBbLatMin());
+                        insertStatement.BindDouble(columnIndex++, map.getBbLongMax());
+                        insertStatement.BindDouble(columnIndex++, map.getBbLongMin());
+                        insertStatement.BindString(columnIndex++, map.getSubType());
+                        insertStatement.BindLong(columnIndex++, map.DownloadState);
                         insertStatement.BindLong(columnIndex++, map.NoDownloadedBytes);
                         insertStatement.BindLong(columnIndex++, 0);
-						insertStatement.BindString(columnIndex, map.DownloadPath);
-						insertStatement.Execute();
-					}
-				}
-			}
-			finally
-			{
-				if ((maps != null) && (mapsItemsCodes != null))
-				{
-					SKLogging.WriteLog(Tag, "Maps were inserted into database !!!", SKLogging.LogDebug);
-					// close the GENERAL transaction
-					_resourcesDao.Database.SetTransactionSuccessful();
-					_resourcesDao.Database.EndTransaction();
-				}
-			}
-		}
+                        insertStatement.BindString(columnIndex, map.DownloadPath);
 
-		/// <summary>
-		/// Get all maps from DB (countries, cities or us states)
-		/// </summary>
-		/// <returns> all maps of a certain type from database </returns>
-		public virtual IDictionary<string, MapDownloadResource> GetAvailableMapsForACertainType(params string[] mapType)
-		{
-			var query = new StringBuilder("SELECT ").Append(Code)
-                .Append(", ").Append(ParentCode)
-                .Append(", ").Append(Region)
-                .Append(", ").Append(Names)
-                .Append(", ").Append(SkmFilePath)
-                .Append(", " + "").Append(ZipFilePath)
-                .Append(", ").Append(TxgFilePath)
-                .Append(", ").Append(TxgFileSize)
-                .Append(", ").Append(SkmAndZipFilesSize)
-                .Append(", ").Append(SkmFileSize)
-                .Append(", " + "").Append(UnzippedFileSize)
-                .Append(", ").Append(BoundingBoxLatitudeMax)
-                .Append(", ").Append(BoundingBoxLatitudeMin)
-                .Append(", ").Append(BoundingBoxLongitudeMax)
-                .Append(", ").Append(BoundingBoxLongitudeMin)
-                .Append(", ").Append(Subtype)
-                .Append(", ").Append(State)
-                .Append(", " + "").Append(NoDownloadedBytes)
-                .Append(", ").Append(FlagId)
-                .Append(", ").Append(DownloadPath)
-                .Append(" FROM ").Append(MapsTable);
+                        insertStatement.Execute();
+                    }
+                }
+            }
+            finally
+            {
+                if ((maps != null) && (mapsItemsCodes != null))
+                {
+                    SKLogging.WriteLog(TAG, "Maps were inserted into database !!!", SKLogging.LogDebug);
+                    // close the GENERAL transaction
+                    resourcesDAO.getDatabase().SetTransactionSuccessful();
+                    resourcesDAO.getDatabase().EndTransaction();
+                }
+            }
+        }
 
-			if ((mapType != null) && (mapType.Length > 0))
-			{
-				query.Append(" WHERE ").Append(Subtype).Append("=?");
+        public void deleteMaps()
+        {
+            String deleteCommand = "DELETE FROM " + MAPS_TABLE;
+            SQLiteStatement deleteStatement = resourcesDAO.getDatabase().CompileStatement(deleteCommand.ToString());
+            deleteStatement.Execute();
+        }
 
-				for (int i = 1; i < mapType.Length; i++)
-				{
-					query.Append(" or ").Append(Subtype).Append("=?");
-				}
-			}
+        public Dictionary<string, MapDownloadResource> getAvailableMapsForACertainType(params string[] mapType)
+        {
+            StringBuilder query =
+                   new StringBuilder("SELECT ").Append(CODE).Append(", ").Append(PARENT_CODE).Append(", ").Append(REGION).Append(", ")
+                           .Append(NAMES).Append(", ").Append(SKM_FILE_PATH).Append(", " +
+                           "").Append(ZIP_FILE_PATH).Append(", ")
+                           .Append(TXG_FILE_PATH).Append(", ").Append(TXG_FILE_SIZE).Append(", ")
+                           .Append(SKM_AND_ZIP_FILES_SIZE).Append(", ").Append(SKM_FILE_SIZE).Append(", " +
+                           "").Append(UNZIPPED_FILE_SIZE)
+                           .Append(", ").Append(BOUNDING_BOX_LATITUDE_MAX).Append(", ").Append(BOUNDING_BOX_LATITUDE_MIN)
+                           .Append(", ").Append(BOUNDING_BOX_LONGITUDE_MAX).Append(", ").Append(BOUNDING_BOX_LONGITUDE_MIN)
+                           .Append(", ").Append(SUBTYPE).Append(", ").Append(STATE).Append(", " +
+                           "").Append(NO_DOWNLOADED_BYTES)
+                           .Append(", ").Append(FLAG_ID).Append(", ").Append(DOWNLOAD_PATH).Append(" FROM ").Append
+                           (MAPS_TABLE);
 
-			ICursor resultCursor = _resourcesDao.Database.RawQuery(query.ToString(), mapType);
+            if (mapType != null && mapType.Length > 0)
+            {
+                query.Append(" WHERE ").Append(SUBTYPE).Append("=?");
 
-			if ((resultCursor != null) && (resultCursor.Count > 0))
-			{
-				IDictionary<string, MapDownloadResource> maps = new Dictionary<string, MapDownloadResource>();
-			    try
-				{
-					resultCursor.MoveToFirst();
-					while (!resultCursor.IsAfterLast)
-					{
+                for (int i = 1; i < mapType.Length; i++)
+                {
+                    query.Append(" or ").Append(SUBTYPE).Append("=?");
+                }
+            }
 
-					    var currentMap = new MapDownloadResource
-					    {
-					        Code = resultCursor.GetString(0),
-					        ParentCode = resultCursor.GetString(1)
-					    };
+            ICursor resultCursor = resourcesDAO.getDatabase().RawQuery(query.ToString(), mapType);
+            if ((resultCursor != null) && (resultCursor.Count > 0))
+            {
+                Dictionary<String, MapDownloadResource> maps = new Dictionary<String, MapDownloadResource>();
+                MapDownloadResource currentMap;
+                try
+                {
+                    resultCursor.MoveToFirst();
+                    while (!resultCursor.IsAfterLast)
+                    {
+                        currentMap = new MapDownloadResource();
+                        currentMap.Code = (resultCursor.GetString(0));
+                        currentMap.ParentCode = (resultCursor.GetString(1));
+                        currentMap.setNames(resultCursor.GetString(3));
+                        currentMap.setSkmFilePath(resultCursor.GetString(4));
+                        currentMap.setZipFilePath(resultCursor.GetString(5));
+                        currentMap.setTXGFilePath(resultCursor.GetString(6));
+                        currentMap.setTXGFileSize(resultCursor.GetInt(7));
+                        currentMap.setSkmAndZipFilesSize(resultCursor.GetInt(8));
+                        currentMap.setSkmFileSize(resultCursor.GetInt(9));
+                        currentMap.setUnzippedFileSize(resultCursor.GetInt(10));
+                        currentMap.setBbLatMax(resultCursor.GetDouble(11));
+                        currentMap.setBbLatMin(resultCursor.GetDouble(12));
+                        currentMap.setBbLongMax(resultCursor.GetDouble(13));
+                        currentMap.setBbLongMin(resultCursor.GetDouble(14));
+                        currentMap.setSubType(resultCursor.GetString(15));
+                        currentMap.DownloadState = (sbyte)resultCursor.GetInt(16);
+                        currentMap.NoDownloadedBytes = (resultCursor.GetInt(17));
+                        currentMap.FlagId = (resultCursor.GetInt(18));
+                        currentMap.DownloadPath = (resultCursor.GetString(19));
+                        maps.Add(currentMap.Code, currentMap);
+                        resultCursor.MoveToNext();
+                    }
+                }
+                finally
+                {
+                    resultCursor.Close();
+                }
 
-                        currentMap.SetNames(resultCursor.GetString(3));
-                        currentMap.SetSkmFilePath(resultCursor.GetString(4));
-                        currentMap.ZipFilePath = resultCursor.GetString(5);
-                        currentMap.TxgFilePath = resultCursor.GetString(6);
-						currentMap.TxgFileSize = resultCursor.GetInt(7);
-                        currentMap.SkmAndZipFilesSize = resultCursor.GetInt(8);
-                        currentMap.SkmFileSize = resultCursor.GetInt(9);
-                        currentMap.UnzippedFileSize = resultCursor.GetInt(10);
-						currentMap.BbLatMax = resultCursor.GetDouble(11);
-                        currentMap.BbLatMin = resultCursor.GetDouble(12);
-                        currentMap.BbLongMax = resultCursor.GetDouble(13);
-                        currentMap.BbLongMin = resultCursor.GetDouble(14);
-						currentMap.SubType = resultCursor.GetString(15);
-						currentMap.DownloadState = (SKDownloadState)resultCursor.GetInt(16);
-						currentMap.NoDownloadedBytes = resultCursor.GetInt(17);
-						currentMap.FlagId = resultCursor.GetInt(18);
-                        currentMap.DownloadPath = resultCursor.GetString(19);
-                        maps[currentMap.Code] = currentMap;
-						resultCursor.MoveToNext();
-					}
-				}
-				finally
-				{
-					resultCursor.Close();
-				}
+                return maps;
+            }
+            else
+            {
+                if (resultCursor != null)
+                {
+                    resultCursor.Close();
+                }
+                return null;
+            }
+        }
 
-				return maps;
-			}
-		    if (resultCursor != null)
-		    {
-		        resultCursor.Close();
-		    }
-		    return null;
-		}
+        public void updateMapResource(MapDownloadResource mapResource)
+        {
+            ContentValues values = new ContentValues();
+            values.Put(STATE, mapResource.DownloadState);
+            values.Put(NO_DOWNLOADED_BYTES, mapResource.NoDownloadedBytes);
+            values.Put(SKM_FILE_PATH, mapResource.getSKMFilePath());
+            values.Put(SKM_FILE_SIZE, mapResource.getSkmFileSize());
+            values.Put(TXG_FILE_PATH, mapResource.getTXGFilePath());
+            values.Put(TXG_FILE_SIZE, mapResource.getTXGFileSize());
+            values.Put(ZIP_FILE_PATH, mapResource.getZipFilePath());
+            values.Put(SKM_AND_ZIP_FILES_SIZE, mapResource.getSkmAndZipFilesSize());
+            values.Put(UNZIPPED_FILE_SIZE, mapResource.getUnzippedFileSize());
+            values.Put(DOWNLOAD_PATH, mapResource.DownloadPath);
+            try
+            {
+                resourcesDAO.getDatabase().BeginTransaction();
+                resourcesDAO.getDatabase().Update(MAPS_TABLE, values, CODE + "=?", new String[] { mapResource.Code });
+                resourcesDAO.getDatabase().SetTransactionSuccessful();
+            }
+            catch (SQLException e)
+            {
+                SKLogging.WriteLog(TAG, "SQL EXCEPTION SAVE MAP DATA " + e.Message, SKLogging.LogError);
+            }
+            finally
+            {
+                resourcesDAO.getDatabase().EndTransaction();
+            }
+        }
 
-		/// <summary>
-		/// Updates the database record corresponding to the map resource given as parameter
-		/// </summary>
-		/// <param name="mapResource"> </param>
-		public virtual void UpdateMapResource(MapDownloadResource mapResource)
-		{
-			ContentValues values = new ContentValues();
-			values.Put(State, (sbyte)mapResource.DownloadState);
-            values.Put(NoDownloadedBytes, mapResource.NoDownloadedBytes);
-            values.Put(SkmFilePath, mapResource.SKMFilePath);
-            values.Put(SkmFileSize, mapResource.SkmFileSize);
-            values.Put(TxgFilePath, mapResource.TxgFilePath);
-            values.Put(TxgFileSize, mapResource.TxgFileSize);
-            values.Put(ZipFilePath, mapResource.ZipFilePath);
-            values.Put(SkmAndZipFilesSize, mapResource.SkmAndZipFilesSize);
-            values.Put(UnzippedFileSize, mapResource.UnzippedFileSize);
-            values.Put(DownloadPath, mapResource.DownloadPath);
-			try
-			{
-				_resourcesDao.Database.BeginTransaction();
-				_resourcesDao.Database.Update(MapsTable, values, Code + "=?", new[]{mapResource.Code});
-				_resourcesDao.Database.SetTransactionSuccessful();
-			}
-			catch (SQLException e)
-			{
-				SKLogging.WriteLog(Tag, "SQL EXCEPTION SAVE MAP DATA " + e.Message, SKLogging.LogError);
-			}
-			finally
-			{
-				_resourcesDao.Database.EndTransaction();
-			}
-		}
-
-		/// <summary>
-		/// Marks resources that are presently in the download queue as not queued in the database table
-		/// </summary>
-		public virtual void ClearResourcesInDownloadQueue()
-		{
-			ContentValues values = new ContentValues();
-            values.Put(State, (sbyte)SKDownloadState.NotQueued);
-			values.Put(NoDownloadedBytes, 0);
-			try
-			{
-				_resourcesDao.Database.BeginTransaction();
-                _resourcesDao.Database.Update(MapsTable, values, State + "=? OR " + State + "=? OR " + State + "=?", new[] { Convert.ToString(SKDownloadState.Downloading), Convert.ToString(SKDownloadState.Paused), Convert.ToString(SKDownloadState.Queued) });
-				_resourcesDao.Database.SetTransactionSuccessful();
-			}
-			catch (SQLException e)
-			{
-				SKLogging.WriteLog(Tag, "SQL EXCEPTION SAVE MAP DATA " + e.Message, SKLogging.LogError);
-			}
-			finally
-			{
-				_resourcesDao.Database.EndTransaction();
-			}
-		}
-	}
+        public void clearResourcesInDownloadQueue()
+        {
+            ContentValues values = new ContentValues();
+            values.Put(STATE, SKToolsDownloadItem.NotQueued);
+            values.Put(NO_DOWNLOADED_BYTES, 0);
+            try
+            {
+                resourcesDAO.getDatabase().BeginTransaction();
+                resourcesDAO.getDatabase().Update(MAPS_TABLE, values, STATE + "=? OR " + STATE + "=? OR " + STATE + "=?", new string[] { SKToolsDownloadItem.Downloading.ToString(), SKToolsDownloadItem.Paused.ToString(), SKToolsDownloadItem.Queued.ToString() });
+                resourcesDAO.getDatabase().SetTransactionSuccessful();
+            }
+            catch (SQLException e)
+            {
+                SKLogging.WriteLog(TAG, "SQL EXCEPTION SAVE MAP DATA " + e.Message, SKLogging.LogError);
+            }
+            finally
+            {
+                resourcesDAO.getDatabase().EndTransaction();
+            }
+        }
+    }
 }

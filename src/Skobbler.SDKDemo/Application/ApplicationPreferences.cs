@@ -2,69 +2,74 @@
 using Android.Content;
 using Newtonsoft.Json;
 using Skobbler.SDKDemo.Database;
+using System.Linq;
 
 namespace Skobbler.SDKDemo.Application
 {
-	public class ApplicationPreferences
-	{
+    public class ApplicationPreferences
+    {
+        public static string DOWNLOAD_STEP_INDEX_PREF_KEY = "downloadStepIndex";
+        public static string DOWNLOAD_QUEUE_PREF_KEY = "downloadQueue";
+        public static string CURRENT_VERSION_CODE = "currentVersionCode";
+        public static string MAP_RESOURCES_UPDATE_NEEDED = "mapResourcesUpdateNeeded";
+        public static string PREFS_NAME = "demoAppPrefs";
 
-		public const string DownloadStepIndexPrefKey = "downloadStepIndex";
+        private ISharedPreferencesEditor _prefsEditor;
+        private ISharedPreferences _prefs;
+        private Context _context;
 
-		public const string DownloadQueuePrefKey = "downloadQueue";
+        public ApplicationPreferences(Context context)
+        {
+            _context = context;
+            _prefs = _context.GetSharedPreferences(PREFS_NAME, FileCreationMode.Private);
+            _prefsEditor = _prefs.Edit();
+        }
 
-		/// <summary>
-		/// preference name
-		/// </summary>
-		public const string PrefsName = "demoAppPrefs";
+        public int GetIntPreference(string key)
+        {
+            return _prefs.GetInt(key, 0);
+        }
 
-		/// <summary>
-		/// used for modifying values in a SharedPreferences prefs
-		/// </summary>
-		private ISharedPreferencesEditor _prefsEditor;
+        public string GetStringPreference(string key)
+        {
+            return _prefs.GetString(key, "");
+        }
 
-		/// <summary>
-		/// reference to preference
-		/// </summary>
-		private ISharedPreferences _prefs;
+        public bool GetBooleanPreference(string key)
+        {
+            return _prefs.GetBoolean(key, false);
+        }
 
-		/// <summary>
-		/// the context
-		/// </summary>
-		private Context _context;
+        public void SaveDownloadStepPreference(int downloadStepIndex)
+        {
+            _prefsEditor.PutInt(DOWNLOAD_STEP_INDEX_PREF_KEY, downloadStepIndex);
+            _prefsEditor.Commit();
+        }
 
-		public ApplicationPreferences(Context context)
-		{
-			_context = context;
-			_prefs = context.GetSharedPreferences(PrefsName, FileCreationMode.Private);
-			_prefsEditor = _prefs.Edit();
-		}
+        public void SetCurrentVersionCode(int versionCode)
+        {
+            _prefsEditor.PutInt(CURRENT_VERSION_CODE, versionCode);
+            _prefsEditor.Commit();
+        }
 
-		public virtual int GetIntPreference(string key)
-		{
-			return _prefs.GetInt(key, 0);
-		}
+        public void SaveDownloadQueuePreference(IList<DownloadResource> downloads)
+        {
+            var resourceCodes = downloads.Select(x => x.Code);
+            //_prefsEditor.PutString(DOWNLOAD_QUEUE_PREF_KEY, new Gson().toJson(resourceCodes));
+            _prefsEditor.PutString(DOWNLOAD_QUEUE_PREF_KEY, JsonConvert.SerializeObject(resourceCodes));
+            _prefsEditor.Commit();
+        }
 
-		public virtual string GetStringPreference(string key)
-		{
-			return _prefs.GetString(key, "");
-		}
+        public void SaveStringPreference(string key, string value)
+        {
+            _prefsEditor.PutString(key, value);
+            _prefsEditor.Commit();
+        }
 
-		public virtual void SaveDownloadStepPreference(int downloadStepIndex)
-		{
-			_prefsEditor.PutInt(DownloadStepIndexPrefKey, downloadStepIndex);
-			_prefsEditor.Commit();
-		}
-
-		public virtual void SaveDownloadQueuePreference(IList<DownloadResource> downloads)
-		{
-			string[] resourceCodes = new string[downloads.Count];
-			for (int i = 0; i < downloads.Count; i++)
-			{
-				resourceCodes[i] = downloads[i].Code;
-			}
-            _prefsEditor.PutString(DownloadQueuePrefKey, JsonConvert.SerializeObject(resourceCodes));
-			_prefsEditor.Commit();
-		}
-	}
-
+        public void SaveBooleanPreference(string key, bool value)
+        {
+            _prefsEditor.PutBoolean(key, value);
+            _prefsEditor.Commit();
+        }
+    }
 }

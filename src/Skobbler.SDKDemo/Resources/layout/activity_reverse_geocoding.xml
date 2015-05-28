@@ -18,7 +18,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:inputType="numberSigned|numberDecimal"
-            android:text="37.756479"
+            android:textColor="@color/black"
+            android:text="52.514262 "
             android:textSize="20dp" />
 
         <TextView
@@ -40,7 +41,8 @@
             android:layout_below="@id/latitude_field"
             android:layout_marginTop="15dp"
             android:inputType="numberSigned|numberDecimal"
-            android:text="-122.43287"
+            android:textColor="@color/black"
+            android:text="13.389078"
             android:textSize="20dp" />
 
         <TextView
@@ -61,7 +63,7 @@
             android:layout_below="@id/longitude_field"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
-            android:onClick="OnClick"
+            android:onClick="onClick"
             android:text="@string/reverse_geocode" />
 
         <TextView

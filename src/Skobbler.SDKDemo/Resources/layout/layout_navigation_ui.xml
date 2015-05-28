@@ -7,10 +7,12 @@
     <Button
         android:id="@+id/navigation_ui_back_button"
         style="?android:attr/buttonStyleSmall"
+        android:background="@android:color/darker_gray"
         android:layout_width="50dp"
+        android:layout_marginRight="5dp"
         android:layout_height="wrap_content"
         android:text="@string/less"
-        android:onClick="OnClick" />
+        android:onClick="onClick" />
 
     <LinearLayout
         android:id="@+id/navigation_ui_buttons"
@@ -28,56 +30,77 @@
                 android:id="@+id/select_start_point_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="2.5dp"
                 android:layout_weight="1"
+                android:background="@drawable/toggle_selector"
                 android:checked="false"
                 android:textOff="@string/start_point_nav"
-                android:textOn="@string/start_point_nav" />
+                android:textOn="@string/start_point_nav"
+                android:textSize="14dp"/>
 
             <ToggleButton
                 android:id="@+id/select_end_point_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="2.5dp"
+                android:background="@drawable/toggle_selector"
                 android:layout_weight="1"
                 android:textOff="@string/end_point_nav"
-                android:textOn="@string/end_point_nav" />
+                android:textOn="@string/end_point_nav"
+                android:textSize="14dp"/>
         </LinearLayout>
 
         <ToggleButton
             android:id="@+id/select_via_point_button"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
+            android:layout_marginTop="5dp"
             android:checked="false"
+            android:background="@drawable/toggle_selector"
             android:textOn="@string/select_via_point"
-            android:textOff="@string/select_via_point" />
+            android:textOff="@string/select_via_point"
+            android:textSize="14dp"/>
 
         <Button
             android:id="@+id/clear_via_point_button"
             android:layout_width="fill_parent"
+            android:layout_marginTop="5dp"
             android:layout_height="50dp"
-            android:onClick="OnClick"
+            android:onClick="onClick"
             android:visibility="gone"
-            android:text="@string/clear_via_point" />
+            android:background="@color/grey_options_group"
+            android:text="@string/clear_via_point"
+            android:textSize="14dp"/>
 
         <Button
             android:id="@+id/calculate_routes_button"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:onClick="OnClick"
-            android:text="@string/calculate_routes" />
+            android:layout_marginTop="5dp"
+            android:background="@android:color/darker_gray"
+            android:onClick="onClick"
+            android:text="@string/calculate_routes"
+            android:textSize="14dp"/>
 
         <Button
             android:id="@+id/start_free_drive_button"
             android:layout_width="fill_parent"
+            android:layout_marginTop="5dp"
             android:layout_height="50dp"
-            android:onClick="OnClick"
-            android:text="@string/start_free_drive" />
+            android:background="@android:color/darker_gray"
+            android:onClick="onClick"
+            android:text="@string/start_free_drive"
+            android:textSize="14dp"/>
 
         <Button
             android:id="@+id/settings_button"
+            android:background="@android:color/darker_gray"
+            android:layout_marginTop="5dp"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:onClick="OnClick"
-            android:text="@string/settings_nav_ui" />
+            android:onClick="onClick"
+            android:text="@string/settings_nav_ui"
+            android:textSize="14dp"/>
 
     </LinearLayout>
 
@@ -85,7 +108,9 @@
         android:id="@+id/position_me_navigation_ui_button"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        android:onClick="OnClick"
+        android:layout_margin="5dp"
+        android:onClick="onClick"
+        android:background="@android:color/darker_gray"
         android:src="@drawable/icon_position_me"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true" />

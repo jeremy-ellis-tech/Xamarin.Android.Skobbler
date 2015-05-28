@@ -18,6 +18,7 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <DevInstrumentationEnabled>True</DevInstrumentationEnabled>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
+	<JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +41,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+	<JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -52,11 +55,14 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xamarin.Android.Support.v4">
+      <HintPath>..\packages\Xamarin.Android.Support.v4.22.1.1.1\lib\MonoAndroid403\Xamarin.Android.Support.v4.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\CategorySearchResultsActivity.cs" />
-    <Compile Include="Activities\InteractionMapActivity.cs" />
     <Compile Include="Activities\MapActivity.cs" />
+    <Compile Include="Activities\MapCacheActivity.cs" />
     <Compile Include="Activities\NearbySearchActivity.cs" />
     <Compile Include="Activities\NearbySearchResultsActivity.cs" />
     <Compile Include="Activities\OfflineAddressSearchActivity.cs" />
@@ -67,6 +73,7 @@
     <Compile Include="Activities\SplashActivity.cs" />
     <Compile Include="Activities\TrackElementsActivity.cs" />
     <Compile Include="Activities\TracksActivity.cs" />
+    <Compile Include="Adapter\MenuDrawerAdapter.cs" />
     <Compile Include="Application\ApplicationPreferences.cs" />
     <Compile Include="Application\DemoApplication.cs" />
     <Compile Include="Database\DownloadResource.cs" />
@@ -76,13 +83,11 @@
     <Compile Include="Database\ResourcesDAO.cs" />
     <Compile Include="Database\ResourcesDAOHandler.cs" />
     <Compile Include="Database\SecondMapDataParser.cs" />
+    <Compile Include="Model\MenuDrawerItem.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\DemoUtils.cs" />
     <Compile Include="Util\PreferenceTypes.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\raw\maps.json" />
   </ItemGroup>
   <ItemGroup>
     <TransformFile Include="Properties\AndroidManifest.xml">
@@ -95,9 +100,27 @@
       <Name>Skobbler.Binding</Name>
     </ProjectReference>
     <ProjectReference Include="..\Skobbler.SDKTools\Skobbler.SDKTools.csproj">
-      <Project>{328179fc-c649-40a9-a7ff-5d4f00f4137b}</Project>
+      <Project>{75b58d7c-b96f-4748-939b-3d43960c0c63}</Project>
       <Name>Skobbler.SDKTools</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\GPXTracks\foxboro.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\MysticBasin.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\Route_1_BerlinUnterDenLinden_BerlinHohenzollerndamm.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\Route_2_BerlinUnterDenLinden_BerlinGrunewaldstrasse.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\Route_3_MunchenOskarVonMillerRing_Herterichstrasse.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\Route_4_Berlin_Hamburg.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\Route_5_Chicago_city_track.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\trackA.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\trackB.gpx" />
+    <AndroidAsset Include="Assets\GPXTracks\trackC.gpx" />
+    <AndroidAsset Include="Assets\logFile\Seattle.log" />
+    <AndroidAsset Include="Assets\MapCreator\mapcreatorFile.json" />
+    <AndroidAsset Include="Assets\SKMaps.zip" />
+    <AndroidAsset Include="Assets\SKMapsFull.zip" />
+    <AndroidAsset Include="Assets\SKMapsLight.zip" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\button_background.xml" />
@@ -115,6 +138,12 @@
     <AndroidResource Include="Resources\drawable\map_background.xml" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable\menu_bar_header_background.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\menu_bar_item_selector.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidResource Include="Resources\drawable\menu_options_selector.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +151,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\rounded_corners.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\toggle_selector.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\drawer_shadow.9.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\ic_launcher.png" />
@@ -143,6 +178,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\texture_map_unavailable.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-ldpi\drawer_shadow.9.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-ldpi\icon_map_popup_navigate.png" />
@@ -170,6 +208,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\download.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\drawer_shadow.9.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-mdpi\ic_launcher.png" />
@@ -205,6 +246,9 @@
     <AndroidResource Include="Resources\drawable-mdpi\splashscreen_background.png" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\drawer_shadow.9.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\ic_launcher.png" />
   </ItemGroup>
   <ItemGroup>
@@ -235,10 +279,10 @@
     <AndroidResource Include="Resources\layout\activity_map.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\activity_nearby_search.xml" />
+    <AndroidResource Include="Resources\layout\activity_map_cache.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\activity_new_map.xml" />
+    <AndroidResource Include="Resources\layout\activity_nearby_search.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\activity_reverse_geocoding.xml" />
@@ -259,10 +303,10 @@
     <AndroidResource Include="Resources\layout\element_download_list_item.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\element_real_reach.xml" />
+    <AndroidResource Include="Resources\layout\element_menu_drawer_item.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\element_real_reach_energy.xml" />
+    <AndroidResource Include="Resources\layout\element_menu_drawer_section.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\element_real_reach_time.xml" />
@@ -277,13 +321,7 @@
     <AndroidResource Include="Resources\layout\layout_map_styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\layout_menu.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\layout\layout_navigation_ui.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\layout_pedestrian_navigation.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\layout_popup.xml" />
@@ -310,52 +348,10 @@
     <AndroidResource Include="Resources\xml\settings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\foxboro.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\MysticBasin.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\Route_1_BerlinUnterDenLinden_BerlinHohenzollerndamm.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\Route_2_BerlinUnterDenLinden_BerlinGrunewaldstrasse.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\Route_3_MunchenOskarVonMillerRing_Herterichstrasse.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\Route_4_Berlin_Hamburg.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\Route_5_Chicago_city_track.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\trackA.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\trackB.gpx" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\GPXTracks\trackC.gpx" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\images\dot_blue_high.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\images\dot_blue_medium.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\logFile\Seattle.log" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\MapCreator\mapcreatorFile.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\SKMaps.zip" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
