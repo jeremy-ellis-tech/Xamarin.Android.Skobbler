@@ -112,11 +112,17 @@
     <EmbeddedJar Include="Jars\SKMaps.jar" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedNativeLibrary Include="Jars\armeabi-v7a\libngnative.so" />
-    <EmbeddedNativeLibrary Include="Jars\armeabi\libngnative.so" />
     <None Include="Jars\docs\META-INF\MANIFEST.MF" />
     <None Include="Jars\docs\package-list" />
+  </ItemGroup>
+    <ItemGroup Condition=" '$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU'">
     <EmbeddedNativeLibrary Include="Jars\x86\libngnative.so" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'armeabi' Or '$(Platform)' == 'AnyCPU'">
+    <EmbeddedNativeLibrary Include="Jars\armeabi\libngnative.so" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'armeabi-v7a' Or '$(Platform)' == 'AnyCPU'">
+    <EmbeddedNativeLibrary Include="Jars\armeabi-v7a\libngnative.so" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Jars\docs\allclasses-frame.html" />
