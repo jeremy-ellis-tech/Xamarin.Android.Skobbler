@@ -107,7 +107,7 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnReceivedSearchResults(IList<SKSearchResult> results)
         {
-            resultsPerLevel.Add(_currentListLevel, results);
+            resultsPerLevel[_currentListLevel] = results;
             _operationInProgressLabel.Visibility = ViewStates.Gone;
             _listView.Visibility = ViewStates.Visible;
 

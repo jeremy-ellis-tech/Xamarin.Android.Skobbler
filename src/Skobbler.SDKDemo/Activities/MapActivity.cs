@@ -1567,7 +1567,7 @@ namespace Skobbler.SDKDemo.Activities
                 {
                     continue;
                 }
-                if (_drawnTrackablePOIs[detectedPoiId] == null)
+                if (!_drawnTrackablePOIs.ContainsKey(detectedPoiId))
                 {
                     _drawnTrackablePOIs.Add(detectedPoiId, _trackablePOIs[detectedPoiId]);
                     DrawDetectedPOI(detectedPoiId);
