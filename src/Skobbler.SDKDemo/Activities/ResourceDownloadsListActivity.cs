@@ -77,9 +77,9 @@ namespace Skobbler.SDKDemo.Activities
             ListItem mapResourcesItem = new ListItem();
 
             await Task.Run(() => initializeMapResources())
-                .ContinueWith((r) =>
+                .ContinueWith((t) =>
                 {
-                    if (r.IsCompleted)
+                    if (t.Result)
                     {
                         appContext.AppPrefs.SaveBooleanPreference(ApplicationPreferences.MAP_RESOURCES_UPDATE_NEEDED, false);
                         populateWithChildMaps(mapResourcesItem);
@@ -100,7 +100,7 @@ namespace Skobbler.SDKDemo.Activities
                         Toast.MakeText(this, "Could not retrieve map data from the server", ToastLength.Short).Show();
                         Finish();
                     }
-                });
+                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         ///**

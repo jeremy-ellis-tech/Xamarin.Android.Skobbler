@@ -442,7 +442,7 @@ namespace Skobbler.SDKDemo.Database
 
         private void readCitiesHierarchy(Dictionary<string, string> mapsItemsCodes, string currentParentCode, JsonReader reader)
         {
-            reader.BeginArray();
+            reader.BeginObject();
             while (reader.HasNext)
             {
                 string key = reader.NextName();
