@@ -567,11 +567,11 @@ namespace Skobbler.SDKDemo.Activities
 
             public void OnDownloadProgress(SKToolsDownloadItem currentDownloadItem)
             {
-                ListItem affectedListItem = _activity.codesMap[currentDownloadItem.ItemCode];
+                ListItem affectedListItem;
                 DownloadResource resource;
                 bool stateChanged = false;
                 long bytesDownloadedSinceLastUpdate = 0;
-                if (affectedListItem != null)
+                if (_activity.codesMap.TryGetValue(currentDownloadItem.ItemCode, out affectedListItem))
                 {
                     stateChanged = currentDownloadItem.DownloadState != affectedListItem.DownloadResource.DownloadState;
                     bytesDownloadedSinceLastUpdate = currentDownloadItem.NoDownloadedBytes - affectedListItem.DownloadResource.NoDownloadedBytes;
@@ -616,14 +616,15 @@ namespace Skobbler.SDKDemo.Activities
             public void OnDownloadCancelled(string currentDownloadItemCode)
             {
                 _activity.StopPeriodicUpdates();
-                ListItem affectedListItem = _activity.codesMap[currentDownloadItemCode];
-                if (affectedListItem != null)
+                ListItem affectedListItem;
+
+                if(_activity.codesMap.TryGetValue(currentDownloadItemCode, out affectedListItem))
                 {
                     affectedListItem.DownloadResource.NoDownloadedBytes = (0);
                     affectedListItem.DownloadResource.DownloadState = (SKToolsDownloadItem.NotQueued);
                     activeDownloads.Remove(affectedListItem.DownloadResource);
                     mapsDAO.updateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
-                    _activity.RunOnUiThread(()=>_activity.adapter.NotifyDataSetChanged());
+                    _activity.RunOnUiThread(() => _activity.adapter.NotifyDataSetChanged());
                 }
                 else
                 {
@@ -633,6 +634,7 @@ namespace Skobbler.SDKDemo.Activities
                     activeDownloads.Remove(downloadResource);
                     mapsDAO.updateMapResource((MapDownloadResource)downloadResource);
                 }
+
                 _activity.appContext.AppPrefs.SaveDownloadQueuePreference(activeDownloads);
             }
 
@@ -655,8 +657,9 @@ namespace Skobbler.SDKDemo.Activities
             public void OnDownloadPaused(SKToolsDownloadItem currentDownloadItem)
             {
                 _activity.StopPeriodicUpdates();
-                ListItem affectedListItem = _activity.codesMap[currentDownloadItem.ItemCode];
-                if (affectedListItem != null)
+                ListItem affectedListItem;
+
+                if(_activity.codesMap.TryGetValue(currentDownloadItem.ItemCode, out affectedListItem))
                 {
                     affectedListItem.DownloadResource.DownloadState = (currentDownloadItem.DownloadState);
                     affectedListItem.DownloadResource.NoDownloadedBytes = (currentDownloadItem.NoDownloadedBytes);
@@ -676,9 +679,9 @@ namespace Skobbler.SDKDemo.Activities
 
             public void OnInstallFinished(SKToolsDownloadItem currentInstallingItem)
             {
-                ListItem affectedListItem = _activity.codesMap[currentInstallingItem.ItemCode];
                 DownloadResource resource;
-                if (affectedListItem != null)
+                ListItem affectedListItem;
+                if (_activity.codesMap.TryGetValue(currentInstallingItem.ItemCode, out affectedListItem))
                 {
                     affectedListItem.DownloadResource.DownloadState = SKToolsDownloadItem.Installed;
                     resource = affectedListItem.DownloadResource;
@@ -697,8 +700,9 @@ namespace Skobbler.SDKDemo.Activities
 
             public void OnInstallStarted(SKToolsDownloadItem currentInstallingItem)
             {
-                ListItem affectedListItem = _activity.codesMap[currentInstallingItem.ItemCode];
-                if (affectedListItem != null)
+                ListItem affectedListItem;
+
+                if(_activity.codesMap.TryGetValue(currentInstallingItem.ItemCode, out affectedListItem))
                 {
                     affectedListItem.DownloadResource.DownloadState = SKToolsDownloadItem.Installing;
                     mapsDAO.updateMapResource((MapDownloadResource)affectedListItem.DownloadResource);
