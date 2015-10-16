@@ -35,12 +35,13 @@ using Android.Support.V4.View;
 using Skobbler.SDKDemo.Model;
 using Skobbler.SDKDemo.Adapter;
 using JavaObject = Java.Lang.Object;
+using Android.Graphics;
 
 namespace Skobbler.SDKDemo.Activities
 {
     [Activity(ConfigurationChanges=(ConfigChanges.Orientation|ConfigChanges.ScreenSize))]
     public class MapActivity : Activity, ISKMapSurfaceListener, ISKRouteListener, ISKNavigationListener, ISKRealReachListener, 
-        ISKPOITrackerListener, ISKCurrentPositionListener, ISensorEventListener, ISKMapUpdateListener, ISKToolsNavigationListener, ISKToolsDownloadListener
+        ISKPOITrackerListener, ISKCurrentPositionListener, ISensorEventListener, ISKMapUpdateListener, ISKToolsNavigationListener
     {
         private static readonly byte GreenPinIconId = 0;
 
@@ -156,6 +157,8 @@ namespace Skobbler.SDKDemo.Activities
         private bool _shouldCacheTheNextRoute;
         private int? _cachedRouteId;
         private ListView _listView;
+        private long _currentPositionTime;
+        private byte _numberOfConsecutiveBadPositionReceivedDuringNavi;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -530,7 +533,7 @@ namespace Skobbler.SDKDemo.Activities
 
             if (_currentPosition != null)
             {
-                _mapView.ReportNewGPSPosition(_currentPosition);
+                SKPositionerManager.Instance.ReportNewGPSPosition(_currentPosition);
             }
         }
 
@@ -884,7 +887,7 @@ namespace Skobbler.SDKDemo.Activities
                     return;
                 }
 
-                _startPoint = new SKCoordinate(_currentPosition.Longitude, _currentPosition.Latitude);
+                _startPoint = new SKCoordinate(_currentPosition.Coordinate.Longitude, _currentPosition.Coordinate.Latitude);
 
             }
             else if (prefNavigationType.Equals("1"))
@@ -1178,72 +1181,29 @@ namespace Skobbler.SDKDemo.Activities
 
         private void PrepareAnnotations()
         {
-            SKAnnotation annotation1 = new SKAnnotation(10)
+            SKAnnotation annotationWithTextureId = new SKAnnotation(10)
             {
                 Location = new SKCoordinate(-122.4200, 37.7765),
                 MininumZoomLevel = 5,
-                AnnotationType = SKAnnotation.SkAnnotationTypeRed
+                AnnotationType = SKAnnotation.SkAnnotationTypeRed,
             };
 
-            _mapView.AddAnnotation(annotation1, SKAnimationSettings.AnimationNone);
-
-            // Add an annotation using the absolute path to the image.
-            SKAnnotation annotation = new SKAnnotation(13)
-            {
-                Location = new SKCoordinate(-122.434516, 37.770712),
-                MininumZoomLevel = 5
-            };
-
-            DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager.DefaultDisplay.GetMetrics(metrics);
-            if (metrics.DensityDpi < DisplayMetrics.DensityHigh)
-            {
-                annotation.ImagePath = SKMaps.Instance.MapInitSettings.MapResourcesPath + "/.Common/icon_bluepin@2x.png";
-                annotation.ImageSize = 128;
-            }
-            else
-            {
-                annotation.ImagePath = SKMaps.Instance.MapInitSettings.MapResourcesPath + "/.Common/icon_bluepin@3x.png";
-                annotation.ImageSize = 256;
-
-            }
-
-            _mapView.AddAnnotation(annotation, SKAnimationSettings.AnimationNone);
-
-            SKAnnotationView annotationView = new SKAnnotationView
-            {
-                DrawableResourceId = Resource.Drawable.icon_map_popup_navigate,
-                Width = 128,
-                Height = 128
-            };
-
-            SKAnnotation annotationDrawable = new SKAnnotation(14)
-            {
-                Location = new SKCoordinate(-122.437182, 37.777079),
-                MininumZoomLevel = 5,
-                AnnotationView = annotationView,
-            };
-
-            _mapView.AddAnnotation(annotationDrawable, SKAnimationSettings.AnimationNone);
+            _mapView.AddAnnotation(annotationWithTextureId, SKAnimationSettings.AnimationNone);
 
             _customView = (GetSystemService(Context.LayoutInflaterService) as LayoutInflater).Inflate(Resource.Layout.layout_custom_view, null, false) as RelativeLayout;
 
-            annotationView = new SKAnnotationView
-            {
-                View = _customView
-            };
-
-            SKAnnotation annotationFromView = new SKAnnotation(15)
+            SKAnnotation annotationFromView = new SKAnnotation(11)
             {
                 Location = new SKCoordinate(-122.423573, 37.761349),
                 MininumZoomLevel = 5,
-                AnnotationView = annotationView
+                AnnotationView = new SKAnnotationView()
+                {
+                    View = _customView
+                }
             };
 
             _mapView.AddAnnotation(annotationFromView, SKAnimationSettings.AnimationNone);
-
             _mapView.SetZoom(13);
-
             _mapView.CenterMapOnPosition(new SKCoordinate(-122.4200, 37.7765));
         }
 
@@ -1711,12 +1671,36 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnCurrentPositionUpdate(SKPosition currentPosition)
         {
+            _currentPositionTime = 100;
             _currentPosition = currentPosition;
-
-            if (_mapView != null)
+            SKPositionerManager.Instance.ReportNewGPSPosition(currentPosition);
+            if(_skToolsNavigationInProgress)
             {
-                _mapView.ReportNewGPSPosition(_currentPosition);
+                if (_currentPosition.HorizontalAccuracy >= 150)
+                {
+                    _numberOfConsecutiveBadPositionReceivedDuringNavi++;
+                    if(_numberOfConsecutiveBadPositionReceivedDuringNavi >= 3)
+                    {
+                        _numberOfConsecutiveBadPositionReceivedDuringNavi = 0;
+                        OnGpsSignalLost();
+                    }
+                }
+                else
+                {
+                    _numberOfConsecutiveBadPositionReceivedDuringNavi = 0;
+                    OnGpsSignalRecovered();
+                }
             }
+        }
+
+        private void OnGpsSignalRecovered()
+        {
+            _navigationManager.HideSearchingForGPSPanel();
+        }
+
+        private void OnGpsSignalLost()
+        {
+            _navigationManager.ShowSearchingForGPSPanel();
         }
 
         public void OnOnlineRouteComputationHanging(int status)
@@ -1749,10 +1733,7 @@ namespace Skobbler.SDKDemo.Activities
 
         public void OnAnnotationSelected(SKAnnotation annotation)
         {
-            if (_navigationUI.Visibility == ViewStates.Visible)
-            {
-                return;
-            }
+            if (_navigationUI.Visibility == ViewStates.Visible) return;
 
             int annotationHeight = 0;
             float annotationOffset = annotation.Offset.GetY();
@@ -1760,21 +1741,11 @@ namespace Skobbler.SDKDemo.Activities
             switch (annotation.UniqueID)
             {
                 case 10:
-                    annotationHeight = annotation.ImageSize;
+                    annotationHeight = (int)(64 * Resources.DisplayMetrics.Density);
                     _popupTitleView.Text = "Annotation using texture ID";
                     _popupDescriptionView.Text = " Red pin";
                     break;
-                case 13:
-                    annotationHeight = annotation.ImageSize;
-                    _popupTitleView.Text = "Annotation using absolute \n image path";
-                    _popupDescriptionView.Text = null;
-                    break;
-                case 14:
-                    annotationHeight = annotation.AnnotationView.Height;
-                    _popupTitleView.Text = "Annotation using  \n drawable resource ID ";
-                    _popupDescriptionView.Text = null;
-                    break;
-                case 15:
+                case 11:
                     annotationHeight = _customView.Height;
                     _popupTitleView.Text = "Annotation using custom view";
                     _popupDescriptionView.Text = null;
@@ -1784,7 +1755,6 @@ namespace Skobbler.SDKDemo.Activities
             _mapPopup.SetVerticalOffset(-annotationOffset + annotationHeight / 2);
             _mapPopup.ShowAtLocation(annotation.Location, true);
         }
-
 
         private int CalculateProperSizeForView(int width, int height)
         {
@@ -2014,14 +1984,24 @@ namespace Skobbler.SDKDemo.Activities
             else
             {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.SetTitle("Really quit? ");
-                alert.SetMessage("Do you really want to exit the app?");
+                alert.SetTitle("Really quit? ")
+                     .SetMessage("Do you really want to exit the app?");
                 alert.SetPositiveButton("Yes", (s, e) =>
                 {
                     if (ResourceDownloadsListActivity.mapsDAO != null)
                     {
-                        //todo
-                        SKToolsDownloadManager downloadManager = SKToolsDownloadManager.GetInstance(this);
+                        SKToolsDownloadManager downloadManager = SKToolsDownloadManager.GetInstance(null);
+
+                        downloadManager.DownloadPaused += (t, f) =>
+                        {
+                            MapDownloadResource mapResource = (MapDownloadResource)ResourceDownloadsListActivity.allMapResources[f.P0.ItemCode];
+                            mapResource.DownloadState = (f.P0.DownloadState);
+                            mapResource.NoDownloadedBytes = (f.P0.NoDownloadedBytes);
+                            ResourceDownloadsListActivity.mapsDAO.updateMapResource(mapResource);
+                            _app.AppPrefs.SaveDownloadStepPreference(f.P0.CurrentStepIndex);
+                            Finish();
+                        };
+
                         if (downloadManager.IsDownloadProcessRunning)
                         {
                             downloadManager.PauseDownloadThread();
@@ -2033,21 +2013,9 @@ namespace Skobbler.SDKDemo.Activities
                 });
                 alert.SetNegativeButton("Cancel", (s,e) => { });
                 alert.Show();
-
             }
 
         }
-
-        public void OnDownloadPaused(SKToolsDownloadItem currentDownloadItem)
-        {
-            MapDownloadResource mapResource = (MapDownloadResource)ResourceDownloadsListActivity.allMapResources[currentDownloadItem.ItemCode];
-            mapResource.DownloadState = (currentDownloadItem.DownloadState);
-            mapResource.NoDownloadedBytes = (currentDownloadItem.NoDownloadedBytes);
-            ResourceDownloadsListActivity.mapsDAO.updateMapResource(mapResource);
-            _app.AppPrefs.SaveDownloadStepPreference(currentDownloadItem.CurrentStepIndex);
-            Finish();
-        }
-
 
         public void OnRouteCalculationCompleted(SKRouteInfo routeInfo)
         {
@@ -2367,31 +2335,12 @@ namespace Skobbler.SDKDemo.Activities
             _cachedRouteId = null;
         }
 
-        public void OnAllDownloadsCancelled()
+        public void OnFreeDriveUpdated(string p0, string p1, string p2, SKNavigationState.SKStreetType p3, double p4, double p5)
         {
         }
 
-        public void OnDownloadCancelled(string p0)
-        {
-        }
 
-        public void OnDownloadProgress(SKToolsDownloadItem p0)
-        {
-        }
-
-        public void OnInstallFinished(SKToolsDownloadItem p0)
-        {
-        }
-
-        public void OnInstallStarted(SKToolsDownloadItem p0)
-        {
-        }
-
-        public void OnInternetConnectionFailed(SKToolsDownloadItem p0, bool p1)
-        {
-        }
-
-        public void OnNotEnoughMemoryOnCurrentStorage(SKToolsDownloadItem p0)
+        public void OnScreenshotReady(Bitmap screenshot)
         {
         }
     }

@@ -107,14 +107,7 @@
     <TransformFile Include="Transforms\EnumFields.xml" />
     <TransformFile Include="Transforms\EnumMethods.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedJar Include="Jars\SKMaps.jar" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Jars\docs\META-INF\MANIFEST.MF" />
-    <None Include="Jars\docs\package-list" />
-  </ItemGroup>
-    <ItemGroup Condition=" '$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU'">
+  <ItemGroup Condition=" '$(Platform)' == 'x86' Or '$(Platform)' == 'AnyCPU'">
     <EmbeddedNativeLibrary Include="Jars\x86\libngnative.so" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Platform)' == 'armeabi' Or '$(Platform)' == 'AnyCPU'">
@@ -145,6 +138,7 @@
     <Content Include="Jars\docs\com\skobbler\ngx\class-use\SKMapsInitializationException.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\class-use\SKMapsInitSettings.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\class-use\SKMapsPathsNotInitializedException.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\class-use\SKMercatorCoordinate.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\class-use\SKPrepareMapTextureListener.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\class-use\SKPrepareMapTextureThread.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\class-use\SKProxySettings.html" />
@@ -169,13 +163,14 @@
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapPOI.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapScaleView.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSettings.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSettings.SKDrawingOrderType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSettings.SKMapDisplayMode.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSettings.SKMapFollowerMode.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSurfaceListener.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSurfaceView.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSurfaceView.SKAnimationNotificationType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSurfaceView.SKAnimationType.html" />
-    <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSurfaceView.SKDrawingOrder.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSurfaceView.SKCurrentPositionIconArrowType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSurfaceView.SKOrientationIndicatorType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapSurfaceView.SKOrientationType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\class-use\SKMapViewHolder.html" />
@@ -223,13 +218,14 @@
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapPOI.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapScaleView.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSettings.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSettings.SKDrawingOrderType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSettings.SKMapDisplayMode.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSettings.SKMapFollowerMode.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSurfaceListener.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSurfaceView.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSurfaceView.SKAnimationNotificationType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSurfaceView.SKAnimationType.html" />
-    <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSurfaceView.SKDrawingOrder.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSurfaceView.SKCurrentPositionIconArrowType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSurfaceView.SKOrientationIndicatorType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapSurfaceView.SKOrientationType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKMapViewHolder.html" />
@@ -254,6 +250,7 @@
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\class-use\SKNavigationState.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\class-use\SKNavigationState.SKStreetType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\class-use\SKVisualAdviceColor.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\navigation\class-use\SKZoomLevelConfiguration.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\package-frame.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\package-summary.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\package-tree.html" />
@@ -270,6 +267,7 @@
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\SKNavigationState.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\SKNavigationState.SKStreetType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\SKVisualAdviceColor.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\navigation\SKZoomLevelConfiguration.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\package-frame.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\package-summary.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\package-tree.html" />
@@ -303,6 +301,7 @@
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\class-use\SKCurrentPositionListener.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\class-use\SKCurrentPositionProvider.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\class-use\SKPosition.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\positioner\class-use\SKPositionerManager.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\logging\class-use\SKPositionLoggingManager.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\logging\class-use\SKPositionLoggingManager.SPositionLoggingType.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\logging\package-frame.html" />
@@ -318,6 +317,7 @@
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\SKCurrentPositionListener.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\SKCurrentPositionProvider.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\positioner\SKPosition.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\positioner\SKPositionerManager.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\reversegeocode\class-use\SKReverseGeocoderManager.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\reversegeocode\package-frame.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\reversegeocode\package-summary.html" />
@@ -327,6 +327,7 @@
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKExtendedRoutePosition.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKRouteAdvice.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKRouteAdvice.SKFunctionalClasification.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKRouteAdvice.SKStreetDirection.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKRouteAlternativeSettings.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKRouteInfo.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKRouteJsonAnswer.html" />
@@ -338,7 +339,6 @@
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKRouteSettings.SKRouteMode.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKViaPoint.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKViaPointInfo.html" />
-    <Content Include="Jars\docs\com\skobbler\ngx\routing\class-use\SKZoomLevelConfiguration.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\package-frame.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\package-summary.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\package-tree.html" />
@@ -346,6 +346,7 @@
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKExtendedRoutePosition.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKRouteAdvice.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKRouteAdvice.SKFunctionalClasification.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\routing\SKRouteAdvice.SKStreetDirection.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKRouteAlternativeSettings.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKRouteInfo.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKRouteJsonAnswer.html" />
@@ -357,7 +358,6 @@
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKRouteSettings.SKRouteMode.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKViaPoint.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\routing\SKViaPointInfo.html" />
-    <Content Include="Jars\docs\com\skobbler\ngx\routing\SKZoomLevelConfiguration.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\search\class-use\SKAddressSearchSettings.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\search\class-use\SKMultiStepSearchSettings.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\search\class-use\SKNearbySearchSettings.html" />
@@ -402,6 +402,7 @@
     <Content Include="Jars\docs\com\skobbler\ngx\SKMapsInitializationException.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\SKMapsInitSettings.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\SKMapsPathsNotInitializedException.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\SKMercatorCoordinate.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\SKPrepareMapTextureListener.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\SKPrepareMapTextureThread.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\SKProxySettings.html" />
@@ -468,6 +469,11 @@
     <Content Include="Jars\docs\resources\titlebar_end.gif" />
     <Content Include="Jars\docs\serialized-form.html" />
     <Content Include="Jars\docs\stylesheet.css" />
+    <EmbeddedJar Include="Jars\SKMaps.jar" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Jars\docs\META-INF\MANIFEST.MF" />
+    <Content Include="Jars\docs\package-list" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

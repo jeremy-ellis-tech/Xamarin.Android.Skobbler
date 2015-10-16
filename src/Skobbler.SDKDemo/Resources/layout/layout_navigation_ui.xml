@@ -68,7 +68,7 @@
             android:layout_height="50dp"
             android:onClick="onClick"
             android:visibility="gone"
-            android:background="@color/grey_options_group"
+            android:background="@color/light_grey"
             android:text="@string/clear_via_point"
             android:textSize="14dp"/>
 

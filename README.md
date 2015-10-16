@@ -1,4 +1,4 @@
-Xamarin.Android.Skobbler v2.5.0
+Xamarin.Android.Skobbler v2.5.1
 ========================
 
 ## C#  bindings for the Skobbler Android SDK ##

@@ -311,5 +311,17 @@ namespace Skobbler.SDKDemo.Activities
 
         }
         #endregion
+
+
+        public void OnScreenshotReady(Android.Graphics.Bitmap screenshot)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void OnFreeDriveUpdated(string p0, string p1, string p2, SKNavigationState.SKStreetType p3, double p4, double p5)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

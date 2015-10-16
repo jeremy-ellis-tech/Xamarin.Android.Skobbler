@@ -51,9 +51,6 @@
     <LibraryProjectZip Include="sdktools.zip" />
   </ItemGroup>
   <ItemGroup>
-    <ReferenceJar Include="Jars\joda-time-2.4.jar" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Additions\" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +58,12 @@
       <Project>{c399b111-040e-485c-85f0-40ae7bb88af4}</Project>
       <Name>Skobbler.Binding</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ReferenceJar Include="Jars\gson-2.2.4.jar" />
+  </ItemGroup>
+  <ItemGroup>
+    <ReferenceJar Include="Jars\joda-time-2.4.jar" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

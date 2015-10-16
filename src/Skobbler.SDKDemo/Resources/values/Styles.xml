@@ -33,7 +33,7 @@
     <style name="menu_options_group_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/grey_options_group</item>
+        <item name="android:background">@color/light_grey</item>
         <item name="android:textSize">14dp</item>
         <item name="android:paddingBottom">2dp</item>
         <item name="android:paddingTop">2dp</item>
