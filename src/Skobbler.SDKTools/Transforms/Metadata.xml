@@ -1,6 +1,35 @@
 <metadata>
+
+  <!-- Stop dll from re-exporting namespaces from binding project-->
+  <remove-node path="/api/package[@name='com.skobbler.ngx']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.cache']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.map']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.map.realreach']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.navigation']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.packages']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.poitracker']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.positioner']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.positioner.logging']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.routing']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.search']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.tracks']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.trail']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.util']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.versioning']" />
+  
+  <!-- Change return/parameter types to match inherited abstract method signatures -->
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']/class[@name='SKSearchResultAdapter']/method[@name='onCreateViewHolder' and count(parameter)=2 and parameter[1][@type='android.view.ViewGroup'] and parameter[2][@type='int']]/parameter[1]" name="managedType">Android.Views.ViewGroup</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']/class[@name='SKSearchResultAdapter']/method[@name='onCreateViewHolder' and count(parameter)=2 and parameter[1][@type='android.view.ViewGroup'] and parameter[2][@type='int']]" name="managedReturn">Android.Support.V7.Widget.RecyclerView.ViewHolder</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']/class[@name='SKSearchResultAdapter']/method[@name='onBindViewHolder' and count(parameter)=2 and parameter[1][@type='com.skobbler.ngx.sdktools.onebox.adapters.SKSearchResultAdapter.ResultsHolder'] and parameter[2][@type='int']]" name="managedName">_OnBindViewHolder</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']/class[@name='SKSearchResultAdapter']/method[@name='onBindViewHolder' and count(parameter)=2 and parameter[1][@type='com.skobbler.ngx.sdktools.onebox.adapters.SKSearchResultAdapter.ResultsHolder'] and parameter[2][@type='int']]" name="visibility">protected</attr>
+  
   <!--.NET friendly namespace names-->
   <attr path="/api/package[@name='com.skobbler.ngx.sdktools.navigationui']" name="managedName">Skobbler.Ngx.SDKTools.NavigationUI</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.sdktools.navigationui.autonight']" name="managedName">Skobbler.Ngx.SDKTools.NavigationUI.Autonight</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.sdktools.download']" name="managedName">Skobbler.Ngx.SDKTools.Download</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox']" name="managedName">Skobbler.Ngx.SDKTools.Onebox</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']" name="managedName">Skobbler.Ngx.SDKTools.Onebox.Adapters</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.fragments']" name="managedName">Skobbler.Ngx.SDKTools.Onebox.Fragments</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.listeners']" name="managedName">Skobbler.Ngx.SDKTools.Onebox.Listeners</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.utils']" name="managedName">Skobbler.Ngx.SDKTools.Onebox.Utils</attr>
 </metadata>

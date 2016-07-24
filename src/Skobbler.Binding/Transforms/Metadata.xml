@@ -1,7 +1,4 @@
 <metadata>
-  <!--Remove non-skobbler bindings-->
-  <remove-node path="/api/package[starts-with(@name, 'com.google')]" />
-  
   <!--Match visibility to allow binding generator to override implementation instead of hiding-->
   <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapScaleView']/method[@name='onDraw' and count(parameter)=1 and parameter[1][@type='android.graphics.Canvas']]" name="visibility">protected</attr>
 
@@ -24,6 +21,8 @@
   
   <!-- Remove listener property setter, use method setter as per convention -->
   <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapSurfaceView']/method[@name='setMapSurfaceListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.map.SKMapSurfaceListener']]" name="propertyName"/>
+
+  <remove-node path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']"/>
 
   <!--.NET friendly namespace names-->
   <attr path="/api/package[@name='com.skobbler.ngx']" name="managedName">Skobbler.Ngx</attr>

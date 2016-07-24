@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
+using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using Skobbler.Ngx;
 using Skobbler.Ngx.Map;
 using Skobbler.Ngx.Navigation;
 using Skobbler.Ngx.Routing;
-using Skobbler.Ngx;
+using System;
 
 namespace Skobbler.SDKDemo.Activities
 {
@@ -93,7 +88,7 @@ namespace Skobbler.SDKDemo.Activities
             {
                 StartCoordinate = startPoint,
                 DestinationCoordinate = destinationPoint,
-                NoOfRoutes = 1,
+                MaximumReturnedRoutes = 1,
                 RouteMode = SKRouteSettings.SKRouteMode.CarFastest,
                 RouteExposed = true
             };
@@ -313,15 +308,13 @@ namespace Skobbler.SDKDemo.Activities
         #endregion
 
 
-        public void OnScreenshotReady(Android.Graphics.Bitmap screenshot)
+        public void OnScreenshotReady(Bitmap screenshot)
         {
-            throw new NotImplementedException();
         }
 
 
         public void OnFreeDriveUpdated(string p0, string p1, string p2, SKNavigationState.SKStreetType p3, double p4, double p5)
         {
-            throw new NotImplementedException();
         }
     }
 }

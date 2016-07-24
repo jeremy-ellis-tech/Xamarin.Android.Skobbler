@@ -25,6 +25,7 @@
     <string name="option_car_navigation_ui">Car navigation UI</string>
     <string name="option_pedestrian_navigation_ui">Pedestrian navigation UI</string>
     <string name="option_heat_map">Heat Map</string>
+    <string name="option_onebox">One Box Search</string>
     <string name="map_style_day">Day</string>
     <string name="map_style_night">Night</string>
     <string name="map_style_outdoor">Outdoor</string>
@@ -55,6 +56,7 @@
     <string name="route_calculation_failed">Route calculation failed</string>
     <string name="show_heat_map">SHOW HEAT MAP FOR\nTHE SELECTED CATEGORIES</string>
     <string name="gpx_license_notification_text">GPX track navigation is available for commercial use with a enterprise license. Usage without such a license will lead to your API KEY being suspended.</string>
+    <string name="bicycle_license_notification_text">Bike routing is available for commercial use with a enterprise license. Usage without such a license will lead to your API KEY being suspended.</string>
     <string name="ok_text">OK</string>
     <string name="update_label">Update</string>
     <string name="cancel_label">Cancel</string>
@@ -131,7 +133,10 @@
     <string name="open_drawer">OPEN</string>
     <string name="close_drawer">CLOSE</string>
 
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
 
 
 </resources>

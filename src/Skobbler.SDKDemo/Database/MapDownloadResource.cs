@@ -387,7 +387,7 @@ namespace Skobbler.SDKDemo.Database
 
         public override SKToolsDownloadItem ToDownloadItem()
         {
-            SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(Code, skmFilePath.StartsWith("custom-packages"));
+            SKPackageURLInfo info = SKPackageManager.Instance.GetURLInfoForPackageWithCode(Code, null, skmFilePath.StartsWith("custom-packages"));
             List<SKToolsFileDownloadStep> downloadSteps = new List<SKToolsFileDownloadStep>();
             downloadSteps.Add(new SKToolsFileDownloadStep(info.MapURL, new StringBuilder(DownloadPath).Append(Code)
                     .Append(SKToolsDownloadManager.SkmFileExtension).ToString(), skmFileSize));

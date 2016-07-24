@@ -147,43 +147,6 @@ namespace Skobbler.SDKDemo.Util
             return false;
         }
 
-        public static bool InitializeLibrary(Activity context)
-        {
-            SKLogging.EnableLogs(true);
-            SKMapsInitSettings initMapSettings = new SKMapsInitSettings();
-
-            string mapResourcesPath = ((DemoApplication)context.ApplicationContext).AppPrefs.GetStringPreference("mapResourcesPath");
-            initMapSettings.SetMapResourcesPaths(mapResourcesPath, new SKMapViewStyle(mapResourcesPath + "daystyle/", "daystyle.json"));
-
-            SKAdvisorSettings advisorSettings = initMapSettings.AdvisorSettings;
-            advisorSettings.AdvisorConfigPath = mapResourcesPath + "/Advisor";
-            advisorSettings.ResourcePath = mapResourcesPath + "/Advisor/Languages";
-            advisorSettings.Language = SKAdvisorSettings.SKAdvisorLanguage.LanguageEn;
-            advisorSettings.AdvisorVoice = "en";
-            initMapSettings.AdvisorSettings = advisorSettings;
-
-            // EXAMPLE OF ADDING PREINSTALLED MAPS
-            //         initMapSettings.setPreinstalledMapsPath(((DemoApplication)context.getApplicationContext()).getMapResourcesDirPath()
-            //         + "/PreinstalledMaps");
-            // initMapSettings.setConnectivityMode(SKMaps.CONNECTIVITY_MODE_OFFLINE);
-
-            // Example of setting light maps
-            // initMapSettings.setMapDetailLevel(SKMapsInitSettings.SK_MAP_DETAIL_LIGHT);
-            // initialize map using the settings object
-
-            try
-            {
-                SKMaps.Instance.InitializeSKMaps(context, initMapSettings);
-                return true;
-            }
-            catch (SKDeveloperKeyException exception)
-            {
-                exception.PrintStackTrace();
-                ShowApiKeyErrorDialog(context);
-                return false;
-            }
-        }
-
         public static void ShowApiKeyErrorDialog(Activity currentActivity)
         {
             new AlertDialog.Builder(currentActivity)

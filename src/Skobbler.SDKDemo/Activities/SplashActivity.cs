@@ -1,36 +1,34 @@
-﻿using System;
-using System.IO;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.OS;
 using Android.Util;
-using Android.Widget;
-using Java.Lang;
-using Java.Lang.Reflect;
+using Java.IO;
+using Skobbler.DebugKit.Activity;
+using Skobbler.DebugKit.Util;
 using Skobbler.Ngx;
+using Skobbler.Ngx.Map;
 using Skobbler.Ngx.Util;
 using Skobbler.Ngx.Versioning;
 using Skobbler.SDKDemo.Application;
 using Skobbler.SDKDemo.Util;
-using Environment = Android.OS.Environment;
-using IOException = Java.IO.IOException;
 using System.Threading.Tasks;
-using Android.Content.PM;
-using Skobbler.Ngx.Map;
-using File = Java.IO.File;
 
 namespace Skobbler.SDKDemo.Activities
 {
-    [Activity(MainLauncher = true, ConfigurationChanges = (ConfigChanges.Orientation | ConfigChanges.ScreenSize), Theme = "@style/SplashActivityTheme")]
-    public class SplashActivity : Activity, ISKPrepareMapTextureListener, ISKMapUpdateListener
+    [Activity(MainLauncher = true, ConfigurationChanges = (ConfigChanges.Orientation | ConfigChanges.ScreenSize))]
+    public class SplashActivity : Activity, ISKMapsInitializationListener, ISKMapVersioningListener
     {
 
-        public static string mapResourcesDirPath = "";
-
-        private bool update = false;
-
         private static string TAG = "SplashActivity";
-        public static int NewMapVersionDetected = 0;
+        public static int _newMapVersionDetected = 0;
+
+        private bool _update = false;
+        private long _startLibInitTime;
+        /**
+         * flag that shows whether the debug kit is enabled or not
+         */
+        private bool _debugKitEnabled;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -45,9 +43,11 @@ namespace Skobbler.SDKDemo.Activities
                 ApplicationInfo applicationInfo = PackageManager.GetApplicationInfo(PackageName, PackageInfoFlags.MetaData);
                 Bundle bundle = applicationInfo.MetaData;
                 multipleMapSupport = bundle.GetBoolean("provideMultipleMapSupport");
+                _debugKitEnabled = bundle.GetBoolean(DebugKitConfig.EnableDebugKitKey);
             }
             catch (PackageManager.NameNotFoundException e)
             {
+                _debugKitEnabled = false;
                 e.PrintStackTrace();
             }
             if (multipleMapSupport)
@@ -56,75 +56,95 @@ namespace Skobbler.SDKDemo.Activities
                 DemoUtils.IsMultipleMapSupportEnabled = true;
             }
 
-            string applicationPath = ChooseStoragePath(this);
-
-            // determine path where map resources should be copied on the device
-            if (applicationPath != null)
+            try
             {
-                mapResourcesDirPath = applicationPath + "/" + "SKMaps/";
+                SKLogging.WriteLog(TAG, "Initialize SKMaps", SKLogging.LogDebug);
+                _startLibInitTime = DemoUtils.CurrentTimeMillis();
+                CheckForSDKUpdate();
+                //            SKMapsInitSettings mapsInitSettings = new SKMapsInitSettings();
+                //            mapsInitSettings.setMapResourcesPath(getExternalFilesDir(null).toString()+"/SKMaps/");
+                //  mapsInitSettings.setConnectivityMode(SKMaps.CONNECTIVITY_MODE_OFFLINE);
+                //  mapsInitSettings.setPreinstalledMapsPath(getExternalFilesDir(null).toString()+"/SKMaps/PreinstalledMaps/");
+                SKMaps.Instance.InitializeSKMaps(Application, this);
+            }
+            catch (SKDeveloperKeyException exception)
+            {
+                exception.PrintStackTrace();
+                DemoUtils.ShowApiKeyErrorDialog(this);
+            }
+
+        }
+
+        public void OnLibraryInitialized(bool isSuccessful)
+        {
+            SKLogging.WriteLog(TAG, " SKMaps library initialized isSuccessful= " + isSuccessful + " time= " + (DemoUtils.CurrentTimeMillis() - _startLibInitTime), SKLogging.LogDebug);
+            if (isSuccessful)
+            {
+                DemoApplication app = Application as DemoApplication;
+                app.MapCreatorFilePath = SKMaps.Instance.MapInitSettings.MapResourcesPath + "MapCreator/mapcreatorFile.json";
+                app.MapResourcesDirPath = SKMaps.Instance.MapInitSettings.MapResourcesPath;
+                CopyOtherResources();
+                PrepareMapCreatorFile();
+                //everything ok. proceed
+                SKVersioningManager.Instance.SetMapUpdateListener(this);
+                GoToMap();
+            }
+            else {
+                //map was not initialized successfully
+                Finish();
+            }
+        }
+
+        private void GoToMap()
+        {
+            Finish();
+            if (!_debugKitEnabled)
+            {
+                StartActivity(new Intent(this, typeof(MapActivity)));
             }
             else
             {
-                // show a dialog and then finish
-            }
-            ((DemoApplication)ApplicationContext).AppPrefs.SaveStringPreference("mapResourcesPath", mapResourcesDirPath);
-            ((DemoApplication)Application).MapResourcesDirPath = mapResourcesDirPath;
-            CheckForUpdate();
-            if (!new File(mapResourcesDirPath).Exists())
-            {
-                // copy some other resource needed
-                new SKPrepareMapTextureThread(this, mapResourcesDirPath, "SKMaps.zip", this).Start();
-                CopyOtherResources();
-                PrepareMapCreatorFile();
-            }
-            else if (!update)
-            {
-                DemoApplication app = (DemoApplication)Application;
-                app.MapCreatorFilePath = mapResourcesDirPath + "MapCreator/mapcreatorFile.json";
-                Toast.MakeText(this, "Map resources copied in a previous run", ToastLength.Short).Show();
-                PrepareMapCreatorFile();
-                DemoUtils.InitializeLibrary(this);
-                SKVersioningManager.Instance.SetMapUpdateListener(this);
-                Finish();
-                StartActivity(new Intent(this, typeof(MapActivity)));
-
-            }
-
-        }
-
-        public void OnMapTexturesPrepared(bool prepared)
-        {
-            SKVersioningManager.Instance.SetMapUpdateListener(this);
-            Toast.MakeText(this, "Map resources were copied", ToastLength.Short).Show();
-
-            if (DemoUtils.InitializeLibrary(this))
-            {
-                Finish();
-                StartActivity(new Intent(this, typeof(MapActivity)));
+                Intent intent = new Intent(this, typeof(DebugMapActivity));
+                intent.PutExtra("mapResourcesPath", SKMaps.Instance.MapInitSettings.MapResourcesPath);
+                StartActivity(intent);
             }
         }
 
-        private void CopyOtherResources()
+        /**
+         * Copy some additional resources from assets
+         */
+        private async void CopyOtherResources()
         {
-            RunOnUiThread(() =>
+            string mapResourcesDirPath = SKMaps.Instance.MapInitSettings.MapResourcesPath;
+            await Task.Run(() =>
             {
                 try
                 {
+                    bool resAlreadyExist;
+
                     string tracksPath = mapResourcesDirPath + "GPXTracks";
                     File tracksDir = new File(tracksPath);
-                    if (!tracksDir.Exists())
+                    resAlreadyExist = tracksDir.Exists();
+                    if (!resAlreadyExist || _update)
                     {
-                        tracksDir.Mkdirs();
+                        if (!resAlreadyExist)
+                        {
+                            tracksDir.Mkdirs();
+                        }
+                        DemoUtils.CopyAssetsToFolder(Assets, "GPXTracks", mapResourcesDirPath + "GPXTracks");
                     }
-                    DemoUtils.CopyAssetsToFolder(Assets, "GPXTracks", mapResourcesDirPath + "GPXTracks");
 
                     string imagesPath = mapResourcesDirPath + "images";
                     File imagesDir = new File(imagesPath);
-                    if (!imagesDir.Exists())
+                    resAlreadyExist = imagesDir.Exists();
+                    if (!resAlreadyExist || _update)
                     {
-                        imagesDir.Mkdirs();
+                        if (!resAlreadyExist)
+                        {
+                            imagesDir.Mkdirs();
+                        }
+                        DemoUtils.CopyAssetsToFolder(Assets, "images", mapResourcesDirPath + "images");
                     }
-                    DemoUtils.CopyAssetsToFolder(Assets, "images", mapResourcesDirPath + "images");
                 }
                 catch (IOException e)
                 {
@@ -133,32 +153,46 @@ namespace Skobbler.SDKDemo.Activities
             });
         }
 
-        private void PrepareMapCreatorFile()
+        /**
+         * Copies the map creator file and logFile from assets to a storage.
+         */
+        private async void PrepareMapCreatorFile()
         {
-            DemoApplication app = (DemoApplication)Application;
-            RunOnUiThread(() =>
+            string mapResourcesDirPath = SKMaps.Instance.MapInitSettings.MapResourcesPath;
+            DemoApplication app = Application as DemoApplication;
+            await Task.Run(() =>
             {
                 try
                 {
-                    Android.OS.Process.SetThreadPriority(ThreadPriority.Background);
+                    bool resAlreadyExist;
 
                     string mapCreatorFolderPath = mapResourcesDirPath + "MapCreator";
-                    File mapCreatorFolder = new File(mapCreatorFolderPath);
                     // create the folder where you want to copy the json file
-                    if (!mapCreatorFolder.Exists())
+                    File mapCreatorFolder = new File(mapCreatorFolderPath);
+
+                    resAlreadyExist = mapCreatorFolder.Exists();
+                    if (!resAlreadyExist || _update)
                     {
-                        mapCreatorFolder.Mkdirs();
+                        if (!resAlreadyExist)
+                        {
+                            mapCreatorFolder.Mkdirs();
+                        }
+                        app.MapCreatorFilePath = mapCreatorFolderPath + "/mapcreatorFile.json";
+                        DemoUtils.CopyAsset(Assets, "MapCreator", mapCreatorFolderPath, "mapcreatorFile.json");
                     }
-                    app.MapCreatorFilePath = mapCreatorFolderPath + "/mapcreatorFile.json";
-                    DemoUtils.CopyAsset(Assets, "MapCreator", mapCreatorFolderPath, "mapcreatorFile.json");
+
                     // Copies the log file from assets to a storage.
                     string logFolderPath = mapResourcesDirPath + "logFile";
                     File logFolder = new File(logFolderPath);
-                    if (!logFolder.Exists())
+                    resAlreadyExist = logFolder.Exists();
+                    if (!resAlreadyExist || _update)
                     {
-                        logFolder.Mkdirs();
+                        if (!resAlreadyExist)
+                        {
+                            logFolder.Mkdirs();
+                        }
+                        DemoUtils.CopyAsset(Assets, "logFile", logFolderPath, "Seattle.log");
                     }
-                    DemoUtils.CopyAsset(Assets, "logFile", logFolderPath, "Seattle.log");
                 }
                 catch (IOException e)
                 {
@@ -167,72 +201,15 @@ namespace Skobbler.SDKDemo.Activities
             });
         }
 
-        public void OnMapVersionSet(int newVersion)
+
+        /**
+         * Checks if the current version code is grater than the previous and performs an SDK update.
+         */
+        public void CheckForSDKUpdate()
         {
-        }
-
-        public void OnNewVersionDetected(int newVersion)
-        {
-            Log.Error("", "new version " + newVersion);
-            NewMapVersionDetected = newVersion;
-        }
-
-        public void OnNoNewVersionDetected()
-        {
-        }
-
-        public void OnVersionFileDownloadTimeout()
-        {
-        }
-
-        public static long KILO = 1024;
-
-        public static long MEGA = KILO * KILO;
-
-        public static string ChooseStoragePath(Context context)
-        {
-            if (GetAvailableMemorySize(Environment.DataDirectory.Path) >= 50 * MEGA)
-            {
-                if (context != null && context.FilesDir != null)
-                {
-                    return context.FilesDir.Path;
-                }
-            }
-            else
-            {
-                if ((context != null) && (context.GetExternalFilesDir(null) != null))
-                {
-                    if (GetAvailableMemorySize(context.GetExternalFilesDir(null).ToString()) >= 50 * MEGA)
-                    {
-                        return context.GetExternalFilesDir(null).ToString();
-                    }
-                }
-            }
-
-            SKLogging.WriteLog(TAG, "There is not enough memory on any storage, but return internal memory", SKLogging.LogDebug);
-
-            if (context != null && context.FilesDir != null)
-            {
-                return context.FilesDir.Path;
-            }
-            else
-            {
-                if ((context != null) && (context.GetExternalFilesDir(null) != null))
-                {
-                    return context.GetExternalFilesDir(null).ToString();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        public void CheckForUpdate()
-        {
-            DemoApplication appContext = (DemoApplication)Application;
+            DemoApplication appContext = Application as DemoApplication;
             int currentVersionCode = appContext.AppPrefs.GetIntPreference(ApplicationPreferences.CURRENT_VERSION_CODE);
-            int versionCode = GetVersionCode();
+            int versionCode = VersionCode;
             if (currentVersionCode == 0)
             {
                 appContext.AppPrefs.SetCurrentVersionCode(versionCode);
@@ -240,79 +217,52 @@ namespace Skobbler.SDKDemo.Activities
 
             if (0 < currentVersionCode && currentVersionCode < versionCode)
             {
-                update = true;
+                SKMaps.UpdateToLatestSDKVersion = true;
                 appContext.AppPrefs.SetCurrentVersionCode(versionCode);
-                DemoUtils.DeleteFileOrDirectory(new File(mapResourcesDirPath));
-                new SKPrepareMapTextureThread(this, mapResourcesDirPath, "SKMaps.zip", this).Start();
-                CopyOtherResources();
-                PrepareMapCreatorFile();
             }
-
         }
 
-        public static long GetAvailableMemorySize(string path)
+        /**
+         * Returns the current version code
+         *
+         * @return
+         */
+        public int VersionCode
         {
-            StatFs statFs = null;
-            try
+            get
             {
-                statFs = new StatFs(path);
-            }
-            catch (IllegalArgumentException ex)
-            {
-                SKLogging.WriteLog("SplashActivity", "Exception when creating StatF ; message = " + ex, SKLogging.LogDebug);
-            }
-            if (statFs != null)
-            {
-                Method getAvailableBytesMethod = null;
+                int v = 0;
                 try
                 {
-                    getAvailableBytesMethod = statFs.Class.GetMethod("getAvailableBytes");
+                    v = PackageManager.GetPackageInfo(PackageName, (PackageInfoFlags)0).VersionCode;
                 }
-                catch (NoSuchMethodException e)
+                catch (PackageManager.NameNotFoundException e)
                 {
-                    SKLogging.WriteLog(TAG, "Exception at getAvailableMemorySize method = " + e.Message, SKLogging.LogDebug);
                 }
-
-                if (getAvailableBytesMethod != null)
-                {
-                    try
-                    {
-                        SKLogging.WriteLog(TAG, "Using new API for getAvailableMemorySize method !!!", SKLogging.LogDebug);
-                        return (long)getAvailableBytesMethod.Invoke(statFs);
-                    }
-                    catch (IllegalAccessException)
-                    {
-                        return (long)statFs.AvailableBlocks * (long)statFs.BlockSize;
-                    }
-                    catch (InvocationTargetException)
-                    {
-                        return (long)statFs.AvailableBlocks * (long)statFs.BlockSize;
-                    }
-                }
-                else
-                {
-                    return (long)statFs.AvailableBlocks * (long)statFs.BlockSize;
-                }
-            }
-            else
-            {
-                return 0;
+                return v;
             }
         }
 
-        public int GetVersionCode()
+        public void OnNewVersionDetected(int i)
         {
-            int v = 0;
+            Log.Error("", " New version = " + i);
+            _newMapVersionDetected = i;
 
-            try
-            {
-                v = PackageManager.GetPackageInfo(PackageName, 0).VersionCode;
-            }
-            catch (PackageManager.NameNotFoundException)
-            {
-            }
+        }
 
-            return v;
+        public void OnMapVersionSet(int i)
+        {
+
+        }
+
+        public void OnVersionFileDownloadTimeout()
+        {
+
+        }
+
+        public void OnNoNewVersionDetected()
+        {
+
         }
     }
 }

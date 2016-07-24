@@ -13,6 +13,10 @@
     <AssemblyName>Skobbler.SDKTools</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <Java7DocPaths>Jars\docs</Java7DocPaths>
+    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,8 +40,29 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="Xamarin.Android.Support.Animated.Vector.Drawable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.Android.Support.Animated.Vector.Drawable.23.4.0.1\lib\MonoAndroid403\Xamarin.Android.Support.Animated.Vector.Drawable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v4, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.Android.Support.v4.23.4.0.1\lib\MonoAndroid403\Xamarin.Android.Support.v4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.AppCompat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.AppCompat.23.4.0.1\lib\MonoAndroid403\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.v7.RecyclerView, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.Android.Support.v7.RecyclerView.23.4.0.1\lib\MonoAndroid403\Xamarin.Android.Support.v7.RecyclerView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xamarin.Android.Support.Vector.Drawable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\lib\MonoAndroid403\Xamarin.Android.Support.Vector.Drawable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Additions\SKSearchResultAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -47,12 +72,7 @@
     <TransformFile Include="Transforms\EnumFields.xml" />
     <TransformFile Include="Transforms\EnumMethods.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <LibraryProjectZip Include="sdktools.zip" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Additions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Skobbler.Binding\Skobbler.Binding.csproj">
       <Project>{c399b111-040e-485c-85f0-40ae7bb88af4}</Project>
@@ -65,7 +85,88 @@
   <ItemGroup>
     <ReferenceJar Include="Jars\joda-time-2.4.jar" />
   </ItemGroup>
+  <ItemGroup>
+    <ReferenceJar Include="Jars\guava-18.0.jar" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <LibraryProjectZip Include="Jars\sdktools-debug.aar" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LibraryProjectZip Include="Jars\sdktools-release.aar" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Jars\docs\allclasses-frame.html" />
+    <Content Include="Jars\docs\allclasses-noframe.html" />
+    <Content Include="Jars\docs\com\ngx\sdktools\ApplicationTest.html" />
+    <Content Include="Jars\docs\com\ngx\sdktools\package-frame.html" />
+    <Content Include="Jars\docs\com\ngx\sdktools\package-summary.html" />
+    <Content Include="Jars\docs\com\ngx\sdktools\package-tree.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\package-frame.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\package-summary.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\package-tree.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\SKToolsDownloadItem.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\SKToolsDownloadListener.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\SKToolsDownloadManager.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\SKToolsDownloadPerformer.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\SKToolsDownloadUtils.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\SKToolsFileDownloadStep.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\download\SKToolsUnzipPerformer.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\autonight\package-frame.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\autonight\package-summary.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\autonight\package-tree.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\autonight\SKToolsAutoNightManager.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\autonight\SKToolsCalculateSunriseSunsetTimeAutoReceiver.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\autonight\SKToolsChangeMapStyleAutoReceiver.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\package-frame.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\package-summary.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\package-tree.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\SKToolsAdvicePlayer.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\SKToolsLogicManager.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\SKToolsNavigationConfiguration.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\SKToolsNavigationListener.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\sdktools\navigationui\SKToolsNavigationManager.html" />
+    <Content Include="Jars\docs\constant-values.html" />
+    <Content Include="Jars\docs\deprecated-list.html" />
+    <Content Include="Jars\docs\help-doc.html" />
+    <Content Include="Jars\docs\index-files\index-1.html" />
+    <Content Include="Jars\docs\index-files\index-10.html" />
+    <Content Include="Jars\docs\index-files\index-11.html" />
+    <Content Include="Jars\docs\index-files\index-12.html" />
+    <Content Include="Jars\docs\index-files\index-13.html" />
+    <Content Include="Jars\docs\index-files\index-14.html" />
+    <Content Include="Jars\docs\index-files\index-15.html" />
+    <Content Include="Jars\docs\index-files\index-16.html" />
+    <Content Include="Jars\docs\index-files\index-17.html" />
+    <Content Include="Jars\docs\index-files\index-18.html" />
+    <Content Include="Jars\docs\index-files\index-19.html" />
+    <Content Include="Jars\docs\index-files\index-2.html" />
+    <Content Include="Jars\docs\index-files\index-20.html" />
+    <Content Include="Jars\docs\index-files\index-3.html" />
+    <Content Include="Jars\docs\index-files\index-4.html" />
+    <Content Include="Jars\docs\index-files\index-5.html" />
+    <Content Include="Jars\docs\index-files\index-6.html" />
+    <Content Include="Jars\docs\index-files\index-7.html" />
+    <Content Include="Jars\docs\index-files\index-8.html" />
+    <Content Include="Jars\docs\index-files\index-9.html" />
+    <JavaDocIndex Include="Jars\docs\index.html" />
+    <Content Include="Jars\docs\overview-frame.html" />
+    <Content Include="Jars\docs\overview-summary.html" />
+    <Content Include="Jars\docs\overview-tree.html" />
+    <Content Include="Jars\docs\script.js" />
+    <Content Include="Jars\docs\stylesheet.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Jars\docs\package-list" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
+  <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  
-   
+
     <color name="blue_filling">#e0e0ff</color>
     <color name="blue_outline">#6060ff</color>
     <color name="darker_grey">#404040</color>
     <color name="grey">#c0c0c0</color>
-    <color name="light_grey">#a0a0a0</color>
+    <color name="grey_options_group">#a0a0a0</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="selected">#FAEFAA</color>
@@ -21,4 +20,16 @@
     <color name="navigate_blue_button">#0080ff</color>
     <color name="green">#00ff00</color>
 
+    <color name="primary">#3f51b5</color>
+    <color name="primaryDark">#a0a0a0</color>
+    <color name="primaryLight">#c5cae9</color>
+    <color name="accent">#ff4081</color>
+    <color name="accentDark">#f50057</color>
+    <color name="accentLight">#ff80ab</color>
+
+    <color name="text">#d9000000</color>
+    <color name="textSecondary">#8c000000</color>
+    <color name="textPrimary">#bfff</color>
+
+  <color name="light_grey">#c0c0c0</color>
 </resources>

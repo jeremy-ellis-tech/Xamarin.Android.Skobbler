@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.Binding", "Skobbler.Binding\Skobbler.Binding.csproj", "{C399B111-040E-485C-85F0-40AE7BB88AF4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SDKDemo", "Skobbler.SDKDemo\Skobbler.SDKDemo.csproj", "{795B9ED9-17BA-4319-9646-B938FCBAEE7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.SDKTools", "Skobbler.SDKTools\Skobbler.SDKTools.csproj", "{75B58D7C-B96F-4748-939B-3D43960C0C63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skobbler.DebugKit", "Skobbler.DebugKit\Skobbler.DebugKit.csproj", "{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +79,22 @@ Global
 		{75B58D7C-B96F-4748-939B-3D43960C0C63}.Release|armeabi-v7a.Build.0 = Release|Any CPU
 		{75B58D7C-B96F-4748-939B-3D43960C0C63}.Release|x86.ActiveCfg = Release|Any CPU
 		{75B58D7C-B96F-4748-939B-3D43960C0C63}.Release|x86.Build.0 = Release|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Debug|armeabi.ActiveCfg = Debug|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Debug|armeabi.Build.0 = Debug|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Debug|armeabi-v7a.ActiveCfg = Debug|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Debug|armeabi-v7a.Build.0 = Debug|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Debug|x86.Build.0 = Debug|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Release|armeabi.ActiveCfg = Release|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Release|armeabi.Build.0 = Release|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Release|armeabi-v7a.ActiveCfg = Release|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Release|armeabi-v7a.Build.0 = Release|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Release|x86.ActiveCfg = Release|Any CPU
+		{B2ACC369-F439-4C4C-B117-88DA9D12CBAF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

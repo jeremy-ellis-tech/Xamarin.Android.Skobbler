@@ -1,0 +1,12 @@
+<metadata>
+  <!-- Same class/member name error -->
+  <attr path="/api/package[@name='com.skobbler.debugkit.activity']/class[@name='DebugMapActivity.TestingOption']/field[@name='TESTING_OPTION']" name="managedName">CurrentTestingOption</attr>
+  
+  <!-- .NET style namespaces -->
+  <attr path="/api/package[@name='com.skobbler.debugkit.activity']" name="managedName">Skobbler.DebugKit.Activity</attr>
+  <attr path="/api/package[@name='com.skobbler.debugkit.adapter']" name="managedName">Skobbler.DebugKit.Adapter</attr>
+  <attr path="/api/package[@name='com.skobbler.debugkit.debugsettings']" name="managedName">Skobbler.DebugKit.DebugSettings</attr>
+  <attr path="/api/package[@name='com.skobbler.debugkit.model']" name="managedName">Skobbler.DebugKit.Model</attr>
+  <attr path="/api/package[@name='com.skobbler.debugkit.util']" name="managedName">Skobbler.DebugKit.Util</attr>
+  <attr path="/api/package[@name='com.skobbler.debugkit']" name="managedName">Skobbler.DebugKit</attr>
+</metadata>
