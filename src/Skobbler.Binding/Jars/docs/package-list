@@ -2,6 +2,7 @@ com.skobbler.ngx
 com.skobbler.ngx.cache
 com.skobbler.ngx.map
 com.skobbler.ngx.map.realreach
+com.skobbler.ngx.map.worldlayer
 com.skobbler.ngx.navigation
 com.skobbler.ngx.packages
 com.skobbler.ngx.poitracker

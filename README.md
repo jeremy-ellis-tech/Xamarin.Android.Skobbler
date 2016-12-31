@@ -1,16 +1,16 @@
-Xamarin.Android.Skobbler v3.0
+Xamarin.Android.Skobbler v3.0.2
 ========================
 
 ## C#  bindings for the Skobbler Android SDK ##
 
 I am not associated with either [Skobbler](http://www.skobbler.com/) or [Xamarin .inc](http://xamarin.com/). All rights belong to their respective owners.
 
-This repository includes a C# translation of the demo included with the Skobbler SDK. This currently has a few small bugs which are probably a result of my [mis]translation. Raise an issue or send a pull request if you would like these fixed ASAP.
+This repository includes a C# translation of the demo included with the Skobbler SDK. This currently has a few small bugs which are probably a result of my [mis]translation. Raise an issue or send a pull request if you would like these fixed ASAP. (You'll need to paste your API key into the android manifest before running the SDK demo)
 
 ## Installation ##
 
 1. Clone the repo.
-2. Build the Skobbler.Binding project. You'll need to set your jdk to `jdk1.8` & have `SDK build-tools v24.0.1` installed via the Android SDK manager.
+2. Build the Skobbler.Binding project. You'll need to set your jdk to `jdk1.8.0_102` or above & have `SDK build-tools v24.0.1` or above installed via the Android SDK manager.
 3. Reference "Skobbler.dll" from your project; found under `"Xamarin.Android.Skobbler\src\Skobbler\bin\[Debug|Release][-$ABI]\Skobbler.dll"`
 
 There are platform configurations for each native library ABI (`x86`, `armeabi-v7a` & `armeabi`). The `AnyCPU` platform configuration includes all 3 ABIs at the cost of a larger assembly (~5MB for specific platforms and ~12MB for AnyCPU). If you don't know which platform to select just use `AnyCPU`.
@@ -56,8 +56,8 @@ I have added `async/await` methods to make things cleaner and more .NET friendly
 	{
 		//Catch invalid search status here.
 	}
-    
-Namespaces should be the same as their respective Java packages, minus the `com` prefix and capitalization.
+
+Namespaces should be the same as their respective Java packages, except the `com` prefix and are PascalCased.
 
 ## Demo App Screenshots ##
 

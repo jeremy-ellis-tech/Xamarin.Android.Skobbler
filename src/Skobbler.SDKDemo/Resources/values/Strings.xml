@@ -53,6 +53,7 @@
     <string name="label_position_me">Position me</string>
     <string name="label_heading">Heading</string>
     <string name="no_position_available">Current position is not available</string>
+    <string name="map_instance_created">New map instance created</string>
     <string name="route_calculation_failed">Route calculation failed</string>
     <string name="show_heat_map">SHOW HEAT MAP FOR\nTHE SELECTED CATEGORIES</string>
     <string name="gpx_license_notification_text">GPX track navigation is available for commercial use with a enterprise license. Usage without such a license will lead to your API KEY being suspended.</string>

@@ -4,6 +4,8 @@
   <remove-node path="/api/package[@name='com.skobbler.ngx']" />
   <remove-node path="/api/package[@name='com.skobbler.ngx.cache']" />
   <remove-node path="/api/package[@name='com.skobbler.ngx.map']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.reversegeocode']" />
+  <remove-node path="/api/package[@name='com.skobbler.ngx.map.worldlayer']" />
   <remove-node path="/api/package[@name='com.skobbler.ngx.map.realreach']" />
   <remove-node path="/api/package[@name='com.skobbler.ngx.navigation']" />
   <remove-node path="/api/package[@name='com.skobbler.ngx.packages']" />
@@ -20,8 +22,6 @@
   <!-- Change return/parameter types to match inherited abstract method signatures -->
   <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']/class[@name='SKSearchResultAdapter']/method[@name='onCreateViewHolder' and count(parameter)=2 and parameter[1][@type='android.view.ViewGroup'] and parameter[2][@type='int']]/parameter[1]" name="managedType">Android.Views.ViewGroup</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']/class[@name='SKSearchResultAdapter']/method[@name='onCreateViewHolder' and count(parameter)=2 and parameter[1][@type='android.view.ViewGroup'] and parameter[2][@type='int']]" name="managedReturn">Android.Support.V7.Widget.RecyclerView.ViewHolder</attr>
-  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']/class[@name='SKSearchResultAdapter']/method[@name='onBindViewHolder' and count(parameter)=2 and parameter[1][@type='com.skobbler.ngx.sdktools.onebox.adapters.SKSearchResultAdapter.ResultsHolder'] and parameter[2][@type='int']]" name="managedName">_OnBindViewHolder</attr>
-  <attr path="/api/package[@name='com.skobbler.ngx.sdktools.onebox.adapters']/class[@name='SKSearchResultAdapter']/method[@name='onBindViewHolder' and count(parameter)=2 and parameter[1][@type='com.skobbler.ngx.sdktools.onebox.adapters.SKSearchResultAdapter.ResultsHolder'] and parameter[2][@type='int']]" name="visibility">protected</attr>
   
   <!--.NET friendly namespace names-->
   <attr path="/api/package[@name='com.skobbler.ngx.sdktools.navigationui']" name="managedName">Skobbler.Ngx.SDKTools.NavigationUI</attr>

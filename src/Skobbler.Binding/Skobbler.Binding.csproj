@@ -89,6 +89,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <AndroidClassParser>class-parse</AndroidClassParser>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
@@ -115,12 +118,18 @@
     <TransformFile Include="Transforms\EnumFields.xml" />
     <TransformFile Include="Transforms\EnumMethods.xml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedNativeLibrary Include="Jars\armeabi-v7a\libngnative.so" />
     <EmbeddedNativeLibrary Include="Jars\armeabi\libngnative.so" />
+    <None Include="Jars\docs\META-INF\MANIFEST.MF" />
+    <None Include="Jars\docs\package-list" />
     <EmbeddedNativeLibrary Include="Jars\x86\libngnative.so" />
+    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <PropertyGroup>
+    <Java7DocPaths>Jars\docs</Java7DocPaths>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="Jars\docs\allclasses-frame.html" />
     <Content Include="Jars\docs\allclasses-noframe.html" />
@@ -246,6 +255,18 @@
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKPolyline.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKPulseAnimationSettings.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\map\SKScreenPoint.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\class-use\SKWorldLayerDownloadListener.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\class-use\SKWorldLayerManager.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\class-use\SKWorldLayerSettings.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\class-use\SKWorldLayerSettings.SKWorldLayerStatus.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\package-frame.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\package-summary.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\package-tree.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\package-use.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\SKWorldLayerDownloadListener.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\SKWorldLayerManager.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\SKWorldLayerSettings.html" />
+    <Content Include="Jars\docs\com\skobbler\ngx\map\worldlayer\SKWorldLayerSettings.SKWorldLayerStatus.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\class-use\SKAdvisorSettings.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\class-use\SKAdvisorSettings.SKAdvisorLanguage.html" />
     <Content Include="Jars\docs\com\skobbler\ngx\navigation\class-use\SKAdvisorSettings.SKAdvisorType.html" />
@@ -472,26 +493,24 @@
     <Content Include="Jars\docs\deprecated-list.html" />
     <Content Include="Jars\docs\help-doc.html" />
     <Content Include="Jars\docs\index-all.html" />
-    <InputJar Include="Jars\SKMaps.jar" />
     <Content Include="Jars\docs\index.html" />
     <Content Include="Jars\docs\overview-frame.html" />
     <Content Include="Jars\docs\overview-summary.html" />
     <Content Include="Jars\docs\overview-tree.html" />
-    <Content Include="Jars\docs\resources\inherit.gif" />
+    <Content Include="Jars\docs\resources\background.gif" />
+    <Content Include="Jars\docs\resources\tab.gif" />
+    <Content Include="Jars\docs\resources\titlebar.gif" />
+    <Content Include="Jars\docs\resources\titlebar_end.gif" />
     <Content Include="Jars\docs\serialized-form.html" />
     <Content Include="Jars\docs\stylesheet.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Jars\docs\META-INF\MANIFEST.MF" />
-    <None Include="Jars\docs\package-list" />
-    <None Include="packages.config" />
+    <InputJar Include="Jars\SKMaps.jar" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+</Target>
+<Target Name="AfterBuild">
+</Target>
+-->
 </Project>

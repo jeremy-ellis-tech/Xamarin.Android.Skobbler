@@ -1,11 +1,19 @@
 <metadata>
   <!--Match visibility to allow binding generator to override implementation instead of hiding-->
   <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapScaleView']/method[@name='onDraw' and count(parameter)=1 and parameter[1][@type='android.graphics.Canvas']]" name="visibility">protected</attr>
-
+  
+  <!--Reimplement in additions due to not being able to use Skobbler.Ngx.ISKPrepareMapTextureListener-->
+  <remove-node path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']"/>
+  
   <!--Fix protected method / sealed class warnings-->
   <attr path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMapsInitSettings']/method[@name='setAppName']" name="visibility">private</attr>
   <attr path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMapsInitSettings']/method[@name='setAppVersion']" name="visibility">private</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.navigation']/class[@name='SKNavigationSettings']/method[@name='isFcdEnabled']" name="visibility">private</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.map.worldlayer']/class[@name='SKWorldLayerManager']/method[@name='worldlayerdownload' and count(parameter)=7 and parameter[1][@type='java.lang.String'] and parameter[2][@type='int'] and parameter[3][@type='int'] and parameter[4][@type='int'] and parameter[5][@type='int'] and parameter[6][@type='int'] and parameter[7][@type='int']]" name="visibility">private</attr>
+  
+  <!--Fix SKDeveloperKeyException.getMessage & SKMapsPathsNotInitializedException.getMessage marked as new/virtual-->
+  <remove-node path="/api/package[@name='com.skobbler.ngx']/class[@name='SKDeveloperKeyException']/method[@name='getMessage' and count(parameter)=0]"/>
+  <remove-node path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMapsPathsNotInitializedException']/method[@name='getMessage' and count(parameter)=0]"/>
 
   <!--Change event name to stop hiding of inherited glSurfaceView member-->
   <attr path="/api/package[@name='com.skobbler.ngx.map']/interface[@name='SKMapSurfaceListener']/method[@name='onSurfaceCreated' and count(parameter)=1]" name="eventName">MapSurfaceCreated</attr>
@@ -22,12 +30,11 @@
   <!-- Remove listener property setter, use method setter as per convention -->
   <attr path="/api/package[@name='com.skobbler.ngx.map']/class[@name='SKMapSurfaceView']/method[@name='setMapSurfaceListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.map.SKMapSurfaceListener']]" name="propertyName"/>
 
-  <remove-node path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']"/>
-
   <!--.NET friendly namespace names-->
   <attr path="/api/package[@name='com.skobbler.ngx']" name="managedName">Skobbler.Ngx</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.cache']" name="managedName">Skobbler.Ngx.Cache</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.map']" name="managedName">Skobbler.Ngx.Map</attr>
+  <attr path="/api/package[@name='com.skobbler.ngx.map.worldlayer']" name="managedName">Skobbler.Ngx.Map.WorldLayer</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.map.realreach']" name="managedName">Skobbler.Ngx.Map.RealReach</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.navigation']" name="managedName">Skobbler.Ngx.Navigation</attr>
   <attr path="/api/package[@name='com.skobbler.ngx.packages']" name="managedName">Skobbler.Ngx.Packages</attr>

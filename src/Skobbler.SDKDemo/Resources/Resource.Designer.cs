@@ -2102,8 +2102,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07015f
 			public const int Internationalization_translit = 2131165535;
 			
-			// aapt resource value: 0x7f07018e
-			public const int action0 = 2131165582;
+			// aapt resource value: 0x7f070187
+			public const int OSM_tile_server = 2131165575;
+			
+			// aapt resource value: 0x7f0701a0
+			public const int action0 = 2131165600;
 			
 			// aapt resource value: 0x7f070042
 			public const int action_bar = 2131165250;
@@ -2129,8 +2132,8 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070043
 			public const int action_context_bar = 2131165251;
 			
-			// aapt resource value: 0x7f070192
-			public const int action_divider = 2131165586;
+			// aapt resource value: 0x7f0701a4
+			public const int action_divider = 2131165604;
 			
 			// aapt resource value: 0x7f070003
 			public const int action_menu_divider = 2131165187;
@@ -2147,8 +2150,8 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070024
 			public const int action_mode_close_button = 2131165220;
 			
-			// aapt resource value: 0x7f0701b8
-			public const int actions_title = 2131165624;
+			// aapt resource value: 0x7f0701cb
+			public const int actions_title = 2131165643;
 			
 			// aapt resource value: 0x7f07009c
 			public const int actions_title_row = 2131165340;
@@ -2156,17 +2159,20 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070025
 			public const int activity_chooser_view_content = 2131165221;
 			
-			// aapt resource value: 0x7f0701c0
-			public const int advice_list_info = 2131165632;
+			// aapt resource value: 0x7f070195
+			public const int add_world_layer = 2131165589;
 			
-			// aapt resource value: 0x7f0701ad
-			public const int aerial_distance = 2131165613;
+			// aapt resource value: 0x7f0701d3
+			public const int advice_list_info = 2131165651;
+			
+			// aapt resource value: 0x7f0701c0
+			public const int aerial_distance = 2131165632;
 			
 			// aapt resource value: 0x7f070031
 			public const int alertTitle = 2131165233;
 			
-			// aapt resource value: 0x7f07022b
-			public const int alpha_seekbar = 2131165739;
+			// aapt resource value: 0x7f070241
+			public const int alpha_seekbar = 2131165761;
 			
 			// aapt resource value: 0x7f070162
 			public const int alt_route_1 = 2131165538;
@@ -2375,11 +2381,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700a9
 			public const int annotation_view_title_row = 2131165353;
 			
-			// aapt resource value: 0x7f070252
-			public const int annotation_zoom_limit = 2131165778;
+			// aapt resource value: 0x7f070268
+			public const int annotation_zoom_limit = 2131165800;
 			
-			// aapt resource value: 0x7f070242
-			public const int annotations_over_objects = 2131165762;
+			// aapt resource value: 0x7f070258
+			public const int annotations_over_objects = 2131165784;
 			
 			// aapt resource value: 0x7f070105
 			public const int arriving_distance_text = 2131165445;
@@ -2402,44 +2408,47 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07001a
 			public const int beginning = 2131165210;
 			
-			// aapt resource value: 0x7f07022a
-			public const int blue_seekbar = 2131165738;
+			// aapt resource value: 0x7f070240
+			public const int blue_seekbar = 2131165760;
 			
-			// aapt resource value: 0x7f070237
-			public const int border_pixels_skip = 2131165751;
+			// aapt resource value: 0x7f07024d
+			public const int border_pixels_skip = 2131165773;
 			
-			// aapt resource value: 0x7f070236
-			public const int border_pixels_solid = 2131165750;
+			// aapt resource value: 0x7f07024c
+			public const int border_pixels_solid = 2131165772;
 			
-			// aapt resource value: 0x7f070235
-			public const int border_width = 2131165749;
+			// aapt resource value: 0x7f07024b
+			public const int border_width = 2131165771;
 			
 			// aapt resource value: 0x7f0700d3
 			public const int bottom_button = 2131165395;
 			
-			// aapt resource value: 0x7f070219
-			public const int bottom_right_latitude = 2131165721;
+			// aapt resource value: 0x7f07022f
+			public const int bottom_right_latitude = 2131165743;
 			
-			// aapt resource value: 0x7f07021a
-			public const int bottom_right_longitude = 2131165722;
+			// aapt resource value: 0x7f070230
+			public const int bottom_right_longitude = 2131165744;
 			
 			// aapt resource value: 0x7f070181
 			public const int bottom_text = 2131165569;
 			
-			// aapt resource value: 0x7f07021d
-			public const int bounding_box_render_button = 2131165725;
+			// aapt resource value: 0x7f070233
+			public const int bounding_box_render_button = 2131165747;
 			
-			// aapt resource value: 0x7f070216
-			public const int bounding_box_settings_title = 2131165718;
+			// aapt resource value: 0x7f07022c
+			public const int bounding_box_settings_title = 2131165740;
 			
 			// aapt resource value: 0x7f07002c
 			public const int buttonPanel = 2131165228;
 			
-			// aapt resource value: 0x7f070187
-			public const int cache_info_title = 2131165575;
+			// aapt resource value: 0x7f070199
+			public const int cache_info_title = 2131165593;
 			
-			// aapt resource value: 0x7f070189
-			public const int cache_limit = 2131165577;
+			// aapt resource value: 0x7f07019b
+			public const int cache_limit = 2131165595;
+			
+			// aapt resource value: 0x7f07018d
+			public const int cache_size_layer = 2131165581;
 			
 			// aapt resource value: 0x7f070179
 			public const int calculate_routes_button = 2131165561;
@@ -2474,23 +2483,23 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700b3
 			public const int callout_view_title_text = 2131165363;
 			
-			// aapt resource value: 0x7f070224
-			public const int camera_center = 2131165732;
+			// aapt resource value: 0x7f07023a
+			public const int camera_center = 2131165754;
 			
-			// aapt resource value: 0x7f070226
-			public const int camera_distance = 2131165734;
+			// aapt resource value: 0x7f07023c
+			public const int camera_distance = 2131165756;
 			
-			// aapt resource value: 0x7f070259
-			public const int camera_settings = 2131165785;
+			// aapt resource value: 0x7f07026f
+			public const int camera_settings = 2131165807;
 			
-			// aapt resource value: 0x7f070225
-			public const int camera_tilt = 2131165733;
+			// aapt resource value: 0x7f07023b
+			public const int camera_tilt = 2131165755;
 			
 			// aapt resource value: 0x7f0700e2
 			public const int cancel = 2131165410;
 			
-			// aapt resource value: 0x7f07018f
-			public const int cancel_action = 2131165583;
+			// aapt resource value: 0x7f0701a1
+			public const int cancel_action = 2131165601;
 			
 			// aapt resource value: 0x7f070055
 			public const int cancel_all_button = 2131165269;
@@ -2498,8 +2507,8 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07013d
 			public const int cancel_pre_navigation_button = 2131165501;
 			
-			// aapt resource value: 0x7f07024e
-			public const int center_on_current_position = 2131165774;
+			// aapt resource value: 0x7f070264
+			public const int center_on_current_position = 2131165796;
 			
 			// aapt resource value: 0x7f07003a
 			public const int checkbox = 2131165242;
@@ -2507,20 +2516,20 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07005d
 			public const int chess_board_background = 2131165277;
 			
-			// aapt resource value: 0x7f070195
-			public const int chronometer = 2131165589;
+			// aapt resource value: 0x7f0701a7
+			public const int chronometer = 2131165607;
 			
-			// aapt resource value: 0x7f070266
-			public const int circle = 2131165798;
+			// aapt resource value: 0x7f07027c
+			public const int circle = 2131165820;
 			
-			// aapt resource value: 0x7f070234
-			public const int circle_id = 2131165748;
+			// aapt resource value: 0x7f07024a
+			public const int circle_id = 2131165770;
 			
-			// aapt resource value: 0x7f070269
-			public const int clear_all_overlays = 2131165801;
+			// aapt resource value: 0x7f07027f
+			public const int clear_all_overlays = 2131165823;
 			
-			// aapt resource value: 0x7f070280
-			public const int clear_screenshot = 2131165824;
+			// aapt resource value: 0x7f070296
+			public const int clear_screenshot = 2131165846;
 			
 			// aapt resource value: 0x7f070178
 			public const int clear_via_point_button = 2131165560;
@@ -2528,8 +2537,8 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07001e
 			public const int collapseActionView = 2131165214;
 			
-			// aapt resource value: 0x7f070253
-			public const int compass_options = 2131165779;
+			// aapt resource value: 0x7f070269
+			public const int compass_options = 2131165801;
 			
 			// aapt resource value: 0x7f0700ca
 			public const int contentFrameLayout = 2131165386;
@@ -2537,17 +2546,17 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070032
 			public const int contentPanel = 2131165234;
 			
-			// aapt resource value: 0x7f07022c
-			public const int continuous_check = 2131165740;
+			// aapt resource value: 0x7f070242
+			public const int continuous_check = 2131165762;
 			
-			// aapt resource value: 0x7f07027e
-			public const int continuous_screenshot = 2131165822;
+			// aapt resource value: 0x7f070294
+			public const int continuous_screenshot = 2131165844;
 			
-			// aapt resource value: 0x7f0701c1
-			public const int coordinates_info = 2131165633;
+			// aapt resource value: 0x7f0701d6
+			public const int coordinates_info = 2131165654;
 			
-			// aapt resource value: 0x7f0701c2
-			public const int country_codes_info = 2131165634;
+			// aapt resource value: 0x7f0701d7
+			public const int country_codes_info = 2131165655;
 			
 			// aapt resource value: 0x7f0700f4
 			public const int current_advice_distance_text = 2131165428;
@@ -2630,11 +2639,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700c1
 			public const int custom_poi_type = 2131165377;
 			
-			// aapt resource value: 0x7f070230
-			public const int custom_view_checkbox = 2131165744;
+			// aapt resource value: 0x7f070246
+			public const int custom_view_checkbox = 2131165766;
 			
-			// aapt resource value: 0x7f070214
-			public const int debug_close_button = 2131165716;
+			// aapt resource value: 0x7f07022a
+			public const int debug_close_button = 2131165738;
 			
 			// aapt resource value: 0x7f07016c
 			public const int debug_heading_mode_back_button = 2131165548;
@@ -2651,17 +2660,17 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07016b
 			public const int debug_heading_mode_text = 2131165547;
 			
-			// aapt resource value: 0x7f070212
-			public const int debug_minimize_button = 2131165714;
+			// aapt resource value: 0x7f070228
+			public const int debug_minimize_button = 2131165736;
 			
 			// aapt resource value: 0x7f0700cd
 			public const int debug_settings_base = 2131165389;
 			
-			// aapt resource value: 0x7f070215
-			public const int debug_settings_scroll_view = 2131165717;
+			// aapt resource value: 0x7f07022b
+			public const int debug_settings_scroll_view = 2131165739;
 			
-			// aapt resource value: 0x7f070213
-			public const int debug_settings_top_bar = 2131165715;
+			// aapt resource value: 0x7f070229
+			public const int debug_settings_top_bar = 2131165737;
 			
 			// aapt resource value: 0x7f070040
 			public const int decor_content_parent = 2131165248;
@@ -2669,23 +2678,23 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070028
 			public const int default_activity_button = 2131165224;
 			
-			// aapt resource value: 0x7f07018b
-			public const int delete_all_cache = 2131165579;
+			// aapt resource value: 0x7f07019d
+			public const int delete_all_cache = 2131165597;
 			
-			// aapt resource value: 0x7f07018d
-			public const int delete_cache_older = 2131165581;
+			// aapt resource value: 0x7f07019f
+			public const int delete_cache_older = 2131165599;
 			
-			// aapt resource value: 0x7f07018a
-			public const int delete_cache_title = 2131165578;
+			// aapt resource value: 0x7f07019c
+			public const int delete_cache_title = 2131165596;
 			
-			// aapt resource value: 0x7f0701b0
-			public const int destination_location = 2131165616;
+			// aapt resource value: 0x7f0701c3
+			public const int destination_location = 2131165635;
 			
 			// aapt resource value: 0x7f0700d5
 			public const int detected_pois_id = 2131165397;
 			
-			// aapt resource value: 0x7f0701bb
-			public const int detected_pois_list = 2131165627;
+			// aapt resource value: 0x7f0701ce
+			public const int detected_pois_list = 2131165646;
 			
 			// aapt resource value: 0x7f0700d6
 			public const int detected_pois_title = 2131165398;
@@ -2693,8 +2702,14 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07000d
 			public const int disableHome = 2131165197;
 			
+			// aapt resource value: 0x7f070194
+			public const int disable_world_layer = 2131165588;
+			
 			// aapt resource value: 0x7f070052
 			public const int download_button = 2131165266;
+			
+			// aapt resource value: 0x7f070198
+			public const int download_data_world_layer = 2131165592;
 			
 			// aapt resource value: 0x7f070053
 			public const int download_percentage_text = 2131165267;
@@ -2711,32 +2726,35 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070058
 			public const int drawer_layout = 2131165272;
 			
-			// aapt resource value: 0x7f07025d
-			public const int drawing_order = 2131165789;
+			// aapt resource value: 0x7f070273
+			public const int drawing_order = 2131165811;
 			
-			// aapt resource value: 0x7f07022f
-			public const int duration_out_seekbar = 2131165743;
+			// aapt resource value: 0x7f070245
+			public const int duration_out_seekbar = 2131165765;
 			
-			// aapt resource value: 0x7f07022e
-			public const int duration_seekbar = 2131165742;
+			// aapt resource value: 0x7f070244
+			public const int duration_seekbar = 2131165764;
 			
 			// aapt resource value: 0x7f070044
 			public const int edit_query = 2131165252;
 			
-			// aapt resource value: 0x7f0701b6
-			public const int eliminate_uturn = 2131165622;
+			// aapt resource value: 0x7f0701c9
+			public const int eliminate_uturn = 2131165641;
 			
-			// aapt resource value: 0x7f070258
-			public const int enable_3d = 2131165784;
+			// aapt resource value: 0x7f07026e
+			public const int enable_3d = 2131165806;
 			
-			// aapt resource value: 0x7f070255
-			public const int enable_inertia = 2131165781;
+			// aapt resource value: 0x7f07026b
+			public const int enable_inertia = 2131165803;
+			
+			// aapt resource value: 0x7f070193
+			public const int enable_world_layer = 2131165587;
 			
 			// aapt resource value: 0x7f07001b
 			public const int end = 2131165211;
 			
-			// aapt resource value: 0x7f07019a
-			public const int end_padder = 2131165594;
+			// aapt resource value: 0x7f0701ac
+			public const int end_padder = 2131165612;
 			
 			// aapt resource value: 0x7f0700ef
 			public const int estimated_navigation_time_text = 2131165423;
@@ -2756,35 +2774,35 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07014f
 			public const int fallback_option_two = 2131165519;
 			
-			// aapt resource value: 0x7f070239
-			public const int fill_color = 2131165753;
+			// aapt resource value: 0x7f07024f
+			public const int fill_color = 2131165775;
 			
 			// aapt resource value: 0x7f070138
 			public const int first_route = 2131165496;
 			
-			// aapt resource value: 0x7f070223
-			public const int fit_bounding_box_button = 2131165731;
+			// aapt resource value: 0x7f070239
+			public const int fit_bounding_box_button = 2131165753;
 			
-			// aapt resource value: 0x7f07021e
-			public const int fit_bounding_box_title = 2131165726;
+			// aapt resource value: 0x7f070234
+			public const int fit_bounding_box_title = 2131165748;
 			
-			// aapt resource value: 0x7f070248
-			public const int follower_mode_historic_position = 2131165768;
+			// aapt resource value: 0x7f07025e
+			public const int follower_mode_historic_position = 2131165790;
 			
-			// aapt resource value: 0x7f070247
-			public const int follower_mode_navigation = 2131165767;
+			// aapt resource value: 0x7f07025d
+			public const int follower_mode_navigation = 2131165789;
 			
-			// aapt resource value: 0x7f070244
-			public const int follower_mode_none = 2131165764;
+			// aapt resource value: 0x7f07025a
+			public const int follower_mode_none = 2131165786;
 			
-			// aapt resource value: 0x7f070249
-			public const int follower_mode_none_with_heading = 2131165769;
+			// aapt resource value: 0x7f07025f
+			public const int follower_mode_none_with_heading = 2131165791;
 			
-			// aapt resource value: 0x7f070245
-			public const int follower_mode_position = 2131165765;
+			// aapt resource value: 0x7f07025b
+			public const int follower_mode_position = 2131165787;
 			
-			// aapt resource value: 0x7f070246
-			public const int follower_mode_position_plus_heading = 2131165766;
+			// aapt resource value: 0x7f07025c
+			public const int follower_mode_position_plus_heading = 2131165788;
 			
 			// aapt resource value: 0x7f0700d9
 			public const int forward_mark = 2131165401;
@@ -2804,11 +2822,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700e9
 			public const int free_drive_current_street_text = 2131165417;
 			
-			// aapt resource value: 0x7f07023e
-			public const int generate_new_id = 2131165758;
+			// aapt resource value: 0x7f070254
+			public const int generate_new_id = 2131165780;
 			
-			// aapt resource value: 0x7f070231
-			public const int go_to_current_position = 2131165745;
+			// aapt resource value: 0x7f070247
+			public const int go_to_current_position = 2131165767;
 			
 			// aapt resource value: 0x7f07006c
 			public const int gpx_chicago = 2131165292;
@@ -2825,20 +2843,20 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07006b
 			public const int gpx_route_4 = 2131165291;
 			
-			// aapt resource value: 0x7f070276
-			public const int gpx_type = 2131165814;
+			// aapt resource value: 0x7f07028c
+			public const int gpx_type = 2131165836;
 			
-			// aapt resource value: 0x7f070229
-			public const int green_seekbar = 2131165737;
+			// aapt resource value: 0x7f07023f
+			public const int green_seekbar = 2131165759;
 			
 			// aapt resource value: 0x7f07014a
 			public const int heading_button = 2131165514;
 			
-			// aapt resource value: 0x7f07024a
-			public const int heading_mode = 2131165770;
+			// aapt resource value: 0x7f070260
+			public const int heading_mode = 2131165792;
 			
-			// aapt resource value: 0x7f07019f
-			public const int helper = 2131165599;
+			// aapt resource value: 0x7f0701b1
+			public const int helper = 2131165617;
 			
 			// aapt resource value: 0x7f070005
 			public const int home = 2131165189;
@@ -2855,11 +2873,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070027
 			public const int image = 2131165223;
 			
-			// aapt resource value: 0x7f07021c
-			public const int image_size_height = 2131165724;
+			// aapt resource value: 0x7f070232
+			public const int image_size_height = 2131165746;
 			
-			// aapt resource value: 0x7f07021b
-			public const int image_size_width = 2131165723;
+			// aapt resource value: 0x7f070231
+			public const int image_size_width = 2131165745;
 			
 			// aapt resource value: 0x7f070129
 			public const int increase_decrease_layout = 2131165481;
@@ -2867,11 +2885,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070184
 			public const int indicator_children_available = 2131165572;
 			
-			// aapt resource value: 0x7f070199
-			public const int info = 2131165593;
+			// aapt resource value: 0x7f0701ab
+			public const int info = 2131165611;
 			
-			// aapt resource value: 0x7f07023b
-			public const int is_mask = 2131165755;
+			// aapt resource value: 0x7f070251
+			public const int is_mask = 2131165777;
 			
 			// aapt resource value: 0x7f070000
 			public const int item_touch_helper_previous_elevation = 2131165184;
@@ -2900,14 +2918,14 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700dc
 			public const int left_layout = 2131165404;
 			
-			// aapt resource value: 0x7f070193
-			public const int line1 = 2131165587;
+			// aapt resource value: 0x7f0701a5
+			public const int line1 = 2131165605;
 			
-			// aapt resource value: 0x7f070197
-			public const int line3 = 2131165591;
+			// aapt resource value: 0x7f0701a9
+			public const int line3 = 2131165609;
 			
-			// aapt resource value: 0x7f070274
-			public const int line_width = 2131165812;
+			// aapt resource value: 0x7f07028a
+			public const int line_width = 2131165834;
 			
 			// aapt resource value: 0x7f07013f
 			public const int linearLayout1 = 2131165503;
@@ -2918,29 +2936,29 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070029
 			public const int list_item = 2131165225;
 			
-			// aapt resource value: 0x7f0701a6
-			public const int list_item_distance = 2131165606;
+			// aapt resource value: 0x7f0701b9
+			public const int list_item_distance = 2131165625;
 			
-			// aapt resource value: 0x7f0701a4
-			public const int list_item_image = 2131165604;
+			// aapt resource value: 0x7f0701b7
+			public const int list_item_image = 2131165623;
 			
-			// aapt resource value: 0x7f0701a7
-			public const int list_item_subtitle = 2131165607;
+			// aapt resource value: 0x7f0701ba
+			public const int list_item_subtitle = 2131165626;
 			
-			// aapt resource value: 0x7f0701a5
-			public const int list_item_text = 2131165605;
+			// aapt resource value: 0x7f0701b8
+			public const int list_item_text = 2131165624;
 			
 			// aapt resource value: 0x7f070054
 			public const int list_view = 2131165268;
 			
-			// aapt resource value: 0x7f070188
-			public const int local_tile_cache_size = 2131165576;
+			// aapt resource value: 0x7f07019a
+			public const int local_tile_cache_size = 2131165594;
 			
-			// aapt resource value: 0x7f070277
-			public const int log_file_type = 2131165815;
+			// aapt resource value: 0x7f07028d
+			public const int log_file_type = 2131165837;
 			
-			// aapt resource value: 0x7f070275
-			public const int log_type = 2131165813;
+			// aapt resource value: 0x7f07028b
+			public const int log_type = 2131165835;
 			
 			// aapt resource value: 0x7f070065
 			public const int longitude = 2131165285;
@@ -2948,11 +2966,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070064
 			public const int longitude_field = 2131165284;
 			
-			// aapt resource value: 0x7f070265
-			public const int map_bearing = 2131165797;
+			// aapt resource value: 0x7f07027b
+			public const int map_bearing = 2131165819;
 			
-			// aapt resource value: 0x7f07018c
-			public const int map_cache_seconds = 2131165580;
+			// aapt resource value: 0x7f07019e
+			public const int map_cache_seconds = 2131165598;
 			
 			// aapt resource value: 0x7f070059
 			public const int map_container = 2131165273;
@@ -2960,14 +2978,14 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700cb
 			public const int map_layout_root = 2131165387;
 			
-			// aapt resource value: 0x7f070263
-			public const int map_position_latitude = 2131165795;
+			// aapt resource value: 0x7f070279
+			public const int map_position_latitude = 2131165817;
 			
-			// aapt resource value: 0x7f070264
-			public const int map_position_longitude = 2131165796;
+			// aapt resource value: 0x7f07027a
+			public const int map_position_longitude = 2131165818;
 			
-			// aapt resource value: 0x7f070257
-			public const int map_state = 2131165783;
+			// aapt resource value: 0x7f07026d
+			public const int map_state = 2131165805;
 			
 			// aapt resource value: 0x7f07016f
 			public const int map_style_day = 2131165551;
@@ -2984,26 +3002,29 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700d1
 			public const int map_styles = 2131165393;
 			
-			// aapt resource value: 0x7f07028e
-			public const int map_version = 2131165838;
+			// aapt resource value: 0x7f0702a4
+			public const int map_version = 2131165860;
 			
-			// aapt resource value: 0x7f070262
-			public const int map_zoom = 2131165794;
+			// aapt resource value: 0x7f070278
+			public const int map_zoom = 2131165816;
 			
-			// aapt resource value: 0x7f07023c
-			public const int masked_object_scale = 2131165756;
+			// aapt resource value: 0x7f070252
+			public const int masked_object_scale = 2131165778;
 			
-			// aapt resource value: 0x7f0701b5
-			public const int max_distance_after_turn = 2131165621;
+			// aapt resource value: 0x7f0701c8
+			public const int max_distance_after_turn = 2131165640;
 			
-			// aapt resource value: 0x7f0701b3
-			public const int max_gps_accuracy = 2131165619;
+			// aapt resource value: 0x7f0701c6
+			public const int max_gps_accuracy = 2131165638;
 			
-			// aapt resource value: 0x7f070292
-			public const int max_zoom = 2131165842;
+			// aapt resource value: 0x7f0702a8
+			public const int max_zoom = 2131165864;
 			
 			// aapt resource value: 0x7f070191
-			public const int media_actions = 2131165585;
+			public const int max_zoom_layer = 2131165585;
+			
+			// aapt resource value: 0x7f0701a3
+			public const int media_actions = 2131165603;
 			
 			// aapt resource value: 0x7f070128
 			public const int menu_back_follower_mode_button = 2131165480;
@@ -3020,38 +3041,41 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700e0
 			public const int middle_layout = 2131165408;
 			
-			// aapt resource value: 0x7f0701b4
-			public const int min_speed_ignore_dist = 2131165620;
+			// aapt resource value: 0x7f0701c7
+			public const int min_speed_ignore_dist = 2131165639;
 			
-			// aapt resource value: 0x7f070291
-			public const int min_zoom = 2131165841;
+			// aapt resource value: 0x7f0702a7
+			public const int min_zoom = 2131165863;
 			
-			// aapt resource value: 0x7f0701f7
-			public const int mode_0 = 2131165687;
+			// aapt resource value: 0x7f070190
+			public const int min_zoom_layer = 2131165584;
 			
-			// aapt resource value: 0x7f0701f8
-			public const int mode_1 = 2131165688;
+			// aapt resource value: 0x7f07020d
+			public const int mode_0 = 2131165709;
 			
-			// aapt resource value: 0x7f0701f9
-			public const int mode_2 = 2131165689;
+			// aapt resource value: 0x7f07020e
+			public const int mode_1 = 2131165710;
 			
-			// aapt resource value: 0x7f0701fa
-			public const int mode_3 = 2131165690;
+			// aapt resource value: 0x7f07020f
+			public const int mode_2 = 2131165711;
 			
-			// aapt resource value: 0x7f0701fb
-			public const int mode_4 = 2131165691;
+			// aapt resource value: 0x7f070210
+			public const int mode_3 = 2131165712;
 			
-			// aapt resource value: 0x7f0701fc
-			public const int mode_5 = 2131165692;
+			// aapt resource value: 0x7f070211
+			public const int mode_4 = 2131165713;
 			
-			// aapt resource value: 0x7f0701fd
-			public const int mode_6 = 2131165693;
+			// aapt resource value: 0x7f070212
+			public const int mode_5 = 2131165714;
+			
+			// aapt resource value: 0x7f070213
+			public const int mode_6 = 2131165715;
 			
 			// aapt resource value: 0x7f070015
 			public const int multiply = 2131165205;
 			
-			// aapt resource value: 0x7f070290
-			public const int namebrowser_version = 2131165840;
+			// aapt resource value: 0x7f0702a6
+			public const int namebrowser_version = 2131165862;
 			
 			// aapt resource value: 0x7f070112
 			public const int nav_settings_first_row = 2131165458;
@@ -3206,8 +3230,8 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070020
 			public const int never = 2131165216;
 			
-			// aapt resource value: 0x7f070261
-			public const int new_instance = 2131165793;
+			// aapt resource value: 0x7f070277
+			public const int new_instance = 2131165815;
 			
 			// aapt resource value: 0x7f0700fc
 			public const int next_advice_distance_text = 2131165436;
@@ -3224,8 +3248,8 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700fa
 			public const int next_image_turn_advice_distance_layout = 2131165434;
 			
-			// aapt resource value: 0x7f0701a1
-			public const int no_results_view = 2131165601;
+			// aapt resource value: 0x7f0701b3
+			public const int no_results_view = 2131165619;
 			
 			// aapt resource value: 0x7f07000f
 			public const int none = 2131165199;
@@ -3233,47 +3257,50 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07000b
 			public const int normal = 2131165195;
 			
-			// aapt resource value: 0x7f070238
-			public const int number_of_points = 2131165752;
+			// aapt resource value: 0x7f07024e
+			public const int number_of_points = 2131165774;
 			
-			// aapt resource value: 0x7f0701ae
-			public const int number_of_turns = 2131165614;
+			// aapt resource value: 0x7f0701c1
+			public const int number_of_turns = 2131165633;
 			
-			// aapt resource value: 0x7f070243
-			public const int objects_over_annotations = 2131165763;
+			// aapt resource value: 0x7f070259
+			public const int objects_over_annotations = 2131165785;
 			
-			// aapt resource value: 0x7f070240
-			public const int offset_x = 2131165760;
+			// aapt resource value: 0x7f070256
+			public const int offset_x = 2131165782;
 			
-			// aapt resource value: 0x7f070241
-			public const int offset_y = 2131165761;
+			// aapt resource value: 0x7f070257
+			public const int offset_y = 2131165783;
 			
-			// aapt resource value: 0x7f07025b
-			public const int one_ways = 2131165787;
+			// aapt resource value: 0x7f070271
+			public const int one_ways = 2131165809;
 			
 			// aapt resource value: 0x7f07005a
 			public const int onebox_fragment = 2131165274;
 			
-			// aapt resource value: 0x7f0701a3
-			public const int onebox_list = 2131165603;
+			// aapt resource value: 0x7f0701b5
+			public const int onebox_list = 2131165621;
 			
-			// aapt resource value: 0x7f0701a0
-			public const int onebox_recycle_view = 2131165600;
+			// aapt resource value: 0x7f0701b2
+			public const int onebox_recycle_view = 2131165618;
 			
-			// aapt resource value: 0x7f07023a
-			public const int outline_color = 2131165754;
+			// aapt resource value: 0x7f07018c
+			public const int order_idx_layer = 2131165580;
 			
-			// aapt resource value: 0x7f070272
-			public const int outline_pixels_skip = 2131165810;
+			// aapt resource value: 0x7f070250
+			public const int outline_color = 2131165776;
 			
-			// aapt resource value: 0x7f070271
-			public const int outline_pixels_solid = 2131165809;
+			// aapt resource value: 0x7f070288
+			public const int outline_pixels_skip = 2131165832;
 			
-			// aapt resource value: 0x7f070270
-			public const int outline_width = 2131165808;
+			// aapt resource value: 0x7f070287
+			public const int outline_pixels_solid = 2131165831;
 			
-			// aapt resource value: 0x7f07026a
-			public const int overlay_id = 2131165802;
+			// aapt resource value: 0x7f070286
+			public const int outline_width = 2131165830;
+			
+			// aapt resource value: 0x7f070280
+			public const int overlay_id = 2131165824;
 			
 			// aapt resource value: 0x7f0700df
 			public const int package_name = 2131165407;
@@ -3281,26 +3308,26 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700de
 			public const int package_size = 2131165406;
 			
-			// aapt resource value: 0x7f070221
-			public const int padding_bottom = 2131165729;
+			// aapt resource value: 0x7f070237
+			public const int padding_bottom = 2131165751;
 			
-			// aapt resource value: 0x7f070220
-			public const int padding_height = 2131165728;
+			// aapt resource value: 0x7f070236
+			public const int padding_height = 2131165750;
 			
-			// aapt resource value: 0x7f070222
-			public const int padding_top = 2131165730;
+			// aapt resource value: 0x7f070238
+			public const int padding_top = 2131165752;
 			
-			// aapt resource value: 0x7f07021f
-			public const int padding_width = 2131165727;
+			// aapt resource value: 0x7f070235
+			public const int padding_width = 2131165749;
 			
-			// aapt resource value: 0x7f070250
-			public const int panning = 2131165776;
+			// aapt resource value: 0x7f070266
+			public const int panning = 2131165798;
 			
 			// aapt resource value: 0x7f07002e
 			public const int parentPanel = 2131165230;
 			
-			// aapt resource value: 0x7f07027b
-			public const int pause_logging = 2131165819;
+			// aapt resource value: 0x7f070291
+			public const int pause_logging = 2131165841;
 			
 			// aapt resource value: 0x7f070135
 			public const int pedestrian_compass_panel_image_view = 2131165493;
@@ -3311,29 +3338,29 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700e6
 			public const int percentage = 2131165414;
 			
-			// aapt resource value: 0x7f0701b7
-			public const int play_audio_warning = 2131165623;
+			// aapt resource value: 0x7f0701ca
+			public const int play_audio_warning = 2131165642;
 			
-			// aapt resource value: 0x7f0701b1
-			public const int poi_location = 2131165617;
+			// aapt resource value: 0x7f0701c4
+			public const int poi_location = 2131165636;
 			
-			// aapt resource value: 0x7f07025a
-			public const int poi_options = 2131165786;
+			// aapt resource value: 0x7f070270
+			public const int poi_options = 2131165808;
 			
-			// aapt resource value: 0x7f070267
-			public const int polygon_id = 2131165799;
+			// aapt resource value: 0x7f07027d
+			public const int polygon_id = 2131165821;
 			
-			// aapt resource value: 0x7f070273
-			public const int polygon_points = 2131165811;
+			// aapt resource value: 0x7f070289
+			public const int polygon_points = 2131165833;
 			
-			// aapt resource value: 0x7f070268
-			public const int polyline = 2131165800;
+			// aapt resource value: 0x7f07027e
+			public const int polyline = 2131165822;
 			
 			// aapt resource value: 0x7f07017d
 			public const int popup_layout = 2131165565;
 			
-			// aapt resource value: 0x7f070278
-			public const int position_logs_path = 2131165816;
+			// aapt resource value: 0x7f07028e
+			public const int position_logs_path = 2131165838;
 			
 			// aapt resource value: 0x7f070149
 			public const int position_me_button = 2131165513;
@@ -3410,32 +3437,38 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070142
 			public const int real_reach_vehicle_layout = 2131165506;
 			
-			// aapt resource value: 0x7f070228
-			public const int red_seekbar = 2131165736;
+			// aapt resource value: 0x7f07023e
+			public const int red_seekbar = 2131165758;
 			
-			// aapt resource value: 0x7f0701aa
-			public const int refresh_margin = 2131165610;
+			// aapt resource value: 0x7f0701bd
+			public const int refresh_margin = 2131165629;
 			
-			// aapt resource value: 0x7f07026c
-			public const int remove_overlay = 2131165804;
+			// aapt resource value: 0x7f070197
+			public const int remove_data_world_layer = 2131165591;
 			
-			// aapt resource value: 0x7f0701fe
-			public const int restriction_mode_0 = 2131165694;
+			// aapt resource value: 0x7f070282
+			public const int remove_overlay = 2131165826;
 			
-			// aapt resource value: 0x7f0701ff
-			public const int restriction_mode_1 = 2131165695;
+			// aapt resource value: 0x7f070196
+			public const int remove_world_layer = 2131165590;
 			
-			// aapt resource value: 0x7f070200
-			public const int restriction_mode_2 = 2131165696;
+			// aapt resource value: 0x7f070214
+			public const int restriction_mode_0 = 2131165716;
 			
-			// aapt resource value: 0x7f070201
-			public const int restriction_mode_3 = 2131165697;
+			// aapt resource value: 0x7f070215
+			public const int restriction_mode_1 = 2131165717;
 			
-			// aapt resource value: 0x7f070202
-			public const int restriction_mode_4 = 2131165698;
+			// aapt resource value: 0x7f070216
+			public const int restriction_mode_2 = 2131165718;
 			
-			// aapt resource value: 0x7f07027a
-			public const int resume_logging = 2131165818;
+			// aapt resource value: 0x7f070217
+			public const int restriction_mode_3 = 2131165719;
+			
+			// aapt resource value: 0x7f070218
+			public const int restriction_mode_4 = 2131165720;
+			
+			// aapt resource value: 0x7f070290
+			public const int resume_logging = 2131165840;
 			
 			// aapt resource value: 0x7f070066
 			public const int reverse_geocode_button = 2131165286;
@@ -3449,161 +3482,161 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070103
 			public const int roadblock_list = 2131165443;
 			
-			// aapt resource value: 0x7f07024f
-			public const int rotation = 2131165775;
+			// aapt resource value: 0x7f070265
+			public const int rotation = 2131165797;
 			
-			// aapt resource value: 0x7f0701e3
-			public const int rounting_advice_list = 2131165667;
-			
-			// aapt resource value: 0x7f0701de
-			public const int rounting_after_rerouting = 2131165662;
-			
-			// aapt resource value: 0x7f0701ee
-			public const int rounting_block_road = 2131165678;
-			
-			// aapt resource value: 0x7f0701ed
-			public const int rounting_block_road_distance = 2131165677;
-			
-			// aapt resource value: 0x7f0701ea
-			public const int rounting_bottom_inset = 2131165674;
-			
-			// aapt resource value: 0x7f0701e7
-			public const int rounting_calculate_route = 2131165671;
-			
-			// aapt resource value: 0x7f0701f2
-			public const int rounting_clear_all_routes_from_cache = 2131165682;
-			
-			// aapt resource value: 0x7f0701f6
-			public const int rounting_clear_routes = 2131165686;
-			
-			// aapt resource value: 0x7f0701e4
-			public const int rounting_coordinates = 2131165668;
-			
-			// aapt resource value: 0x7f0701dd
-			public const int rounting_corridor_download = 2131165661;
-			
-			// aapt resource value: 0x7f0701d6
-			public const int rounting_corridor_width = 2131165654;
-			
-			// aapt resource value: 0x7f0701e5
-			public const int rounting_country_codes = 2131165669;
-			
-			// aapt resource value: 0x7f0701c7
-			public const int rounting_dest_latitude = 2131165639;
-			
-			// aapt resource value: 0x7f0701c8
-			public const int rounting_dest_longitude = 2131165640;
-			
-			// aapt resource value: 0x7f0701d8
-			public const int rounting_destination_is_point = 2131165656;
-			
-			// aapt resource value: 0x7f0701db
-			public const int rounting_distance = 2131165659;
-			
-			// aapt resource value: 0x7f0701d5
-			public const int rounting_download_route_corridor = 2131165653;
-			
-			// aapt resource value: 0x7f0701dc
-			public const int rounting_estimated_time = 2131165660;
-			
-			// aapt resource value: 0x7f0701e1
-			public const int rounting_ferrylines = 2131165665;
-			
-			// aapt resource value: 0x7f0701f3
-			public const int rounting_get_advise_list = 2131165683;
-			
-			// aapt resource value: 0x7f0701e0
-			public const int rounting_highways = 2131165664;
-			
-			// aapt resource value: 0x7f0701e9
-			public const int rounting_left_inset = 2131165673;
-			
-			// aapt resource value: 0x7f0701f1
-			public const int rounting_load_route_from_cache = 2131165681;
-			
-			// aapt resource value: 0x7f0701c9
-			public const int rounting_longpress_destination = 2131165641;
-			
-			// aapt resource value: 0x7f0701c6
-			public const int rounting_longpress_start = 2131165638;
-			
-			// aapt resource value: 0x7f0701ca
-			public const int rounting_nrroutes = 2131165642;
-			
-			// aapt resource value: 0x7f0701d0
-			public const int rounting_request_advices = 2131165648;
-			
-			// aapt resource value: 0x7f0701d2
-			public const int rounting_request_country_code = 2131165650;
-			
-			// aapt resource value: 0x7f0701f5
-			public const int rounting_request_country_code_action = 2131165685;
-			
-			// aapt resource value: 0x7f0701d1
-			public const int rounting_request_extend_route = 2131165649;
-			
-			// aapt resource value: 0x7f0701eb
-			public const int rounting_right_inset = 2131165675;
-			
-			// aapt resource value: 0x7f0701cd
-			public const int rounting_route_connection_mode = 2131165645;
+			// aapt resource value: 0x7f0701f9
+			public const int rounting_advice_list = 2131165689;
 			
 			// aapt resource value: 0x7f0701f4
-			public const int rounting_route_coordinates_from_route = 2131165684;
+			public const int rounting_after_rerouting = 2131165684;
 			
-			// aapt resource value: 0x7f0701da
-			public const int rounting_route_id = 2131165658;
+			// aapt resource value: 0x7f070204
+			public const int rounting_block_road = 2131165700;
 			
-			// aapt resource value: 0x7f0701cc
-			public const int rounting_route_mode = 2131165644;
+			// aapt resource value: 0x7f070203
+			public const int rounting_block_road_distance = 2131165699;
 			
-			// aapt resource value: 0x7f0701ce
-			public const int rounting_route_restriction = 2131165646;
+			// aapt resource value: 0x7f070200
+			public const int rounting_bottom_inset = 2131165696;
 			
-			// aapt resource value: 0x7f0701cf
-			public const int rounting_should_be_rendered = 2131165647;
+			// aapt resource value: 0x7f0701fd
+			public const int rounting_calculate_route = 2131165693;
 			
-			// aapt resource value: 0x7f0701c4
-			public const int rounting_start_latitude = 2131165636;
+			// aapt resource value: 0x7f070208
+			public const int rounting_clear_all_routes_from_cache = 2131165704;
 			
-			// aapt resource value: 0x7f0701c5
-			public const int rounting_start_longitude = 2131165637;
+			// aapt resource value: 0x7f07020c
+			public const int rounting_clear_routes = 2131165708;
 			
-			// aapt resource value: 0x7f0701df
-			public const int rounting_toll_roads = 2131165663;
+			// aapt resource value: 0x7f0701fa
+			public const int rounting_coordinates = 2131165690;
 			
-			// aapt resource value: 0x7f0701e8
-			public const int rounting_top_inset = 2131165672;
-			
-			// aapt resource value: 0x7f0701ef
-			public const int rounting_unlock_road = 2131165679;
-			
-			// aapt resource value: 0x7f0701d4
-			public const int rounting_use_slopes = 2131165652;
-			
-			// aapt resource value: 0x7f0701cb
-			public const int rounting_via_points = 2131165643;
-			
-			// aapt resource value: 0x7f0701e2
-			public const int rounting_via_points_on_route = 2131165666;
-			
-			// aapt resource value: 0x7f0701d7
-			public const int rounting_wait_corridor_download = 2131165655;
+			// aapt resource value: 0x7f0701f3
+			public const int rounting_corridor_download = 2131165683;
 			
 			// aapt resource value: 0x7f0701ec
-			public const int rounting_zoom_to_route = 2131165676;
+			public const int rounting_corridor_width = 2131165676;
 			
-			// aapt resource value: 0x7f0701bd
-			public const int route_1 = 2131165629;
+			// aapt resource value: 0x7f0701fb
+			public const int rounting_country_codes = 2131165691;
 			
-			// aapt resource value: 0x7f0701be
-			public const int route_2 = 2131165630;
+			// aapt resource value: 0x7f0701dc
+			public const int rounting_dest_latitude = 2131165660;
+			
+			// aapt resource value: 0x7f0701dd
+			public const int rounting_dest_longitude = 2131165661;
+			
+			// aapt resource value: 0x7f0701ee
+			public const int rounting_destination_is_point = 2131165678;
+			
+			// aapt resource value: 0x7f0701f1
+			public const int rounting_distance = 2131165681;
+			
+			// aapt resource value: 0x7f0701eb
+			public const int rounting_download_route_corridor = 2131165675;
+			
+			// aapt resource value: 0x7f0701f2
+			public const int rounting_estimated_time = 2131165682;
+			
+			// aapt resource value: 0x7f0701f7
+			public const int rounting_ferrylines = 2131165687;
+			
+			// aapt resource value: 0x7f070209
+			public const int rounting_get_advise_list = 2131165705;
+			
+			// aapt resource value: 0x7f0701f6
+			public const int rounting_highways = 2131165686;
+			
+			// aapt resource value: 0x7f0701ff
+			public const int rounting_left_inset = 2131165695;
+			
+			// aapt resource value: 0x7f070207
+			public const int rounting_load_route_from_cache = 2131165703;
+			
+			// aapt resource value: 0x7f0701de
+			public const int rounting_longpress_destination = 2131165662;
+			
+			// aapt resource value: 0x7f0701db
+			public const int rounting_longpress_start = 2131165659;
+			
+			// aapt resource value: 0x7f0701df
+			public const int rounting_nrroutes = 2131165663;
+			
+			// aapt resource value: 0x7f0701e6
+			public const int rounting_request_advices = 2131165670;
+			
+			// aapt resource value: 0x7f0701e8
+			public const int rounting_request_country_code = 2131165672;
+			
+			// aapt resource value: 0x7f07020b
+			public const int rounting_request_country_code_action = 2131165707;
+			
+			// aapt resource value: 0x7f0701e7
+			public const int rounting_request_extend_route = 2131165671;
+			
+			// aapt resource value: 0x7f070201
+			public const int rounting_right_inset = 2131165697;
+			
+			// aapt resource value: 0x7f0701e2
+			public const int rounting_route_connection_mode = 2131165666;
+			
+			// aapt resource value: 0x7f07020a
+			public const int rounting_route_coordinates_from_route = 2131165706;
+			
+			// aapt resource value: 0x7f0701f0
+			public const int rounting_route_id = 2131165680;
+			
+			// aapt resource value: 0x7f0701e1
+			public const int rounting_route_mode = 2131165665;
+			
+			// aapt resource value: 0x7f0701e4
+			public const int rounting_route_restriction = 2131165668;
+			
+			// aapt resource value: 0x7f0701e5
+			public const int rounting_should_be_rendered = 2131165669;
+			
+			// aapt resource value: 0x7f0701d9
+			public const int rounting_start_latitude = 2131165657;
+			
+			// aapt resource value: 0x7f0701da
+			public const int rounting_start_longitude = 2131165658;
+			
+			// aapt resource value: 0x7f0701f5
+			public const int rounting_toll_roads = 2131165685;
+			
+			// aapt resource value: 0x7f0701fe
+			public const int rounting_top_inset = 2131165694;
+			
+			// aapt resource value: 0x7f070205
+			public const int rounting_unlock_road = 2131165701;
+			
+			// aapt resource value: 0x7f0701ea
+			public const int rounting_use_slopes = 2131165674;
+			
+			// aapt resource value: 0x7f0701e0
+			public const int rounting_via_points = 2131165664;
+			
+			// aapt resource value: 0x7f0701f8
+			public const int rounting_via_points_on_route = 2131165688;
+			
+			// aapt resource value: 0x7f0701ed
+			public const int rounting_wait_corridor_download = 2131165677;
+			
+			// aapt resource value: 0x7f070202
+			public const int rounting_zoom_to_route = 2131165698;
+			
+			// aapt resource value: 0x7f0701d0
+			public const int route_1 = 2131165648;
+			
+			// aapt resource value: 0x7f0701d1
+			public const int route_2 = 2131165649;
+			
+			// aapt resource value: 0x7f0701d2
+			public const int route_3 = 2131165650;
 			
 			// aapt resource value: 0x7f0701bf
-			public const int route_3 = 2131165631;
-			
-			// aapt resource value: 0x7f0701ac
-			public const int route_distance = 2131165612;
+			public const int route_distance = 2131165631;
 			
 			// aapt resource value: 0x7f070104
 			public const int route_distance_linear_layout = 2131165444;
@@ -3620,44 +3653,53 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070165
 			public const int route_info_layout = 2131165541;
 			
-			// aapt resource value: 0x7f0701e6
-			public const int routing_actions = 2131165670;
+			// aapt resource value: 0x7f0701fc
+			public const int routing_actions = 2131165692;
 			
-			// aapt resource value: 0x7f0701d3
-			public const int routing_advance_settings_row = 2131165651;
+			// aapt resource value: 0x7f0701e9
+			public const int routing_advance_settings_row = 2131165673;
 			
-			// aapt resource value: 0x7f0701d9
-			public const int routing_route_information_row = 2131165657;
+			// aapt resource value: 0x7f0701d4
+			public const int routing_alternative_route_mode1 = 2131165652;
 			
-			// aapt resource value: 0x7f0701c3
-			public const int routing_title_row = 2131165635;
+			// aapt resource value: 0x7f0701d5
+			public const int routing_alternative_route_mode2 = 2131165653;
 			
-			// aapt resource value: 0x7f07028f
-			public const int routing_version = 2131165839;
+			// aapt resource value: 0x7f0701e3
+			public const int routing_alternative_routes = 2131165667;
 			
-			// aapt resource value: 0x7f0701b2
-			public const int rule_advanced_settings_title = 2131165618;
+			// aapt resource value: 0x7f0701ef
+			public const int routing_route_information_row = 2131165679;
 			
-			// aapt resource value: 0x7f0701ab
-			public const int rule_settings_title = 2131165611;
+			// aapt resource value: 0x7f0701d8
+			public const int routing_title_row = 2131165656;
 			
-			// aapt resource value: 0x7f0701f0
-			public const int save_route_to_cache = 2131165680;
+			// aapt resource value: 0x7f0702a5
+			public const int routing_version = 2131165861;
 			
-			// aapt resource value: 0x7f07020d
-			public const int scale_view_distance_format = 2131165709;
+			// aapt resource value: 0x7f0701c5
+			public const int rule_advanced_settings_title = 2131165637;
 			
-			// aapt resource value: 0x7f07020f
-			public const int scale_view_distance_metric = 2131165711;
+			// aapt resource value: 0x7f0701be
+			public const int rule_settings_title = 2131165630;
 			
-			// aapt resource value: 0x7f070210
-			public const int scale_view_night_miles_feet = 2131165712;
+			// aapt resource value: 0x7f070206
+			public const int save_route_to_cache = 2131165702;
 			
-			// aapt resource value: 0x7f070211
-			public const int scale_view_night_miles_yards = 2131165713;
+			// aapt resource value: 0x7f070223
+			public const int scale_view_distance_format = 2131165731;
 			
-			// aapt resource value: 0x7f07020e
-			public const int scale_view_night_style = 2131165710;
+			// aapt resource value: 0x7f070225
+			public const int scale_view_distance_metric = 2131165733;
+			
+			// aapt resource value: 0x7f070226
+			public const int scale_view_night_miles_feet = 2131165734;
+			
+			// aapt resource value: 0x7f070227
+			public const int scale_view_night_miles_yards = 2131165735;
+			
+			// aapt resource value: 0x7f070224
+			public const int scale_view_night_style = 2131165732;
 			
 			// aapt resource value: 0x7f0700af
 			public const int scale_view_title_row = 2131165359;
@@ -3680,8 +3722,8 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070034
 			public const int scrollView = 2131165236;
 			
-			// aapt resource value: 0x7f07019c
-			public const int search_back_button = 2131165596;
+			// aapt resource value: 0x7f0701ae
+			public const int search_back_button = 2131165614;
 			
 			// aapt resource value: 0x7f070046
 			public const int search_badge = 2131165254;
@@ -3692,23 +3734,23 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070047
 			public const int search_button = 2131165255;
 			
-			// aapt resource value: 0x7f07019e
-			public const int search_clear = 2131165598;
+			// aapt resource value: 0x7f0701b0
+			public const int search_clear = 2131165616;
 			
 			// aapt resource value: 0x7f07004c
 			public const int search_close_btn = 2131165260;
 			
-			// aapt resource value: 0x7f07019b
-			public const int search_container = 2131165595;
+			// aapt resource value: 0x7f0701ad
+			public const int search_container = 2131165613;
 			
 			// aapt resource value: 0x7f070048
 			public const int search_edit_frame = 2131165256;
 			
-			// aapt resource value: 0x7f07019d
-			public const int search_field_editable = 2131165597;
+			// aapt resource value: 0x7f0701af
+			public const int search_field_editable = 2131165615;
 			
-			// aapt resource value: 0x7f07026b
-			public const int search_for_overlay = 2131165803;
+			// aapt resource value: 0x7f070281
+			public const int search_for_overlay = 2131165825;
 			
 			// aapt resource value: 0x7f07004e
 			public const int search_go_btn = 2131165262;
@@ -3734,8 +3776,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070139
 			public const int second_route = 2131165497;
 			
-			// aapt resource value: 0x7f0701a2
-			public const int see_more = 2131165602;
+			// aapt resource value: 0x7f0701b4
+			public const int see_more = 2131165620;
+			
+			// aapt resource value: 0x7f0701b6
+			public const int see_more_results = 2131165622;
 			
 			// aapt resource value: 0x7f070050
 			public const int select_dialog_listview = 2131165264;
@@ -3764,56 +3809,56 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070012
 			public const int showTitle = 2131165202;
 			
-			// aapt resource value: 0x7f07024d
-			public const int show_accuracy_circle = 2131165773;
+			// aapt resource value: 0x7f070263
+			public const int show_accuracy_circle = 2131165795;
 			
-			// aapt resource value: 0x7f07025e
-			public const int show_bicyle_lanes = 2131165790;
+			// aapt resource value: 0x7f070274
+			public const int show_bicyle_lanes = 2131165812;
 			
 			// aapt resource value: 0x7f070150
 			public const int show_both_options = 2131165520;
 			
-			// aapt resource value: 0x7f07026d
-			public const int show_cities = 2131165805;
+			// aapt resource value: 0x7f070283
+			public const int show_cities = 2131165827;
 			
-			// aapt resource value: 0x7f07023f
-			public const int show_compass = 2131165759;
+			// aapt resource value: 0x7f070255
+			public const int show_compass = 2131165781;
 			
-			// aapt resource value: 0x7f07024b
-			public const int show_current_position = 2131165771;
+			// aapt resource value: 0x7f070261
+			public const int show_current_position = 2131165793;
 			
-			// aapt resource value: 0x7f07027d
-			public const int show_frame = 2131165821;
+			// aapt resource value: 0x7f070293
+			public const int show_frame = 2131165843;
 			
-			// aapt resource value: 0x7f07026e
-			public const int show_general_pois = 2131165806;
+			// aapt resource value: 0x7f070284
+			public const int show_general_pois = 2131165828;
 			
-			// aapt resource value: 0x7f07024c
-			public const int show_heading_indicator = 2131165772;
+			// aapt resource value: 0x7f070262
+			public const int show_heading_indicator = 2131165794;
 			
 			// aapt resource value: 0x7f070056
 			public const int show_heat_map = 2131165270;
 			
-			// aapt resource value: 0x7f070260
-			public const int show_house_numbers = 2131165792;
+			// aapt resource value: 0x7f070276
+			public const int show_house_numbers = 2131165814;
 			
-			// aapt resource value: 0x7f07026f
-			public const int show_important_pois = 2131165807;
+			// aapt resource value: 0x7f070285
+			public const int show_important_pois = 2131165829;
 			
-			// aapt resource value: 0x7f070295
-			public const int sort_distance = 2131165845;
+			// aapt resource value: 0x7f0702ab
+			public const int sort_distance = 2131165867;
 			
-			// aapt resource value: 0x7f070296
-			public const int sort_name = 2131165846;
+			// aapt resource value: 0x7f0702ac
+			public const int sort_name = 2131165868;
 			
-			// aapt resource value: 0x7f070294
-			public const int sort_rank = 2131165844;
+			// aapt resource value: 0x7f0702aa
+			public const int sort_rank = 2131165866;
 			
 			// aapt resource value: 0x7f07002d
 			public const int spacer = 2131165229;
 			
-			// aapt resource value: 0x7f07022d
-			public const int span_seekbar = 2131165741;
+			// aapt resource value: 0x7f070243
+			public const int span_seekbar = 2131165763;
 			
 			// aapt resource value: 0x7f0700e8
 			public const int speed = 2131165416;
@@ -3833,17 +3878,20 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070019
 			public const int src_over = 2131165209;
 			
-			// aapt resource value: 0x7f070232
-			public const int start_animation_button = 2131165746;
+			// aapt resource value: 0x7f070188
+			public const int stamen_tile_server = 2131165576;
+			
+			// aapt resource value: 0x7f070248
+			public const int start_animation_button = 2131165768;
 			
 			// aapt resource value: 0x7f07017a
 			public const int start_free_drive_button = 2131165562;
 			
-			// aapt resource value: 0x7f0701af
-			public const int start_location = 2131165615;
+			// aapt resource value: 0x7f0701c2
+			public const int start_location = 2131165634;
 			
-			// aapt resource value: 0x7f070279
-			public const int start_logging = 2131165817;
+			// aapt resource value: 0x7f07028f
+			public const int start_logging = 2131165839;
 			
 			// aapt resource value: 0x7f07013b
 			public const int start_navigation_button = 2131165499;
@@ -3851,35 +3899,35 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700e1
 			public const int start_pause = 2131165409;
 			
-			// aapt resource value: 0x7f0701b9
-			public const int start_poi_tracker = 2131165625;
+			// aapt resource value: 0x7f0701cc
+			public const int start_poi_tracker = 2131165644;
 			
-			// aapt resource value: 0x7f070190
-			public const int status_bar_latest_event_content = 2131165584;
+			// aapt resource value: 0x7f0701a2
+			public const int status_bar_latest_event_content = 2131165602;
 			
-			// aapt resource value: 0x7f070233
-			public const int stop_animation_button = 2131165747;
+			// aapt resource value: 0x7f070249
+			public const int stop_animation_button = 2131165769;
 			
-			// aapt resource value: 0x7f07027c
-			public const int stop_logging = 2131165820;
+			// aapt resource value: 0x7f070292
+			public const int stop_logging = 2131165842;
 			
-			// aapt resource value: 0x7f0701ba
-			public const int stop_poi_tracker = 2131165626;
+			// aapt resource value: 0x7f0701cd
+			public const int stop_poi_tracker = 2131165645;
 			
-			// aapt resource value: 0x7f07025c
-			public const int street_badges = 2131165788;
+			// aapt resource value: 0x7f070272
+			public const int street_badges = 2131165810;
 			
-			// aapt resource value: 0x7f070281
-			public const int style_day = 2131165825;
+			// aapt resource value: 0x7f070297
+			public const int style_day = 2131165847;
 			
-			// aapt resource value: 0x7f070284
-			public const int style_gray = 2131165828;
+			// aapt resource value: 0x7f07029a
+			public const int style_gray = 2131165850;
 			
-			// aapt resource value: 0x7f070282
-			public const int style_night = 2131165826;
+			// aapt resource value: 0x7f070298
+			public const int style_night = 2131165848;
 			
-			// aapt resource value: 0x7f070283
-			public const int style_outdoor = 2131165827;
+			// aapt resource value: 0x7f070299
+			public const int style_outdoor = 2131165849;
 			
 			// aapt resource value: 0x7f07004d
 			public const int submit_area = 2131165261;
@@ -3890,11 +3938,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07000c
 			public const int tabMode = 2131165196;
 			
-			// aapt resource value: 0x7f07027f
-			public const int take_screenshot = 2131165823;
+			// aapt resource value: 0x7f070295
+			public const int take_screenshot = 2131165845;
 			
-			// aapt resource value: 0x7f07023d
-			public const int tap_to_draw = 2131165757;
+			// aapt resource value: 0x7f070253
+			public const int tap_to_draw = 2131165779;
 			
 			// aapt resource value: 0x7f07008c
 			public const int test_open_child_annotation = 2131165324;
@@ -3902,11 +3950,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07008d
 			public const int test_open_child_custompoi = 2131165325;
 			
-			// aapt resource value: 0x7f070198
-			public const int text = 2131165592;
+			// aapt resource value: 0x7f0701aa
+			public const int text = 2131165610;
 			
-			// aapt resource value: 0x7f070196
-			public const int text2 = 2131165590;
+			// aapt resource value: 0x7f0701a8
+			public const int text2 = 2131165608;
 			
 			// aapt resource value: 0x7f070035
 			public const int textSpacerNoButtons = 2131165237;
@@ -3914,8 +3962,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07013a
 			public const int third_route = 2131165498;
 			
-			// aapt resource value: 0x7f070194
-			public const int time = 2131165588;
+			// aapt resource value: 0x7f07018b
+			public const int tile_server_layer = 2131165579;
+			
+			// aapt resource value: 0x7f0701a6
+			public const int time = 2131165606;
 			
 			// aapt resource value: 0x7f0700e7
 			public const int time_left = 2131165415;
@@ -3923,14 +3974,14 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f07002b
 			public const int title = 2131165227;
 			
-			// aapt resource value: 0x7f070227
-			public const int title_row = 2131165735;
+			// aapt resource value: 0x7f07023d
+			public const int title_row = 2131165757;
 			
 			// aapt resource value: 0x7f070030
 			public const int title_template = 2131165232;
 			
-			// aapt resource value: 0x7f070293
-			public const int toolbar = 2131165843;
+			// aapt resource value: 0x7f0702a9
+			public const int toolbar = 2131165865;
 			
 			// aapt resource value: 0x7f07002f
 			public const int topPanel = 2131165231;
@@ -3938,53 +3989,59 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f0700dd
 			public const int top_layout = 2131165405;
 			
-			// aapt resource value: 0x7f070217
-			public const int top_left_latitude = 2131165719;
+			// aapt resource value: 0x7f07022d
+			public const int top_left_latitude = 2131165741;
 			
-			// aapt resource value: 0x7f070218
-			public const int top_left_longitude = 2131165720;
+			// aapt resource value: 0x7f07022e
+			public const int top_left_longitude = 2131165742;
 			
 			// aapt resource value: 0x7f070180
 			public const int top_text = 2131165568;
 			
+			// aapt resource value: 0x7f0701cf
+			public const int track_with_custom_location = 2131165647;
+			
 			// aapt resource value: 0x7f0701bc
-			public const int track_with_custom_location = 2131165628;
+			public const int tracker_radius = 2131165628;
 			
-			// aapt resource value: 0x7f0701a9
-			public const int tracker_radius = 2131165609;
+			// aapt resource value: 0x7f0701bb
+			public const int tracker_settings_title = 2131165627;
 			
-			// aapt resource value: 0x7f0701a8
-			public const int tracker_settings_title = 2131165608;
+			// aapt resource value: 0x7f0702a0
+			public const int trail_alpha = 2131165856;
 			
-			// aapt resource value: 0x7f07028a
-			public const int trail_alpha = 2131165834;
+			// aapt resource value: 0x7f07029f
+			public const int trail_blue = 2131165855;
 			
-			// aapt resource value: 0x7f070289
-			public const int trail_blue = 2131165833;
+			// aapt resource value: 0x7f07029c
+			public const int trail_dotted = 2131165852;
 			
-			// aapt resource value: 0x7f070286
-			public const int trail_dotted = 2131165830;
+			// aapt resource value: 0x7f07029b
+			public const int trail_enabled = 2131165851;
 			
-			// aapt resource value: 0x7f070285
-			public const int trail_enabled = 2131165829;
+			// aapt resource value: 0x7f07029e
+			public const int trail_green = 2131165854;
 			
-			// aapt resource value: 0x7f070288
-			public const int trail_green = 2131165832;
+			// aapt resource value: 0x7f0702a2
+			public const int trail_pedestrian = 2131165858;
 			
-			// aapt resource value: 0x7f07028c
-			public const int trail_pedestrian = 2131165836;
+			// aapt resource value: 0x7f07029d
+			public const int trail_red = 2131165853;
 			
-			// aapt resource value: 0x7f070287
-			public const int trail_red = 2131165831;
+			// aapt resource value: 0x7f07026a
+			public const int trail_settings = 2131165802;
 			
-			// aapt resource value: 0x7f070254
-			public const int trail_settings = 2131165780;
+			// aapt resource value: 0x7f0702a3
+			public const int trail_smooth_level = 2131165859;
 			
-			// aapt resource value: 0x7f07028d
-			public const int trail_smooth_level = 2131165837;
+			// aapt resource value: 0x7f0702a1
+			public const int trail_width = 2131165857;
 			
-			// aapt resource value: 0x7f07028b
-			public const int trail_width = 2131165835;
+			// aapt resource value: 0x7f07018e
+			public const int transparency_layer = 2131165582;
+			
+			// aapt resource value: 0x7f07018a
+			public const int unique_name_layer = 2131165578;
 			
 			// aapt resource value: 0x7f070009
 			public const int up = 2131165193;
@@ -3992,38 +4049,38 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070013
 			public const int useLogo = 2131165203;
 			
-			// aapt resource value: 0x7f070203
-			public const int via_point_info = 2131165699;
+			// aapt resource value: 0x7f070219
+			public const int via_point_info = 2131165721;
 			
 			// aapt resource value: 0x7f070133
 			public const int via_point_text_view = 2131165491;
 			
-			// aapt resource value: 0x7f070209
-			public const int viapoint_add_viapoint = 2131165705;
+			// aapt resource value: 0x7f07021f
+			public const int viapoint_add_viapoint = 2131165727;
 			
-			// aapt resource value: 0x7f070205
-			public const int viapoint_identifier = 2131165701;
+			// aapt resource value: 0x7f07021b
+			public const int viapoint_identifier = 2131165723;
 			
-			// aapt resource value: 0x7f070206
-			public const int viapoint_latitude = 2131165702;
+			// aapt resource value: 0x7f07021c
+			public const int viapoint_latitude = 2131165724;
 			
-			// aapt resource value: 0x7f070207
-			public const int viapoint_longitude = 2131165703;
+			// aapt resource value: 0x7f07021d
+			public const int viapoint_longitude = 2131165725;
 			
-			// aapt resource value: 0x7f070208
-			public const int viapoint_longpress_start = 2131165704;
+			// aapt resource value: 0x7f07021e
+			public const int viapoint_longpress_start = 2131165726;
 			
-			// aapt resource value: 0x7f07020c
-			public const int viapoint_remove_all = 2131165708;
+			// aapt resource value: 0x7f070222
+			public const int viapoint_remove_all = 2131165730;
 			
-			// aapt resource value: 0x7f07020a
-			public const int viapoint_remove_identifier = 2131165706;
+			// aapt resource value: 0x7f070220
+			public const int viapoint_remove_identifier = 2131165728;
 			
-			// aapt resource value: 0x7f07020b
-			public const int viapoint_remove_identifier_viapoint = 2131165707;
+			// aapt resource value: 0x7f070221
+			public const int viapoint_remove_identifier_viapoint = 2131165729;
 			
-			// aapt resource value: 0x7f070204
-			public const int viapoint_title_row = 2131165700;
+			// aapt resource value: 0x7f07021a
+			public const int viapoint_title_row = 2131165722;
 			
 			// aapt resource value: 0x7f07005c
 			public const int view_group_map = 2131165276;
@@ -4031,17 +4088,26 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f070021
 			public const int withText = 2131165217;
 			
+			// aapt resource value: 0x7f070192
+			public const int world_layer_actions_row = 2131165586;
+			
+			// aapt resource value: 0x7f070189
+			public const int world_layer_settings_row = 2131165577;
+			
 			// aapt resource value: 0x7f070014
 			public const int wrap_content = 2131165204;
 			
-			// aapt resource value: 0x7f070256
-			public const int zoom_levels = 2131165782;
+			// aapt resource value: 0x7f07018f
+			public const int zoom_adjust_layer = 2131165583;
 			
-			// aapt resource value: 0x7f07025f
-			public const int zoom_with_center_anchor = 2131165791;
+			// aapt resource value: 0x7f07026c
+			public const int zoom_levels = 2131165804;
 			
-			// aapt resource value: 0x7f070251
-			public const int zooming = 2131165777;
+			// aapt resource value: 0x7f070275
+			public const int zoom_with_center_anchor = 2131165813;
+			
+			// aapt resource value: 0x7f070267
+			public const int zooming = 2131165799;
 			
 			static Id()
 			{
@@ -4379,166 +4445,178 @@ namespace Skobbler.SDKDemo
 			public const int layout_track_element_list_item = 2130903137;
 			
 			// aapt resource value: 0x7f030062
-			public const int map_cache_debug_settings = 2130903138;
+			public const int layout_world_layer_tile = 2130903138;
 			
 			// aapt resource value: 0x7f030063
-			public const int notification_media_action = 2130903139;
+			public const int layout_world_layers = 2130903139;
 			
 			// aapt resource value: 0x7f030064
-			public const int notification_media_cancel_action = 2130903140;
+			public const int map_cache_debug_settings = 2130903140;
 			
 			// aapt resource value: 0x7f030065
-			public const int notification_template_big_media = 2130903141;
+			public const int notification_media_action = 2130903141;
 			
 			// aapt resource value: 0x7f030066
-			public const int notification_template_big_media_narrow = 2130903142;
+			public const int notification_media_cancel_action = 2130903142;
 			
 			// aapt resource value: 0x7f030067
-			public const int notification_template_lines = 2130903143;
+			public const int notification_template_big_media = 2130903143;
 			
 			// aapt resource value: 0x7f030068
-			public const int notification_template_media = 2130903144;
+			public const int notification_template_big_media_narrow = 2130903144;
 			
 			// aapt resource value: 0x7f030069
-			public const int notification_template_part_chronometer = 2130903145;
+			public const int notification_template_lines = 2130903145;
 			
 			// aapt resource value: 0x7f03006a
-			public const int notification_template_part_time = 2130903146;
+			public const int notification_template_media = 2130903146;
 			
 			// aapt resource value: 0x7f03006b
-			public const int onebox_fragment = 2130903147;
+			public const int notification_template_part_chronometer = 2130903147;
 			
 			// aapt resource value: 0x7f03006c
-			public const int onebox_helper_layout = 2130903148;
+			public const int notification_template_part_time = 2130903148;
 			
 			// aapt resource value: 0x7f03006d
-			public const int onebox_see_more = 2130903149;
+			public const int onebox_fragment = 2130903149;
 			
 			// aapt resource value: 0x7f03006e
-			public const int onebox_simple_item = 2130903150;
+			public const int onebox_helper_layout = 2130903150;
 			
 			// aapt resource value: 0x7f03006f
-			public const int onebox_two_line_item = 2130903151;
+			public const int onebox_see_more = 2130903151;
 			
 			// aapt resource value: 0x7f030070
-			public const int poi_tracker_debug_settings = 2130903152;
+			public const int onebox_see_more_results = 2130903152;
 			
 			// aapt resource value: 0x7f030071
-			public const int route_with_custom_points = 2130903153;
+			public const int onebox_simple_item = 2130903153;
 			
 			// aapt resource value: 0x7f030072
-			public const int routing_advice_list_info = 2130903154;
+			public const int onebox_two_line_item = 2130903154;
 			
 			// aapt resource value: 0x7f030073
-			public const int routing_coordinates_list_info = 2130903155;
+			public const int poi_tracker_debug_settings = 2130903155;
 			
 			// aapt resource value: 0x7f030074
-			public const int routing_country_codes_info = 2130903156;
+			public const int route_with_custom_points = 2130903156;
 			
 			// aapt resource value: 0x7f030075
-			public const int routing_debug_kit_customization = 2130903157;
+			public const int routing_advice_list_info = 2130903157;
 			
 			// aapt resource value: 0x7f030076
-			public const int routing_route_connection_mode_option = 2130903158;
+			public const int routing_alternative_routes = 2130903158;
 			
 			// aapt resource value: 0x7f030077
-			public const int routing_route_mode_option = 2130903159;
+			public const int routing_coordinates_list_info = 2130903159;
 			
 			// aapt resource value: 0x7f030078
-			public const int routing_route_restriction_option = 2130903160;
+			public const int routing_country_codes_info = 2130903160;
 			
 			// aapt resource value: 0x7f030079
-			public const int routing_via_point_info = 2130903161;
+			public const int routing_debug_kit_customization = 2130903161;
 			
 			// aapt resource value: 0x7f03007a
-			public const int routing_via_point_option = 2130903162;
+			public const int routing_route_connection_mode_option = 2130903162;
 			
 			// aapt resource value: 0x7f03007b
-			public const int scale_view_customization = 2130903163;
+			public const int routing_route_mode_option = 2130903163;
 			
 			// aapt resource value: 0x7f03007c
-			public const int scale_view_distance_format = 2130903164;
+			public const int routing_route_restriction_option = 2130903164;
 			
 			// aapt resource value: 0x7f03007d
-			public const int select_dialog_item_material = 2130903165;
+			public const int routing_via_point_info = 2130903165;
 			
 			// aapt resource value: 0x7f03007e
-			public const int select_dialog_multichoice_material = 2130903166;
+			public const int routing_via_point_option = 2130903166;
 			
 			// aapt resource value: 0x7f03007f
-			public const int select_dialog_singlechoice_material = 2130903167;
+			public const int scale_view_customization = 2130903167;
 			
 			// aapt resource value: 0x7f030080
-			public const int settings_base = 2130903168;
+			public const int scale_view_distance_format = 2130903168;
 			
 			// aapt resource value: 0x7f030081
-			public const int settings_bounding_box = 2130903169;
+			public const int select_dialog_item_material = 2130903169;
 			
 			// aapt resource value: 0x7f030082
-			public const int settings_camera = 2130903170;
+			public const int select_dialog_multichoice_material = 2130903170;
 			
 			// aapt resource value: 0x7f030083
-			public const int settings_ccp_customization = 2130903171;
+			public const int select_dialog_singlechoice_material = 2130903171;
 			
 			// aapt resource value: 0x7f030084
-			public const int settings_circle = 2130903172;
+			public const int settings_base = 2130903172;
 			
 			// aapt resource value: 0x7f030085
-			public const int settings_color = 2130903173;
+			public const int settings_bounding_box = 2130903173;
 			
 			// aapt resource value: 0x7f030086
-			public const int settings_compass = 2130903174;
+			public const int settings_camera = 2130903174;
 			
 			// aapt resource value: 0x7f030087
-			public const int settings_drawing_order = 2130903175;
+			public const int settings_ccp_customization = 2130903175;
 			
 			// aapt resource value: 0x7f030088
-			public const int settings_follower_mode = 2130903176;
+			public const int settings_circle = 2130903176;
 			
 			// aapt resource value: 0x7f030089
-			public const int settings_map = 2130903177;
+			public const int settings_color = 2130903177;
 			
 			// aapt resource value: 0x7f03008a
-			public const int settings_map_state = 2130903178;
+			public const int settings_compass = 2130903178;
 			
 			// aapt resource value: 0x7f03008b
-			public const int settings_overlays = 2130903179;
+			public const int settings_drawing_order = 2130903179;
 			
 			// aapt resource value: 0x7f03008c
-			public const int settings_poi_display = 2130903180;
+			public const int settings_follower_mode = 2130903180;
 			
 			// aapt resource value: 0x7f03008d
-			public const int settings_polygon = 2130903181;
+			public const int settings_map = 2130903181;
 			
 			// aapt resource value: 0x7f03008e
-			public const int settings_polyline = 2130903182;
+			public const int settings_map_state = 2130903182;
 			
 			// aapt resource value: 0x7f03008f
-			public const int settings_position_file_type = 2130903183;
+			public const int settings_overlays = 2130903183;
 			
 			// aapt resource value: 0x7f030090
-			public const int settings_position_logging = 2130903184;
+			public const int settings_poi_display = 2130903184;
 			
 			// aapt resource value: 0x7f030091
-			public const int settings_screenshot = 2130903185;
+			public const int settings_polygon = 2130903185;
 			
 			// aapt resource value: 0x7f030092
-			public const int settings_style = 2130903186;
+			public const int settings_polyline = 2130903186;
 			
 			// aapt resource value: 0x7f030093
-			public const int settings_trail = 2130903187;
+			public const int settings_position_file_type = 2130903187;
 			
 			// aapt resource value: 0x7f030094
-			public const int settings_version_info = 2130903188;
+			public const int settings_position_logging = 2130903188;
 			
 			// aapt resource value: 0x7f030095
-			public const int settings_zoom_limits = 2130903189;
+			public const int settings_screenshot = 2130903189;
 			
 			// aapt resource value: 0x7f030096
-			public const int standalone_toolbar = 2130903190;
+			public const int settings_style = 2130903190;
 			
 			// aapt resource value: 0x7f030097
-			public const int support_simple_spinner_dropdown_item = 2130903191;
+			public const int settings_trail = 2130903191;
+			
+			// aapt resource value: 0x7f030098
+			public const int settings_version_info = 2130903192;
+			
+			// aapt resource value: 0x7f030099
+			public const int settings_zoom_limits = 2130903193;
+			
+			// aapt resource value: 0x7f03009a
+			public const int standalone_toolbar = 2130903194;
+			
+			// aapt resource value: 0x7f03009b
+			public const int support_simple_spinner_dropdown_item = 2130903195;
 			
 			static Layout()
 			{
@@ -4626,215 +4704,215 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f080012
 			public const int abc_toolbar_collapse_description = 2131230738;
 			
-			// aapt resource value: 0x7f080056
-			public const int actions = 2131230806;
-			
 			// aapt resource value: 0x7f080057
-			public const int add_object = 2131230807;
+			public const int actions = 2131230807;
 			
 			// aapt resource value: 0x7f080058
-			public const int advanced_settings = 2131230808;
+			public const int add_object = 2131230808;
 			
 			// aapt resource value: 0x7f080059
-			public const int aerial_distance = 2131230809;
+			public const int advanced_settings = 2131230809;
 			
 			// aapt resource value: 0x7f08005a
-			public const int alpha = 2131230810;
+			public const int aerial_distance = 2131230810;
 			
 			// aapt resource value: 0x7f08005b
-			public const int animate_bearing = 2131230811;
+			public const int alpha = 2131230811;
 			
 			// aapt resource value: 0x7f08005c
-			public const int animate_bearing_title = 2131230812;
+			public const int animate_bearing = 2131230812;
 			
 			// aapt resource value: 0x7f08005d
-			public const int animate_button = 2131230813;
+			public const int animate_bearing_title = 2131230813;
 			
 			// aapt resource value: 0x7f08005e
-			public const int animate_duration = 2131230814;
+			public const int animate_button = 2131230814;
 			
 			// aapt resource value: 0x7f08005f
-			public const int animate_location = 2131230815;
+			public const int animate_duration = 2131230815;
 			
 			// aapt resource value: 0x7f080060
-			public const int animate_zoom_level = 2131230816;
+			public const int animate_location = 2131230816;
 			
 			// aapt resource value: 0x7f080061
-			public const int animate_zoom_level_title = 2131230817;
+			public const int animate_zoom_level = 2131230817;
 			
 			// aapt resource value: 0x7f080062
-			public const int animation_duration = 2131230818;
+			public const int animate_zoom_level_title = 2131230818;
 			
 			// aapt resource value: 0x7f080063
-			public const int animation_easing_type = 2131230819;
+			public const int animation_duration = 2131230819;
 			
 			// aapt resource value: 0x7f080064
-			public const int animation_settings = 2131230820;
+			public const int animation_easing_type = 2131230820;
 			
 			// aapt resource value: 0x7f080065
-			public const int animation_type = 2131230821;
+			public const int animation_settings = 2131230821;
 			
 			// aapt resource value: 0x7f080066
-			public const int annot_animation_settings = 2131230822;
+			public const int animation_type = 2131230822;
 			
 			// aapt resource value: 0x7f080067
-			public const int annotation_actions = 2131230823;
+			public const int annot_animation_settings = 2131230823;
 			
 			// aapt resource value: 0x7f080068
-			public const int annotation_add = 2131230824;
+			public const int annotation_actions = 2131230824;
 			
 			// aapt resource value: 0x7f080069
-			public const int annotation_bring_to_front = 2131230825;
+			public const int annotation_add = 2131230825;
 			
 			// aapt resource value: 0x7f08006a
-			public const int annotation_clear_all = 2131230826;
+			public const int annotation_bring_to_front = 2131230826;
 			
 			// aapt resource value: 0x7f08006b
-			public const int annotation_color_blue = 2131230827;
+			public const int annotation_clear_all = 2131230827;
 			
 			// aapt resource value: 0x7f08006c
-			public const int annotation_color_destinationflag = 2131230828;
+			public const int annotation_color_blue = 2131230828;
 			
 			// aapt resource value: 0x7f08006d
-			public const int annotation_color_green = 2131230829;
+			public const int annotation_color_destinationflag = 2131230829;
 			
 			// aapt resource value: 0x7f08006e
-			public const int annotation_color_marker = 2131230830;
+			public const int annotation_color_green = 2131230830;
 			
 			// aapt resource value: 0x7f08006f
-			public const int annotation_color_purple = 2131230831;
+			public const int annotation_color_marker = 2131230831;
 			
 			// aapt resource value: 0x7f080070
-			public const int annotation_color_red = 2131230832;
+			public const int annotation_color_purple = 2131230832;
 			
 			// aapt resource value: 0x7f080071
-			public const int annotation_identifier = 2131230833;
+			public const int annotation_color_red = 2131230833;
 			
 			// aapt resource value: 0x7f080072
-			public const int annotation_none = 2131230834;
+			public const int annotation_identifier = 2131230834;
 			
 			// aapt resource value: 0x7f080073
-			public const int annotation_option = 2131230835;
+			public const int annotation_none = 2131230835;
 			
 			// aapt resource value: 0x7f080074
-			public const int annotation_remove = 2131230836;
+			public const int annotation_option = 2131230836;
 			
 			// aapt resource value: 0x7f080075
-			public const int annotation_remove_identifier = 2131230837;
+			public const int annotation_remove = 2131230837;
 			
 			// aapt resource value: 0x7f080076
-			public const int annotation_settings = 2131230838;
+			public const int annotation_remove_identifier = 2131230838;
 			
 			// aapt resource value: 0x7f080077
-			public const int annotation_title = 2131230839;
+			public const int annotation_settings = 2131230839;
 			
 			// aapt resource value: 0x7f080078
-			public const int annotation_type = 2131230840;
+			public const int annotation_title = 2131230840;
 			
 			// aapt resource value: 0x7f080079
-			public const int annotation_update = 2131230841;
+			public const int annotation_type = 2131230841;
 			
 			// aapt resource value: 0x7f08007a
-			public const int annotation_view = 2131230842;
+			public const int annotation_update = 2131230842;
 			
 			// aapt resource value: 0x7f08007b
-			public const int annotation_zoom_limit = 2131230843;
+			public const int annotation_view = 2131230843;
 			
 			// aapt resource value: 0x7f08007c
-			public const int annotations_over_objects = 2131230844;
+			public const int annotation_zoom_limit = 2131230844;
 			
 			// aapt resource value: 0x7f08007d
-			public const int app_name = 2131230845;
+			public const int annotations_over_objects = 2131230845;
 			
 			// aapt resource value: 0x7f08007e
-			public const int autoincrement_ids = 2131230846;
+			public const int app_name = 2131230846;
 			
 			// aapt resource value: 0x7f08007f
-			public const int avoid_bicyclecarry = 2131230847;
+			public const int autoincrement_ids = 2131230847;
 			
 			// aapt resource value: 0x7f080080
-			public const int avoid_bicyclewalk = 2131230848;
+			public const int avoid_bicyclecarry = 2131230848;
 			
 			// aapt resource value: 0x7f080081
-			public const int avoid_ferries = 2131230849;
+			public const int avoid_bicyclewalk = 2131230849;
 			
 			// aapt resource value: 0x7f080082
-			public const int avoid_highways = 2131230850;
+			public const int avoid_ferries = 2131230850;
 			
 			// aapt resource value: 0x7f080083
-			public const int avoid_toll_roads = 2131230851;
+			public const int avoid_highways = 2131230851;
 			
 			// aapt resource value: 0x7f080084
-			public const int bearing = 2131230852;
-			
-			// aapt resource value: 0x7f0801f1
-			public const int bicycle_license_notification_text = 2131231217;
+			public const int avoid_toll_roads = 2131230852;
 			
 			// aapt resource value: 0x7f080085
-			public const int block_road_check = 2131230853;
+			public const int bearing = 2131230853;
+			
+			// aapt resource value: 0x7f080209
+			public const int bicycle_license_notification_text = 2131231241;
 			
 			// aapt resource value: 0x7f080086
-			public const int block_road_mfeet = 2131230854;
+			public const int block_road_check = 2131230854;
 			
 			// aapt resource value: 0x7f080087
-			public const int block_road_mkm = 2131230855;
+			public const int block_road_mfeet = 2131230855;
 			
 			// aapt resource value: 0x7f080088
-			public const int block_road_mmile = 2131230856;
+			public const int block_road_mkm = 2131230856;
 			
 			// aapt resource value: 0x7f080089
-			public const int block_road_myards = 2131230857;
+			public const int block_road_mmile = 2131230857;
 			
 			// aapt resource value: 0x7f08008a
-			public const int block_road_toast = 2131230858;
+			public const int block_road_myards = 2131230858;
 			
 			// aapt resource value: 0x7f08008b
-			public const int blue = 2131230859;
+			public const int block_road_toast = 2131230859;
 			
 			// aapt resource value: 0x7f08008c
-			public const int bottom_right_latitude = 2131230860;
+			public const int blue = 2131230860;
 			
 			// aapt resource value: 0x7f08008d
-			public const int bottom_right_longitude = 2131230861;
+			public const int bottom_right_latitude = 2131230861;
 			
 			// aapt resource value: 0x7f08008e
-			public const int cache_info = 2131230862;
+			public const int bottom_right_longitude = 2131230862;
 			
 			// aapt resource value: 0x7f08008f
-			public const int cache_size = 2131230863;
+			public const int cache_info = 2131230863;
 			
 			// aapt resource value: 0x7f080090
-			public const int calculate_route = 2131230864;
+			public const int cache_size = 2131230864;
 			
 			// aapt resource value: 0x7f080091
-			public const int calculate_routes = 2131230865;
+			public const int calculate_route = 2131230865;
 			
 			// aapt resource value: 0x7f080092
-			public const int callout_view_hide_callout = 2131230866;
+			public const int calculate_routes = 2131230866;
 			
 			// aapt resource value: 0x7f080093
-			public const int callout_view_show_callout = 2131230867;
+			public const int callout_view_hide_callout = 2131230867;
 			
 			// aapt resource value: 0x7f080094
-			public const int callout_view_show_custom_callout = 2131230868;
+			public const int callout_view_show_callout = 2131230868;
 			
 			// aapt resource value: 0x7f080095
-			public const int callout_view_subtitle_text = 2131230869;
+			public const int callout_view_show_custom_callout = 2131230869;
 			
 			// aapt resource value: 0x7f080096
-			public const int callout_view_title = 2131230870;
+			public const int callout_view_subtitle_text = 2131230870;
 			
 			// aapt resource value: 0x7f080097
-			public const int callout_view_title_text = 2131230871;
+			public const int callout_view_title = 2131230871;
 			
 			// aapt resource value: 0x7f080098
-			public const int callout_view_vertical_offset = 2131230872;
+			public const int callout_view_title_text = 2131230872;
 			
 			// aapt resource value: 0x7f080099
-			public const int camera_settings = 2131230873;
+			public const int callout_view_vertical_offset = 2131230873;
 			
 			// aapt resource value: 0x7f08009a
-			public const int cancel_all_downloads = 2131230874;
+			public const int camera_settings = 2131230874;
+			
+			// aapt resource value: 0x7f08009b
+			public const int cancel_all_downloads = 2131230875;
 			
 			// aapt resource value: 0x7f080014
 			public const int cancel_label = 2131230740;
@@ -4866,77 +4944,77 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f08001d
 			public const int category_transport_type = 2131230749;
 			
-			// aapt resource value: 0x7f08009b
-			public const int center = 2131230875;
-			
 			// aapt resource value: 0x7f08009c
-			public const int center_on_current_pos = 2131230876;
+			public const int center = 2131230876;
 			
 			// aapt resource value: 0x7f08009d
-			public const int circle = 2131230877;
+			public const int center_on_current_pos = 2131230877;
 			
 			// aapt resource value: 0x7f08009e
-			public const int cities = 2131230878;
+			public const int circle = 2131230878;
 			
 			// aapt resource value: 0x7f08009f
-			public const int city = 2131230879;
+			public const int cities = 2131230879;
 			
 			// aapt resource value: 0x7f0800a0
-			public const int clear_all_overlays = 2131230880;
+			public const int city = 2131230880;
 			
 			// aapt resource value: 0x7f0800a1
-			public const int clear_screenshot = 2131230881;
+			public const int clear_all_overlays = 2131230881;
 			
 			// aapt resource value: 0x7f0800a2
-			public const int clear_via_point = 2131230882;
+			public const int clear_screenshot = 2131230882;
 			
 			// aapt resource value: 0x7f0800a3
-			public const int close_drawer = 2131230883;
+			public const int clear_via_point = 2131230883;
 			
 			// aapt resource value: 0x7f0800a4
-			public const int compass_options = 2131230884;
+			public const int close_drawer = 2131230884;
 			
 			// aapt resource value: 0x7f0800a5
-			public const int continuous = 2131230885;
+			public const int compass_options = 2131230885;
 			
 			// aapt resource value: 0x7f0800a6
-			public const int continuous_screenshot = 2131230886;
+			public const int continuous = 2131230886;
 			
 			// aapt resource value: 0x7f0800a7
-			public const int country_code = 2131230887;
+			public const int continuous_screenshot = 2131230887;
+			
+			// aapt resource value: 0x7f0800a8
+			public const int country_code = 2131230888;
 			
 			// aapt resource value: 0x7f08001e
 			public const int current_position = 2131230750;
 			
-			// aapt resource value: 0x7f0800a8
-			public const int custom_poi_category = 2131230888;
-			
 			// aapt resource value: 0x7f0800a9
-			public const int custom_poi_title = 2131230889;
+			public const int custom_poi_category = 2131230889;
 			
 			// aapt resource value: 0x7f0800aa
-			public const int custom_poi_type = 2131230890;
+			public const int custom_poi_title = 2131230890;
 			
 			// aapt resource value: 0x7f0800ab
-			public const int custompoi_option = 2131230891;
+			public const int custom_poi_type = 2131230891;
 			
 			// aapt resource value: 0x7f0800ac
-			public const int custompoi_title = 2131230892;
+			public const int custompoi_option = 2131230892;
+			
+			// aapt resource value: 0x7f0800ad
+			public const int custompoi_title = 2131230893;
 			
 			// aapt resource value: 0x7f08001f
 			public const int decrease_speed = 2131230751;
 			
-			// aapt resource value: 0x7f0800ad
-			public const int delete_all_cache = 2131230893;
-			
 			// aapt resource value: 0x7f0800ae
-			public const int delete_cache = 2131230894;
+			public const int delete_all_cache = 2131230894;
 			
 			// aapt resource value: 0x7f0800af
-			public const int delete_older = 2131230895;
+			public const int delete_cache = 2131230895;
 			
 			// aapt resource value: 0x7f0800b0
-			public const int dest_location = 2131230896;
+			public const int delete_older = 2131230896;
+			
+			// aapt resource value: 0x7f0800b1
+			public const int dest_location = 2131230897;
 			
 			// aapt resource value: 0x7f080020
 			public const int destination_label = 2131230752;
@@ -4944,20 +5022,20 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f080021
 			public const int destination_reached_info_text = 2131230753;
 			
-			// aapt resource value: 0x7f0800b1
-			public const int detected_pois = 2131230897;
-			
 			// aapt resource value: 0x7f0800b2
-			public const int detected_pois_list = 2131230898;
+			public const int detected_pois = 2131230898;
 			
 			// aapt resource value: 0x7f0800b3
-			public const int distance = 2131230899;
+			public const int detected_pois_list = 2131230899;
+			
+			// aapt resource value: 0x7f0800b4
+			public const int distance = 2131230900;
 			
 			// aapt resource value: 0x7f080022
 			public const int distance_time = 2131230754;
 			
-			// aapt resource value: 0x7f0800b4
-			public const int dotted = 2131230900;
+			// aapt resource value: 0x7f0800b5
+			public const int dotted = 2131230901;
 			
 			// aapt resource value: 0x7f080023
 			public const int download_cancel = 2131230755;
@@ -4971,38 +5049,38 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f080026
 			public const int download_start = 2131230758;
 			
-			// aapt resource value: 0x7f0800b5
-			public const int draw_on_tap = 2131230901;
-			
-			// aapt resource value: 0x7f0801f4
-			public const int drawer_close = 2131231220;
-			
-			// aapt resource value: 0x7f0801f3
-			public const int drawer_open = 2131231219;
-			
 			// aapt resource value: 0x7f0800b6
-			public const int drawing_order = 2131230902;
+			public const int draw_on_tap = 2131230902;
+			
+			// aapt resource value: 0x7f08020c
+			public const int drawer_close = 2131231244;
+			
+			// aapt resource value: 0x7f08020b
+			public const int drawer_open = 2131231243;
 			
 			// aapt resource value: 0x7f0800b7
-			public const int duration = 2131230903;
+			public const int drawing_order = 2131230903;
 			
 			// aapt resource value: 0x7f0800b8
-			public const int duration_out = 2131230904;
+			public const int duration = 2131230904;
 			
 			// aapt resource value: 0x7f0800b9
-			public const int eliminate_uturn = 2131230905;
+			public const int duration_out = 2131230905;
 			
 			// aapt resource value: 0x7f0800ba
-			public const int enable_3d = 2131230906;
+			public const int eliminate_uturn = 2131230906;
 			
 			// aapt resource value: 0x7f0800bb
-			public const int enable_inertia = 2131230907;
+			public const int enable_3d = 2131230907;
 			
 			// aapt resource value: 0x7f0800bc
-			public const int enabled = 2131230908;
+			public const int enable_inertia = 2131230908;
 			
 			// aapt resource value: 0x7f0800bd
-			public const int end_point_nav = 2131230909;
+			public const int enabled = 2131230909;
+			
+			// aapt resource value: 0x7f0800be
+			public const int end_point_nav = 2131230910;
 			
 			// aapt resource value: 0x7f080027
 			public const int exit_highway_advice_label = 2131230759;
@@ -5016,215 +5094,218 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f08002a
 			public const int feet_label = 2131230762;
 			
-			// aapt resource value: 0x7f0800be
-			public const int fifteen = 2131230910;
-			
 			// aapt resource value: 0x7f0800bf
-			public const int fifteen_mi_h = 2131230911;
+			public const int fifteen = 2131230911;
 			
 			// aapt resource value: 0x7f0800c0
-			public const int fill_color = 2131230912;
+			public const int fifteen_mi_h = 2131230912;
 			
 			// aapt resource value: 0x7f0800c1
-			public const int fit_bounding_box_button = 2131230913;
+			public const int fill_color = 2131230913;
 			
 			// aapt resource value: 0x7f0800c2
-			public const int fit_bounding_box_title = 2131230914;
+			public const int fit_bounding_box_button = 2131230914;
 			
 			// aapt resource value: 0x7f0800c3
-			public const int five = 2131230915;
+			public const int fit_bounding_box_title = 2131230915;
 			
 			// aapt resource value: 0x7f0800c4
-			public const int five_mi_h = 2131230916;
+			public const int five = 2131230916;
 			
 			// aapt resource value: 0x7f0800c5
-			public const int follower_mode = 2131230917;
+			public const int five_mi_h = 2131230917;
 			
 			// aapt resource value: 0x7f0800c6
-			public const int general = 2131230918;
+			public const int follower_mode = 2131230918;
 			
 			// aapt resource value: 0x7f0800c7
-			public const int general_label = 2131230919;
+			public const int general = 2131230919;
 			
 			// aapt resource value: 0x7f0800c8
-			public const int generate_id = 2131230920;
+			public const int general_label = 2131230920;
 			
 			// aapt resource value: 0x7f0800c9
-			public const int go_to_current_position = 2131230921;
+			public const int generate_id = 2131230921;
 			
 			// aapt resource value: 0x7f0800ca
-			public const int gps_accuracy = 2131230922;
+			public const int go_to_current_position = 2131230922;
 			
 			// aapt resource value: 0x7f0800cb
-			public const int gpx_license_notification_text = 2131230923;
+			public const int gps_accuracy = 2131230923;
 			
 			// aapt resource value: 0x7f0800cc
-			public const int gpx_route_1 = 2131230924;
+			public const int gpx_license_notification_text = 2131230924;
 			
 			// aapt resource value: 0x7f0800cd
-			public const int gpx_route_2 = 2131230925;
+			public const int gpx_route_1 = 2131230925;
 			
 			// aapt resource value: 0x7f0800ce
-			public const int gpx_route_3 = 2131230926;
+			public const int gpx_route_2 = 2131230926;
 			
 			// aapt resource value: 0x7f0800cf
-			public const int gpx_route_4 = 2131230927;
+			public const int gpx_route_3 = 2131230927;
 			
 			// aapt resource value: 0x7f0800d0
-			public const int gpx_route_5 = 2131230928;
+			public const int gpx_route_4 = 2131230928;
 			
 			// aapt resource value: 0x7f0800d1
-			public const int green = 2131230929;
+			public const int gpx_route_5 = 2131230929;
 			
-			// aapt resource value: 0x7f0801f2
-			public const int hello_blank_fragment = 2131231218;
+			// aapt resource value: 0x7f0800d2
+			public const int green = 2131230930;
+			
+			// aapt resource value: 0x7f08020a
+			public const int hello_blank_fragment = 2131231242;
 			
 			// aapt resource value: 0x7f08002b
 			public const int hour_value = 2131230763;
 			
-			// aapt resource value: 0x7f0800d2
-			public const int house_number = 2131230930;
-			
 			// aapt resource value: 0x7f0800d3
-			public const int id = 2131230931;
+			public const int house_number = 2131230931;
 			
 			// aapt resource value: 0x7f0800d4
-			public const int image_height = 2131230932;
+			public const int id = 2131230932;
 			
 			// aapt resource value: 0x7f0800d5
-			public const int image_width = 2131230933;
+			public const int image_height = 2131230933;
 			
 			// aapt resource value: 0x7f0800d6
-			public const int important = 2131230934;
+			public const int image_width = 2131230934;
+			
+			// aapt resource value: 0x7f0800d7
+			public const int important = 2131230935;
 			
 			// aapt resource value: 0x7f08002c
 			public const int increase_speed = 2131230764;
 			
-			// aapt resource value: 0x7f0800d7
-			public const int internationalizatio_title = 2131230935;
-			
 			// aapt resource value: 0x7f0800d8
-			public const int internationalization_fallback_option = 2131230936;
+			public const int internationalizatio_title = 2131230936;
 			
 			// aapt resource value: 0x7f0800d9
-			public const int internationalization_primary_option = 2131230937;
+			public const int internationalization_fallback_option = 2131230937;
 			
 			// aapt resource value: 0x7f0800da
-			public const int internationalization_show_both_options = 2131230938;
+			public const int internationalization_primary_option = 2131230938;
 			
 			// aapt resource value: 0x7f0800db
-			public const int internationalization_transliterated = 2131230939;
+			public const int internationalization_show_both_options = 2131230939;
 			
 			// aapt resource value: 0x7f0800dc
-			public const int is_mask = 2131230940;
+			public const int internationalization_transliterated = 2131230940;
+			
+			// aapt resource value: 0x7f0800dd
+			public const int is_mask = 2131230941;
 			
 			// aapt resource value: 0x7f08002d
 			public const int km_label = 2131230765;
 			
-			// aapt resource value: 0x7f0800dd
-			public const int km_m = 2131230941;
+			// aapt resource value: 0x7f0800de
+			public const int km_m = 2131230942;
 			
 			// aapt resource value: 0x7f08002e
 			public const int kmh_label = 2131230766;
 			
-			// aapt resource value: 0x7f0800de
-			public const int label_download = 2131230942;
-			
 			// aapt resource value: 0x7f0800df
-			public const int label_draw = 2131230943;
+			public const int label_download = 2131230943;
 			
 			// aapt resource value: 0x7f0800e0
-			public const int label_heading = 2131230944;
+			public const int label_draw = 2131230944;
 			
 			// aapt resource value: 0x7f0800e1
-			public const int label_parsing_xml = 2131230945;
+			public const int label_heading = 2131230945;
 			
 			// aapt resource value: 0x7f0800e2
-			public const int label_position_me = 2131230946;
+			public const int label_parsing_xml = 2131230946;
 			
 			// aapt resource value: 0x7f0800e3
-			public const int label_route = 2131230947;
+			public const int label_position_me = 2131230947;
 			
 			// aapt resource value: 0x7f0800e4
-			public const int latitude = 2131230948;
+			public const int label_route = 2131230948;
+			
+			// aapt resource value: 0x7f0800e5
+			public const int latitude = 2131230949;
 			
 			// aapt resource value: 0x7f08002f
 			public const int less = 2131230767;
 			
-			// aapt resource value: 0x7f0800e5
-			public const int line_color = 2131230949;
-			
 			// aapt resource value: 0x7f0800e6
-			public const int line_width = 2131230950;
+			public const int line_color = 2131230950;
 			
 			// aapt resource value: 0x7f0800e7
-			public const int log_file_path = 2131230951;
+			public const int line_width = 2131230951;
 			
 			// aapt resource value: 0x7f0800e8
-			public const int log_file_type = 2131230952;
+			public const int log_file_path = 2131230952;
 			
 			// aapt resource value: 0x7f0800e9
-			public const int long_tap_destination_location = 2131230953;
+			public const int log_file_type = 2131230953;
 			
 			// aapt resource value: 0x7f0800ea
-			public const int long_tap_for_position = 2131230954;
+			public const int long_tap_destination_location = 2131230954;
 			
 			// aapt resource value: 0x7f0800eb
-			public const int long_tap_poi_location = 2131230955;
+			public const int long_tap_for_position = 2131230955;
 			
 			// aapt resource value: 0x7f0800ec
-			public const int long_tap_start_location = 2131230956;
+			public const int long_tap_poi_location = 2131230956;
 			
 			// aapt resource value: 0x7f0800ed
-			public const int longitude = 2131230957;
+			public const int long_tap_start_location = 2131230957;
 			
 			// aapt resource value: 0x7f0800ee
-			public const int map_state = 2131230958;
+			public const int longitude = 2131230958;
+			
+			// aapt resource value: 0x7f080208
+			public const int map_instance_created = 2131231240;
 			
 			// aapt resource value: 0x7f0800ef
-			public const int map_style_day = 2131230959;
+			public const int map_state = 2131230959;
 			
 			// aapt resource value: 0x7f0800f0
-			public const int map_style_grayscale = 2131230960;
+			public const int map_style_day = 2131230960;
 			
 			// aapt resource value: 0x7f0800f1
-			public const int map_style_night = 2131230961;
+			public const int map_style_grayscale = 2131230961;
 			
 			// aapt resource value: 0x7f0800f2
-			public const int map_style_outdoor = 2131230962;
+			public const int map_style_night = 2131230962;
 			
 			// aapt resource value: 0x7f0800f3
-			public const int map_version = 2131230963;
+			public const int map_style_outdoor = 2131230963;
 			
 			// aapt resource value: 0x7f0800f4
-			public const int masked_object_scale = 2131230964;
+			public const int map_version = 2131230964;
 			
 			// aapt resource value: 0x7f0800f5
-			public const int max_distance_after_turn = 2131230965;
+			public const int masked_object_scale = 2131230965;
 			
 			// aapt resource value: 0x7f0800f6
-			public const int max_zoom = 2131230966;
+			public const int max_distance_after_turn = 2131230966;
+			
+			// aapt resource value: 0x7f0800f7
+			public const int max_zoom = 2131230967;
 			
 			// aapt resource value: 0x7f080030
 			public const int meters_label = 2131230768;
 			
-			// aapt resource value: 0x7f0800f7
-			public const int mi_feet = 2131230967;
+			// aapt resource value: 0x7f0800f8
+			public const int mi_feet = 2131230968;
 			
 			// aapt resource value: 0x7f080031
 			public const int mi_label = 2131230769;
 			
-			// aapt resource value: 0x7f0800f8
-			public const int mi_yards = 2131230968;
-			
 			// aapt resource value: 0x7f0800f9
-			public const int min_speed_ignore = 2131230969;
+			public const int mi_yards = 2131230969;
 			
 			// aapt resource value: 0x7f0800fa
-			public const int min_zoom = 2131230970;
+			public const int min_speed_ignore = 2131230970;
 			
 			// aapt resource value: 0x7f0800fb
-			public const int minimum_tap_zoom = 2131230971;
+			public const int min_zoom = 2131230971;
+			
+			// aapt resource value: 0x7f0800fc
+			public const int minimum_tap_zoom = 2131230972;
 			
 			// aapt resource value: 0x7f080032
 			public const int minute_value = 2131230770;
@@ -5235,11 +5316,11 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f080034
 			public const int mph_label = 2131230772;
 			
-			// aapt resource value: 0x7f0800fc
-			public const int namebrowser_version = 2131230972;
-			
 			// aapt resource value: 0x7f0800fd
-			public const int navigate = 2131230973;
+			public const int namebrowser_version = 2131230973;
+			
+			// aapt resource value: 0x7f0800fe
+			public const int navigate = 2131230974;
 			
 			// aapt resource value: 0x7f080035
 			public const int navigate_settings_2d_view = 2131230773;
@@ -5280,326 +5361,329 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f080041
 			public const int navigate_settings_volume = 2131230785;
 			
-			// aapt resource value: 0x7f0800fe
-			public const int new_instance = 2131230974;
-			
 			// aapt resource value: 0x7f0800ff
-			public const int no = 2131230975;
+			public const int new_instance = 2131230975;
 			
 			// aapt resource value: 0x7f080100
-			public const int no_internet_connection = 2131230976;
+			public const int no = 2131230976;
 			
 			// aapt resource value: 0x7f080101
-			public const int no_offline_packages = 2131230977;
+			public const int no_internet_connection = 2131230977;
+			
+			// aapt resource value: 0x7f080102
+			public const int no_offline_packages = 2131230978;
 			
 			// aapt resource value: 0x7f080042
 			public const int no_position_available = 2131230786;
 			
-			// aapt resource value: 0x7f080102
-			public const int no_position_message = 2131230978;
+			// aapt resource value: 0x7f080103
+			public const int no_position_message = 2131230979;
 			
 			// aapt resource value: 0x7f080043
 			public const int no_results = 2131230787;
 			
-			// aapt resource value: 0x7f080103
-			public const int number_of_points = 2131230979;
-			
 			// aapt resource value: 0x7f080104
-			public const int number_turns = 2131230980;
+			public const int number_of_points = 2131230980;
 			
 			// aapt resource value: 0x7f080105
-			public const int objects_over_annotations = 2131230981;
+			public const int number_turns = 2131230981;
 			
 			// aapt resource value: 0x7f080106
-			public const int off_button = 2131230982;
+			public const int objects_over_annotations = 2131230982;
 			
 			// aapt resource value: 0x7f080107
-			public const int offset_X = 2131230983;
+			public const int off_button = 2131230983;
 			
 			// aapt resource value: 0x7f080108
-			public const int offset_Y = 2131230984;
+			public const int offset_X = 2131230984;
 			
 			// aapt resource value: 0x7f080109
-			public const int offset_x = 2131230985;
+			public const int offset_Y = 2131230985;
 			
 			// aapt resource value: 0x7f08010a
-			public const int offset_y = 2131230986;
+			public const int offset_x = 2131230986;
+			
+			// aapt resource value: 0x7f08010b
+			public const int offset_y = 2131230987;
 			
 			// aapt resource value: 0x7f080044
 			public const int ok_label = 2131230788;
 			
-			// aapt resource value: 0x7f08010b
-			public const int ok_text = 2131230987;
-			
 			// aapt resource value: 0x7f08010c
-			public const int on_button = 2131230988;
+			public const int ok_text = 2131230988;
 			
 			// aapt resource value: 0x7f08010d
-			public const int one_route = 2131230989;
+			public const int on_button = 2131230989;
 			
 			// aapt resource value: 0x7f08010e
-			public const int one_ways = 2131230990;
+			public const int one_route = 2131230990;
 			
 			// aapt resource value: 0x7f08010f
-			public const int open_drawer = 2131230991;
+			public const int one_ways = 2131230991;
 			
 			// aapt resource value: 0x7f080110
-			public const int operations = 2131230992;
-			
-			// aapt resource value: 0x7f0801e6
-			public const int option_address_search = 2131231206;
-			
-			// aapt resource value: 0x7f0801e2
-			public const int option_alternative_routes = 2131231202;
+			public const int open_drawer = 2131230992;
 			
 			// aapt resource value: 0x7f080111
-			public const int option_animate = 2131230993;
+			public const int operations = 2131230993;
+			
+			// aapt resource value: 0x7f0801fd
+			public const int option_address_search = 2131231229;
+			
+			// aapt resource value: 0x7f0801f9
+			public const int option_alternative_routes = 2131231225;
 			
 			// aapt resource value: 0x7f080112
-			public const int option_annotation_POI = 2131230994;
-			
-			// aapt resource value: 0x7f0801ea
-			public const int option_annotations = 2131231210;
+			public const int option_animate = 2131230994;
 			
 			// aapt resource value: 0x7f080113
-			public const int option_bounding_box = 2131230995;
+			public const int option_annotation_POI = 2131230995;
+			
+			// aapt resource value: 0x7f080201
+			public const int option_annotations = 2131231233;
 			
 			// aapt resource value: 0x7f080114
-			public const int option_callout_view = 2131230996;
-			
-			// aapt resource value: 0x7f0801ed
-			public const int option_car_navigation_ui = 2131231213;
-			
-			// aapt resource value: 0x7f0801e7
-			public const int option_category_search = 2131231207;
+			public const int option_bounding_box = 2131230996;
 			
 			// aapt resource value: 0x7f080115
-			public const int option_ccp_animation_custom_view = 2131230997;
+			public const int option_callout_view = 2131230997;
 			
-			// aapt resource value: 0x7f0801e5
-			public const int option_group_searches = 2131231205;
+			// aapt resource value: 0x7f080204
+			public const int option_car_navigation_ui = 2131231236;
 			
-			// aapt resource value: 0x7f0801ef
-			public const int option_heat_map = 2131231215;
+			// aapt resource value: 0x7f0801fe
+			public const int option_category_search = 2131231230;
 			
 			// aapt resource value: 0x7f080116
-			public const int option_internalization = 2131230998;
+			public const int option_ccp_animation_custom_view = 2131230998;
+			
+			// aapt resource value: 0x7f0801fc
+			public const int option_group_searches = 2131231228;
+			
+			// aapt resource value: 0x7f080206
+			public const int option_heat_map = 2131231238;
 			
 			// aapt resource value: 0x7f080117
-			public const int option_last_rendered_frame = 2131230999;
+			public const int option_internalization = 2131230999;
 			
 			// aapt resource value: 0x7f080118
-			public const int option_map_cache = 2131231000;
-			
-			// aapt resource value: 0x7f0801dd
-			public const int option_map_creator = 2131231197;
-			
-			// aapt resource value: 0x7f0801db
-			public const int option_map_display = 2131231195;
+			public const int option_last_rendered_frame = 2131231000;
 			
 			// aapt resource value: 0x7f080119
-			public const int option_map_style = 2131231001;
+			public const int option_map_cache = 2131231001;
 			
-			// aapt resource value: 0x7f0801dc
-			public const int option_map_styles = 2131231196;
+			// aapt resource value: 0x7f0801f4
+			public const int option_map_creator = 2131231220;
 			
-			// aapt resource value: 0x7f0801df
-			public const int option_map_updates = 2131231199;
+			// aapt resource value: 0x7f0801f2
+			public const int option_map_display = 2131231218;
 			
 			// aapt resource value: 0x7f08011a
-			public const int option_map_version_information = 2131231002;
+			public const int option_map_style = 2131231002;
+			
+			// aapt resource value: 0x7f0801f3
+			public const int option_map_styles = 2131231219;
+			
+			// aapt resource value: 0x7f0801f6
+			public const int option_map_updates = 2131231222;
 			
 			// aapt resource value: 0x7f08011b
-			public const int option_map_view_settings = 2131231003;
-			
-			// aapt resource value: 0x7f0801de
-			public const int option_map_xml_and_downloads = 2131231198;
-			
-			// aapt resource value: 0x7f0801e8
-			public const int option_nearby_search = 2131231208;
-			
-			// aapt resource value: 0x7f0801f0
-			public const int option_onebox = 2131231216;
-			
-			// aapt resource value: 0x7f0801e0
-			public const int option_other_map = 2131231200;
+			public const int option_map_version_information = 2131231003;
 			
 			// aapt resource value: 0x7f08011c
-			public const int option_overlays = 2131231004;
+			public const int option_map_view_settings = 2131231004;
 			
-			// aapt resource value: 0x7f0801ee
-			public const int option_pedestrian_navigation_ui = 2131231214;
+			// aapt resource value: 0x7f0801f5
+			public const int option_map_xml_and_downloads = 2131231221;
+			
+			// aapt resource value: 0x7f0801ff
+			public const int option_nearby_search = 2131231231;
+			
+			// aapt resource value: 0x7f080207
+			public const int option_onebox = 2131231239;
+			
+			// aapt resource value: 0x7f0801f7
+			public const int option_other_map = 2131231223;
 			
 			// aapt resource value: 0x7f08011d
-			public const int option_poi_tracker = 2131231005;
+			public const int option_overlays = 2131231005;
 			
-			// aapt resource value: 0x7f0801ec
-			public const int option_poi_tracking = 2131231212;
+			// aapt resource value: 0x7f080205
+			public const int option_pedestrian_navigation_ui = 2131231237;
 			
 			// aapt resource value: 0x7f08011e
-			public const int option_position_logging = 2131231006;
+			public const int option_poi_tracker = 2131231006;
 			
-			// aapt resource value: 0x7f0801e3
-			public const int option_real_reach = 2131231203;
-			
-			// aapt resource value: 0x7f0801e9
-			public const int option_reverse_geocoding = 2131231209;
+			// aapt resource value: 0x7f080203
+			public const int option_poi_tracking = 2131231235;
 			
 			// aapt resource value: 0x7f08011f
-			public const int option_routing = 2131231007;
+			public const int option_position_logging = 2131231007;
 			
-			// aapt resource value: 0x7f0801eb
-			public const int option_routing_and_navigation = 2131231211;
+			// aapt resource value: 0x7f0801fa
+			public const int option_real_reach = 2131231226;
+			
+			// aapt resource value: 0x7f080200
+			public const int option_reverse_geocoding = 2131231232;
 			
 			// aapt resource value: 0x7f080120
-			public const int option_routing_with_points = 2131231008;
+			public const int option_routing = 2131231008;
+			
+			// aapt resource value: 0x7f080202
+			public const int option_routing_and_navigation = 2131231234;
 			
 			// aapt resource value: 0x7f080121
-			public const int option_scale_view = 2131231009;
-			
-			// aapt resource value: 0x7f0801e4
-			public const int option_tracks = 2131231204;
-			
-			// aapt resource value: 0x7f0801da
-			public const int options_group_map = 2131231194;
-			
-			// aapt resource value: 0x7f0801e1
-			public const int options_group_navigation = 2131231201;
+			public const int option_routing_with_points = 2131231009;
 			
 			// aapt resource value: 0x7f080122
-			public const int outline_color = 2131231010;
+			public const int option_scale_view = 2131231010;
+			
+			// aapt resource value: 0x7f0801fb
+			public const int option_tracks = 2131231227;
 			
 			// aapt resource value: 0x7f080123
-			public const int outline_pixels_skip = 2131231011;
+			public const int option_world_layers = 2131231011;
+			
+			// aapt resource value: 0x7f0801f1
+			public const int options_group_map = 2131231217;
+			
+			// aapt resource value: 0x7f0801f8
+			public const int options_group_navigation = 2131231224;
 			
 			// aapt resource value: 0x7f080124
-			public const int outline_pixels_solid = 2131231012;
+			public const int outline_color = 2131231012;
 			
 			// aapt resource value: 0x7f080125
-			public const int outline_width = 2131231013;
+			public const int outline_pixels_skip = 2131231013;
 			
 			// aapt resource value: 0x7f080126
-			public const int overlay_id = 2131231014;
+			public const int outline_pixels_solid = 2131231014;
 			
 			// aapt resource value: 0x7f080127
-			public const int padding_bottom = 2131231015;
+			public const int outline_width = 2131231015;
 			
 			// aapt resource value: 0x7f080128
-			public const int padding_height = 2131231016;
+			public const int overlay_id = 2131231016;
 			
 			// aapt resource value: 0x7f080129
-			public const int padding_top = 2131231017;
+			public const int padding_bottom = 2131231017;
 			
 			// aapt resource value: 0x7f08012a
-			public const int padding_width = 2131231018;
+			public const int padding_height = 2131231018;
 			
 			// aapt resource value: 0x7f08012b
-			public const int panning = 2131231019;
+			public const int padding_top = 2131231019;
 			
 			// aapt resource value: 0x7f08012c
-			public const int pause_logging_positions = 2131231020;
+			public const int padding_width = 2131231020;
 			
 			// aapt resource value: 0x7f08012d
-			public const int pedestrian_trail = 2131231021;
+			public const int panning = 2131231021;
 			
 			// aapt resource value: 0x7f08012e
-			public const int play_audio_warnings = 2131231022;
+			public const int pause_logging_positions = 2131231022;
 			
 			// aapt resource value: 0x7f08012f
-			public const int poi_location = 2131231023;
+			public const int pedestrian_trail = 2131231023;
 			
 			// aapt resource value: 0x7f080130
-			public const int poi_options = 2131231024;
+			public const int play_audio_warnings = 2131231024;
 			
 			// aapt resource value: 0x7f080131
-			public const int polygon = 2131231025;
+			public const int poi_location = 2131231025;
 			
 			// aapt resource value: 0x7f080132
-			public const int polygon_points = 2131231026;
+			public const int poi_options = 2131231026;
 			
 			// aapt resource value: 0x7f080133
-			public const int polyline = 2131231027;
+			public const int polygon = 2131231027;
 			
 			// aapt resource value: 0x7f080134
-			public const int polyline_points = 2131231028;
+			public const int polygon_points = 2131231028;
+			
+			// aapt resource value: 0x7f080135
+			public const int polyline = 2131231029;
+			
+			// aapt resource value: 0x7f080136
+			public const int polyline_points = 2131231030;
 			
 			// aapt resource value: 0x7f080045
 			public const int quit_navigation = 2131230789;
 			
-			// aapt resource value: 0x7f080135
-			public const int radius = 2131231029;
+			// aapt resource value: 0x7f080137
+			public const int radius = 2131231031;
 			
 			// aapt resource value: 0x7f080046
 			public const int re_routing = 2131230790;
 			
-			// aapt resource value: 0x7f080136
-			public const int real_navigation = 2131231030;
-			
-			// aapt resource value: 0x7f080137
-			public const int real_reach_choose_type = 2131231031;
-			
 			// aapt resource value: 0x7f080138
-			public const int real_reach_hybrid = 2131231032;
+			public const int real_navigation = 2131231032;
 			
 			// aapt resource value: 0x7f080139
-			public const int real_reach_offline = 2131231033;
+			public const int real_reach_choose_type = 2131231033;
 			
 			// aapt resource value: 0x7f08013a
-			public const int real_reach_online = 2131231034;
+			public const int real_reach_hybrid = 2131231034;
 			
 			// aapt resource value: 0x7f08013b
-			public const int real_reach_profile_distance = 2131231035;
+			public const int real_reach_offline = 2131231035;
 			
 			// aapt resource value: 0x7f08013c
-			public const int real_reach_profile_energy = 2131231036;
+			public const int real_reach_online = 2131231036;
 			
 			// aapt resource value: 0x7f08013d
-			public const int real_reach_profile_time = 2131231037;
+			public const int real_reach_profile_distance = 2131231037;
 			
 			// aapt resource value: 0x7f08013e
-			public const int red = 2131231038;
+			public const int real_reach_profile_energy = 2131231038;
 			
 			// aapt resource value: 0x7f08013f
-			public const int refresh_margin = 2131231039;
+			public const int real_reach_profile_time = 2131231039;
 			
 			// aapt resource value: 0x7f080140
-			public const int remove_overlay = 2131231040;
+			public const int red = 2131231040;
 			
 			// aapt resource value: 0x7f080141
-			public const int renderer = 2131231041;
+			public const int refresh_margin = 2131231041;
 			
 			// aapt resource value: 0x7f080142
-			public const int resume_logging_positions = 2131231042;
+			public const int remove_overlay = 2131231042;
 			
 			// aapt resource value: 0x7f080143
-			public const int reverse_geocode = 2131231043;
+			public const int renderer = 2131231043;
 			
 			// aapt resource value: 0x7f080144
-			public const int rotation = 2131231044;
+			public const int resume_logging_positions = 2131231044;
 			
 			// aapt resource value: 0x7f080145
-			public const int round_trip = 2131231045;
+			public const int reverse_geocode = 2131231045;
 			
 			// aapt resource value: 0x7f080146
-			public const int round_trip_off = 2131231046;
+			public const int rotation = 2131231046;
 			
 			// aapt resource value: 0x7f080147
-			public const int route_1 = 2131231047;
+			public const int round_trip = 2131231047;
 			
 			// aapt resource value: 0x7f080148
-			public const int route_2 = 2131231048;
+			public const int round_trip_off = 2131231048;
 			
 			// aapt resource value: 0x7f080149
-			public const int route_3 = 2131231049;
+			public const int route_1 = 2131231049;
 			
 			// aapt resource value: 0x7f08014a
-			public const int route_calculation_failed = 2131231050;
+			public const int route_2 = 2131231050;
+			
+			// aapt resource value: 0x7f08014b
+			public const int route_3 = 2131231051;
+			
+			// aapt resource value: 0x7f08014c
+			public const int route_calculation_failed = 2131231052;
 			
 			// aapt resource value: 0x7f080047
 			public const int route_cannot_be_calculated = 2131230791;
 			
-			// aapt resource value: 0x7f08014b
-			public const int route_distance = 2131231051;
+			// aapt resource value: 0x7f08014d
+			public const int route_distance = 2131231053;
 			
 			// aapt resource value: 0x7f080048
 			public const int route_invalid_destination = 2131230792;
@@ -5610,272 +5694,281 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f08004a
 			public const int route_same_start_and_destination = 2131230794;
 			
-			// aapt resource value: 0x7f08014c
-			public const int route_type_bicycle_fast = 2131231052;
-			
-			// aapt resource value: 0x7f08014d
-			public const int route_type_bicycle_quiet = 2131231053;
-			
 			// aapt resource value: 0x7f08014e
-			public const int route_type_bicycle_short = 2131231054;
+			public const int route_type_bicycle_fast = 2131231054;
 			
 			// aapt resource value: 0x7f08014f
-			public const int route_type_car_efficient = 2131231055;
+			public const int route_type_bicycle_quiet = 2131231055;
 			
 			// aapt resource value: 0x7f080150
-			public const int route_type_car_fastest = 2131231056;
+			public const int route_type_bicycle_short = 2131231056;
 			
 			// aapt resource value: 0x7f080151
-			public const int route_type_car_shortest = 2131231057;
+			public const int route_type_car_efficient = 2131231057;
 			
 			// aapt resource value: 0x7f080152
-			public const int route_type_pedestrian = 2131231058;
+			public const int route_type_car_fastest = 2131231058;
+			
+			// aapt resource value: 0x7f080153
+			public const int route_type_car_shortest = 2131231059;
+			
+			// aapt resource value: 0x7f080154
+			public const int route_type_pedestrian = 2131231060;
 			
 			// aapt resource value: 0x7f08004b
 			public const int route_unknown_server_error = 2131230795;
 			
-			// aapt resource value: 0x7f080153
-			public const int routing_actions = 2131231059;
-			
-			// aapt resource value: 0x7f080154
-			public const int routing_advanced_settings = 2131231060;
-			
 			// aapt resource value: 0x7f080155
-			public const int routing_advice_list = 2131231061;
+			public const int routing_actions = 2131231061;
 			
 			// aapt resource value: 0x7f080156
-			public const int routing_block_distance = 2131231062;
+			public const int routing_advanced_settings = 2131231062;
 			
 			// aapt resource value: 0x7f080157
-			public const int routing_block_road = 2131231063;
+			public const int routing_advice_list = 2131231063;
 			
 			// aapt resource value: 0x7f080158
-			public const int routing_block_type = 2131231064;
+			public const int routing_alternative_route_mode1 = 2131231064;
 			
 			// aapt resource value: 0x7f080159
-			public const int routing_bottom_inset = 2131231065;
+			public const int routing_alternative_route_mode2 = 2131231065;
 			
 			// aapt resource value: 0x7f08015a
-			public const int routing_calculate_route = 2131231066;
+			public const int routing_alternative_routes = 2131231066;
 			
 			// aapt resource value: 0x7f08015b
-			public const int routing_calculated_after_rerouting = 2131231067;
+			public const int routing_block_distance = 2131231067;
 			
 			// aapt resource value: 0x7f08015c
-			public const int routing_clear_all = 2131231068;
+			public const int routing_block_road = 2131231068;
 			
 			// aapt resource value: 0x7f08015d
-			public const int routing_clear_routes_from_chace = 2131231069;
+			public const int routing_block_type = 2131231069;
 			
 			// aapt resource value: 0x7f08015e
-			public const int routing_connection_mode = 2131231070;
+			public const int routing_bottom_inset = 2131231070;
 			
 			// aapt resource value: 0x7f08015f
-			public const int routing_coordinates = 2131231071;
+			public const int routing_calculate_route = 2131231071;
 			
 			// aapt resource value: 0x7f080160
-			public const int routing_coordinates_list = 2131231072;
+			public const int routing_calculated_after_rerouting = 2131231072;
 			
 			// aapt resource value: 0x7f080161
-			public const int routing_corridor_download = 2131231073;
+			public const int routing_clear_all = 2131231073;
 			
 			// aapt resource value: 0x7f080162
-			public const int routing_country_code = 2131231074;
+			public const int routing_clear_routes_from_chace = 2131231074;
 			
 			// aapt resource value: 0x7f080163
-			public const int routing_country_codes = 2131231075;
+			public const int routing_connection_mode = 2131231075;
 			
 			// aapt resource value: 0x7f080164
-			public const int routing_country_codes_list = 2131231076;
+			public const int routing_coordinates = 2131231076;
 			
 			// aapt resource value: 0x7f080165
-			public const int routing_dest_lat = 2131231077;
+			public const int routing_coordinates_list = 2131231077;
 			
 			// aapt resource value: 0x7f080166
-			public const int routing_dest_long = 2131231078;
+			public const int routing_corridor_download = 2131231078;
 			
 			// aapt resource value: 0x7f080167
-			public const int routing_destination_is_point = 2131231079;
+			public const int routing_country_code = 2131231079;
 			
 			// aapt resource value: 0x7f080168
-			public const int routing_distance = 2131231080;
+			public const int routing_country_codes = 2131231080;
 			
 			// aapt resource value: 0x7f080169
-			public const int routing_download_corridor = 2131231081;
+			public const int routing_country_codes_list = 2131231081;
 			
 			// aapt resource value: 0x7f08016a
-			public const int routing_download_corridor_wait = 2131231082;
+			public const int routing_dest_lat = 2131231082;
 			
 			// aapt resource value: 0x7f08016b
-			public const int routing_download_corridor_widht = 2131231083;
+			public const int routing_dest_long = 2131231083;
 			
 			// aapt resource value: 0x7f08016c
-			public const int routing_estimated_time = 2131231084;
+			public const int routing_destination_is_point = 2131231084;
 			
 			// aapt resource value: 0x7f08016d
-			public const int routing_ferry_lines = 2131231085;
+			public const int routing_distance = 2131231085;
 			
 			// aapt resource value: 0x7f08016e
-			public const int routing_get_advice_list = 2131231086;
+			public const int routing_download_corridor = 2131231086;
 			
 			// aapt resource value: 0x7f08016f
-			public const int routing_get_coordinates_list = 2131231087;
+			public const int routing_download_corridor_wait = 2131231087;
 			
 			// aapt resource value: 0x7f080170
-			public const int routing_get_country_codes = 2131231088;
+			public const int routing_download_corridor_widht = 2131231088;
 			
 			// aapt resource value: 0x7f080171
-			public const int routing_highways = 2131231089;
+			public const int routing_estimated_time = 2131231089;
 			
 			// aapt resource value: 0x7f080172
-			public const int routing_id = 2131231090;
+			public const int routing_ferry_lines = 2131231090;
 			
 			// aapt resource value: 0x7f080173
-			public const int routing_instruction = 2131231091;
+			public const int routing_get_advice_list = 2131231091;
 			
 			// aapt resource value: 0x7f080174
-			public const int routing_latitude = 2131231092;
+			public const int routing_get_coordinates_list = 2131231092;
 			
 			// aapt resource value: 0x7f080175
-			public const int routing_left_inset = 2131231093;
+			public const int routing_get_country_codes = 2131231093;
 			
 			// aapt resource value: 0x7f080176
-			public const int routing_load_id = 2131231094;
+			public const int routing_highways = 2131231094;
 			
 			// aapt resource value: 0x7f080177
-			public const int routing_load_route = 2131231095;
+			public const int routing_id = 2131231095;
 			
 			// aapt resource value: 0x7f080178
-			public const int routing_longitude = 2131231096;
+			public const int routing_instruction = 2131231096;
 			
 			// aapt resource value: 0x7f080179
-			public const int routing_longtap_dest = 2131231097;
+			public const int routing_latitude = 2131231097;
 			
 			// aapt resource value: 0x7f08017a
-			public const int routing_longtap_start = 2131231098;
+			public const int routing_left_inset = 2131231098;
 			
 			// aapt resource value: 0x7f08017b
-			public const int routing_position = 2131231099;
+			public const int routing_load_id = 2131231099;
 			
 			// aapt resource value: 0x7f08017c
-			public const int routing_request_advices = 2131231100;
+			public const int routing_load_route = 2131231100;
 			
 			// aapt resource value: 0x7f08017d
-			public const int routing_request_country = 2131231101;
+			public const int routing_longitude = 2131231101;
 			
 			// aapt resource value: 0x7f08017e
-			public const int routing_request_extended = 2131231102;
+			public const int routing_longtap_dest = 2131231102;
 			
 			// aapt resource value: 0x7f08017f
-			public const int routing_restriction = 2131231103;
+			public const int routing_longtap_start = 2131231103;
 			
 			// aapt resource value: 0x7f080180
-			public const int routing_right_inset = 2131231104;
+			public const int routing_position = 2131231104;
 			
 			// aapt resource value: 0x7f080181
-			public const int routing_route_id = 2131231105;
+			public const int routing_request_advices = 2131231105;
 			
 			// aapt resource value: 0x7f080182
-			public const int routing_route_info = 2131231106;
+			public const int routing_request_country = 2131231106;
 			
 			// aapt resource value: 0x7f080183
-			public const int routing_routemode = 2131231107;
+			public const int routing_request_extended = 2131231107;
 			
 			// aapt resource value: 0x7f080184
-			public const int routing_routesnr = 2131231108;
+			public const int routing_restriction = 2131231108;
 			
 			// aapt resource value: 0x7f080185
-			public const int routing_save_id = 2131231109;
+			public const int routing_right_inset = 2131231109;
 			
 			// aapt resource value: 0x7f080186
-			public const int routing_save_route = 2131231110;
+			public const int routing_route_id = 2131231110;
+			
+			// aapt resource value: 0x7f080187
+			public const int routing_route_info = 2131231111;
+			
+			// aapt resource value: 0x7f080188
+			public const int routing_routemode = 2131231112;
+			
+			// aapt resource value: 0x7f080189
+			public const int routing_routesnr = 2131231113;
+			
+			// aapt resource value: 0x7f08018a
+			public const int routing_save_id = 2131231114;
+			
+			// aapt resource value: 0x7f08018b
+			public const int routing_save_route = 2131231115;
 			
 			// aapt resource value: 0x7f08004c
 			public const int routing_server_error = 2131230796;
 			
-			// aapt resource value: 0x7f080187
-			public const int routing_should_be_rendered = 2131231111;
-			
-			// aapt resource value: 0x7f080188
-			public const int routing_start_lat = 2131231112;
-			
-			// aapt resource value: 0x7f080189
-			public const int routing_start_long = 2131231113;
-			
-			// aapt resource value: 0x7f08018a
-			public const int routing_toll_roades = 2131231114;
-			
-			// aapt resource value: 0x7f08018b
-			public const int routing_top_inset = 2131231115;
-			
 			// aapt resource value: 0x7f08018c
-			public const int routing_unlock_road = 2131231116;
+			public const int routing_should_be_rendered = 2131231116;
 			
 			// aapt resource value: 0x7f08018d
-			public const int routing_use_slopes = 2131231117;
+			public const int routing_start_lat = 2131231117;
 			
 			// aapt resource value: 0x7f08018e
-			public const int routing_version = 2131231118;
+			public const int routing_start_long = 2131231118;
 			
 			// aapt resource value: 0x7f08018f
-			public const int routing_viapoint_add = 2131231119;
+			public const int routing_toll_roades = 2131231119;
 			
 			// aapt resource value: 0x7f080190
-			public const int routing_viapoint_list = 2131231120;
+			public const int routing_top_inset = 2131231120;
 			
 			// aapt resource value: 0x7f080191
-			public const int routing_viapoint_longtap = 2131231121;
+			public const int routing_unlock_road = 2131231121;
 			
 			// aapt resource value: 0x7f080192
-			public const int routing_viapoint_remove = 2131231122;
+			public const int routing_use_slopes = 2131231122;
 			
 			// aapt resource value: 0x7f080193
-			public const int routing_viapoint_settings = 2131231123;
+			public const int routing_version = 2131231123;
 			
 			// aapt resource value: 0x7f080194
-			public const int routing_viapoints_on_route = 2131231124;
+			public const int routing_viapoint_add = 2131231124;
 			
 			// aapt resource value: 0x7f080195
-			public const int routing_zoom_to_route = 2131231125;
+			public const int routing_viapoint_list = 2131231125;
 			
 			// aapt resource value: 0x7f080196
-			public const int rule_settings = 2131231126;
+			public const int routing_viapoint_longtap = 2131231126;
 			
 			// aapt resource value: 0x7f080197
-			public const int scale_view_distance_format = 2131231127;
+			public const int routing_viapoint_remove = 2131231127;
 			
 			// aapt resource value: 0x7f080198
-			public const int scale_view_metrics = 2131231128;
+			public const int routing_viapoint_settings = 2131231128;
 			
 			// aapt resource value: 0x7f080199
-			public const int scale_view_milesfeet = 2131231129;
+			public const int routing_viapoints_on_route = 2131231129;
 			
 			// aapt resource value: 0x7f08019a
-			public const int scale_view_milesyards = 2131231130;
+			public const int routing_zoom_to_route = 2131231130;
 			
 			// aapt resource value: 0x7f08019b
-			public const int scale_view_night_style = 2131231131;
+			public const int rule_settings = 2131231131;
 			
 			// aapt resource value: 0x7f08019c
-			public const int scale_view_title = 2131231132;
+			public const int scale_view_distance_format = 2131231132;
 			
 			// aapt resource value: 0x7f08019d
-			public const int search = 2131231133;
+			public const int scale_view_metrics = 2131231133;
 			
 			// aapt resource value: 0x7f08019e
-			public const int search_overlay = 2131231134;
+			public const int scale_view_milesfeet = 2131231134;
 			
 			// aapt resource value: 0x7f08019f
-			public const int search_topic = 2131231135;
+			public const int scale_view_milesyards = 2131231135;
 			
 			// aapt resource value: 0x7f0801a0
-			public const int searching = 2131231136;
+			public const int scale_view_night_style = 2131231136;
+			
+			// aapt resource value: 0x7f0801a1
+			public const int scale_view_title = 2131231137;
+			
+			// aapt resource value: 0x7f0801a2
+			public const int search = 2131231138;
+			
+			// aapt resource value: 0x7f0801a3
+			public const int search_overlay = 2131231139;
+			
+			// aapt resource value: 0x7f0801a4
+			public const int search_topic = 2131231140;
+			
+			// aapt resource value: 0x7f0801a5
+			public const int searching = 2131231141;
 			
 			// aapt resource value: 0x7f08004d
 			public const int searching_for_gps_label = 2131230797;
 			
-			// aapt resource value: 0x7f0801a1
-			public const int seconds = 2131231137;
+			// aapt resource value: 0x7f0801a6
+			public const int seconds = 2131231142;
 			
 			// aapt resource value: 0x7f08004e
 			public const int seconds_value = 2131230798;
@@ -5883,194 +5976,251 @@ namespace Skobbler.SDKDemo
 			// aapt resource value: 0x7f08004f
 			public const int see_all_label = 2131230799;
 			
-			// aapt resource value: 0x7f0801a2
-			public const int select_via_point = 2131231138;
-			
-			// aapt resource value: 0x7f0801a3
-			public const int set_cache_size = 2131231139;
-			
 			// aapt resource value: 0x7f080050
-			public const int settings_label = 2131230800;
-			
-			// aapt resource value: 0x7f0801a4
-			public const int settings_nav_ui = 2131231140;
-			
-			// aapt resource value: 0x7f0801a5
-			public const int settings_title = 2131231141;
-			
-			// aapt resource value: 0x7f0801a6
-			public const int show_accuracy_circle = 2131231142;
+			public const int see_all_results_label = 2131230800;
 			
 			// aapt resource value: 0x7f0801a7
-			public const int show_bicycle_lanes = 2131231143;
+			public const int select_via_point = 2131231143;
 			
 			// aapt resource value: 0x7f0801a8
-			public const int show_compass = 2131231144;
-			
-			// aapt resource value: 0x7f0801a9
-			public const int show_current_position = 2131231145;
-			
-			// aapt resource value: 0x7f0801aa
-			public const int show_frame = 2131231146;
-			
-			// aapt resource value: 0x7f0801ab
-			public const int show_heading_indicator = 2131231147;
-			
-			// aapt resource value: 0x7f0801ac
-			public const int show_heat_map = 2131231148;
-			
-			// aapt resource value: 0x7f0801ad
-			public const int show_house_numbers = 2131231149;
-			
-			// aapt resource value: 0x7f0801ae
-			public const int sim_from_log_navigation = 2131231150;
-			
-			// aapt resource value: 0x7f0801af
-			public const int simulation_navigation = 2131231151;
-			
-			// aapt resource value: 0x7f0801b0
-			public const int smoothness = 2131231152;
-			
-			// aapt resource value: 0x7f0801b1
-			public const int span = 2131231153;
-			
-			// aapt resource value: 0x7f0801b2
-			public const int start_animation = 2131231154;
-			
-			// aapt resource value: 0x7f0801b3
-			public const int start_free_drive = 2131231155;
-			
-			// aapt resource value: 0x7f0801b4
-			public const int start_free_walk = 2131231156;
-			
-			// aapt resource value: 0x7f0801b5
-			public const int start_location = 2131231157;
-			
-			// aapt resource value: 0x7f0801b6
-			public const int start_logging_positions = 2131231158;
-			
-			// aapt resource value: 0x7f0801b7
-			public const int start_navigation = 2131231159;
-			
-			// aapt resource value: 0x7f0801b8
-			public const int start_poi_tracker = 2131231160;
-			
-			// aapt resource value: 0x7f0801b9
-			public const int start_point_nav = 2131231161;
+			public const int set_cache_size = 2131231144;
 			
 			// aapt resource value: 0x7f080051
-			public const int start_prim_navigation = 2131230801;
+			public const int settings_label = 2131230801;
+			
+			// aapt resource value: 0x7f0801a9
+			public const int settings_nav_ui = 2131231145;
+			
+			// aapt resource value: 0x7f0801aa
+			public const int settings_title = 2131231146;
+			
+			// aapt resource value: 0x7f0801ab
+			public const int show_accuracy_circle = 2131231147;
+			
+			// aapt resource value: 0x7f0801ac
+			public const int show_bicycle_lanes = 2131231148;
+			
+			// aapt resource value: 0x7f0801ad
+			public const int show_compass = 2131231149;
+			
+			// aapt resource value: 0x7f0801ae
+			public const int show_current_position = 2131231150;
+			
+			// aapt resource value: 0x7f0801af
+			public const int show_frame = 2131231151;
+			
+			// aapt resource value: 0x7f0801b0
+			public const int show_heading_indicator = 2131231152;
+			
+			// aapt resource value: 0x7f0801b1
+			public const int show_heat_map = 2131231153;
+			
+			// aapt resource value: 0x7f0801b2
+			public const int show_house_numbers = 2131231154;
+			
+			// aapt resource value: 0x7f0801b3
+			public const int sim_from_log_navigation = 2131231155;
+			
+			// aapt resource value: 0x7f0801b4
+			public const int simulation_navigation = 2131231156;
+			
+			// aapt resource value: 0x7f0801b5
+			public const int smoothness = 2131231157;
+			
+			// aapt resource value: 0x7f0801b6
+			public const int span = 2131231158;
+			
+			// aapt resource value: 0x7f0801b7
+			public const int start_animation = 2131231159;
+			
+			// aapt resource value: 0x7f0801b8
+			public const int start_free_drive = 2131231160;
+			
+			// aapt resource value: 0x7f0801b9
+			public const int start_free_walk = 2131231161;
+			
+			// aapt resource value: 0x7f0801ba
+			public const int start_location = 2131231162;
+			
+			// aapt resource value: 0x7f0801bb
+			public const int start_logging_positions = 2131231163;
+			
+			// aapt resource value: 0x7f0801bc
+			public const int start_navigation = 2131231164;
+			
+			// aapt resource value: 0x7f0801bd
+			public const int start_poi_tracker = 2131231165;
+			
+			// aapt resource value: 0x7f0801be
+			public const int start_point_nav = 2131231166;
 			
 			// aapt resource value: 0x7f080052
-			public const int starting_pos_label = 2131230802;
+			public const int start_prim_navigation = 2131230802;
+			
+			// aapt resource value: 0x7f080053
+			public const int starting_pos_label = 2131230803;
 			
 			// aapt resource value: 0x7f080013
 			public const int status_bar_notification_info_overflow = 2131230739;
 			
-			// aapt resource value: 0x7f0801ba
-			public const int stop_animation = 2131231162;
-			
-			// aapt resource value: 0x7f0801bb
-			public const int stop_logging_positions = 2131231163;
-			
-			// aapt resource value: 0x7f0801bc
-			public const int stop_navigation = 2131231164;
-			
-			// aapt resource value: 0x7f0801bd
-			public const int stop_poi_tracker = 2131231165;
-			
-			// aapt resource value: 0x7f0801be
-			public const int street = 2131231166;
-			
 			// aapt resource value: 0x7f0801bf
-			public const int street_badges = 2131231167;
+			public const int stop_animation = 2131231167;
 			
 			// aapt resource value: 0x7f0801c0
-			public const int take_screenshot = 2131231168;
+			public const int stop_logging_positions = 2131231168;
 			
 			// aapt resource value: 0x7f0801c1
-			public const int ten = 2131231169;
+			public const int stop_navigation = 2131231169;
 			
 			// aapt resource value: 0x7f0801c2
-			public const int ten_mi_h = 2131231170;
+			public const int stop_poi_tracker = 2131231170;
 			
 			// aapt resource value: 0x7f0801c3
-			public const int test = 2131231171;
+			public const int street = 2131231171;
 			
 			// aapt resource value: 0x7f0801c4
-			public const int testing = 2131231172;
+			public const int street_badges = 2131231172;
 			
 			// aapt resource value: 0x7f0801c5
-			public const int testing_section = 2131231173;
+			public const int take_screenshot = 2131231173;
 			
 			// aapt resource value: 0x7f0801c6
-			public const int text_to_speech_engine_not_initialized = 2131231174;
+			public const int ten = 2131231174;
 			
 			// aapt resource value: 0x7f0801c7
-			public const int three_routes = 2131231175;
+			public const int ten_mi_h = 2131231175;
 			
 			// aapt resource value: 0x7f0801c8
-			public const int tilt = 2131231176;
+			public const int test = 2131231176;
 			
 			// aapt resource value: 0x7f0801c9
-			public const int top_left_latitude = 2131231177;
+			public const int testing = 2131231177;
 			
 			// aapt resource value: 0x7f0801ca
-			public const int top_left_longitude = 2131231178;
+			public const int testing_section = 2131231178;
 			
 			// aapt resource value: 0x7f0801cb
-			public const int track_custom_location = 2131231179;
+			public const int text_to_speech_engine_not_initialized = 2131231179;
 			
 			// aapt resource value: 0x7f0801cc
-			public const int tracker_radius = 2131231180;
+			public const int three_routes = 2131231180;
 			
 			// aapt resource value: 0x7f0801cd
-			public const int tracker_settings = 2131231181;
+			public const int tilt = 2131231181;
 			
 			// aapt resource value: 0x7f0801ce
-			public const int trail_settings = 2131231182;
+			public const int top_left_latitude = 2131231182;
 			
 			// aapt resource value: 0x7f0801cf
-			public const int twelve = 2131231183;
+			public const int top_left_longitude = 2131231183;
 			
 			// aapt resource value: 0x7f0801d0
-			public const int twelve_mi_h = 2131231184;
+			public const int track_custom_location = 2131231184;
 			
 			// aapt resource value: 0x7f0801d1
-			public const int two_routes = 2131231185;
-			
-			// aapt resource value: 0x7f080053
-			public const int unblock_all = 2131230803;
+			public const int tracker_radius = 2131231185;
 			
 			// aapt resource value: 0x7f0801d2
-			public const int update_label = 2131231186;
+			public const int tracker_settings = 2131231186;
 			
 			// aapt resource value: 0x7f0801d3
-			public const int use_custom_view = 2131231187;
-			
-			// aapt resource value: 0x7f080054
-			public const int via_point_reached = 2131230804;
+			public const int trail_settings = 2131231187;
 			
 			// aapt resource value: 0x7f0801d4
-			public const int width = 2131231188;
-			
-			// aapt resource value: 0x7f080055
-			public const int yards_label = 2131230805;
+			public const int twelve = 2131231188;
 			
 			// aapt resource value: 0x7f0801d5
-			public const int yes = 2131231189;
+			public const int twelve_mi_h = 2131231189;
 			
 			// aapt resource value: 0x7f0801d6
-			public const int zoom = 2131231190;
+			public const int two_routes = 2131231190;
+			
+			// aapt resource value: 0x7f080054
+			public const int unblock_all = 2131230804;
 			
 			// aapt resource value: 0x7f0801d7
-			public const int zoom_levels = 2131231191;
+			public const int update_label = 2131231191;
 			
 			// aapt resource value: 0x7f0801d8
-			public const int zoom_with_anchor = 2131231192;
+			public const int use_custom_view = 2131231192;
+			
+			// aapt resource value: 0x7f080055
+			public const int via_point_reached = 2131230805;
 			
 			// aapt resource value: 0x7f0801d9
-			public const int zooming = 2131231193;
+			public const int width = 2131231193;
+			
+			// aapt resource value: 0x7f0801da
+			public const int world_layer_OSM = 2131231194;
+			
+			// aapt resource value: 0x7f0801db
+			public const int world_layer_actions = 2131231195;
+			
+			// aapt resource value: 0x7f0801dc
+			public const int world_layer_add = 2131231196;
+			
+			// aapt resource value: 0x7f0801dd
+			public const int world_layer_cache_size = 2131231197;
+			
+			// aapt resource value: 0x7f0801de
+			public const int world_layer_disable = 2131231198;
+			
+			// aapt resource value: 0x7f0801df
+			public const int world_layer_download_data = 2131231199;
+			
+			// aapt resource value: 0x7f0801e0
+			public const int world_layer_enable = 2131231200;
+			
+			// aapt resource value: 0x7f0801e1
+			public const int world_layer_max_zoom_level = 2131231201;
+			
+			// aapt resource value: 0x7f0801e2
+			public const int world_layer_min_zoom_level = 2131231202;
+			
+			// aapt resource value: 0x7f0801e3
+			public const int world_layer_order_idX = 2131231203;
+			
+			// aapt resource value: 0x7f0801e4
+			public const int world_layer_remove = 2131231204;
+			
+			// aapt resource value: 0x7f0801e5
+			public const int world_layer_remove_data = 2131231205;
+			
+			// aapt resource value: 0x7f0801e6
+			public const int world_layer_settings = 2131231206;
+			
+			// aapt resource value: 0x7f0801e7
+			public const int world_layer_staeman = 2131231207;
+			
+			// aapt resource value: 0x7f0801e8
+			public const int world_layer_tile_server = 2131231208;
+			
+			// aapt resource value: 0x7f0801e9
+			public const int world_layer_transparency = 2131231209;
+			
+			// aapt resource value: 0x7f0801ea
+			public const int world_layer_unique_name = 2131231210;
+			
+			// aapt resource value: 0x7f0801eb
+			public const int world_layer_zoom_adjust = 2131231211;
+			
+			// aapt resource value: 0x7f080056
+			public const int yards_label = 2131230806;
+			
+			// aapt resource value: 0x7f0801ec
+			public const int yes = 2131231212;
+			
+			// aapt resource value: 0x7f0801ed
+			public const int zoom = 2131231213;
+			
+			// aapt resource value: 0x7f0801ee
+			public const int zoom_levels = 2131231214;
+			
+			// aapt resource value: 0x7f0801ef
+			public const int zoom_with_anchor = 2131231215;
+			
+			// aapt resource value: 0x7f0801f0
+			public const int zooming = 2131231216;
 			
 			static String()
 			{

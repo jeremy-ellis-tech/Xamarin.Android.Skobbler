@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="originBtn_width">100dp</dimen>
+    <dimen name="destinationBtn_width">150dp</dimen>
+    <dimen name="annotationLayout_width">250dp</dimen>
+
+</resources>

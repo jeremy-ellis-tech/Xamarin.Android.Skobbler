@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <AndroidClassParser>class-parse</AndroidClassParser>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
@@ -75,13 +78,9 @@
       <Name>Skobbler.SDKTools</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LibraryProjectZip Include="Jars\debugkit-debug.aar" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LibraryProjectZip Include="Jars\debugkit-release.aar" />
-  </ItemGroup>
   <ItemGroup>
+    <LibraryProjectZip Include="Jars\debugkit-debug.aar" />
+    <LibraryProjectZip Include="Jars\debugkit-release.aar" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -95,7 +94,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

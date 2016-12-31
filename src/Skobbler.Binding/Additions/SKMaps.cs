@@ -7,10 +7,8 @@ namespace Skobbler.Ngx
 
     // Metadata.xml XPath class reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']"
     [global::Android.Runtime.Register("com/skobbler/ngx/SKMaps", DoNotGenerateAcw = true)]
-    public sealed partial class SKMaps : Java.Lang.Object
+    public sealed partial class SKMaps : global::Java.Lang.Object
     {
-
-
         // Metadata.xml XPath field reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/field[@name='CONNECTIVITY_MODE_OFFLINE']"
         [Register("CONNECTIVITY_MODE_OFFLINE")]
         public const sbyte ConnectivityModeOffline = (sbyte)2;
@@ -126,7 +124,7 @@ namespace Skobbler.Ngx
                         id_getValue = JNIEnv.GetMethodID(class_ref, "getValue", "()I");
                     try
                     {
-                        return JNIEnv.CallIntMethod(Handle, id_getValue);
+                        return JNIEnv.CallIntMethod(((global::Java.Lang.Object)this).Handle, id_getValue);
                     }
                     finally
                     {
@@ -137,14 +135,14 @@ namespace Skobbler.Ngx
             static IntPtr id_forInt_I;
             // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps.SKDistanceUnitType']/method[@name='forInt' and count(parameter)=1 and parameter[1][@type='int']]"
             [Register("forInt", "(I)Lcom/skobbler/ngx/SKMaps$SKDistanceUnitType;", "")]
-            public static unsafe global::Skobbler.Ngx.SKMaps.SKDistanceUnitType ForInt(int id)
+            public static unsafe global::Skobbler.Ngx.SKMaps.SKDistanceUnitType ForInt(int p0)
             {
                 if (id_forInt_I == IntPtr.Zero)
                     id_forInt_I = JNIEnv.GetStaticMethodID(class_ref, "forInt", "(I)Lcom/skobbler/ngx/SKMaps$SKDistanceUnitType;");
                 try
                 {
                     JValue* __args = stackalloc JValue[1];
-                    __args[0] = new JValue(id);
+                    __args[0] = new JValue(p0);
                     return global::Java.Lang.Object.GetObject<global::Skobbler.Ngx.SKMaps.SKDistanceUnitType>(JNIEnv.CallStaticObjectMethod(class_ref, id_forInt_I, __args), JniHandleOwnership.TransferLocalRef);
                 }
                 finally
@@ -155,21 +153,21 @@ namespace Skobbler.Ngx
             static IntPtr id_valueOf_Ljava_lang_String_;
             // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps.SKDistanceUnitType']/method[@name='valueOf' and count(parameter)=1 and parameter[1][@type='java.lang.String']]"
             [Register("valueOf", "(Ljava/lang/String;)Lcom/skobbler/ngx/SKMaps$SKDistanceUnitType;", "")]
-            public static unsafe global::Skobbler.Ngx.SKMaps.SKDistanceUnitType ValueOf(string name)
+            public static unsafe global::Skobbler.Ngx.SKMaps.SKDistanceUnitType ValueOf(string p0)
             {
                 if (id_valueOf_Ljava_lang_String_ == IntPtr.Zero)
                     id_valueOf_Ljava_lang_String_ = JNIEnv.GetStaticMethodID(class_ref, "valueOf", "(Ljava/lang/String;)Lcom/skobbler/ngx/SKMaps$SKDistanceUnitType;");
-                IntPtr native_name = JNIEnv.NewString(name);
+                IntPtr native_p0 = JNIEnv.NewString(p0);
                 try
                 {
                     JValue* __args = stackalloc JValue[1];
-                    __args[0] = new JValue(native_name);
+                    __args[0] = new JValue(native_p0);
                     global::Skobbler.Ngx.SKMaps.SKDistanceUnitType __ret = global::Java.Lang.Object.GetObject<global::Skobbler.Ngx.SKMaps.SKDistanceUnitType>(JNIEnv.CallStaticObjectMethod(class_ref, id_valueOf_Ljava_lang_String_, __args), JniHandleOwnership.TransferLocalRef);
                     return __ret;
                 }
                 finally
                 {
-                    JNIEnv.DeleteLocalRef(native_name);
+                    JNIEnv.DeleteLocalRef(native_p0);
                 }
             }
 
@@ -348,7 +346,7 @@ namespace Skobbler.Ngx
                         id_getValue = JNIEnv.GetMethodID(class_ref, "getValue", "()I");
                     try
                     {
-                        return JNIEnv.CallIntMethod(Handle, id_getValue);
+                        return JNIEnv.CallIntMethod(((global::Java.Lang.Object)this).Handle, id_getValue);
                     }
                     finally
                     {
@@ -359,14 +357,14 @@ namespace Skobbler.Ngx
             static IntPtr id_forInt_I;
             // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps.SKLanguage']/method[@name='forInt' and count(parameter)=1 and parameter[1][@type='int']]"
             [Register("forInt", "(I)Lcom/skobbler/ngx/SKMaps$SKLanguage;", "")]
-            public static unsafe global::Skobbler.Ngx.SKMaps.SKLanguage ForInt(int id)
+            public static unsafe global::Skobbler.Ngx.SKMaps.SKLanguage ForInt(int p0)
             {
                 if (id_forInt_I == IntPtr.Zero)
                     id_forInt_I = JNIEnv.GetStaticMethodID(class_ref, "forInt", "(I)Lcom/skobbler/ngx/SKMaps$SKLanguage;");
                 try
                 {
                     JValue* __args = stackalloc JValue[1];
-                    __args[0] = new JValue(id);
+                    __args[0] = new JValue(p0);
                     return global::Java.Lang.Object.GetObject<global::Skobbler.Ngx.SKMaps.SKLanguage>(JNIEnv.CallStaticObjectMethod(class_ref, id_forInt_I, __args), JniHandleOwnership.TransferLocalRef);
                 }
                 finally
@@ -377,21 +375,21 @@ namespace Skobbler.Ngx
             static IntPtr id_valueOf_Ljava_lang_String_;
             // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps.SKLanguage']/method[@name='valueOf' and count(parameter)=1 and parameter[1][@type='java.lang.String']]"
             [Register("valueOf", "(Ljava/lang/String;)Lcom/skobbler/ngx/SKMaps$SKLanguage;", "")]
-            public static unsafe global::Skobbler.Ngx.SKMaps.SKLanguage ValueOf(string name)
+            public static unsafe global::Skobbler.Ngx.SKMaps.SKLanguage ValueOf(string p0)
             {
                 if (id_valueOf_Ljava_lang_String_ == IntPtr.Zero)
                     id_valueOf_Ljava_lang_String_ = JNIEnv.GetStaticMethodID(class_ref, "valueOf", "(Ljava/lang/String;)Lcom/skobbler/ngx/SKMaps$SKLanguage;");
-                IntPtr native_name = JNIEnv.NewString(name);
+                IntPtr native_p0 = JNIEnv.NewString(p0);
                 try
                 {
                     JValue* __args = stackalloc JValue[1];
-                    __args[0] = new JValue(native_name);
+                    __args[0] = new JValue(native_p0);
                     global::Skobbler.Ngx.SKMaps.SKLanguage __ret = global::Java.Lang.Object.GetObject<global::Skobbler.Ngx.SKMaps.SKLanguage>(JNIEnv.CallStaticObjectMethod(class_ref, id_valueOf_Ljava_lang_String_, __args), JniHandleOwnership.TransferLocalRef);
                     return __ret;
                 }
                 finally
                 {
-                    JNIEnv.DeleteLocalRef(native_name);
+                    JNIEnv.DeleteLocalRef(native_p0);
                 }
             }
 
@@ -446,7 +444,7 @@ namespace Skobbler.Ngx
                     id_getApiKey = JNIEnv.GetMethodID(class_ref, "getApiKey", "()Ljava/lang/String;");
                 try
                 {
-                    return JNIEnv.GetString(JNIEnv.CallObjectMethod(Handle, id_getApiKey), JniHandleOwnership.TransferLocalRef);
+                    return JNIEnv.GetString(JNIEnv.CallObjectMethod(((global::Java.Lang.Object)this).Handle, id_getApiKey), JniHandleOwnership.TransferLocalRef);
                 }
                 finally
                 {
@@ -463,7 +461,7 @@ namespace Skobbler.Ngx
                 {
                     JValue* __args = stackalloc JValue[1];
                     __args[0] = new JValue(native_value);
-                    JNIEnv.CallVoidMethod(Handle, id_setApiKey_Ljava_lang_String_, __args);
+                    JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_setApiKey_Ljava_lang_String_, __args);
                 }
                 finally
                 {
@@ -484,7 +482,7 @@ namespace Skobbler.Ngx
                     id_getConnectivityMode = JNIEnv.GetMethodID(class_ref, "getConnectivityMode", "()B");
                 try
                 {
-                    return JNIEnv.CallByteMethod(Handle, id_getConnectivityMode);
+                    return JNIEnv.CallByteMethod(((global::Java.Lang.Object)this).Handle, id_getConnectivityMode);
                 }
                 finally
                 {
@@ -500,7 +498,7 @@ namespace Skobbler.Ngx
                 {
                     JValue* __args = stackalloc JValue[1];
                     __args[0] = new JValue(value);
-                    JNIEnv.CallVoidMethod(Handle, id_setConnectivityMode_B, __args);
+                    JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_setConnectivityMode_B, __args);
                 }
                 finally
                 {
@@ -538,7 +536,7 @@ namespace Skobbler.Ngx
                     id_isSKMapsInitialized = JNIEnv.GetMethodID(class_ref, "isSKMapsInitialized", "()Z");
                 try
                 {
-                    return JNIEnv.CallBooleanMethod(Handle, id_isSKMapsInitialized);
+                    return JNIEnv.CallBooleanMethod(((global::Java.Lang.Object)this).Handle, id_isSKMapsInitialized);
                 }
                 finally
                 {
@@ -557,7 +555,7 @@ namespace Skobbler.Ngx
                     id_getMapInitSettings = JNIEnv.GetMethodID(class_ref, "getMapInitSettings", "()Lcom/skobbler/ngx/SKMapsInitSettings;");
                 try
                 {
-                    return global::Java.Lang.Object.GetObject<global::Skobbler.Ngx.SKMapsInitSettings>(JNIEnv.CallObjectMethod(Handle, id_getMapInitSettings), JniHandleOwnership.TransferLocalRef);
+                    return global::Java.Lang.Object.GetObject<global::Skobbler.Ngx.SKMapsInitSettings>(JNIEnv.CallObjectMethod(((global::Java.Lang.Object)this).Handle, id_getMapInitSettings), JniHandleOwnership.TransferLocalRef);
                 }
                 finally
                 {
@@ -576,7 +574,7 @@ namespace Skobbler.Ngx
                     id_getObfuscatedApiKey = JNIEnv.GetMethodID(class_ref, "getObfuscatedApiKey", "()Ljava/lang/String;");
                 try
                 {
-                    return JNIEnv.GetString(JNIEnv.CallObjectMethod(Handle, id_getObfuscatedApiKey), JniHandleOwnership.TransferLocalRef);
+                    return JNIEnv.GetString(JNIEnv.CallObjectMethod(((global::Java.Lang.Object)this).Handle, id_getObfuscatedApiKey), JniHandleOwnership.TransferLocalRef);
                 }
                 finally
                 {
@@ -595,7 +593,7 @@ namespace Skobbler.Ngx
                     id_getSDKVersion = JNIEnv.GetMethodID(class_ref, "getSDKVersion", "()Ljava/lang/String;");
                 try
                 {
-                    return JNIEnv.GetString(JNIEnv.CallObjectMethod(Handle, id_getSDKVersion), JniHandleOwnership.TransferLocalRef);
+                    return JNIEnv.GetString(JNIEnv.CallObjectMethod(((global::Java.Lang.Object)this).Handle, id_getSDKVersion), JniHandleOwnership.TransferLocalRef);
                 }
                 finally
                 {
@@ -614,7 +612,7 @@ namespace Skobbler.Ngx
                     id_getUserId = JNIEnv.GetMethodID(class_ref, "getUserId", "()Ljava/lang/String;");
                 try
                 {
-                    return JNIEnv.GetString(JNIEnv.CallObjectMethod(Handle, id_getUserId), JniHandleOwnership.TransferLocalRef);
+                    return JNIEnv.GetString(JNIEnv.CallObjectMethod(((global::Java.Lang.Object)this).Handle, id_getUserId), JniHandleOwnership.TransferLocalRef);
                 }
                 finally
                 {
@@ -631,7 +629,7 @@ namespace Skobbler.Ngx
                 id_destroySKMaps = JNIEnv.GetMethodID(class_ref, "destroySKMaps", "()V");
             try
             {
-                JNIEnv.CallVoidMethod(Handle, id_destroySKMaps);
+                JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_destroySKMaps);
             }
             finally
             {
@@ -641,15 +639,15 @@ namespace Skobbler.Ngx
         static IntPtr id_enableProxy_Z;
         // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/method[@name='enableProxy' and count(parameter)=1 and parameter[1][@type='boolean']]"
         [Register("enableProxy", "(Z)V", "")]
-        public unsafe void EnableProxy(bool enable)
+        public unsafe void EnableProxy(bool p0)
         {
             if (id_enableProxy_Z == IntPtr.Zero)
                 id_enableProxy_Z = JNIEnv.GetMethodID(class_ref, "enableProxy", "(Z)V");
             try
             {
                 JValue* __args = stackalloc JValue[1];
-                __args[0] = new JValue(enable);
-                JNIEnv.CallVoidMethod(Handle, id_enableProxy_Z, __args);
+                __args[0] = new JValue(p0);
+                JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_enableProxy_Z, __args);
             }
             finally
             {
@@ -665,7 +663,7 @@ namespace Skobbler.Ngx
                 id_finalizeLibrary = JNIEnv.GetMethodID(class_ref, "finalizeLibrary", "()Z");
             try
             {
-                return JNIEnv.CallBooleanMethod(Handle, id_finalizeLibrary);
+                return JNIEnv.CallBooleanMethod(((global::Java.Lang.Object)this).Handle, id_finalizeLibrary);
             }
             finally
             {
@@ -675,16 +673,16 @@ namespace Skobbler.Ngx
         static IntPtr id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_;
         // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/method[@name='initializeSKMaps' and count(parameter)=2 and parameter[1][@type='android.app.Application'] and parameter[2][@type='com.skobbler.ngx.SKMapsInitializationListener']]"
         [Register("initializeSKMaps", "(Landroid/app/Application;Lcom/skobbler/ngx/SKMapsInitializationListener;)V", "")]
-        public unsafe void InitializeSKMaps(global::Android.App.Application context, global::Skobbler.Ngx.ISKMapsInitializationListener mapsInitListener)
+        public unsafe void InitializeSKMaps(global::Android.App.Application p0, global::Skobbler.Ngx.ISKMapsInitializationListener p1)
         {
             if (id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_ == IntPtr.Zero)
                 id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_ = JNIEnv.GetMethodID(class_ref, "initializeSKMaps", "(Landroid/app/Application;Lcom/skobbler/ngx/SKMapsInitializationListener;)V");
             try
             {
                 JValue* __args = stackalloc JValue[2];
-                __args[0] = new JValue(context);
-                __args[1] = new JValue(mapsInitListener);
-                JNIEnv.CallVoidMethod(Handle, id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_, __args);
+                __args[0] = new JValue(p0);
+                __args[1] = new JValue(p1);
+                JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_, __args);
             }
             finally
             {
@@ -694,17 +692,17 @@ namespace Skobbler.Ngx
         static IntPtr id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_Lcom_skobbler_ngx_SKMapsInitSettings_;
         // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/method[@name='initializeSKMaps' and count(parameter)=3 and parameter[1][@type='android.app.Application'] and parameter[2][@type='com.skobbler.ngx.SKMapsInitializationListener'] and parameter[3][@type='com.skobbler.ngx.SKMapsInitSettings']]"
         [Register("initializeSKMaps", "(Landroid/app/Application;Lcom/skobbler/ngx/SKMapsInitializationListener;Lcom/skobbler/ngx/SKMapsInitSettings;)V", "")]
-        public unsafe void InitializeSKMaps(global::Android.App.Application context, global::Skobbler.Ngx.ISKMapsInitializationListener mapsInitListener, global::Skobbler.Ngx.SKMapsInitSettings mapInitSettings)
+        public unsafe void InitializeSKMaps(global::Android.App.Application p0, global::Skobbler.Ngx.ISKMapsInitializationListener p1, global::Skobbler.Ngx.SKMapsInitSettings p2)
         {
             if (id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_Lcom_skobbler_ngx_SKMapsInitSettings_ == IntPtr.Zero)
                 id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_Lcom_skobbler_ngx_SKMapsInitSettings_ = JNIEnv.GetMethodID(class_ref, "initializeSKMaps", "(Landroid/app/Application;Lcom/skobbler/ngx/SKMapsInitializationListener;Lcom/skobbler/ngx/SKMapsInitSettings;)V");
             try
             {
                 JValue* __args = stackalloc JValue[3];
-                __args[0] = new JValue(context);
-                __args[1] = new JValue(mapsInitListener);
-                __args[2] = new JValue(mapInitSettings);
-                JNIEnv.CallVoidMethod(Handle, id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_Lcom_skobbler_ngx_SKMapsInitSettings_, __args);
+                __args[0] = new JValue(p0);
+                __args[1] = new JValue(p1);
+                __args[2] = new JValue(p2);
+                JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_initializeSKMaps_Landroid_app_Application_Lcom_skobbler_ngx_SKMapsInitializationListener_Lcom_skobbler_ngx_SKMapsInitSettings_, __args);
             }
             finally
             {
@@ -714,15 +712,15 @@ namespace Skobbler.Ngx
         static IntPtr id_onMapTexturesPrepared_Z;
         // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/method[@name='onMapTexturesPrepared' and count(parameter)=1 and parameter[1][@type='boolean']]"
         [Register("onMapTexturesPrepared", "(Z)V", "")]
-        public unsafe void OnMapTexturesPrepared(bool texturesPrepared)
+        public unsafe void OnMapTexturesPrepared(bool p0)
         {
             if (id_onMapTexturesPrepared_Z == IntPtr.Zero)
                 id_onMapTexturesPrepared_Z = JNIEnv.GetMethodID(class_ref, "onMapTexturesPrepared", "(Z)V");
             try
             {
                 JValue* __args = stackalloc JValue[1];
-                __args[0] = new JValue(texturesPrepared);
-                JNIEnv.CallVoidMethod(Handle, id_onMapTexturesPrepared_Z, __args);
+                __args[0] = new JValue(p0);
+                JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_onMapTexturesPrepared_Z, __args);
             }
             finally
             {
@@ -732,15 +730,15 @@ namespace Skobbler.Ngx
         static IntPtr id_setDownloadListener_Lcom_skobbler_ngx_SKMapsDownloadListener_;
         // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/method[@name='setDownloadListener' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.SKMapsDownloadListener']]"
         [Register("setDownloadListener", "(Lcom/skobbler/ngx/SKMapsDownloadListener;)V", "")]
-        public unsafe void SetDownloadListener(global::Skobbler.Ngx.ISKMapsDownloadListener downloadListener)
+        public unsafe void SetDownloadListener(global::Skobbler.Ngx.ISKMapsDownloadListener p0)
         {
             if (id_setDownloadListener_Lcom_skobbler_ngx_SKMapsDownloadListener_ == IntPtr.Zero)
                 id_setDownloadListener_Lcom_skobbler_ngx_SKMapsDownloadListener_ = JNIEnv.GetMethodID(class_ref, "setDownloadListener", "(Lcom/skobbler/ngx/SKMapsDownloadListener;)V");
             try
             {
                 JValue* __args = stackalloc JValue[1];
-                __args[0] = new JValue(downloadListener);
-                JNIEnv.CallVoidMethod(Handle, id_setDownloadListener_Lcom_skobbler_ngx_SKMapsDownloadListener_, __args);
+                __args[0] = new JValue(p0);
+                JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_setDownloadListener_Lcom_skobbler_ngx_SKMapsDownloadListener_, __args);
             }
             finally
             {
@@ -750,15 +748,15 @@ namespace Skobbler.Ngx
         static IntPtr id_setOnlineConnectionNotificationDelay_I;
         // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/method[@name='setOnlineConnectionNotificationDelay' and count(parameter)=1 and parameter[1][@type='int']]"
         [Register("setOnlineConnectionNotificationDelay", "(I)V", "")]
-        public unsafe void SetOnlineConnectionNotificationDelay(int delay)
+        public unsafe void SetOnlineConnectionNotificationDelay(int p0)
         {
             if (id_setOnlineConnectionNotificationDelay_I == IntPtr.Zero)
                 id_setOnlineConnectionNotificationDelay_I = JNIEnv.GetMethodID(class_ref, "setOnlineConnectionNotificationDelay", "(I)V");
             try
             {
                 JValue* __args = stackalloc JValue[1];
-                __args[0] = new JValue(delay);
-                JNIEnv.CallVoidMethod(Handle, id_setOnlineConnectionNotificationDelay_I, __args);
+                __args[0] = new JValue(p0);
+                JNIEnv.CallVoidMethod(((global::Java.Lang.Object)this).Handle, id_setOnlineConnectionNotificationDelay_I, __args);
             }
             finally
             {
@@ -768,15 +766,15 @@ namespace Skobbler.Ngx
         static IntPtr id_setProxy_Lcom_skobbler_ngx_SKProxySettings_;
         // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/method[@name='setProxy' and count(parameter)=1 and parameter[1][@type='com.skobbler.ngx.SKProxySettings']]"
         [Register("setProxy", "(Lcom/skobbler/ngx/SKProxySettings;)Z", "")]
-        public unsafe bool SetProxy(global::Skobbler.Ngx.SKProxySettings proxySettings)
+        public unsafe bool SetProxy(global::Skobbler.Ngx.SKProxySettings p0)
         {
             if (id_setProxy_Lcom_skobbler_ngx_SKProxySettings_ == IntPtr.Zero)
                 id_setProxy_Lcom_skobbler_ngx_SKProxySettings_ = JNIEnv.GetMethodID(class_ref, "setProxy", "(Lcom/skobbler/ngx/SKProxySettings;)Z");
             try
             {
                 JValue* __args = stackalloc JValue[1];
-                __args[0] = new JValue(proxySettings);
-                bool __ret = JNIEnv.CallBooleanMethod(Handle, id_setProxy_Lcom_skobbler_ngx_SKProxySettings_, __args);
+                __args[0] = new JValue(p0);
+                bool __ret = JNIEnv.CallBooleanMethod(((global::Java.Lang.Object)this).Handle, id_setProxy_Lcom_skobbler_ngx_SKProxySettings_, __args);
                 return __ret;
             }
             finally
@@ -787,24 +785,24 @@ namespace Skobbler.Ngx
         static IntPtr id_unzipFile_Ljava_lang_String_Ljava_lang_String_;
         // Metadata.xml XPath method reference: path="/api/package[@name='com.skobbler.ngx']/class[@name='SKMaps']/method[@name='unzipFile' and count(parameter)=2 and parameter[1][@type='java.lang.String'] and parameter[2][@type='java.lang.String']]"
         [Register("unzipFile", "(Ljava/lang/String;Ljava/lang/String;)I", "")]
-        public unsafe int UnzipFile(string sourceName, string destinationFolder)
+        public unsafe int UnzipFile(string p0, string p1)
         {
             if (id_unzipFile_Ljava_lang_String_Ljava_lang_String_ == IntPtr.Zero)
                 id_unzipFile_Ljava_lang_String_Ljava_lang_String_ = JNIEnv.GetMethodID(class_ref, "unzipFile", "(Ljava/lang/String;Ljava/lang/String;)I");
-            IntPtr native_sourceName = JNIEnv.NewString(sourceName);
-            IntPtr native_destinationFolder = JNIEnv.NewString(destinationFolder);
+            IntPtr native_p0 = JNIEnv.NewString(p0);
+            IntPtr native_p1 = JNIEnv.NewString(p1);
             try
             {
                 JValue* __args = stackalloc JValue[2];
-                __args[0] = new JValue(native_sourceName);
-                __args[1] = new JValue(native_destinationFolder);
-                int __ret = JNIEnv.CallIntMethod(Handle, id_unzipFile_Ljava_lang_String_Ljava_lang_String_, __args);
+                __args[0] = new JValue(native_p0);
+                __args[1] = new JValue(native_p1);
+                int __ret = JNIEnv.CallIntMethod(((global::Java.Lang.Object)this).Handle, id_unzipFile_Ljava_lang_String_Ljava_lang_String_, __args);
                 return __ret;
             }
             finally
             {
-                JNIEnv.DeleteLocalRef(native_sourceName);
-                JNIEnv.DeleteLocalRef(native_destinationFolder);
+                JNIEnv.DeleteLocalRef(native_p0);
+                JNIEnv.DeleteLocalRef(native_p1);
             }
         }
 

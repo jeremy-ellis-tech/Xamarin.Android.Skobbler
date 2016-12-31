@@ -35,6 +35,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <AndroidClassParser>class-parse</AndroidClassParser>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="System" />
@@ -62,7 +65,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Additions\SKSearchResultAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,7 +74,9 @@
     <TransformFile Include="Transforms\EnumFields.xml" />
     <TransformFile Include="Transforms\EnumMethods.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Additions\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Skobbler.Binding\Skobbler.Binding.csproj">
       <Project>{c399b111-040e-485c-85f0-40ae7bb88af4}</Project>
@@ -80,19 +84,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ReferenceJar Include="Jars\gson-2.2.4.jar" />
+    <EmbeddedReferenceJar Include="Jars\gson-2.2.4.jar" />
   </ItemGroup>
   <ItemGroup>
-    <ReferenceJar Include="Jars\joda-time-2.4.jar" />
+    <EmbeddedReferenceJar Include="Jars\joda-time-2.4.jar" />
   </ItemGroup>
   <ItemGroup>
-    <ReferenceJar Include="Jars\guava-18.0.jar" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <LibraryProjectZip Include="Jars\sdktools-debug.aar" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <LibraryProjectZip Include="Jars\sdktools-release.aar" />
+    <EmbeddedReferenceJar Include="Jars\guava-18.0.jar" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Jars\docs\allclasses-frame.html" />
@@ -157,6 +155,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Jars\docs\package-list" />
+    <LibraryProjectZip Include="Jars\sdktools-debug.aar" />
+    <LibraryProjectZip Include="Jars\sdktools-release.aar" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
@@ -167,7 +167,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Android.Support.Vector.Drawable.23.4.0.1\build\Xamarin.Android.Support.Vector.Drawable.targets'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
